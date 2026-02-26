@@ -9,7 +9,6 @@ export const SITE = {
     'Production-minded infrastructure engineering with a focus on reliable automation, platform operations, and practical AI enablement.',
   publicLocation: 'Europe (UTC+1)',
   showExactLocation: false,
-  contactNote: 'Direct contact details are intentionally not published in the repository or site source.',
   copyrightName: 'Sergio B.',
 } as const;
 
