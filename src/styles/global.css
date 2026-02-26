@@ -3,8 +3,8 @@
   --bg-elev-1: rgba(16, 27, 46, 0.94);
   --bg-elev-2: rgba(20, 34, 56, 0.98);
   --bg-sidebar: rgba(8, 15, 28, 0.97);
-  --panel-border: rgba(148, 163, 184, 0.18);
-  --panel-border-strong: rgba(148, 163, 184, 0.28);
+  --panel-border: rgba(148, 163, 184, 0.24);
+  --panel-border-strong: rgba(148, 163, 184, 0.42);
   --text-primary: #e5edf8;
   --text-secondary: #b5c1d6;
   --text-muted: #8da0bc;
@@ -17,7 +17,7 @@
   --success: #7df0b1;
   --danger: #ff8c82;
   --shadow-lg: 0 18px 40px rgba(1, 7, 17, 0.36);
-  --shadow-sm: 0 2px 12px rgba(1, 7, 17, 0.18);
+  --shadow-sm: 0 10px 26px rgba(1, 7, 17, 0.28);
 
   --font-ui: 'Avenir Next', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-display: var(--font-ui);
@@ -483,15 +483,15 @@ li + li {
 }
 
 .panel {
-  background: linear-gradient(180deg, rgba(16, 27, 46, 0.86), rgba(12, 21, 37, 0.9));
+  background: linear-gradient(180deg, rgba(26, 47, 82, 0.92), rgba(10, 18, 34, 0.94));
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .panel-soft {
   border-radius: var(--radius-md);
-  background: linear-gradient(180deg, rgba(18, 29, 49, 0.78), rgba(12, 21, 37, 0.84));
+  background: linear-gradient(180deg, rgba(22, 40, 70, 0.74), rgba(8, 14, 26, 0.9));
 }
 
 .hero {
@@ -681,6 +681,13 @@ li + li {
 
 .post-card {
   padding: 1rem;
+  background: linear-gradient(180deg, rgba(30, 56, 96, 0.58), rgba(8, 14, 26, 0.92));
+  border-color: rgba(138, 227, 255, 0.18);
+}
+
+.post-card:hover {
+  border-color: rgba(138, 227, 255, 0.34);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .post-meta {
@@ -688,7 +695,7 @@ li + li {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.45rem;
-  color: var(--text-muted);
+  color: var(--text-faint);
   font-family: var(--font-mono);
   font-size: 0.76rem;
 }
@@ -709,10 +716,12 @@ li + li {
 .post-title {
   margin-top: 0.55rem;
   font-size: 1.28rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .post-title a {
-  color: var(--heading);
+  color: #f8fbff;
 }
 
 .post-title a:hover {
@@ -1020,8 +1029,9 @@ li + li {
   margin-top: 1rem;
   padding: 1.15rem;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  background: rgba(10, 17, 29, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: linear-gradient(180deg, rgba(22, 40, 70, 0.42), rgba(7, 12, 22, 0.9));
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .article-footer {
