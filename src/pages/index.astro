@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CATEGORY_META } from '../content/categories';
+import { withBase } from '../utils/paths';
+
+const posts = await getCollection('posts');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const publishedPosts = sortedPosts.filter(post => !post.data.draft);
+
+// Get reading time helper
+const getReadingTime = (body: string): number => {
+  if (!body) return 1;
+  const words = body.trim().split(/\s+/).length;
+  const time = Math.ceil(words / 225);
+  return time > 0 ? time : 1;
+};
+---
+
+<BaseLayout 
+  title="Sergio B. | Infrastructure, AI & Cloud" 
+  description="Linux & Virtualization Engineer sharing practical notes on Infrastructure, AI, Cloud and automation."
+>
+  <div class="page-header">
+    <p class="eyebrow">Linux & Virtualization Engineer · Madrid</p>
+    <h1>Writing about infrastructure, automation, and practical AI.</h1>
+    <p class="page-description">
+      Real-world notes from RHEL lifecycle programs, Ansible automation, Azure projects, and local AI experiments. 
+      This site is intentionally simple so publishing stays frictionless.
+    </p>
+  </div>
+
+  <section class="post-feed" aria-label="Latest posts">
+    {publishedPosts.map((post) => (
+      <article class="post-card">
+        <div class="post-meta">
+          <time class="post-date">
+            {post.data.pubDate.toLocaleDateString('en-US', { 
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric' 
+            })}
+          </time>
+          <span>·</span>
+          <a href={withBase(`${post.data.category}/`)} class="post-category">
+            {CATEGORY_META[post.data.category].label}
+          </a>
+          <span>·</span>
+          <span>{getReadingTime(post.body)} min read</span>
+        </div>
+        <h2 class="post-title">
+          <a href={withBase(`posts/${post.id}/`)}>{post.data.title}</a>
+        </h2>
+        <p class="post-excerpt">{post.data.description}</p>
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div class="post-tags">
+            {post.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </article>
+    ))}
+    
+    {publishedPosts.length === 0 && (
+      <p class="empty-state">No posts published yet.</p>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+</style>

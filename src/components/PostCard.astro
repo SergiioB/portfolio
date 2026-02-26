@@ -1,0 +1,60 @@
+---
+import { CATEGORY_META } from '../content/categories';
+import { withBase } from '../utils/paths';
+
+interface Props {
+  post: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      category: 'infrastructure' | 'ai' | 'cloud' | 'local-ai' | 'kotlin' | 'snippets' | 'career';
+      tags?: string[];
+    };
+    body: string;
+  };
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, category, tags } = post.data;
+
+// Simple reading time estimation based on body length
+const getReadingTime = (body: string): number => {
+  if (!body) return 1;
+  const words = body.trim().split(/\s+/).length;
+  const time = Math.ceil(words / 225);
+  return time > 0 ? time : 1;
+};
+
+const readingTime = getReadingTime(post.body);
+---
+
+<article class="post-card">
+  <div class="post-meta">
+    <time class="post-date">
+      {pubDate.toLocaleDateString('en-US', { 
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric' 
+      })}
+    </time>
+    <span>·</span>
+    <a href={withBase(`${category}/`)} class="post-category">
+      {CATEGORY_META[category].label}
+    </a>
+    <span>·</span>
+    <span>{readingTime} min read</span>
+  </div>
+  <h2 class="post-title">
+    <a href={withBase(`posts/${post.id}/`)}>{title}</a>
+  </h2>
+  <p class="post-excerpt">{description}</p>
+  {tags && tags.length > 0 && (
+    <div class="post-tags">
+      {tags.map((tag) => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  )}
+</article>
