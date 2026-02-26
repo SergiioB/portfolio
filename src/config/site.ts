@@ -14,8 +14,7 @@ export const SITE = {
 } as const;
 
 export const PUBLIC_LINKS: Array<{ label: string; href: string }> = [
-  // Add only links you are comfortable exposing publicly.
-  // Example: { label: 'GitHub', href: 'https://github.com/your-user' }
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sergio-barrientose/' },
 ];
 
 export const PUBLIC_CV = {
