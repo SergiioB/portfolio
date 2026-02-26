@@ -1,94 +1,135 @@
 ---
 import { getCollection } from 'astro:content';
+import PostCard from '../components/PostCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { CATEGORY_META } from '../content/categories';
+import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
+import { PUBLIC_CV, SITE } from '../config/site';
 import { withBase } from '../utils/paths';
 
 const posts = await getCollection('posts');
-const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const publishedPosts = sortedPosts.filter(post => !post.data.draft);
+const publishedPosts = posts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Get reading time helper
-const getReadingTime = (body: string): number => {
-  if (!body) return 1;
-  const words = body.trim().split(/\s+/).length;
-  const time = Math.ceil(words / 225);
-  return time > 0 ? time : 1;
-};
+const latestPosts = publishedPosts.slice(0, 8);
+const categoryCounts = CATEGORY_ORDER.map((category) => ({
+  slug: category,
+  label: CATEGORY_META[category].label,
+  description: CATEGORY_META[category].description,
+  count: publishedPosts.filter((post) => post.data.category === category).length,
+}));
+
+const activeCategories = categoryCounts.filter((category) => category.count > 0);
+const latestDate = publishedPosts[0]?.data.pubDate;
+const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 ---
 
-<BaseLayout 
-  title="Sergio B. | Infrastructure, AI & Cloud" 
-  description="Linux & Virtualization Engineer sharing practical notes on Infrastructure, AI, Cloud and automation."
->
-  <div class="page-header">
-    <p class="eyebrow">Linux & Virtualization Engineer · Madrid</p>
-    <h1>Writing about infrastructure, automation, and practical AI.</h1>
-    <p class="page-description">
-      Real-world notes from RHEL lifecycle programs, Ansible automation, Azure projects, and local AI experiments. 
-      This site is intentionally simple so publishing stays frictionless.
+<BaseLayout title={`${SITE.author} | Infrastructure Engineering Notes`} description={SITE.description}>
+  <section class="hero panel" aria-labelledby="home-hero-title">
+    <div class="hero-kicker">Portfolio + technical knowledge base</div>
+    <h1 id="home-hero-title" class="hero-title">
+      Evidence-driven infrastructure work, documented as reusable notes.
+    </h1>
+    <p class="hero-description">
+      This site is optimized for showing real engineering focus areas: platform operations, automation, cloud delivery,
+      and privacy-aware AI experimentation. The content is static, fast, and intentionally low-risk for public hosting.
     </p>
-  </div>
 
-  <section class="post-feed" aria-label="Latest posts">
-    {publishedPosts.map((post) => (
-      <article class="post-card">
-        <div class="post-meta">
-          <time class="post-date">
-            {post.data.pubDate.toLocaleDateString('en-US', { 
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric' 
-            })}
-          </time>
-          <span>·</span>
-          <a href={withBase(`${post.data.category}/`)} class="post-category">
-            {CATEGORY_META[post.data.category].label}
-          </a>
-          <span>·</span>
-          <span>{getReadingTime(post.body)} min read</span>
+    <div class="hero-actions">
+      <a href={withBase('about/')} class="action-link action-link-secondary">About</a>
+      <a href={withBase('archive/')} class="action-link action-link-secondary">Archive</a>
+      {PUBLIC_CV.enabled && (
+        <a
+          href={publicCvHref}
+          class="action-link"
+          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+        >
+          {PUBLIC_CV.label}
+        </a>
+      )}
+    </div>
+
+    <div class="hero-grid">
+      <div class="panel panel-soft stat-card">
+        <div class="stat-label">Published posts</div>
+        <div class="stat-value">{publishedPosts.length}</div>
+        <div class="stat-meta">Markdown content, static build output</div>
+      </div>
+      <div class="panel panel-soft stat-card">
+        <div class="stat-label">Active domains</div>
+        <div class="stat-value">{activeCategories.length}</div>
+        <div class="stat-meta">Infrastructure, cloud, snippets, local AI, more</div>
+      </div>
+      <div class="panel panel-soft stat-card">
+        <div class="stat-label">Latest update</div>
+        <div class="stat-value stat-value-sm">
+          {latestDate
+            ? latestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : 'No posts yet'}
         </div>
-        <h2 class="post-title">
-          <a href={withBase(`posts/${post.id}/`)}>{post.data.title}</a>
-        </h2>
-        <p class="post-excerpt">{post.data.description}</p>
-        {post.data.tags && post.data.tags.length > 0 && (
-          <div class="post-tags">
-            {post.data.tags.map((tag) => (
-              <span class="tag">{tag}</span>
-            ))}
-          </div>
-        )}
+        <div class="stat-meta">Recent activity visible from content timestamps</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block" aria-labelledby="intent-title">
+    <div class="section-header-row">
+      <h2 id="intent-title">Current intention</h2>
+      <a href={withBase('about/')} class="subtle-link">Profile overview</a>
+    </div>
+    <div class="signal-grid">
+      <article class="panel panel-soft signal-card">
+        <h3>Show execution, not just claims</h3>
+        <p>
+          Posts are organized by delivery domain so the portfolio reads like a working knowledge archive rather than a resume-only page.
+        </p>
       </article>
-    ))}
-    
-    {publishedPosts.length === 0 && (
-      <p class="empty-state">No posts published yet.</p>
-    )}
+      <article class="panel panel-soft signal-card">
+        <h3>Stay easy to maintain</h3>
+        <p>
+          Astro + Markdown + GitHub Pages keeps publishing friction low, which is the right tradeoff for a writing-first technical portfolio.
+        </p>
+      </article>
+      <article class="panel panel-soft signal-card">
+        <h3>Public by design, private by default</h3>
+        <p>
+          Sensitive employer/contact details are omitted from the repo and site copy while keeping enough information to establish expertise.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block" aria-labelledby="domains-title">
+    <div class="section-header-row">
+      <h2 id="domains-title">Coverage map</h2>
+      <a href={withBase('archive/')} class="subtle-link">Browse archive</a>
+    </div>
+    <div class="category-grid">
+      {categoryCounts.map((category) => (
+        <a href={withBase(`${category.slug}/`)} class={`category-tile panel panel-soft category-${category.slug}`}>
+          <div class="category-tile-top">
+            <span class={`category-badge ${category.slug}`}>{category.label}</span>
+            <span class="category-tile-count">{category.count}</span>
+          </div>
+          <p>{category.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section-block" aria-labelledby="latest-posts-title">
+    <div class="section-header-row">
+      <h2 id="latest-posts-title">Latest notes</h2>
+      <a href={withBase('archive/')} class="subtle-link">All posts</a>
+    </div>
+
+    <div class="post-feed" aria-label="Latest posts">
+      {latestPosts.map((post) => (
+        <PostCard post={post} />
+      ))}
+
+      {publishedPosts.length === 0 && <p class="empty-state panel panel-soft">No posts published yet.</p>}
+    </div>
   </section>
 </BaseLayout>
-
-<style>
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-  }
-
-  .page-header h1 {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    font-weight: 600;
-    line-height: 1.25;
-    margin-bottom: 0.75rem;
-  }
-
-  .page-description {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    line-height: 1.6;
-    max-width: 60ch;
-  }
-</style>

@@ -2,7 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCategoryLabel } from '../../content/categories';
+import { SITE } from '../../config/site';
 import { withBase } from '../../utils/paths';
+import { estimateReadingTime } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -15,53 +17,43 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 const { title, description, pubDate, category, tags, updatedDate } = post.data;
-
-const getReadingTime = (body: string): number => {
-  if (!body) return 1;
-  const words = body.trim().split(/\s+/).length;
-  const time = Math.ceil(words / 225);
-  return time > 0 ? time : 1;
-};
-
-const readingTime = getReadingTime(post.body);
+const readingTime = estimateReadingTime(post.body);
 ---
 
-<BaseLayout title={`${title} | Sergio B.`} description={description}>
-  <a href={withBase()} class="back-link">
-    ← Back to posts
-  </a>
+<BaseLayout title={`${title} | ${SITE.author}`} description={description}>
+  <a href={withBase()} class="back-link">← Back to posts</a>
 
-  <article>
+  <article class="article-shell">
     <header class="article-header">
-      <nav class="breadcrumbs">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href={withBase()}>Home</a>
-        <span> / </span>
+        <span>/</span>
         <a href={withBase(`${category}/`)}>{getCategoryLabel(category)}</a>
       </nav>
 
       <div class="article-meta">
-        <time>
-          {pubDate.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+        <time datetime={pubDate.toISOString()}>
+          {pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
           })}
         </time>
-        <span>·</span>
+        <span aria-hidden="true">•</span>
         <span>{readingTime} min read</span>
         {updatedDate && (
           <>
-            <span>·</span>
-            <span>Updated: {updatedDate.toLocaleDateString('en-US')}</span>
+            <span aria-hidden="true">•</span>
+            <span>Updated {updatedDate.toLocaleDateString('en-US')}</span>
           </>
         )}
       </div>
 
       <h1 class="article-title">{title}</h1>
       <p class="page-description">{description}</p>
-      
+
       {tags && tags.length > 0 && (
-        <div class="post-tags" style="margin-top: 1rem;">
+        <div class="post-tags post-tags-spaced" aria-label="Post tags">
           {tags.map((tag) => (
             <span class="tag">{tag}</span>
           ))}
@@ -69,46 +61,12 @@ const readingTime = getReadingTime(post.body);
       )}
     </header>
 
-    <div class="article-content">
+    <div class="article-content prose-shell">
       <Content />
     </div>
 
     <footer class="article-footer">
-      <a href={withBase()} class="back-link">
-        ← Back to all posts
-      </a>
+      <a href={withBase('archive/')} class="back-link">← Browse archive</a>
     </footer>
   </article>
 </BaseLayout>
-
-<style>
-  .article-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .article-title {
-    font-size: clamp(1.75rem, 5vw, 2.25rem);
-    font-weight: 700;
-    line-height: 1.2;
-    margin: 1rem 0 0.75rem 0;
-  }
-
-  .article-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-  }
-
-  .article-footer {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-</style>

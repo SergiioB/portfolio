@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { CATEGORY_META, CATEGORY_ORDER, getCategoryLabel, type CategorySlug } from '../content/categories';
+import { SITE } from '../config/site';
 import { withBase } from '../utils/paths';
 
 export async function getStaticPaths() {
-  // Generate pages for all 7 categories, even if empty
   return CATEGORY_ORDER.map((category) => ({
     params: { category },
     props: { category },
@@ -16,53 +16,42 @@ export async function getStaticPaths() {
 const { category } = Astro.params;
 const posts = await getCollection('posts');
 const filteredPosts = posts
-  .filter(p => p.data.category === category && !p.data.draft)
+  .filter((post) => post.data.category === category && !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const catName = getCategoryLabel(category as string);
-const catDescription = category && category in CATEGORY_META
-  ? CATEGORY_META[category as CategorySlug].description
-  : `Articles about ${category}`;
+const catDescription =
+  category && category in CATEGORY_META
+    ? CATEGORY_META[category as CategorySlug].description
+    : `Articles about ${category}`;
 ---
 
-<BaseLayout title={`${catName} | Sergio B.`} description={catDescription}>
-  <nav class="breadcrumbs">
+<BaseLayout title={`${catName} | ${SITE.author}`} description={catDescription}>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href={withBase()}>Home</a>
-    <span> / </span>
+    <span>/</span>
     <span>{catName}</span>
   </nav>
 
-  <div class="page-header">
+  <header class="page-header page-header-tight">
     <span class={`category-badge ${category}`}>{catName}</span>
     <h1>{catName}</h1>
     <p class="page-description">{catDescription}</p>
-    <p class="post-count">{filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'}</p>
-  </div>
+    <p class="post-count">{filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} published</p>
+  </header>
+
+  <section class="category-summary panel panel-soft" aria-label={`${catName} category summary`}>
+    <p>
+      Category pages keep the portfolio readable for recruiters, peers, and collaborators who want a quick view of depth in a specific area.
+      Posts here focus on practical implementation notes and repeatable patterns.
+    </p>
+  </section>
 
   <section class="post-feed" aria-label={`Posts in ${catName}`}>
     {filteredPosts.map((post) => (
       <PostCard post={post} />
     ))}
-    
-    {filteredPosts.length === 0 && (
-      <p class="empty-state">No posts in this category yet.</p>
-    )}
+
+    {filteredPosts.length === 0 && <p class="empty-state panel panel-soft">No posts in this category yet.</p>}
   </section>
 </BaseLayout>
-
-<style>
-  .post-count {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.75rem;
-  }
-
-  .page-header .category-badge {
-    margin-bottom: 0.75rem;
-  }
-
-  .page-header h1 {
-    margin-bottom: 0.5rem;
-  }
-</style>

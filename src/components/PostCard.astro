@@ -1,6 +1,7 @@
 ---
 import { CATEGORY_META } from '../content/categories';
 import { withBase } from '../utils/paths';
+import { estimateReadingTime } from '../utils/readingTime';
 
 interface Props {
   post: {
@@ -18,40 +19,35 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, pubDate, category, tags } = post.data;
-
-// Simple reading time estimation based on body length
-const getReadingTime = (body: string): number => {
-  if (!body) return 1;
-  const words = body.trim().split(/\s+/).length;
-  const time = Math.ceil(words / 225);
-  return time > 0 ? time : 1;
-};
-
-const readingTime = getReadingTime(post.body);
+const readingTime = estimateReadingTime(post.body);
+const postUrl = withBase(`posts/${post.id}/`);
 ---
 
-<article class="post-card">
+<article class="post-card panel panel-soft">
   <div class="post-meta">
-    <time class="post-date">
-      {pubDate.toLocaleDateString('en-US', { 
+    <time class="post-date" datetime={pubDate.toISOString()}>
+      {pubDate.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric' 
+        day: 'numeric',
       })}
     </time>
-    <span>·</span>
+    <span aria-hidden="true">•</span>
     <a href={withBase(`${category}/`)} class="post-category">
       {CATEGORY_META[category].label}
     </a>
-    <span>·</span>
+    <span aria-hidden="true">•</span>
     <span>{readingTime} min read</span>
   </div>
+
   <h2 class="post-title">
-    <a href={withBase(`posts/${post.id}/`)}>{title}</a>
+    <a href={postUrl}>{title}</a>
   </h2>
+
   <p class="post-excerpt">{description}</p>
+
   {tags && tags.length > 0 && (
-    <div class="post-tags">
+    <div class="post-tags" aria-label="Post tags">
       {tags.map((tag) => (
         <span class="tag">{tag}</span>
       ))}
