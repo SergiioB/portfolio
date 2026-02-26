@@ -19,12 +19,12 @@
   --shadow-lg: 0 18px 40px rgba(1, 7, 17, 0.36);
   --shadow-sm: 0 2px 12px rgba(1, 7, 17, 0.18);
 
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
-  --font-body: 'Charter', 'Bitstream Charter', Cambria, Georgia, serif;
   --font-ui: 'Avenir Next', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: var(--font-ui);
+  --font-body: var(--font-ui);
   --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --sidebar-width: 320px;
+  --sidebar-width: 360px;
   --content-width: 980px;
   --radius-lg: 18px;
   --radius-md: 12px;
@@ -1144,7 +1144,7 @@ li + li {
 
 @media (max-width: 1180px) {
   :root {
-    --sidebar-width: 280px;
+    --sidebar-width: 320px;
   }
 
   .hero-grid,
