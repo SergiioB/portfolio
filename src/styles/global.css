@@ -22,8 +22,8 @@
 
   --sidebar-width: 340px;
   --content-width: 940px;
-  --radius-lg: 18px;
-  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
   --radius-sm: 10px;
   --transition-fast: 150ms ease;
   --transition-base: 240ms ease;
@@ -138,6 +138,7 @@ li + li {
   display: flex;
   flex-direction: column;
   z-index: 110;
+  box-shadow: inset -1px 0 0 rgba(15, 23, 42, 0.02);
 }
 
 .sidebar-header {
@@ -363,33 +364,47 @@ li + li {
   justify-content: center;
   gap: 0.35rem;
   border-radius: 999px;
-  border: 1px solid transparent;
-  background: linear-gradient(180deg, #3649d9, #2f3eb5);
+  border: 1px solid #2f3eb5;
+  background: #3649d9;
   color: #fff;
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 0.44rem 0.72rem;
+  padding: 0.4rem 0.68rem;
 }
 
 .action-link:hover {
   color: #fff;
   text-decoration: none;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(54, 73, 217, 0.25);
+  background: #2f3eb5;
+  border-color: #28349b;
+  box-shadow: 0 6px 14px rgba(54, 73, 217, 0.2);
 }
 
 .action-link-secondary {
   border: 1px solid var(--border);
-  background: var(--surface-muted);
+  background: var(--surface);
   color: var(--text-secondary);
 }
 
 .action-link-secondary:hover {
   color: var(--text);
   border-color: var(--border-strong);
+  background: var(--surface-soft);
   box-shadow: none;
+}
+
+.action-link:focus-visible,
+.quick-link:focus-visible,
+.subtle-link:focus-visible,
+.nav-link:focus-visible,
+.post-title a:focus-visible,
+.post-category:focus-visible,
+.archive-post-title:focus-visible,
+.back-link:focus-visible {
+  outline: 2px solid #8ca2ff;
+  outline-offset: 2px;
 }
 
 .mobile-header {
@@ -466,18 +481,18 @@ li + li {
   width: 100%;
   max-width: calc(var(--content-width) + 4rem);
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.55rem 1.8rem;
 }
 
 .content-wrapper > * + * {
-  margin-top: 1.15rem;
+  margin-top: 0.95rem;
 }
 
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
 }
 
 .panel-soft {
@@ -486,7 +501,7 @@ li + li {
 }
 
 .hero {
-  padding: 1.35rem;
+  padding: 1.1rem 1.15rem;
 }
 
 .hero-kicker,
@@ -500,33 +515,33 @@ li + li {
 }
 
 .hero-title {
-  font-size: clamp(1.8rem, 4.1vw, 2.75rem);
-  max-width: 18ch;
+  font-size: clamp(1.68rem, 3.8vw, 2.35rem);
+  max-width: 20ch;
 }
 
 .hero-description {
-  margin: 0.95rem 0 0;
+  margin: 0.7rem 0 0;
   color: var(--text-secondary);
-  max-width: 70ch;
-  font-size: 1rem;
+  max-width: 62ch;
+  font-size: 0.96rem;
 }
 
 .hero-actions {
-  margin-top: 1rem;
+  margin-top: 0.82rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 
 .hero-grid {
-  margin-top: 1.2rem;
+  margin-top: 0.95rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .stat-card {
-  padding: 0.95rem;
+  padding: 0.8rem;
 }
 
 .stat-label {
@@ -539,7 +554,7 @@ li + li {
 
 .stat-value {
   margin-top: 0.35rem;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-family: var(--font-display);
   color: var(--heading);
 }
@@ -550,18 +565,18 @@ li + li {
 }
 
 .stat-meta {
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   color: var(--text-secondary);
-  font-size: 0.83rem;
+  font-size: 0.8rem;
   line-height: 1.4;
 }
 
 .section-block {
-  margin-top: 1.35rem;
+  margin-top: 1rem;
 }
 
 .section-surface {
-  padding: 1.05rem;
+  padding: 0.9rem;
 }
 
 .section-header-row {
@@ -569,11 +584,11 @@ li + li {
   align-items: end;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.7rem;
 }
 
 .section-header-row h2 {
-  font-size: 1.3rem;
+  font-size: 1.16rem;
 }
 
 .subtle-link {
@@ -593,34 +608,34 @@ li + li {
 .signal-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .signal-card {
-  padding: 0.95rem;
+  padding: 0.8rem;
 }
 
 .signal-card h3 {
-  font-size: 1rem;
-  margin-bottom: 0.45rem;
+  font-size: 0.94rem;
+  margin-bottom: 0.3rem;
 }
 
 .signal-card p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .category-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .category-tile {
   display: block;
-  padding: 0.95rem;
+  padding: 0.78rem;
   color: inherit;
   border: 1px solid var(--border);
   position: relative;
@@ -674,14 +689,14 @@ li + li {
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.4rem;
 }
 
 .category-tile p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.45;
+  font-size: 0.84rem;
+  line-height: 1.4;
 }
 
 .category-tile-count {
@@ -696,11 +711,11 @@ li + li {
 
 .post-feed {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .post-card {
-  padding: 1rem;
+  padding: 0.86rem;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
@@ -794,8 +809,8 @@ li + li {
 }
 
 .post-title {
-  margin-top: 0.55rem;
-  font-size: 1.26rem;
+  margin-top: 0.45rem;
+  font-size: 1.12rem;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -810,17 +825,17 @@ li + li {
 }
 
 .post-excerpt {
-  margin: 0.52rem 0 0;
+  margin: 0.38rem 0 0;
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.55;
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 .post-tags {
-  margin-top: 0.65rem;
+  margin-top: 0.55rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .post-tags-spaced {
@@ -860,7 +875,7 @@ li + li {
 }
 
 .page-header {
-  padding: 1.05rem 1.1rem;
+  padding: 0.88rem 0.95rem;
   border-radius: var(--radius-lg);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -872,14 +887,16 @@ li + li {
 }
 
 .page-header h1 {
-  font-size: clamp(1.55rem, 3.8vw, 2.2rem);
+  font-size: clamp(1.4rem, 3.5vw, 1.95rem);
   margin-top: 0.2rem;
 }
 
 .page-description {
-  margin: 0.62rem 0 0;
+  margin: 0.45rem 0 0;
   color: var(--text-secondary);
-  max-width: 70ch;
+  max-width: 62ch;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .post-count {
@@ -890,7 +907,7 @@ li + li {
 }
 
 .category-summary {
-  padding: 0.9rem 1rem;
+  padding: 0.74rem 0.86rem;
 }
 
 .category-summary p {
@@ -948,7 +965,7 @@ li + li {
 
 .archive-content {
   display: grid;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .archive-year {
@@ -971,7 +988,7 @@ li + li {
 }
 
 .archive-post {
-  padding: 0.75rem 0.85rem;
+  padding: 0.65rem 0.75rem;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 0.75rem;
@@ -999,7 +1016,7 @@ li + li {
 }
 
 .about-section {
-  margin-top: 1rem;
+  margin-top: 0.85rem;
 }
 
 .cv-card {
@@ -1022,17 +1039,17 @@ li + li {
 }
 
 .about-section > h2 {
-  font-size: 1.25rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.06rem;
+  margin-bottom: 0.62rem;
 }
 
 .timeline {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .timeline-item {
-  padding: 1rem;
+  padding: 0.84rem;
 }
 
 .timeline-head {
@@ -1070,12 +1087,12 @@ li + li {
 .principles-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .skill-card,
 .principles-grid .panel {
-  padding: 0.95rem;
+  padding: 0.8rem;
 }
 
 .skill-card h3,
@@ -1112,7 +1129,7 @@ li + li {
 }
 
 .article-header {
-  padding: 1rem 1.05rem;
+  padding: 0.85rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -1131,13 +1148,13 @@ li + li {
 }
 
 .article-title {
-  margin-top: 0.75rem;
-  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  margin-top: 0.62rem;
+  font-size: clamp(1.55rem, 3.8vw, 2.1rem);
 }
 
 .article-content {
-  margin-top: 1rem;
-  padding: 1.15rem;
+  margin-top: 0.82rem;
+  padding: 0.96rem;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background: var(--surface);
@@ -1152,8 +1169,8 @@ li + li {
 
 .prose-shell {
   color: var(--text);
-  font-size: 1.02rem;
-  line-height: 1.78;
+  font-size: 0.98rem;
+  line-height: 1.72;
 }
 
 .prose-shell > *:last-child {
@@ -1252,7 +1269,7 @@ li + li {
 
 .site-footer {
   margin-top: auto;
-  padding: 1.15rem 2rem 1.6rem;
+  padding: 0.95rem 2rem 1.3rem;
 }
 
 .footer-content {
@@ -1303,7 +1320,7 @@ li + li {
   }
 
   .content-wrapper {
-    padding: 4.3rem 1rem 1.25rem;
+    padding: 4.2rem 1rem 1.1rem;
   }
 
   .hero,

@@ -26,17 +26,16 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
 <BaseLayout title={`${SITE.author} | Infrastructure Engineering Notes`} description={SITE.description}>
   <section class="hero panel" aria-labelledby="home-hero-title">
-    <div class="hero-kicker">Portfolio + technical knowledge base</div>
+    <div class="hero-kicker">Infrastructure portfolio</div>
     <h1 id="home-hero-title" class="hero-title">
-      Evidence-driven infrastructure work, documented as reusable notes.
+      Practical infrastructure notes with clear, reusable patterns.
     </h1>
     <p class="hero-description">
-      This site is optimized for showing real engineering focus areas: platform operations, automation, cloud delivery,
-      and privacy-aware AI experimentation. The content is static, fast, and intentionally low-risk for public hosting.
+      Operations, automation, cloud, and local AI work documented as concise implementation-first posts.
     </p>
 
     <div class="hero-actions">
-      <a href={withBase('about/')} class="action-link action-link-secondary">About</a>
+      <a href={withBase('about/')} class="action-link action-link-secondary">About me</a>
       <a href={withBase('archive/')} class="action-link action-link-secondary">Archive</a>
       {PUBLIC_CV.enabled && (
         <a
@@ -54,12 +53,12 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       <div class="panel panel-soft stat-card">
         <div class="stat-label">Published posts</div>
         <div class="stat-value">{publishedPosts.length}</div>
-        <div class="stat-meta">Markdown content, static build output</div>
+        <div class="stat-meta">Markdown-based engineering notes</div>
       </div>
       <div class="panel panel-soft stat-card">
         <div class="stat-label">Active domains</div>
         <div class="stat-value">{activeCategories.length}</div>
-        <div class="stat-meta">Infrastructure, cloud, snippets, local AI, more</div>
+        <div class="stat-meta">Clear topic split by category</div>
       </div>
       <div class="panel panel-soft stat-card">
         <div class="stat-label">Latest update</div>
@@ -68,42 +67,36 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
             ? latestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
             : 'No posts yet'}
         </div>
-        <div class="stat-meta">Recent activity visible from content timestamps</div>
+        <div class="stat-meta">Always visible from post dates</div>
       </div>
     </div>
   </section>
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="intent-title">
     <div class="section-header-row">
-      <h2 id="intent-title">Current intention</h2>
-      <a href={withBase('about/')} class="subtle-link">Profile overview</a>
+      <h2 id="intent-title">Focus</h2>
+      <a href={withBase('about/')} class="subtle-link">Profile</a>
     </div>
     <div class="signal-grid">
       <article class="panel panel-soft signal-card">
-        <h3>Show execution, not just claims</h3>
-        <p>
-          Posts are organized by delivery domain so the portfolio reads like a working knowledge archive rather than a resume-only page.
-        </p>
+        <h3>Execution over claims</h3>
+        <p>Posts are organized by delivery domain and centered on real implementation notes.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>Stay easy to maintain</h3>
-        <p>
-          Astro + Markdown + GitHub Pages keeps publishing friction low, which is the right tradeoff for a writing-first technical portfolio.
-        </p>
+        <h3>Simple publishing</h3>
+        <p>Astro + Markdown keeps maintenance low and writing flow fast.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>Public by design, private by default</h3>
-        <p>
-          Sensitive employer/contact details are omitted from the repo and site copy while keeping enough information to establish expertise.
-        </p>
+        <h3>Public-safe by default</h3>
+        <p>Content stays technical while avoiding private or employer-sensitive details.</p>
       </article>
     </div>
   </section>
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
     <div class="section-header-row">
-      <h2 id="domains-title">Knowledge areas</h2>
-      <a href={withBase('archive/')} class="subtle-link">Browse archive</a>
+      <h2 id="domains-title">Categories</h2>
+      <a href={withBase('archive/')} class="subtle-link">Browse all</a>
     </div>
     <div class="category-grid">
       {categoryCounts.map((category) => (
@@ -120,7 +113,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="latest-posts-title">
     <div class="section-header-row">
-      <h2 id="latest-posts-title">Latest notes</h2>
+      <h2 id="latest-posts-title">Recent posts</h2>
       <a href={withBase('archive/')} class="subtle-link">All posts</a>
     </div>
 
