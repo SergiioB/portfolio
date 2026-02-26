@@ -26,6 +26,7 @@ npm-debug.log*
 PRIVATE_NOTES.md
 private/
 private-docs/
+*.md
 
 # Syncthing internals
 .stfolder/
