@@ -37,10 +37,13 @@ const csp = [
     <meta name="author" content={SITE.author} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f6f7fb" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b0f19" />
     <meta http-equiv="Content-Security-Policy" content={csp} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <meta property="og:site_name" content={SITE.brand} />
     <meta property="og:title" content={title} />
