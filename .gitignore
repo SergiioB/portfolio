@@ -15,9 +15,17 @@ npm-debug.log*
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.kdbx
 
 # Private notes
 PRIVATE_NOTES.md
+private/
+private-docs/
 
 # Syncthing internals
 .stfolder/

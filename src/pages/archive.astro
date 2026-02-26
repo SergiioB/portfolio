@@ -2,18 +2,17 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CATEGORY_META } from '../content/categories';
+import { SITE } from '../config/site';
 import { withBase } from '../utils/paths';
 
 const posts = await getCollection('posts');
-const publishedPosts = posts.filter(p => !p.data.draft);
-const sortedPosts = publishedPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const sortedPosts = posts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Group posts by year
 const postsByYear = sortedPosts.reduce((acc, post) => {
   const year = post.data.pubDate.getFullYear();
-  if (!acc[year]) {
-    acc[year] = [];
-  }
+  if (!acc[year]) acc[year] = [];
   acc[year].push(post);
   return acc;
 }, {} as Record<number, typeof sortedPosts>);
@@ -21,40 +20,35 @@ const postsByYear = sortedPosts.reduce((acc, post) => {
 const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 ---
 
-<BaseLayout 
-  title="Archive | Sergio B." 
-  description="Browse all posts by year."
->
-  <nav class="breadcrumbs">
+<BaseLayout title={`Archive | ${SITE.author}`} description="Browse all published notes grouped by year.">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href={withBase()}>Home</a>
-    <span> / </span>
+    <span>/</span>
     <span>Archive</span>
   </nav>
 
-  <div class="page-header">
-    <h1>Archive</h1>
+  <header class="page-header page-header-tight">
+    <p class="eyebrow">Archive</p>
+    <h1>All published notes</h1>
     <p class="page-description">
-      {sortedPosts.length} posts across {years.length} year{years.length === 1 ? '' : 's'}.
+      {sortedPosts.length} post{sortedPosts.length === 1 ? '' : 's'} across {years.length} year{years.length === 1 ? '' : 's'}.
     </p>
-  </div>
+  </header>
 
   <div class="archive-content">
     {years.map((year) => (
-      <section class="archive-year">
-        <h2 class="archive-year-header">{year}</h2>
+      <section class="archive-year" aria-labelledby={`year-${year}`}>
+        <h2 id={`year-${year}`} class="archive-year-header">{year}</h2>
         <div class="archive-posts">
           {postsByYear[year].map((post) => (
-            <div class="archive-post">
-              <time class="archive-post-date">
-                {post.data.pubDate.toLocaleDateString('en-US', { 
-                  month: 'short',
-                  day: 'numeric'
-                })}
+            <div class="archive-post panel panel-soft">
+              <time class="archive-post-date" datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </time>
               <a href={withBase(`posts/${post.id}/`)} class="archive-post-title">
                 {post.data.title}
               </a>
-              <span class={`category-badge ${post.data.category}`} style="margin-left: auto;">
+              <span class={`category-badge archive-post-badge ${post.data.category}`}>
                 {CATEGORY_META[post.data.category].label}
               </span>
             </div>
@@ -62,87 +56,7 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
         </div>
       </section>
     ))}
-    
-    {years.length === 0 && (
-      <p class="empty-state">No posts published yet.</p>
-    )}
+
+    {years.length === 0 && <p class="empty-state panel panel-soft">No posts published yet.</p>}
   </div>
 </BaseLayout>
-
-<style>
-  .archive-content {
-    margin-top: 1rem;
-  }
-
-  .archive-year {
-    margin-bottom: 2rem;
-  }
-
-  .archive-year-header {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .archive-posts {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .archive-post {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .archive-post:last-child {
-    border-bottom: none;
-  }
-
-  .archive-post-date {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    min-width: 60px;
-    flex-shrink: 0;
-  }
-
-  .archive-post-title {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 0.95rem;
-    flex: 1;
-  }
-
-  .archive-post-title:hover {
-    color: var(--accent-strong);
-  }
-
-  .category-badge {
-    font-size: 0.65rem;
-  }
-
-  @media (max-width: 640px) {
-    .archive-post {
-      flex-wrap: wrap;
-      gap: 0.35rem;
-    }
-
-    .archive-post-title {
-      width: 100%;
-      order: 3;
-    }
-
-    .category-badge {
-      order: 2;
-      margin-left: 0 !important;
-    }
-  }
-</style>
