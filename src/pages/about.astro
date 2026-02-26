@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../utils/paths';
+---
+
+<BaseLayout title="About | Sergio B." description="Linux and Virtualization Engineer focused on Infrastructure Automation, RHEL lifecycle, and AI/Cloud projects.">
+  <nav class="breadcrumbs">
+    <a href={withBase()}>Home</a>
+    <span> / </span>
+    <span>About</span>
+  </nav>
+
+  <div class="page-header">
+    <h1>About</h1>
+    <p class="page-description">
+      Linux and Virtualization Engineer based in Madrid, focused on Infrastructure automation, 
+      RHEL lifecycle programs, and practical AI use cases in enterprise environments.
+    </p>
+  </div>
+
+  <section class="about-section">
+    <h2>Experience</h2>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <div>
+          <div class="experience-title">Linux and Virtualization Engineer</div>
+          <div class="experience-company">Deutsche Bank AG · Full-time</div>
+        </div>
+        <div class="experience-meta">
+          <div>Jul 2025 - Present</div>
+          <div>Madrid · Hybrid</div>
+        </div>
+      </div>
+      <div class="experience-content">
+        <ul>
+          <li>Architecting Infrastructure automation for server deployment with Ansible and Git-based change control.</li>
+          <li>Leading RHEL 7/8 to RHEL 9 migration strategy with Red Hat Satellite for lifecycle and provisioning.</li>
+          <li>Contributing to cloud and AI business initiatives with Azure AI Foundry, document intelligence, and fine-tuning workflows.</li>
+          <li>Operating middleware platforms (Apache Tomcat, JBoss Web Server) for enterprise workloads.</li>
+          <li>Driving security patching cycles, hardening, proactive monitoring (CheckMK), and HA/DR readiness.</li>
+          <li>Managing VMware vSphere infrastructure, system tuning, and stakeholder-facing technical consulting.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <div>
+          <div class="experience-title">Linux System Administrator</div>
+          <div class="experience-company">Sopra Steria · Full-time</div>
+        </div>
+        <div class="experience-meta">
+          <div>Nov 2023 - Jul 2025</div>
+          <div>Madrid · Hybrid</div>
+        </div>
+      </div>
+      <div class="experience-content">
+        <ul>
+          <li>Resolved incidents, requests, and changes through ServiceNow in production environments.</li>
+          <li>Provided advanced support for Linux (Red Hat) and Windows systems, including Azure workloads.</li>
+          <li>Applied automation-first delivery with Ansible to reduce manual operations.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <div>
+          <div class="experience-title">Information Technology Application Specialist</div>
+          <div class="experience-company">Sopra Steria · Full-time</div>
+        </div>
+        <div class="experience-meta">
+          <div>Apr 2023 - Jan 2025</div>
+          <div>Madrid</div>
+        </div>
+      </div>
+      <div class="experience-content">
+        <ul>
+          <li>Delivered multi-technology support with incident prioritization and efficient task planning.</li>
+          <li>Managed identity and workplace platforms: Azure Entra ID, Intune, and Exchange.</li>
+          <li>Coordinated delivery in an English-speaking international client project context.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <div>
+          <div class="experience-title">Internship Trainee</div>
+          <div class="experience-company">Sopra Steria · Internship</div>
+        </div>
+        <div class="experience-meta">
+          <div>Apr 2023 - Jun 2023</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <h2>Core Areas</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3>Infrastructure & OS</h3>
+        <p>RHEL 7/8/9, Linux administration, Windows Server, kernel/system operations.</p>
+      </div>
+      <div class="skill-card">
+        <h3>Automation</h3>
+        <p>Ansible, Git workflows, peer-reviewed Infrastructure changes, Satellite lifecycle management.</p>
+      </div>
+      <div class="skill-card">
+        <h3>Cloud & AI</h3>
+        <p>Azure, Azure AI Foundry, document intelligence, enterprise GenAI adoption patterns.</p>
+      </div>
+      <div class="skill-card">
+        <h3>Web & Middleware</h3>
+        <p>Apache Tomcat, JBoss Web Server, stable runtime operations for critical workloads.</p>
+      </div>
+      <div class="skill-card">
+        <h3>Monitoring & Ops</h3>
+        <p>CheckMK, ServiceNow, patching, hardening, high availability, DR planning and execution.</p>
+      </div>
+      <div class="skill-card">
+        <h3>Virtualization</h3>
+        <p>VMware vSphere server provisioning, configuration, and change implementation.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
