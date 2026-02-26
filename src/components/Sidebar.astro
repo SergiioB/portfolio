@@ -107,16 +107,14 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         </a>
       )}
 
-      <div class="sidebar-note">
-        <div class="sidebar-note-title">Privacy-first public profile</div>
-        <p>{SITE.contactNote}</p>
-      </div>
-
       {PUBLIC_LINKS.length > 0 && (
-        <div class="quick-links" aria-label="Public links">
-          {PUBLIC_LINKS.map((link) => (
-            <a href={link.href} target="_blank" rel="noopener noreferrer" class="quick-link">{link.label}</a>
-          ))}
+        <div class="sidebar-links" aria-label="Public links">
+          <div class="sidebar-links-title">Links</div>
+          <div class="quick-links">
+            {PUBLIC_LINKS.map((link) => (
+              <a href={link.href} target="_blank" rel="noopener noreferrer" class="quick-link">{link.label}</a>
+            ))}
+          </div>
         </div>
       )}
     </div>
