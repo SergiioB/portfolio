@@ -2262,7 +2262,7 @@ li+li {
 }
 
 .engineer-zone {
-  display: grid;
+  display: none;
   gap: 1rem;
 }
 
