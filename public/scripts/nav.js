@@ -120,23 +120,26 @@
     document.body.classList.add('booting');
 
     const bootLines = [
-      '$ date -Ins',
-      '$ uname -a',
-      'Linux rhel-core-01 5.14.0-503.35.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC',
-      '$ systemctl is-system-running',
-      'running',
-      '$ nmcli -t -f STATE g',
-      'connected',
-      '$ ssh -o BatchMode=yes sergiio@rhel-core-01',
-      '[ssh] handshake established · curve25519-sha256',
-      '[auth] publickey accepted for sergiio',
-      '$ ansible all -m ping --one-line',
-      '128 hosts reachable · 0 unreachable',
-      '$ podman ps --format "table {{.Names}}\t{{.Status}}"',
-      'inference-gw\tUp 2h',
-      '$ ./serve-llm --healthcheck qwen3.5-edge',
-      '[ai] model runtime warmed · deterministic policy active',
-      '[ok] engineer cockpit ready',
+      { text: '── PHASE 1: KERNEL ──────────────────────────', type: 'phase' },
+      { text: '$ uname -a', type: 'cmd' },
+      { text: 'Linux rhel-core-01 5.14.0-503.35.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC', type: '' },
+      { text: '$ systemctl is-system-running', type: 'cmd' },
+      { text: 'running', type: 'ok' },
+      { text: '── PHASE 2: NETWORK ─────────────────────────', type: 'phase' },
+      { text: '$ nmcli -t -f STATE g', type: 'cmd' },
+      { text: 'connected', type: 'ok' },
+      { text: '$ ssh -o BatchMode=yes sergiio@rhel-core-01', type: 'cmd' },
+      { text: '[ssh] curve25519-sha256 handshake ✓', type: 'accent' },
+      { text: '[auth] publickey accepted for sergiio', type: 'accent' },
+      { text: '── PHASE 3: ORCHESTRATION ───────────────────', type: 'phase' },
+      { text: '$ ansible all -m ping --one-line', type: 'cmd' },
+      { text: '128 hosts reachable · 0 unreachable', type: '' },
+      { text: '$ podman ps --format "{{.Names}}\\t{{.Status}}"', type: 'cmd' },
+      { text: 'inference-gw   Up 2h  ✓', type: 'ok' },
+      { text: '── PHASE 4: AI RUNTIME ──────────────────────', type: 'phase' },
+      { text: '$ ./serve-llm --healthcheck qwen3.5-edge', type: 'cmd' },
+      { text: '[ai] model runtime warmed · deterministic policy active', type: 'accent' },
+      { text: '[ok] all systems nominal · cockpit ready', type: 'ready' },
     ];
 
     const setProgress = (v) => {
@@ -166,20 +169,25 @@
       gateInput.select();
     };
 
-    const appendLine = (text) => {
+    const appendLine = (entry) => {
+      const text = typeof entry === 'string' ? entry : entry.text;
+      const type = typeof entry === 'string' ? '' : (entry.type || '');
       const line = document.createElement('div');
       line.className = 'boot-line';
-      if (text.includes('[ok]')) line.classList.add('boot-ok');
-      if (text.includes('[warn]')) line.classList.add('boot-warn');
-      if (text.includes('[ssh]') || text.includes('[auth]')) line.classList.add('boot-accent');
-      if (text.startsWith('$')) line.classList.add('boot-accent');
+      if (type === 'phase') line.classList.add('boot-phase');
+      else if (type === 'cmd') line.classList.add('boot-accent');
+      else if (type === 'ok') line.classList.add('boot-ok');
+      else if (type === 'accent') line.classList.add('boot-accent');
+      else if (type === 'ready') line.classList.add('boot-ready');
+      else if (text.includes('[ok]')) line.classList.add('boot-ok');
+      else if (text.includes('[warn]')) line.classList.add('boot-warn');
       line.textContent = text;
       output.appendChild(line);
       output.scrollTop = output.scrollHeight;
     };
 
     if (prefersReducedMotion && !force) {
-      appendLine('[ok] reduced-motion profile active · instant ready');
+      appendLine({ text: '[ok] reduced-motion profile active · instant ready', type: 'ok' });
       setProgress(100);
       boot.finishTimer = window.setTimeout(finalizeBoot, 120);
       return;
@@ -194,15 +202,20 @@
         boot.finishTimer = window.setTimeout(finalizeBoot, 260);
         return;
       }
-      appendLine(bootLines[lineIndex]);
+      const entry = bootLines[lineIndex];
+      appendLine(entry);
       lineIndex += 1;
       setProgress((lineIndex / bootLines.length) * 100);
-      boot.lineTimer = window.setTimeout(tick, 95 + Math.random() * 85);
+      /* Phase headers get a brief pause; commands are fast */
+      const delay = entry.type === 'phase' ? 140 + Math.random() * 60
+                  : entry.type === 'ready' ? 180
+                  : 55 + Math.random() * 65;
+      boot.lineTimer = window.setTimeout(tick, delay);
     };
 
     boot.failSafeTimer = window.setTimeout(() => {
       if (currentRun === boot.runId) { setProgress(100); finalizeBoot(); }
-    }, 9000);
+    }, 5000);
 
     tick();
   };
@@ -216,6 +229,104 @@
    *  overrode it — so closing the palette via `el.hidden = true` had zero
    *  visual effect.
    * ═══════════════════════════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Toast notification system
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const showToast = (message) => {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    window.setTimeout(() => {
+      toast.classList.remove('show');
+      toast.classList.add('hide');
+      window.setTimeout(() => toast.remove(), 300);
+    }, 2400);
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Scroll progress bar
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const initScrollProgress = () => {
+    let bar = document.querySelector('.scroll-progress-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'scroll-progress-bar';
+      document.body.appendChild(bar);
+    }
+    const update = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = progress + '%';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Animated stat counters (hero section)
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const initAnimatedCounters = () => {
+    const counters = document.querySelectorAll('[data-count-to]');
+    if (counters.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        const el = entry.target;
+        const target = parseInt(el.getAttribute('data-count-to'), 10);
+        if (isNaN(target)) return;
+        const duration = 1200;
+        const start = performance.now();
+        const tick = (now) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          /* Ease out cubic */
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.round(target * eased);
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.3 });
+
+    counters.forEach((c) => observer.observe(c));
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Sidebar session uptime counter
+   * ═══════════════════════════════════════════════════════════════════════ */
+  let uptimeInterval = 0;
+  const sessionStart = Date.now();
+
+  const initUptimeCounter = () => {
+    const el = document.querySelector('[data-uptime]');
+    if (!el) return;
+    if (uptimeInterval) window.clearInterval(uptimeInterval);
+    const update = () => {
+      const s = Math.floor((Date.now() - sessionStart) / 1000);
+      const m = Math.floor(s / 60);
+      const h = Math.floor(m / 60);
+      el.textContent = h > 0
+        ? h + 'h ' + (m % 60) + 'm ' + (s % 60) + 's'
+        : m > 0
+        ? m + 'm ' + (s % 60) + 's'
+        : s + 's';
+    };
+    update();
+    uptimeInterval = window.setInterval(update, 1000);
+  };
+
   let paletteIsOpen = false;
   let globalPaletteListenersBound = false;
 
@@ -267,11 +378,10 @@
 
     commands = [
       {
-        id: 'nav-home',
+        id: 'nav-home', group: 'Navigation', icon: '⌂',
         label: 'Go to Home',
         tags: 'navigation home index',
         run: () => {
-          /* If already on homepage, scroll to top instead of navigating. */
           if (normalizePath(window.location.pathname) === normalizePath(new URL(base, window.location.origin).pathname)) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
@@ -280,51 +390,53 @@
         },
       },
       {
-        id: 'nav-archive',
+        id: 'nav-archive', group: 'Navigation', icon: '▤',
         label: 'Go to Archive',
         tags: 'navigation archive posts',
         run: () => spaNavigate(base + 'archive/'),
       },
       {
-        id: 'nav-about',
+        id: 'nav-about', group: 'Navigation', icon: '◉',
         label: 'Go to About',
         tags: 'navigation about cv profile',
         run: () => spaNavigate(base + 'about/'),
       },
       {
-        id: 'nav-recruiter',
+        id: 'nav-recruiter', group: 'Navigation', icon: '★',
         label: 'Go to Recruiter Snapshot',
         tags: 'navigation recruiter hiring summary profile fit',
         run: () => scrollOrNav('recruiter-view'),
       },
       {
-        id: 'nav-topology',
+        id: 'nav-topology', group: 'Navigation', icon: '◈',
         label: 'Go to Network Topology',
         tags: 'navigation network topology latency map',
         run: () => scrollOrNav('network-topology'),
       },
       {
-        id: 'mode-hardcore',
+        id: 'mode-hardcore', group: 'Mode', icon: '⚡',
         label: 'Enable Hardcore Mode',
         tags: 'mode hardcore glitch intense',
         run: () => {
           window.localStorage.setItem('portfolio-mode', 'hardcore');
           document.body.classList.add('hardcore-mode');
           window.dispatchEvent(new CustomEvent('portfolio-request-mode', { detail: { mode: 'hardcore' } }));
+          showToast('Hardcore mode enabled');
         },
       },
       {
-        id: 'mode-normal',
+        id: 'mode-normal', group: 'Mode', icon: '○',
         label: 'Enable Normal Mode',
         tags: 'mode normal calm',
         run: () => {
           window.localStorage.setItem('portfolio-mode', 'normal');
           document.body.classList.remove('hardcore-mode');
           window.dispatchEvent(new CustomEvent('portfolio-request-mode', { detail: { mode: 'normal' } }));
+          showToast('Normal mode enabled');
         },
       },
       {
-        id: 'audience-recruiter',
+        id: 'audience-recruiter', group: 'Audience', icon: '◧',
         label: 'Switch to Recruiter Mode',
         tags: 'audience recruiter hiring concise',
         run: () => {
@@ -332,10 +444,11 @@
           document.body.classList.add('audience-recruiter');
           document.body.classList.remove('audience-engineer');
           window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode: 'recruiter' } }));
+          showToast('Recruiter mode active');
         },
       },
       {
-        id: 'audience-engineer',
+        id: 'audience-engineer', group: 'Audience', icon: '◨',
         label: 'Switch to Engineer Mode',
         tags: 'audience engineer labs technical',
         run: () => {
@@ -343,16 +456,17 @@
           document.body.classList.add('audience-engineer');
           document.body.classList.remove('audience-recruiter');
           window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode: 'engineer' } }));
+          showToast('Engineer mode active');
         },
       },
       {
-        id: 'boot-replay',
+        id: 'boot-replay', group: 'System', icon: '↻',
         label: 'Replay Boot Sequence',
         tags: 'boot preloader ssh startup replay',
         run: () => runBootSequence({ force: true }),
       },
       {
-        id: 'boot-gate',
+        id: 'boot-gate', group: 'System', icon: '⚿',
         label: 'Toggle Boot Unlock Gate',
         tags: 'boot unlock gate type unlock security',
         run: () => {
@@ -360,6 +474,7 @@
           const on = window.localStorage.getItem(key) === '1';
           window.localStorage.setItem(key, on ? '0' : '1');
           window.dispatchEvent(new CustomEvent('portfolio-boot-gate-change', { detail: { enabled: !on } }));
+          showToast(on ? 'Boot gate disabled' : 'Boot gate enabled');
         },
       },
     ];
@@ -372,17 +487,31 @@
     const q = (query || '').trim().toLowerCase();
     const filtered = commands.filter((c) => {
       if (!q) return true;
-      return c.label.toLowerCase().includes(q) || c.tags.toLowerCase().includes(q);
+      return c.label.toLowerCase().includes(q) || c.tags.toLowerCase().includes(q) || (c.group || '').toLowerCase().includes(q);
     });
     if (filtered.length === 0) {
       list.innerHTML = '<div class="command-item-empty">No command matched.</div>';
       return;
     }
-    list.innerHTML = filtered
-      .map((c, i) =>
-        '<button type="button" class="command-item' + (i === 0 ? ' active' : '') + '" data-cmd-id="' + c.id + '">' + c.label + '</button>'
-      )
-      .join('');
+    /* Group commands by category */
+    const groups = [];
+    const groupMap = new Map();
+    filtered.forEach((c) => {
+      const g = c.group || 'Other';
+      if (!groupMap.has(g)) { groupMap.set(g, []); groups.push(g); }
+      groupMap.get(g).push(c);
+    });
+    let html = '';
+    let isFirst = true;
+    groups.forEach((g) => {
+      html += '<div class="command-group-label">' + g + '</div>';
+      groupMap.get(g).forEach((c) => {
+        const icon = c.icon ? '<span class="command-icon">' + c.icon + '</span>' : '';
+        html += '<button type="button" class="command-item' + (isFirst ? ' active' : '') + '" data-cmd-id="' + c.id + '">' + icon + c.label + '</button>';
+        isFirst = false;
+      });
+    });
+    list.innerHTML = html;
   };
 
   const moveActive = (dir) => {
@@ -582,6 +711,9 @@
     /* 4. Other systems */
     initSidebar();
     initReveal();
+    initScrollProgress();
+    initAnimatedCounters();
+    initUptimeCounter();
 
     /* 5. Audience buttons */
     document.querySelectorAll('[data-set-audience]').forEach((btn) => {
