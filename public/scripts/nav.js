@@ -694,6 +694,12 @@
 
     elements.forEach((el, i) => {
       if (el.classList.contains('reveal')) return;
+      /* Skip elements inside .engineer-zone — their visibility is
+         controlled entirely by audience-mode display toggling. */
+      if (el.closest('.engineer-zone')) {
+        el.classList.add('in-view');
+        return;
+      }
       el.classList.add('reveal');
       el.style.transitionDelay = Math.min(i * 26, 170) + 'ms';
       observer.observe(el);
@@ -704,6 +710,15 @@
    *  Page init (runs on every Astro page load)
    * ═══════════════════════════════════════════════════════════════════════ */
   const initPage = () => {
+    /* 0. Immediately apply saved audience mode to body so CSS
+         visibility rules are active before any DOM work. */
+    try {
+      const savedAudience = window.localStorage.getItem('portfolio.audience.mode');
+      const isEngineer = savedAudience === 'engineer';
+      document.body.classList.toggle('audience-engineer', isEngineer);
+      document.body.classList.toggle('audience-recruiter', !isEngineer);
+    } catch {}
+
     /* 1. Immediately guarantee overlays are closed */
     closePalette();
     dismissBoot();
@@ -731,6 +746,15 @@
         const mode = btn.getAttribute('data-set-audience');
         if (mode) window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode } }));
       });
+    });
+
+    /* 6. Listen for audience changes to force-reveal engineer zone content */
+    window.addEventListener('portfolio-audience-change', (e) => {
+      if (e?.detail?.mode === 'engineer') {
+        document.querySelectorAll('.engineer-zone .reveal').forEach((el) => {
+          el.classList.add('in-view');
+        });
+      }
     });
   };
 

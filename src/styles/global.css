@@ -612,8 +612,8 @@ li+li {
 }
 
 .sidebar-search-input:focus-visible {
-  outline: 1px solid var(--link);
-  border-color: var(--link);
+  /* Glitch animation override — see bottom of file */
+  outline: none;
 }
 
 .sidebar-search-submit {
@@ -1458,9 +1458,8 @@ li+li {
 }
 
 .post-search-input:focus-visible {
-  outline: 1px solid var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 0 10px rgba(35, 134, 54, 0.2);
+  /* Glitch animation override — see bottom of file */
+  outline: none;
 }
 
 .post-search-status {
@@ -3364,4 +3363,73 @@ body.hardcore-mode .ops-alert-stream {
 
 .category-tile:hover {
   transform: translateY(-2px) scale(1.01);
+}
+
+/* ─── Search bar glitch animations ─── */
+@keyframes search-glitch-border {
+  0%, 100% { border-color: var(--border); box-shadow: none; }
+  10% { border-color: rgba(88, 166, 255, 0.6); box-shadow: 0 0 8px rgba(88, 166, 255, 0.2), inset 0 0 4px rgba(88, 166, 255, 0.05); }
+  20% { border-color: var(--border); box-shadow: none; }
+  30% { border-color: rgba(126, 231, 135, 0.5); box-shadow: 0 0 6px rgba(126, 231, 135, 0.15); }
+  35% { border-color: var(--border); box-shadow: none; }
+  70% { border-color: rgba(255, 123, 114, 0.4); box-shadow: 0 0 6px rgba(255, 123, 114, 0.12); }
+  75% { border-color: var(--border); box-shadow: none; }
+}
+
+@keyframes search-scanline {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 200%; }
+}
+
+.sidebar-search-input,
+.post-search-input {
+  position: relative;
+}
+
+.sidebar-search-input:focus-visible,
+.post-search-input:focus-visible {
+  outline: none;
+  border-color: rgba(88, 166, 255, 0.5);
+  box-shadow: 0 0 12px rgba(88, 166, 255, 0.18), 0 0 2px rgba(35, 134, 54, 0.3), inset 0 0 30px rgba(88, 166, 255, 0.03);
+  animation: search-glitch-border 3.2s steps(1) infinite;
+  background-image: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(88, 166, 255, 0.03) 50%,
+    transparent 100%
+  );
+  background-size: 100% 40%;
+  background-repeat: no-repeat;
+  animation: search-glitch-border 3.2s steps(1) infinite, search-scanline 2.8s linear infinite;
+}
+
+.sidebar-search-input::placeholder,
+.post-search-input::placeholder {
+  transition: color 200ms ease, letter-spacing 200ms ease;
+}
+
+.sidebar-search-input:focus-visible::placeholder,
+.post-search-input:focus-visible::placeholder {
+  color: rgba(88, 166, 255, 0.35);
+  letter-spacing: 0.14em;
+}
+
+/* Glitch flash on the search submit button */
+.sidebar-search-submit {
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-search-submit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(88, 166, 255, 0.15), transparent);
+  transform: translateX(-100%);
+  transition: none;
+}
+
+.sidebar-search-submit:hover::after {
+  transform: translateX(100%);
+  transition: transform 400ms ease;
 }
