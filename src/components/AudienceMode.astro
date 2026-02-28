@@ -1,78 +1,25 @@
 <section class="audience-switch panel panel-soft section-surface" aria-labelledby="audience-title" data-audience-switch>
   <div class="section-header-row audience-header">
-    <h2 id="audience-title">Choose Your View</h2>
-    <span class="audience-status" data-audience-status>Current: Recruiter Mode</span>
+    <h2 id="audience-title" data-i18n="audience.title">Choose Your View</h2>
+    <span class="audience-status" data-audience-status data-i18n="audience.currentRecruiter">Current: Recruiter Mode</span>
   </div>
 
   <div class="audience-toggle" role="tablist" aria-label="Audience mode selector">
-    <button type="button" class="audience-btn active" data-audience-mode="recruiter" aria-selected="true" role="tab">
+    <button type="button" class="audience-btn active" data-audience-mode="recruiter" aria-selected="true" role="tab" data-i18n="audience.recruiterMode">
       Recruiter Mode
     </button>
-    <button type="button" class="audience-btn" data-audience-mode="engineer" aria-selected="false" role="tab">
+    <button type="button" class="audience-btn" data-audience-mode="engineer" aria-selected="false" role="tab" data-i18n="audience.engineerMode">
       Engineer Mode
     </button>
   </div>
 
   <div class="audience-copy" data-audience-copy>
-    <p>
+    <p data-i18n="audience.copy">
       Recruiter view prioritizes impact, role fit, and business outcomes first. Engineer view enables full live labs,
       telemetry streams, and command simulations.
     </p>
   </div>
 </section>
-
-<script>
-  function initAudienceMode() {
-    const switches = document.querySelectorAll('[data-audience-switch]:not([data-initialized])');
-
-    switches.forEach((section) => {
-      section.setAttribute('data-initialized', 'true');
-
-      const status = section.querySelector('[data-audience-status]');
-      const buttons = Array.from(section.querySelectorAll('[data-audience-mode]'));
-      if (!status || buttons.length === 0) return;
-
-      const storageKey = 'portfolio.audience.mode';
-
-      const applyMode = (mode, persist = true) => {
-        const normalized = mode === 'engineer' ? 'engineer' : 'recruiter';
-
-        document.body.classList.toggle('audience-engineer', normalized === 'engineer');
-        document.body.classList.toggle('audience-recruiter', normalized === 'recruiter');
-
-        buttons.forEach((button) => {
-          const isActive = button.getAttribute('data-audience-mode') === normalized;
-          button.classList.toggle('active', isActive);
-          button.setAttribute('aria-selected', String(isActive));
-        });
-
-        status.textContent = `Current: ${normalized === 'engineer' ? 'Engineer Mode' : 'Recruiter Mode'}`;
-
-        if (persist) {
-          window.localStorage.setItem(storageKey, normalized);
-        }
-
-        window.dispatchEvent(new CustomEvent('portfolio-audience-change', { detail: { mode: normalized } }));
-      };
-
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const mode = button.getAttribute('data-audience-mode') || 'recruiter';
-          applyMode(mode);
-        });
-      });
-
-      const saved = window.localStorage.getItem(storageKey);
-      applyMode(saved === 'engineer' ? 'engineer' : 'recruiter', false);
-
-      window.addEventListener('portfolio-request-audience', (event) => {
-        const requested = event?.detail?.mode;
-        if (requested === 'engineer' || requested === 'recruiter') {
-          applyMode(requested);
-        }
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', initAudienceMode);
-</script>
+<!-- Button click handlers and state management are centralised in nav.js
+     (applyAudienceMode / initAudienceButtons) to avoid Astro module-timing
+     race conditions that previously caused the toggle to be unresponsive. -->

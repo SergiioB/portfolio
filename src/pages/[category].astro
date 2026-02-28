@@ -30,7 +30,7 @@ const catDescription =
 
 <BaseLayout title={`${catName} | ${SITE.author}`} description={catDescription}>
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href={withBase()}>Home</a>
+    <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
     <span>/</span>
     <span>{catName}</span>
   </nav>
@@ -46,7 +46,7 @@ const catDescription =
   </header>
 
   <section class="category-summary panel panel-soft" aria-label={`${catName} category summary`}>
-    <p>
+    <p data-i18n="catPage.caseSummary">
       Each post in this domain is written in case-study format: situation, issue, solution, usage context, and delivery impact.
     </p>
   </section>
@@ -58,6 +58,6 @@ const catDescription =
       <PostCard post={post} />
     ))}
 
-    {filteredPosts.length === 0 && <p class="empty-state panel panel-soft">No posts in this category yet.</p>}
+    {filteredPosts.length === 0 && <p class="empty-state panel panel-soft" data-i18n="catPage.noPosts">No posts in this category yet.</p>}
   </section>
 </BaseLayout>

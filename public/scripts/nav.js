@@ -18,6 +18,8 @@
    * ═══════════════════════════════════════════════════════════════════════ */
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const BOOT_COMPLETED_KEY = 'portfolio.boot.completed';
+  const AUDIENCE_KEY = 'portfolio.audience.mode';
+  const LANG_KEY = 'portfolio.lang';
 
   const getBase = () => {
     const brand = document.querySelector('.site-brand');
@@ -40,6 +42,90 @@
     document.body.appendChild(a);
     a.click();
     a.remove();
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  i18n runtime — language state + translation helper
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const getLang = () => {
+    try { return window.localStorage.getItem(LANG_KEY) === 'es' ? 'es' : 'en'; } catch { return 'en'; }
+  };
+
+  let currentLang = getLang();
+
+  /** Translate a key using the injected dictionary `window.__i18n`. */
+  const T = (key) => {
+    const dict = window.__i18n;
+    if (!dict || !dict[key]) return key;
+    return dict[key][currentLang] || dict[key].en || key;
+  };
+
+  /** Swap all `[data-i18n]` elements on the page to the current language. */
+  const applyI18nDom = () => {
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.getAttribute('data-i18n');
+      if (!key) return;
+      const text = T(key);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.setAttribute('placeholder', text);
+      } else {
+        el.textContent = text;
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (key) el.setAttribute('placeholder', T(key));
+    });
+    document.querySelectorAll('[data-i18n-label]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-label');
+      if (key) el.setAttribute('aria-label', T(key));
+    });
+    document.documentElement.lang = currentLang;
+  };
+
+  const setLang = (lang) => {
+    currentLang = lang === 'es' ? 'es' : 'en';
+    try { window.localStorage.setItem(LANG_KEY, currentLang); } catch {}
+    applyI18nDom();
+    buildCommands();
+    renderCommands('');
+    const audience = document.body.classList.contains('audience-engineer') ? 'engineer' : 'recruiter';
+    applyAudienceMode(audience, false);
+    window.dispatchEvent(new CustomEvent('portfolio-lang-change', { detail: { lang: currentLang } }));
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Console Easter egg
+   * ═══════════════════════════════════════════════════════════════════════ */
+  let easterEggPrinted = false;
+  const printConsoleEgg = () => {
+    if (easterEggPrinted) return;
+    easterEggPrinted = true;
+    const art = [
+      '%c┌─────────────────────────────────────────────────┐',
+      '│  sergio@portfolio:~$ cat /etc/motd               │',
+      '│                                                   │',
+      '│  ███████╗███████╗██████╗  ██████╗ ██╗ ██████╗    │',
+      '│  ██╔════╝██╔════╝██╔══██╗██╔════╝ ██║██╔═══██╗   │',
+      '│  ███████╗█████╗  ██████╔╝██║  ███╗██║██║   ██║   │',
+      '│  ╚════██║██╔══╝  ██╔══██╗██║   ██║██║██║   ██║   │',
+      '│  ███████║███████╗██║  ██║╚██████╔╝██║╚██████╔╝   │',
+      '│  ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝ ╚═════╝   │',
+      '│                                                   │',
+      '│  Nice! You opened DevTools. Try Ctrl+K for the   │',
+      '│  command palette, or type "mode hardcore" in the  │',
+      '│  Ops Cockpit CLI.                                 │',
+      '│                                                   │',
+      '│  Stack: Astro 5 · Vanilla JS · Zero frameworks    │',
+      '│  i18n: EN/ES · State: localStorage + body classes  │',
+      '│                                                   │',
+      '└─────────────────────────────────────────────────┘',
+    ].join('\n');
+    console.log(art, 'color: #7ee787; font-family: monospace; font-size: 11px;');
+    console.log(
+      '%c💡 Tip: This site is fully bilingual (EN/ES). Use the language toggle or Ctrl+K → "Switch language".',
+      'color: #58a6ff; font-size: 11px;'
+    );
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -100,6 +186,18 @@
     if (!force && hasCompletedBoot()) {
       dismissBoot();
       return;
+    }
+
+    /* UX improvement: skip boot entirely for recruiter-mode visitors */
+    if (!force) {
+      try {
+        const audience = window.localStorage.getItem(AUDIENCE_KEY);
+        if (audience !== 'engineer') {
+          dismissBoot();
+          markBootCompleted();
+          return;
+        }
+      } catch {}
     }
 
     boot.runId += 1;
@@ -335,6 +433,102 @@
     uptimeInterval = window.setInterval(update, 1000);
   };
 
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Audience mode (Recruiter / Engineer) — centralised state management
+   *
+   *  Every audience toggle on the page funnels through applyAudienceMode().
+   *  This avoids depending on Astro-bundled module scripts that may race
+   *  against the page-load event.
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const applyAudienceMode = (mode, persist = true) => {
+    const normalized = mode === 'engineer' ? 'engineer' : 'recruiter';
+
+    document.body.classList.toggle('audience-engineer', normalized === 'engineer');
+    document.body.classList.toggle('audience-recruiter', normalized === 'recruiter');
+
+    /* Sync AudienceMode component tab buttons */
+    document.querySelectorAll('[data-audience-mode]').forEach((btn) => {
+      const isActive = btn.getAttribute('data-audience-mode') === normalized;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+    });
+
+    /* Sync status text */
+    document.querySelectorAll('[data-audience-status]').forEach((el) => {
+      el.textContent = normalized === 'engineer' ? T('audience.currentEngineer') : T('audience.currentRecruiter');
+    });
+
+    if (persist) {
+      try { window.localStorage.setItem(AUDIENCE_KEY, normalized); } catch {}
+    }
+
+    window.dispatchEvent(new CustomEvent('portfolio-audience-change', { detail: { mode: normalized } }));
+  };
+
+  const initAudienceButtons = () => {
+    /* Bind [data-set-audience] buttons (teaser "Switch to Engineer Mode", etc.) */
+    document.querySelectorAll('[data-set-audience]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-set-audience');
+        if (mode) applyAudienceMode(mode);
+      });
+    });
+
+    /* Bind [data-audience-mode] tab buttons (AudienceMode component) */
+    document.querySelectorAll('[data-audience-mode]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-audience-mode') || 'recruiter';
+        applyAudienceMode(mode);
+      });
+    });
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Typewriter (WHOAMI hero title)
+   *
+   *  Moved here from an Astro component <script> to guarantee execution —
+   *  nav.js initialises via a plain `defer` <script> with a window.load
+   *  fallback, so it never misses the page-load event.
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const initTypewriter = () => {
+    const el = document.getElementById('typewriter');
+    if (!el || el.dataset.typed) return;
+    el.dataset.typed = 'true';
+
+    const text = T('hero.typewriter');
+    const h1 = document.getElementById('home-hero-title');
+    let i = 0;
+
+    /* prefers-reduced-motion: show text instantly */
+    if (prefersReducedMotion) {
+      el.textContent = text;
+      if (h1) { h1.setAttribute('data-text', text + '_'); h1.classList.add('glitch'); }
+      return;
+    }
+
+    function type() {
+      /* Pause typing while boot overlay is active */
+      if (document.body.classList.contains('booting')) {
+        window.addEventListener('portfolio-boot-complete', type, { once: true });
+        return;
+      }
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, Math.random() * 40 + 20);
+      } else if (h1) {
+        h1.setAttribute('data-text', text + '_');
+        h1.classList.add('glitch');
+      }
+    }
+
+    setTimeout(type, 150);
+  };
+
   let paletteIsOpen = false;
   let globalPaletteListenersBound = false;
 
@@ -386,9 +580,9 @@
 
     commands = [
       {
-        id: 'nav-home', group: 'Navigation', icon: '⌂',
-        label: 'Go to Home',
-        tags: 'navigation home index',
+        id: 'nav-home', group: T('cmd.groupNav'), icon: '⌂',
+        label: T('cmd.goHome'),
+        tags: 'navigation home index inicio',
         run: () => {
           if (normalizePath(window.location.pathname) === normalizePath(new URL(base, window.location.origin).pathname)) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -398,91 +592,95 @@
         },
       },
       {
-        id: 'nav-archive', group: 'Navigation', icon: '▤',
-        label: 'Go to Archive',
-        tags: 'navigation archive posts',
+        id: 'nav-archive', group: T('cmd.groupNav'), icon: '▤',
+        label: T('cmd.goArchive'),
+        tags: 'navigation archive posts archivo',
         run: () => spaNavigate(base + 'archive/'),
       },
       {
-        id: 'nav-about', group: 'Navigation', icon: '◉',
-        label: 'Go to About',
-        tags: 'navigation about cv profile',
+        id: 'nav-about', group: T('cmd.groupNav'), icon: '◉',
+        label: T('cmd.goAbout'),
+        tags: 'navigation about cv profile acerca',
         run: () => spaNavigate(base + 'about/'),
       },
       {
-        id: 'nav-recruiter', group: 'Navigation', icon: '★',
-        label: 'Go to Recruiter Snapshot',
-        tags: 'navigation recruiter hiring summary profile fit',
+        id: 'nav-recruiter', group: T('cmd.groupNav'), icon: '★',
+        label: T('cmd.goRecruiter'),
+        tags: 'navigation recruiter hiring summary reclutador',
         run: () => scrollOrNav('recruiter-view'),
       },
       {
-        id: 'nav-topology', group: 'Navigation', icon: '◈',
-        label: 'Go to Network Topology',
-        tags: 'navigation network topology latency map',
+        id: 'nav-topology', group: T('cmd.groupNav'), icon: '◈',
+        label: T('cmd.goTopology'),
+        tags: 'navigation network topology latency topologia',
         run: () => scrollOrNav('network-topology'),
       },
       {
-        id: 'mode-hardcore', group: 'Mode', icon: '⚡',
-        label: 'Enable Hardcore Mode',
+        id: 'mode-hardcore', group: T('cmd.groupMode'), icon: '⚡',
+        label: T('cmd.hardcoreEnable'),
         tags: 'mode hardcore glitch intense',
         run: () => {
           window.localStorage.setItem('portfolio-mode', 'hardcore');
           document.body.classList.add('hardcore-mode');
           window.dispatchEvent(new CustomEvent('portfolio-request-mode', { detail: { mode: 'hardcore' } }));
-          showToast('Hardcore mode enabled');
+          showToast(T('toast.hardcoreEnabled'));
         },
       },
       {
-        id: 'mode-normal', group: 'Mode', icon: '○',
-        label: 'Enable Normal Mode',
+        id: 'mode-normal', group: T('cmd.groupMode'), icon: '○',
+        label: T('cmd.normalEnable'),
         tags: 'mode normal calm',
         run: () => {
           window.localStorage.setItem('portfolio-mode', 'normal');
           document.body.classList.remove('hardcore-mode');
           window.dispatchEvent(new CustomEvent('portfolio-request-mode', { detail: { mode: 'normal' } }));
-          showToast('Normal mode enabled');
+          showToast(T('toast.normalEnabled'));
         },
       },
       {
-        id: 'audience-recruiter', group: 'Audience', icon: '◧',
-        label: 'Switch to Recruiter Mode',
-        tags: 'audience recruiter hiring concise',
+        id: 'audience-recruiter', group: T('cmd.groupAudience'), icon: '◧',
+        label: T('cmd.recruiterSwitch'),
+        tags: 'audience recruiter hiring concise reclutador',
         run: () => {
-          window.localStorage.setItem('portfolio.audience.mode', 'recruiter');
-          document.body.classList.add('audience-recruiter');
-          document.body.classList.remove('audience-engineer');
-          window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode: 'recruiter' } }));
-          showToast('Recruiter mode active');
+          applyAudienceMode('recruiter');
+          showToast(T('toast.recruiterActive'));
         },
       },
       {
-        id: 'audience-engineer', group: 'Audience', icon: '◨',
-        label: 'Switch to Engineer Mode',
-        tags: 'audience engineer labs technical',
+        id: 'audience-engineer', group: T('cmd.groupAudience'), icon: '◨',
+        label: T('cmd.engineerSwitch'),
+        tags: 'audience engineer labs technical ingeniero',
         run: () => {
-          window.localStorage.setItem('portfolio.audience.mode', 'engineer');
-          document.body.classList.add('audience-engineer');
-          document.body.classList.remove('audience-recruiter');
-          window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode: 'engineer' } }));
-          showToast('Engineer mode active');
+          applyAudienceMode('engineer');
+          showToast(T('toast.engineerActive'));
         },
       },
       {
-        id: 'boot-replay', group: 'System', icon: '↻',
-        label: 'Replay Boot Sequence',
-        tags: 'boot preloader ssh startup replay',
+        id: 'lang-switch', group: T('cmd.groupLang'), icon: '🌐',
+        label: T('cmd.switchLang'),
+        tags: 'language idioma english español spanish lang',
+        run: () => {
+          const nextLang = currentLang === 'en' ? 'es' : 'en';
+          setLang(nextLang);
+          showToast(T('toast.langSwitched'));
+        },
+      },
+      {
+        id: 'boot-replay', group: T('cmd.groupSystem'), icon: '↻',
+        label: T('cmd.bootReplay'),
+        tags: 'boot preloader ssh startup replay arranque',
         run: () => runBootSequence({ force: true }),
       },
       {
-        id: 'boot-gate', group: 'System', icon: '⚿',
-        label: 'Toggle Boot Unlock Gate',
-        tags: 'boot unlock gate type unlock security',
+        id: 'boot-gate', group: T('cmd.groupSystem'), icon: '⚿',
+        label: T('cmd.bootGate'),
+        tags: 'boot unlock gate puerta',
         run: () => {
           const key = 'portfolio.boot.gate';
           const on = window.localStorage.getItem(key) === '1';
           window.localStorage.setItem(key, on ? '0' : '1');
           window.dispatchEvent(new CustomEvent('portfolio-boot-gate-change', { detail: { enabled: !on } }));
-          showToast(on ? 'Boot gate disabled' : 'Boot gate enabled');
+          showToast(on ? T('toast.bootGateDisabled') : T('toast.bootGateEnabled'));
         },
       },
     ];
@@ -498,7 +696,7 @@
       return c.label.toLowerCase().includes(q) || c.tags.toLowerCase().includes(q) || (c.group || '').toLowerCase().includes(q);
     });
     if (filtered.length === 0) {
-      list.innerHTML = '<div class="command-item-empty">No command matched.</div>';
+      list.innerHTML = '<div class="command-item-empty">' + T('palette.noMatch') + '</div>';
       return;
     }
     /* Group commands by category */
@@ -579,6 +777,23 @@
 
     /* External event to open palette */
     window.addEventListener('portfolio-open-palette', openPalette);
+
+    /* Audience mode: handle requests from any source (once, globally) */
+    window.addEventListener('portfolio-request-audience', (event) => {
+      const requested = event?.detail?.mode;
+      if (requested === 'engineer' || requested === 'recruiter') {
+        applyAudienceMode(requested);
+      }
+    });
+
+    /* Force-reveal engineer zone content when switching to engineer mode */
+    window.addEventListener('portfolio-audience-change', (e) => {
+      if (e?.detail?.mode === 'engineer') {
+        document.querySelectorAll('.engineer-zone .reveal').forEach((el) => {
+          el.classList.add('in-view');
+        });
+      }
+    });
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -630,6 +845,23 @@
 
     /* Initial render */
     renderCommands('');
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Language switcher button binding
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const initLangSwitcher = () => {
+    document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        const nextLang = currentLang === 'en' ? 'es' : 'en';
+        setLang(nextLang);
+        showToast(T('toast.langSwitched'));
+        /* Update the button label itself */
+        btn.textContent = T('lang.switch');
+      });
+    });
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -710,52 +942,49 @@
    *  Page init (runs on every Astro page load)
    * ═══════════════════════════════════════════════════════════════════════ */
   const initPage = () => {
-    /* 0. Immediately apply saved audience mode to body so CSS
-         visibility rules are active before any DOM work. */
-    try {
-      const savedAudience = window.localStorage.getItem('portfolio.audience.mode');
-      const isEngineer = savedAudience === 'engineer';
-      document.body.classList.toggle('audience-engineer', isEngineer);
-      document.body.classList.toggle('audience-recruiter', !isEngineer);
-    } catch {}
+    /* 0. Restore language preference */
+    currentLang = getLang();
 
-    /* 1. Immediately guarantee overlays are closed */
+    /* 1. Apply saved audience mode immediately so CSS visibility
+         rules are active before any DOM-dependent work runs. */
+    try {
+      const saved = window.localStorage.getItem(AUDIENCE_KEY);
+      applyAudienceMode(saved === 'engineer' ? 'engineer' : 'recruiter', false);
+    } catch {
+      applyAudienceMode('recruiter', false);
+    }
+
+    /* 2. Immediately guarantee overlays are closed */
     closePalette();
     dismissBoot();
 
-    /* 2. Boot (sessionStorage-guarded) */
+    /* 3. Boot (sessionStorage-guarded, recruiter-skipped) */
     runBootSequence();
 
-    /* 3. Palette */
+    /* 4. Palette */
     buildCommands();
     bindGlobalListeners();   /* no-op after first call */
     bindPalettePage();
 
-    /* 4. Other systems */
+    /* 5. Other systems */
     initSidebar();
     initReveal();
     initScrollProgress();
     initAnimatedCounters();
     initUptimeCounter();
 
-    /* 5. Audience buttons */
-    document.querySelectorAll('[data-set-audience]').forEach((btn) => {
-      if (btn.dataset.bound === '1') return;
-      btn.dataset.bound = '1';
-      btn.addEventListener('click', () => {
-        const mode = btn.getAttribute('data-set-audience');
-        if (mode) window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode } }));
-      });
-    });
+    /* 6. Typewriter (hero WHOAMI animation) */
+    initTypewriter();
 
-    /* 6. Listen for audience changes to force-reveal engineer zone content */
-    window.addEventListener('portfolio-audience-change', (e) => {
-      if (e?.detail?.mode === 'engineer') {
-        document.querySelectorAll('.engineer-zone .reveal').forEach((el) => {
-          el.classList.add('in-view');
-        });
-      }
-    });
+    /* 7. Audience mode buttons (teaser + AudienceMode tabs) */
+    initAudienceButtons();
+
+    /* 8. Language switcher + apply i18n DOM text */
+    initLangSwitcher();
+    applyI18nDom();
+
+    /* 9. Console Easter egg */
+    printConsoleEgg();
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════

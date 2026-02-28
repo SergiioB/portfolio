@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { CATEGORY_META } from '../content/categories';
 import { SITE } from '../config/site';
 import { withBase } from '../utils/paths';
+import { t } from '../config/i18n';
 import PostSearch from '../components/PostSearch.astro';
 
 const posts = await getCollection('posts');
@@ -23,16 +24,16 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 
 <BaseLayout title={`Archive | ${SITE.author}`} description="Chronological archive of technical case studies.">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href={withBase()}>Home</a>
+    <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
     <span>/</span>
-    <span>Archive</span>
+    <span data-i18n="archive.eyebrow">Archive</span>
   </nav>
 
   <header class="page-header page-header-tight">
-    <p class="eyebrow">Archive</p>
-    <h1>All Case Studies</h1>
+    <p class="eyebrow" data-i18n="archive.eyebrow">Archive</p>
+    <h1 data-i18n="archive.title">All Case Studies</h1>
     <p class="page-description">
-      {sortedPosts.length} post{sortedPosts.length === 1 ? '' : 's'} grouped by year, each with clear issue and solution framing.
+      {sortedPosts.length} <span data-i18n="archive.description">posts grouped by year, each with clear issue and solution framing.</span>
     </p>
   </header>
 
@@ -80,6 +81,6 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
       </section>
     ))}
 
-    {years.length === 0 && <p class="empty-state panel panel-soft">No posts published yet.</p>}
+    {years.length === 0 && <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">No posts published yet.</p>}
   </div>
 </BaseLayout>

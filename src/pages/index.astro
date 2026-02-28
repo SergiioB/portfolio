@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
 import { PUBLIC_CV, SITE } from '../config/site';
 import { withBase } from '../utils/paths';
+import { t } from '../config/i18n';
 import CategoryAnimation from '../components/CategoryAnimation.astro';
 import EngineerLab from '../components/EngineerLab.astro';
 import OpsDeck from '../components/OpsDeck.astro';
@@ -33,39 +34,18 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <section class="hero panel" aria-labelledby="home-hero-title">
     <CategoryAnimation category="ai" />
     <div class="hero-content" style="position: relative; z-index: 10;">
-      <div class="hero-kicker" style="color: var(--accent); font-weight: 600;">sergio@portfolio:~$ whoami</div>
+      <div class="hero-kicker" style="color: var(--accent); font-weight: 600;" data-i18n="hero.kicker">sergio@portfolio:~$ whoami</div>
       <h1 id="home-hero-title" class="hero-title" style="min-height: 2.3em;">
         <span id="typewriter"></span><span class="cursor-blink" style="color: var(--accent);">_</span>
       </h1>
-      <script>
-        document.addEventListener('astro:page-load', () => {
-          const text = "Production ops and platform modernization field notes";
-          const el = document.getElementById('typewriter');
-          if (!el || el.dataset.typed) return;
-          el.dataset.typed = 'true';
-          const h1 = document.getElementById('home-hero-title');
-          let i = 0;
-          function type() {
-            if (i < text.length) {
-              el.innerHTML += text.charAt(i);
-              i++;
-              setTimeout(type, Math.random() * 40 + 20);
-            } else if (h1) {
-              h1.setAttribute('data-text', text + '_');
-              h1.classList.add('glitch');
-            }
-          }
-          setTimeout(type, 150);
-        });
-      </script>
-      <p class="hero-description">
+      <p class="hero-description" data-i18n="hero.description">
         Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.
       </p>
 
       <div class="hero-actions">
-      <a href="#recruiter-view" class="action-link">Recruiter View</a>
-      <a href={withBase('about/')} class="action-link action-link-secondary">About + CV</a>
-      <a href={withBase('archive/')} class="action-link action-link-secondary">Archive</a>
+      <a href="#recruiter-view" class="action-link" data-i18n="hero.recruiterView">Recruiter View</a>
+      <a href={withBase('about/')} class="action-link action-link-secondary" data-i18n="hero.aboutCv">About + CV</a>
+      <a href={withBase('archive/')} class="action-link action-link-secondary" data-i18n="hero.archive">Archive</a>
       {PUBLIC_CV.enabled && (
         <a
           href={publicCvHref}
@@ -81,44 +61,44 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
     <div class="hero-grid">
       <div class="panel panel-soft stat-card">
-        <div class="stat-label">Current role</div>
-        <div class="stat-value stat-value-sm">Linux & Virtualization Engineer</div>
-        <div class="stat-meta">Deutsche Pfandbriefbank AG · Madrid · Hybrid</div>
+        <div class="stat-label" data-i18n="hero.currentRole">Current role</div>
+        <div class="stat-value stat-value-sm" data-i18n="hero.roleTitle">Linux & Virtualization Engineer</div>
+        <div class="stat-meta" data-i18n="hero.roleCompany">Deutsche Pfandbriefbank AG · Madrid · Hybrid</div>
       </div>
       <div class="panel panel-soft stat-card">
-        <div class="stat-label">Published posts</div>
+        <div class="stat-label" data-i18n="hero.publishedPosts">Published posts</div>
         <div class="stat-value" data-count-to={String(publishedPosts.length)}>0</div>
-        <div class="stat-meta">Case-study driven technical notes</div>
+        <div class="stat-meta" data-i18n="hero.postsMeta">Case-study driven technical notes</div>
       </div>
       <div class="panel panel-soft stat-card">
-        <div class="stat-label">Last update</div>
+        <div class="stat-label" data-i18n="hero.lastUpdate">Last update</div>
         <div class="stat-value stat-value-sm">
           {latestDate
             ? latestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
             : 'No posts yet'}
         </div>
-        <div class="stat-meta">Archive-first publishing flow</div>
+        <div class="stat-meta" data-i18n="hero.archiveFirst">Archive-first publishing flow</div>
       </div>
     </div>
   </section>
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="focus-title">
     <div class="section-header-row">
-      <h2 id="focus-title">Delivery Focus</h2>
-      <a href={withBase('about/')} class="subtle-link">Profile</a>
+      <h2 id="focus-title" data-i18n="focus.title">Delivery Focus</h2>
+      <a href={withBase('about/')} class="subtle-link" data-i18n="focus.profile">Profile</a>
     </div>
     <div class="signal-grid">
       <article class="panel panel-soft signal-card">
-        <h3>Infrastructure automation at scale</h3>
-        <p>Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.</p>
+        <h3 data-i18n="focus.infraTitle">Infrastructure automation at scale</h3>
+        <p data-i18n="focus.infraDesc">Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>RHEL modernization</h3>
-        <p>RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.</p>
+        <h3 data-i18n="focus.rhelTitle">RHEL modernization</h3>
+        <p data-i18n="focus.rhelDesc">RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>Applied enterprise AI</h3>
-        <p>Azure AI Foundry and document intelligence pilots translated into operationally viable workloads.</p>
+        <h3 data-i18n="focus.aiTitle">Applied enterprise AI</h3>
+        <p data-i18n="focus.aiDesc">Azure AI Foundry and document intelligence pilots translated into operationally viable workloads.</p>
       </article>
     </div>
   </section>
@@ -127,36 +107,36 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
   <section id="recruiter-view" class="section-block panel panel-soft section-surface recruiter-focus" aria-labelledby="recruiter-title">
     <div class="section-header-row">
-      <h2 id="recruiter-title">Recruiter Snapshot</h2>
-      <a href={withBase('about/')} class="subtle-link">Full profile</a>
+      <h2 id="recruiter-title" data-i18n="recruiter.title">Recruiter Snapshot</h2>
+      <a href={withBase('about/')} class="subtle-link" data-i18n="recruiter.fullProfile">Full profile</a>
     </div>
-    <div class="recruiter-badge">● Recruiter-ready overview</div>
-    <p class="recruiter-summary">
+    <div class="recruiter-badge" data-i18n="recruiter.badge">● Recruiter-ready overview</div>
+    <p class="recruiter-summary" data-i18n="recruiter.summary">
       Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability,
       and practical enterprise AI implementation.
     </p>
     <div class="recruiter-grid">
       <article class="panel panel-soft recruiter-card">
-        <h3>Role fit</h3>
+        <h3 data-i18n="recruiter.roleFit">Role fit</h3>
         <ul>
-          <li>Linux platform administration in enterprise environments</li>
-          <li>Infrastructure as code with Ansible + Git workflow discipline</li>
-          <li>Cross-team delivery from design through operational handoff</li>
+          <li data-i18n="recruiter.roleFit1">Linux platform administration in enterprise environments</li>
+          <li data-i18n="recruiter.roleFit2">Infrastructure as code with Ansible + Git workflow discipline</li>
+          <li data-i18n="recruiter.roleFit3">Cross-team delivery from design through operational handoff</li>
         </ul>
       </article>
       <article class="panel panel-soft recruiter-card">
-        <h3>Top outcomes</h3>
+        <h3 data-i18n="recruiter.topOutcomes">Top outcomes</h3>
         <ul>
-          <li>Patch and lifecycle orchestration patterns for safer rollouts</li>
-          <li>RHEL modernization playbooks for controlled migrations</li>
-          <li>Applied AI pilots documented from prototype to operations</li>
+          <li data-i18n="recruiter.outcome1">Patch and lifecycle orchestration patterns for safer rollouts</li>
+          <li data-i18n="recruiter.outcome2">RHEL modernization playbooks for controlled migrations</li>
+          <li data-i18n="recruiter.outcome3">Applied AI pilots documented from prototype to operations</li>
         </ul>
       </article>
       <article class="panel panel-soft recruiter-card">
-        <h3>Quick actions</h3>
+        <h3 data-i18n="recruiter.quickActions">Quick actions</h3>
         <ul>
-          <li><a href={withBase('about/')}>Open profile and experience summary</a></li>
-          <li><a href={withBase('archive/')}>Review all case studies</a></li>
+          <li><a href={withBase('about/')} data-i18n="recruiter.openProfile">Open profile and experience summary</a></li>
+          <li><a href={withBase('archive/')} data-i18n="recruiter.reviewStudies">Review all case studies</a></li>
           {PUBLIC_CV.enabled && (
             <li>
               <a
@@ -172,17 +152,17 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       </article>
     </div>
     <div class="recruiter-cta-card">
-      <p>Ready to review full experience and delivery outcomes?</p>
-      <a href={withBase('about/')} class="action-link">Open Profile &amp; CV</a>
+      <p data-i18n="recruiter.ctaText">Ready to review full experience and delivery outcomes?</p>
+      <a href={withBase('about/')} class="action-link" data-i18n="recruiter.ctaButton">Open Profile &amp; CV</a>
     </div>
   </section>
 
   <section class="engineer-zone-teaser panel panel-soft section-surface" data-engineer-zone-teaser>
     <div class="section-header-row">
-      <h2>Engineer Labs</h2>
-      <button type="button" class="action-link" data-set-audience="engineer">Switch to Engineer Mode</button>
+      <h2 data-i18n="engineer.labsTitle">Engineer Labs</h2>
+      <button type="button" class="action-link" data-set-audience="engineer" data-i18n="engineer.switchButton">Switch to Engineer Mode</button>
     </div>
-    <p>
+    <p data-i18n="engineer.teaserText">
       Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry,
       command simulation, and network topology labs.
     </p>
@@ -198,8 +178,8 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
     <div class="section-header-row">
-      <h2 id="domains-title">Domains</h2>
-      <a href={withBase('archive/')} class="subtle-link">Browse all</a>
+      <h2 id="domains-title" data-i18n="domains.title">Domains</h2>
+      <a href={withBase('archive/')} class="subtle-link" data-i18n="domains.browseAll">Browse all</a>
     </div>
     <div class="category-grid">
       {categoryCounts.map((category) => (
@@ -212,13 +192,13 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         </a>
       ))}
     </div>
-    <p class="post-count">{activeCategories.length} active domains with published case studies.</p>
+    <p class="post-count"><span>{activeCategories.length}</span> <span data-i18n="domains.activeDomains">active domains with published case studies.</span></p>
   </section>
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="latest-posts-title">
     <div class="section-header-row">
-      <h2 id="latest-posts-title">Recent Case Studies</h2>
-      <a href={withBase('archive/')} class="subtle-link">All posts</a>
+      <h2 id="latest-posts-title" data-i18n="posts.recent">Recent Case Studies</h2>
+      <a href={withBase('archive/')} class="subtle-link" data-i18n="posts.allPosts">All posts</a>
     </div>
 
     <div class="post-feed" aria-label="Latest posts">
@@ -226,7 +206,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         <PostCard post={post} />
       ))}
 
-      {publishedPosts.length === 0 && <p class="empty-state panel panel-soft">No posts published yet.</p>}
+      {publishedPosts.length === 0 && <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">No posts published yet.</p>}
     </div>
   </section>
 </BaseLayout>

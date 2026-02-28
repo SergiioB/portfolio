@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
 import { PUBLIC_CV, PUBLIC_LINKS, SITE } from '../config/site';
 import { withBase } from '../utils/paths';
+import { t } from '../config/i18n';
 
 const posts = await getCollection('posts');
 const publishedPosts = posts.filter((post) => !post.data.draft);
@@ -33,15 +34,15 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 <aside class="sidebar" id="site-sidebar" data-sidebar>
   <div class="sidebar-header">
     <a href={withBase()} class="site-brand" aria-label="Homepage">
-      <span class="brand-name glitch" data-text={SITE.brand}>{SITE.brand}</span>
-      <span class="brand-tagline">{SITE.role}</span>
+      <span class="brand-name glitch" data-text={SITE.brand} data-i18n="site.brand">{SITE.brand}</span>
+      <span class="brand-tagline" data-i18n="site.role">{SITE.role}</span>
     </a>
-    <p class="sidebar-intro">{SITE.profileSummary}</p>
+    <p class="sidebar-intro" data-i18n="site.profileSummary">{SITE.profileSummary}</p>
   </div>
 
   <div class="sidebar-body" id="sidebar-nav-shell">
     <form class="sidebar-search" role="search" method="get" action={withBase('archive/')}>
-      <label class="sidebar-search-label" for="sidebar-post-search">Search</label>
+      <label class="sidebar-search-label" for="sidebar-post-search" data-i18n="nav.search">Search</label>
       <div class="sidebar-search-row">
         <div style="position: relative; display: flex; align-items: center; width: 100%;">
           <span style="position: absolute; left: 0.7rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent);">~$</span>
@@ -52,31 +53,32 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
             name="q"
             autocomplete="off"
             placeholder="grep post..."
+            data-i18n-placeholder="nav.searchPlaceholder"
             style="padding-left: 2rem;"
           />
         </div>
-        <button class="sidebar-search-submit" type="submit">Go</button>
+        <button class="sidebar-search-submit" type="submit" data-i18n="nav.go">Go</button>
       </div>
     </form>
 
     <nav class="sidebar-nav" aria-label="Primary navigation">
       <div class="nav-section">
-        <div class="nav-section-title">Portfolio</div>
+        <div class="nav-section-title" data-i18n="nav.portfolio">Portfolio</div>
         <ul class="nav-list">
           <li class="nav-item">
-            <a href={withBase()} class:list={['nav-link', { active: isActive(withBase()) }]}>Home</a>
+            <a href={withBase()} class:list={['nav-link', { active: isActive(withBase()) }]} data-i18n="nav.home">Home</a>
           </li>
           <li class="nav-item">
-            <a href={withBase('archive/')} class:list={['nav-link', { active: isActive(withBase('archive/')) }]}>Archive</a>
+            <a href={withBase('archive/')} class:list={['nav-link', { active: isActive(withBase('archive/')) }]} data-i18n="nav.archive">Archive</a>
           </li>
           <li class="nav-item">
-            <a href={withBase('about/')} class:list={['nav-link', { active: isActive(withBase('about/')) }]}>About + CV</a>
+            <a href={withBase('about/')} class:list={['nav-link', { active: isActive(withBase('about/')) }]} data-i18n="nav.about">About + CV</a>
           </li>
         </ul>
       </div>
 
       <div class="nav-section">
-        <div class="nav-section-title">Domains</div>
+        <div class="nav-section-title" data-i18n="nav.domains">Domains</div>
         <ul class="nav-list">
           {categoryCounts.map((cat) => (
             <li class="nav-item">
@@ -94,7 +96,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
       {years.length > 0 && (
         <div class="nav-section">
-          <div class="nav-section-title">Years</div>
+          <div class="nav-section-title" data-i18n="nav.years">Years</div>
           <ul class="nav-list compact-list">
             {years.slice(0, 8).map((year) => (
               <li class="nav-item">
@@ -118,12 +120,16 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         </a>
       )}
 
-      <div class="sidebar-uptime">Session: <span data-uptime>0s</span></div>
-      <div class="sidebar-palette-hint">Command palette: <kbd>Ctrl</kbd>+<kbd>K</kbd></div>
+      <div class="sidebar-uptime" data-i18n-session><span data-i18n="nav.session">Session:</span> <span data-uptime>0s</span></div>
+      <div class="sidebar-palette-hint"><span data-i18n="nav.commandPalette">Command palette:</span> <kbd>Ctrl</kbd>+<kbd>K</kbd></div>
+
+      <button class="lang-toggle-btn" type="button" data-lang-toggle aria-label="Switch language" data-i18n-label="lang.switchLabel">
+        <span data-i18n="lang.switch">ES</span>
+      </button>
 
       {PUBLIC_LINKS.length > 0 && (
         <div class="sidebar-links" aria-label="Public links">
-          <div class="sidebar-links-title">Links</div>
+          <div class="sidebar-links-title" data-i18n="nav.links">Links</div>
           <div class="quick-links">
             {PUBLIC_LINKS.map((link) => (
               <a href={link.href} target="_blank" rel="noopener noreferrer" class="quick-link">{link.label}</a>

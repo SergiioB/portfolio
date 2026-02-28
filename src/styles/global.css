@@ -3325,6 +3325,31 @@ body.hardcore-mode .ops-alert-stream {
   color: var(--text-soft);
 }
 
+/* ─── Language toggle button ─── */
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.6rem;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: rgba(22, 27, 34, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.lang-toggle-btn:hover {
+  background: rgba(56, 139, 253, 0.12);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
 /* ─── Animated stat counter shimmer ─── */
 .stat-value[data-count-to] {
   transition: color 300ms ease;
