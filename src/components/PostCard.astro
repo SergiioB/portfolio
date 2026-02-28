@@ -54,7 +54,7 @@ const searchText = [
       {CATEGORY_META[category].label}
     </a>
     <span aria-hidden="true">•</span>
-    <span>{readingTime} min read</span>
+    <span>{readingTime} <span data-i18n="posts.minRead">min read</span></span>
   </div>
 
   <h2 class="post-title">
@@ -65,9 +65,9 @@ const searchText = [
 
   {(issue || solution || usedIn) && (
     <ul class="post-highlights" aria-label="Case study highlights">
-      {issue && <li><strong>Issue:</strong> {issue}</li>}
-      {solution && <li><strong>Solution:</strong> {solution}</li>}
-      {usedIn && <li><strong>Used In:</strong> {usedIn}</li>}
+      {issue && <li><strong data-i18n="posts.issue">Issue:</strong> {issue}</li>}
+      {solution && <li><strong data-i18n="posts.solution">Solution:</strong> {solution}</li>}
+      {usedIn && <li><strong data-i18n="posts.usedIn">Used In:</strong> {usedIn}</li>}
     </ul>
   )}
 

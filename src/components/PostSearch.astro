@@ -14,7 +14,7 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll('/', '-') || 
 ---
 
 <section class="post-search panel panel-soft" aria-label="Post search">
-  <label class="post-search-label" for={inputId}>Search posts</label>
+  <label class="post-search-label" for={inputId} data-i18n="archive.searchPosts">Search posts</label>
   <input
     id={inputId}
     class="post-search-input"
@@ -24,7 +24,7 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll('/', '-') || 
     placeholder={placeholder ?? 'Search by title, issue, tags...'}
   />
   <p id={statusId} class="post-search-status" aria-live="polite"></p>
-  <p id={emptyId} class="post-search-empty" hidden>No matches.</p>
+  <p id={emptyId} class="post-search-empty" hidden data-i18n="archive.noMatches">No matches.</p>
 </section>
 
 <script is:inline define:vars={{ inputId, statusId, emptyId, itemSelector, sectionSelector }}>

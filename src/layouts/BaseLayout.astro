@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar.astro';
 import { SITE } from '../config/site';
 import { withBase } from '../utils/paths';
 import { ViewTransitions } from 'astro:transitions';
+import { dictionary, t } from '../config/i18n';
 
 interface Props {
   title: string;
@@ -22,7 +23,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: https:",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "connect-src 'none'",
+  "connect-src 'self'",
   "frame-src 'none'",
   "manifest-src 'self'",
   'upgrade-insecure-requests',
@@ -59,6 +60,38 @@ const csp = [
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
 
+    <!-- AI-friendly meta -->
+    <meta name="ai-content-type" content="developer-portfolio" />
+    <meta name="ai-author" content={SITE.author} />
+    <meta name="ai-summary" content="Portfolio of Sergio B., Linux & Virtualization Engineer. Case-study driven technical notes on RHEL lifecycle, Ansible automation, enterprise AI, and infrastructure delivery. Bilingual: English and Spanish." />
+    <meta name="ai-topics" content="Linux, RHEL, Ansible, VMware, Azure AI, Infrastructure, Automation, DevOps, Platform Engineering" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": canonicalUrl + "#person",
+          "name": SITE.author,
+          "jobTitle": "Linux & Virtualization Engineer",
+          "worksFor": { "@type": "Organization", "name": "Deutsche Pfandbriefbank AG" },
+          "url": Astro.site?.toString() ?? canonicalUrl,
+          "knowsAbout": ["Linux", "RHEL", "Ansible", "VMware vSphere", "Azure AI", "Infrastructure Automation", "Enterprise AI", "Platform Engineering"],
+          "sameAs": ["https://github.com/SergiioB", "https://linkedin.com/in/sergio-barrientos-dev"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": canonicalUrl + "#website",
+          "name": SITE.brand,
+          "url": Astro.site?.toString() ?? canonicalUrl,
+          "description": description,
+          "inLanguage": ["en", "es"],
+          "author": { "@id": canonicalUrl + "#person" }
+        }
+      ]
+    })} />
+
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
     <ViewTransitions />
@@ -67,16 +100,16 @@ const csp = [
     <div class="boot-sequence done" data-boot-sequence aria-hidden="true">
       <div class="boot-shell" role="presentation">
         <div class="boot-head">
-          <span class="boot-title">Booting Engineer Runtime</span>
+          <span class="boot-title" data-i18n="boot.title">Booting Engineer Runtime</span>
           <span class="boot-host">ssh://sergiio@rhel-core-01</span>
         </div>
         <div class="boot-meta">
           <span class="boot-percent" data-boot-percent>0%</span>
-          <span class="boot-hint">Click to skip · Esc to continue instantly</span>
+          <span class="boot-hint" data-i18n="boot.hint">Click to skip · Esc to continue instantly</span>
         </div>
         <div class="boot-output" data-boot-output></div>
         <div class="boot-gate" data-boot-gate hidden>
-          <label for="boot-gate-input" class="boot-gate-label">Type unlock to continue</label>
+          <label for="boot-gate-input" class="boot-gate-label" data-i18n="boot.gateLabel">Type unlock to continue</label>
           <div class="boot-gate-row">
             <span class="boot-gate-prompt">root@runtime:~#</span>
             <input id="boot-gate-input" class="boot-gate-input" data-boot-gate-input type="text" autocomplete="off" spellcheck="false" />
@@ -92,16 +125,17 @@ const csp = [
       <div class="command-palette-backdrop" data-command-palette-close></div>
       <div class="command-palette-shell" role="dialog" aria-modal="true" aria-labelledby="command-palette-title">
         <div class="command-palette-head">
-          <h2 id="command-palette-title">Engineer Command Palette</h2>
+          <h2 id="command-palette-title" data-i18n="palette.title">Engineer Command Palette</h2>
           <div class="command-palette-head-actions">
             <span class="command-palette-hint">Ctrl/Cmd + K</span>
-            <button class="command-palette-close" type="button" data-command-palette-close aria-label="Close command palette">Close</button>
+            <button class="command-palette-close" type="button" data-command-palette-close aria-label="Close command palette" data-i18n="palette.close">Close</button>
           </div>
         </div>
         <input
           class="command-palette-input"
           data-command-palette-input
           type="text"
+          data-i18n-placeholder="palette.searchPlaceholder"
           placeholder="Search commands... (mode, nav, boot)"
           autocomplete="off"
         />
@@ -109,7 +143,7 @@ const csp = [
       </div>
     </div>
 
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a class="skip-link" href="#main-content" data-i18n="nav.skipToContent">Skip to content</a>
 
     <div class="site-shell">
       <Sidebar />
@@ -121,14 +155,15 @@ const csp = [
 
         <footer class="site-footer" aria-label="Site footer">
           <div class="footer-content">
-            <span>{SITE.brand}</span>
+            <span data-i18n="site.brand">{SITE.brand}</span>
             <span aria-hidden="true">•</span>
-            <span>Case-study driven engineering portfolio</span>
+            <span data-i18n="site.footer">Case-study driven engineering portfolio</span>
           </div>
         </footer>
       </main>
     </div>
 
+    <script is:inline define:vars={{ i18nDict: dictionary }}>window.__i18n = i18nDict;</script>
     <script src={withBase('scripts/nav.js')} defer></script>
   </body>
 </html>

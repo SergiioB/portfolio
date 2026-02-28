@@ -1,8 +1,8 @@
 <section class="ops-deck section-block panel panel-soft section-surface" aria-labelledby="ops-deck-title" data-ops-deck>
   <div class="section-header-row ops-deck-header">
-    <h2 id="ops-deck-title">Ops Cockpit · top + command sandbox</h2>
+    <h2 id="ops-deck-title" data-i18n="opsDeck.title">Ops Cockpit · top + command sandbox</h2>
     <div class="ops-head-actions">
-      <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false">Mode: Normal</button>
+      <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" data-i18n="opsDeck.modeNormal">Mode: Normal</button>
       <span class="ops-deck-status" data-ops-status>load avg: 0.72 0.61 0.43</span>
     </div>
   </div>
@@ -11,22 +11,22 @@
 
   <div class="ops-kpis" aria-label="Live infrastructure signals">
     <article class="ops-kpi-card panel panel-soft" data-kpi="cpu">
-      <p class="ops-kpi-label">CPU load</p>
+      <p class="ops-kpi-label" data-i18n="opsDeck.cpu">CPU load</p>
       <p class="ops-kpi-value" data-kpi-value>32%</p>
       <div class="ops-kpi-bar"><span data-kpi-bar style="width: 32%"></span></div>
     </article>
     <article class="ops-kpi-card panel panel-soft" data-kpi="memory">
-      <p class="ops-kpi-label">Memory pressure</p>
+      <p class="ops-kpi-label" data-i18n="opsDeck.memory">Memory pressure</p>
       <p class="ops-kpi-value" data-kpi-value>44%</p>
       <div class="ops-kpi-bar"><span data-kpi-bar style="width: 44%"></span></div>
     </article>
     <article class="ops-kpi-card panel panel-soft" data-kpi="errors">
-      <p class="ops-kpi-label">Error rate</p>
+      <p class="ops-kpi-label" data-i18n="opsDeck.errors">Error rate</p>
       <p class="ops-kpi-value" data-kpi-value>0.6%</p>
       <div class="ops-kpi-bar"><span data-kpi-bar style="width: 6%"></span></div>
     </article>
     <article class="ops-kpi-card panel panel-soft" data-kpi="cache">
-      <p class="ops-kpi-label">Prompt cache hit</p>
+      <p class="ops-kpi-label" data-i18n="opsDeck.cache">Prompt cache hit</p>
       <p class="ops-kpi-value" data-kpi-value>78%</p>
       <div class="ops-kpi-bar"><span data-kpi-bar style="width: 78%"></span></div>
     </article>
@@ -35,8 +35,8 @@
   <div class="ops-grid">
     <article class="ops-top panel panel-soft" aria-labelledby="ops-top-title">
       <div class="ops-top-head">
-        <h3 id="ops-top-title">Process monitor</h3>
-        <p class="ops-top-meta">click headers to sort · values stream live</p>
+        <h3 id="ops-top-title" data-i18n="opsDeck.processTitle">Process monitor</h3>
+        <p class="ops-top-meta" data-i18n="opsDeck.processMeta">click headers to sort · values stream live</p>
       </div>
 
       <div class="ops-top-table-wrap" role="region" aria-label="Live process table">
@@ -57,8 +57,8 @@
 
     <article class="ops-cli panel panel-soft" aria-labelledby="ops-cli-title">
       <div class="ops-cli-head">
-        <h3 id="ops-cli-title">Command sandbox</h3>
-        <p class="ops-top-meta">try: top · journalctl -n 5 · ansible --version · ai.health</p>
+        <h3 id="ops-cli-title" data-i18n="opsDeck.sandboxTitle">Command sandbox</h3>
+        <p class="ops-top-meta" data-i18n="opsDeck.sandboxMeta">try: top · journalctl -n 5 · ansible --version · ai.health</p>
       </div>
 
       <div class="ops-cli-output" data-cli-output aria-live="polite" aria-atomic="false"></div>
@@ -66,15 +66,18 @@
       <form class="ops-cli-form" data-cli-form>
         <label for="ops-cli-input" class="sr-only">Linux command input</label>
         <span class="ops-prompt">sergio@rhel-lab:~$</span>
-        <input id="ops-cli-input" type="text" name="command" autocomplete="off" placeholder="Type a command..." />
-        <button type="submit">Run</button>
+        <input id="ops-cli-input" type="text" name="command" autocomplete="off" placeholder="Type a command..." data-i18n-placeholder="opsDeck.inputPlaceholder" />
+        <button type="submit" data-i18n="opsDeck.run">Run</button>
       </form>
 
       <div class="ops-cli-chips" aria-label="Quick commands">
         <button type="button" class="ops-chip" data-command="top">top</button>
+        <button type="button" class="ops-chip" data-command="ls">ls</button>
         <button type="button" class="ops-chip" data-command="journalctl -n 5">journalctl -n 5</button>
         <button type="button" class="ops-chip" data-command="ansible --version">ansible --version</button>
         <button type="button" class="ops-chip" data-command="ai.health">ai.health</button>
+        <button type="button" class="ops-chip" data-command="whoami">whoami</button>
+        <button type="button" class="ops-chip" data-command="uname -a">uname -a</button>
         <button type="button" class="ops-chip" data-command="mode hardcore">mode hardcore</button>
       </div>
     </article>
@@ -121,7 +124,7 @@
       const maxLines = 120;
 
       const commands = {
-        help: ['Available commands: top, journalctl -n 5, ansible --version, ai.health, mode normal, mode hardcore, palette, clear'],
+        help: ['Available commands: top, journalctl -n 5, ansible --version, ai.health, mode normal, mode hardcore, palette, clear, ls, pwd, whoami, uname -a, uptime, df -h, free -m, cat /etc/os-release, hostname, date, id'],
         'ansible --version': [
           'ansible [core 2.17.5]',
           'python version = 3.12.2',
@@ -141,6 +144,36 @@
           'cache_hit=79.2% fallback=disabled',
           'guardrails=enabled deterministic=true',
         ],
+        'ls': [
+          'ansible/  docs/  playbooks/  roles/  scripts/',
+          'README.md  inventory.yml  site.yml  vault.yml',
+        ],
+        'pwd': ['/home/sergio/infra-ops'],
+        'whoami': ['sergio'],
+        'uname -a': ['Linux rhel-core-01 5.14.0-503.35.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux'],
+        'uptime': [' 17:22:01 up 16 days,  3:18,  1 user,  load average: 0.72, 0.61, 0.43'],
+        'df -h': [
+          'Filesystem      Size  Used Avail Use% Mounted on',
+          '/dev/mapper/rl-root   50G   18G   33G  35% /',
+          '/dev/sda1            1014M  263M  752M  26% /boot',
+          '/dev/mapper/rl-home   98G   42G   56G  44% /home',
+        ],
+        'free -m': [
+          '              total        used        free      shared  buff/cache   available',
+          'Mem:          32098       11042       10214        1228       10841       19525',
+          'Swap:          4096           0        4096',
+        ],
+        'cat /etc/os-release': [
+          'NAME="Red Hat Enterprise Linux"',
+          'VERSION="9.5 (Plow)"',
+          'ID="rhel"',
+          'PLATFORM_ID="platform:el9"',
+          'PRETTY_NAME="Red Hat Enterprise Linux 9.5 (Plow)"',
+          'CPE_NAME="cpe:/o:redhat:enterprise_linux:9::baseos"',
+        ],
+        'hostname': ['rhel-core-01.internal.lab'],
+        'date': [new Date().toUTCString()],
+        'id': ['uid=1000(sergio) gid=1000(sergio) groups=1000(sergio),10(wheel),994(docker)'],
       };
 
       const telemetryMessages = [
@@ -295,6 +328,9 @@
         const hardcoreEnabled = mode === 'hardcore';
         document.body.classList.toggle('hardcore-mode', hardcoreEnabled);
         modeToggle.textContent = hardcoreEnabled ? 'Mode: Hardcore' : 'Mode: Normal';
+        if (typeof T === 'function') {
+          modeToggle.textContent = hardcoreEnabled ? T('opsDeck.modeHardcore') : T('opsDeck.modeNormal');
+        }
         modeToggle.setAttribute('aria-pressed', String(hardcoreEnabled));
         if (persist) {
           window.localStorage.setItem('portfolio-mode', mode);
@@ -355,7 +391,8 @@
           });
         } else {
           appendLine(`bash: ${command}: command not found`, 'error');
-          appendLine('Try `help` for available commands.', 'warn');
+          const helpHint = typeof T === 'function' ? T('opsDeck.helpHint') : 'Try `help` for available commands.';
+          appendLine(helpHint, 'warn');
         }
       };
 

@@ -2,146 +2,147 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { PUBLIC_CV, SITE } from '../config/site';
 import { withBase } from '../utils/paths';
+import { t } from '../config/i18n';
 
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 ---
 
 <BaseLayout title={`About | ${SITE.author}`} description="Professional profile, impact statements, and CV summary.">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href={withBase()}>Home</a>
+    <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
     <span>/</span>
-    <span>About</span>
+    <span data-i18n="about.pageTitle">About</span>
   </nav>
 
   <header class="page-header page-header-tight">
-    <p class="eyebrow">Profile</p>
-    <h1>Linux & Virtualization Engineer with automation-first execution.</h1>
-    <p class="page-description">
+    <p class="eyebrow" data-i18n="about.eyebrow">Profile</p>
+    <h1 data-i18n="about.headline">Linux & Virtualization Engineer with automation-first execution.</h1>
+    <p class="page-description" data-i18n="about.intro">
       I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge
       infrastructure operations with practical Generative AI implementations.
     </p>
   </header>
 
   <section class="about-section" aria-labelledby="summary-title">
-    <h2 id="summary-title">Professional Snapshot</h2>
+    <h2 id="summary-title" data-i18n="about.snapshot">Professional Snapshot</h2>
     <div class="signal-grid">
       <article class="panel panel-soft signal-card">
-        <h3>Infrastructure lifecycle ownership</h3>
-        <p>RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.</p>
+        <h3 data-i18n="about.infraTitle">Infrastructure lifecycle ownership</h3>
+        <p data-i18n="about.infraDesc">RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>Automation discipline</h3>
-        <p>Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.</p>
+        <h3 data-i18n="about.autoTitle">Automation discipline</h3>
+        <p data-i18n="about.autoDesc">Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>AI integration for business cases</h3>
-        <p>Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.</p>
+        <h3 data-i18n="about.aiTitle">AI integration for business cases</h3>
+        <p data-i18n="about.aiDesc">Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.</p>
       </article>
     </div>
   </section>
 
   <section class="about-section" aria-labelledby="experience-title">
-    <h2 id="experience-title">Experience</h2>
+    <h2 id="experience-title" data-i18n="about.experience">Experience</h2>
     <div class="timeline">
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3>Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG</h3>
-            <p class="timeline-subtitle">Full-time · Hybrid · Madrid, Comunidad de Madrid, España</p>
+            <h3 data-i18n="exp.pbb.title">Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG</h3>
+            <p class="timeline-subtitle" data-i18n="exp.pbb.subtitle">Full-time · Hybrid · Madrid, Comunidad de Madrid, España</p>
           </div>
-          <p class="timeline-period">Jul 2025 - Present</p>
+          <p class="timeline-period" data-i18n="exp.pbb.period">Jul 2025 - Present</p>
         </div>
         <ul>
-          <li>Architect automated server deployment and lifecycle workflows with Ansible + Git version control.</li>
-          <li>Lead RHEL 7/8 to RHEL 9 migration strategy and Satellite-based provisioning and software distribution.</li>
-          <li>Operate Apache Tomcat and JBoss web environments for high-demand application workloads.</li>
-          <li>Own end-to-end patching and hardening cycles with compliance-oriented operational controls.</li>
-          <li>Manage HA clusters and participate in DR plan execution/testing across distributed datacenters.</li>
-          <li>Drive VMware vSphere administration for provisioning, reconfiguration, and platform maintenance.</li>
-          <li>Collaborate on GenAI business use cases with Azure AI Foundry and document intelligence pipelines.</li>
-          <li>Act as infrastructure consultant for application owners, translating requirements into delivery plans.</li>
+          <li data-i18n="exp.pbb.1">Architect automated server deployment and lifecycle workflows with Ansible + Git version control.</li>
+          <li data-i18n="exp.pbb.2">Lead RHEL 7/8 to RHEL 9 migration strategy and Satellite-based provisioning and software distribution.</li>
+          <li data-i18n="exp.pbb.3">Operate Apache Tomcat and JBoss web environments for high-demand application workloads.</li>
+          <li data-i18n="exp.pbb.4">Own end-to-end patching and hardening cycles with compliance-oriented operational controls.</li>
+          <li data-i18n="exp.pbb.5">Manage HA clusters and participate in DR plan execution/testing across distributed datacenters.</li>
+          <li data-i18n="exp.pbb.6">Drive VMware vSphere administration for provisioning, reconfiguration, and platform maintenance.</li>
+          <li data-i18n="exp.pbb.7">Collaborate on GenAI business use cases with Azure AI Foundry and document intelligence pipelines.</li>
+          <li data-i18n="exp.pbb.8">Act as infrastructure consultant for application owners, translating requirements into delivery plans.</li>
         </ul>
       </article>
 
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3>Information Technology Application Specialist - Linux System Administrator · Sopra Steria</h3>
-            <p class="timeline-subtitle">Full-time · Hybrid · Madrid, Community of Madrid, Spain</p>
+            <h3 data-i18n="exp.sopra1.title">Information Technology Application Specialist - Linux System Administrator · Sopra Steria</h3>
+            <p class="timeline-subtitle" data-i18n="exp.sopra1.subtitle">Full-time · Hybrid · Madrid, Community of Madrid, Spain</p>
           </div>
-          <p class="timeline-period">Nov 2023 - Jul 2025</p>
+          <p class="timeline-period" data-i18n="exp.sopra1.period">Nov 2023 - Jul 2025</p>
         </div>
         <ul>
-          <li>Handled incidents, service requests, and change operations in ITSM-governed environments.</li>
-          <li>Supported Linux/Windows application platforms with strong troubleshooting and SLA execution.</li>
-          <li>Administered Active Directory connected workflows and operational support for enterprise users.</li>
+          <li data-i18n="exp.sopra1.1">Handled incidents, service requests, and change operations in ITSM-governed environments.</li>
+          <li data-i18n="exp.sopra1.2">Supported Linux/Windows application platforms with strong troubleshooting and SLA execution.</li>
+          <li data-i18n="exp.sopra1.3">Administered Active Directory connected workflows and operational support for enterprise users.</li>
         </ul>
       </article>
 
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3>Information Technology Application Specialist · Sopra Steria</h3>
-            <p class="timeline-subtitle">Full-time · Madrid, Community of Madrid, Spain</p>
+            <h3 data-i18n="exp.sopra2.title">Information Technology Application Specialist · Sopra Steria</h3>
+            <p class="timeline-subtitle" data-i18n="exp.sopra2.subtitle">Full-time · Madrid, Community of Madrid, Spain</p>
           </div>
-          <p class="timeline-period">Apr 2023 - Jan 2025</p>
+          <p class="timeline-period" data-i18n="exp.sopra2.period">Apr 2023 - Jan 2025</p>
         </div>
         <ul>
-          <li>Delivered advanced technical support across multiple technologies in enterprise production contexts.</li>
-          <li>Contributed to cloud-transition support initiatives and workplace modernization programs.</li>
-          <li>Worked across global collaboration environments with structured escalation and resolution flows.</li>
+          <li data-i18n="exp.sopra2.1">Delivered advanced technical support across multiple technologies in enterprise production contexts.</li>
+          <li data-i18n="exp.sopra2.2">Contributed to cloud-transition support initiatives and workplace modernization programs.</li>
+          <li data-i18n="exp.sopra2.3">Worked across global collaboration environments with structured escalation and resolution flows.</li>
         </ul>
       </article>
 
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3>Internship Trainee · Sopra Steria</h3>
-            <p class="timeline-subtitle">Internship · Madrid, Community of Madrid, Spain</p>
+            <h3 data-i18n="exp.intern.title">Internship Trainee · Sopra Steria</h3>
+            <p class="timeline-subtitle" data-i18n="exp.intern.subtitle">Internship · Madrid, Community of Madrid, Spain</p>
           </div>
-          <p class="timeline-period">Apr 2023 - Jun 2023</p>
+          <p class="timeline-period" data-i18n="exp.intern.period">Apr 2023 - Jun 2023</p>
         </div>
         <ul>
-          <li>Built foundations in incident handling, directory services, and enterprise support workflows.</li>
+          <li data-i18n="exp.intern.1">Built foundations in incident handling, directory services, and enterprise support workflows.</li>
         </ul>
       </article>
     </div>
   </section>
 
   <section class="about-section" aria-labelledby="areas-title">
-    <h2 id="areas-title">Core Areas</h2>
+    <h2 id="areas-title" data-i18n="about.coreAreas">Core Areas</h2>
     <div class="skills-grid">
       <article class="skill-card panel panel-soft">
-        <h3>Linux Platform Engineering</h3>
-        <p>RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.</p>
+        <h3 data-i18n="skill.linux">Linux Platform Engineering</h3>
+        <p data-i18n="skill.linux.desc">RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.</p>
       </article>
       <article class="skill-card panel panel-soft">
-        <h3>Automation & Governance</h3>
-        <p>Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.</p>
+        <h3 data-i18n="skill.auto">Automation & Governance</h3>
+        <p data-i18n="skill.auto.desc">Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.</p>
       </article>
       <article class="skill-card panel panel-soft">
-        <h3>Virtualization & Datacenter Ops</h3>
-        <p>VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.</p>
+        <h3 data-i18n="skill.virt">Virtualization & Datacenter Ops</h3>
+        <p data-i18n="skill.virt.desc">VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.</p>
       </article>
       <article class="skill-card panel panel-soft">
-        <h3>Middleware Operations</h3>
-        <p>Apache Tomcat/JBoss environments, SSL and identity integrations, and performance-focused runtime support.</p>
+        <h3 data-i18n="skill.mid">Middleware Operations</h3>
+        <p data-i18n="skill.mid.desc">Apache Tomcat/JBoss environments, SSL and identity integrations, and performance-focused runtime support.</p>
       </article>
       <article class="skill-card panel panel-soft">
-        <h3>Cloud + AI Integration</h3>
-        <p>Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.</p>
+        <h3 data-i18n="skill.cloud">Cloud + AI Integration</h3>
+        <p data-i18n="skill.cloud.desc">Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.</p>
       </article>
       <article class="skill-card panel panel-soft">
-        <h3>Cross-Team Delivery</h3>
-        <p>Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.</p>
+        <h3 data-i18n="skill.team">Cross-Team Delivery</h3>
+        <p data-i18n="skill.team.desc">Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.</p>
       </article>
     </div>
   </section>
 
   <section class="about-section" aria-labelledby="cv-title">
-    <h2 id="cv-title">CV / Resume</h2>
+    <h2 id="cv-title" data-i18n="about.cvTitle">CV / Resume</h2>
     <article class="panel panel-soft cv-card">
-      <p>Detailed CV is available as a PDF with role scope, delivery outcomes, and full technology coverage.</p>
+      <p data-i18n="about.cvDesc">Detailed CV is available as a PDF with role scope, delivery outcomes, and full technology coverage.</p>
       {PUBLIC_CV.enabled ? (
         <a
           href={publicCvHref}
@@ -152,25 +153,25 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           {PUBLIC_CV.label}
         </a>
       ) : (
-        <p class="cv-disabled-note">CV link is temporarily unavailable.</p>
+        <p class="cv-disabled-note" data-i18n="about.cvDisabled">CV link is temporarily unavailable.</p>
       )}
     </article>
   </section>
 
   <section class="about-section" aria-labelledby="principles-title">
-    <h2 id="principles-title">Operating Principles</h2>
+    <h2 id="principles-title" data-i18n="about.principles">Operating Principles</h2>
     <div class="principles-grid">
       <article class="panel panel-soft">
-        <h3>Codify repeatable operations</h3>
-        <p>Every recurring action should move from ad-hoc command execution into tested automation.</p>
+        <h3 data-i18n="about.principle1Title">Codify repeatable operations</h3>
+        <p data-i18n="about.principle1Desc">Every recurring action should move from ad-hoc command execution into tested automation.</p>
       </article>
       <article class="panel panel-soft">
-        <h3>State the problem before the tool</h3>
-        <p>Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.</p>
+        <h3 data-i18n="about.principle2Title">State the problem before the tool</h3>
+        <p data-i18n="about.principle2Desc">Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.</p>
       </article>
       <article class="panel panel-soft">
-        <h3>Keep portfolio content safe</h3>
-        <p>Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.</p>
+        <h3 data-i18n="about.principle3Title">Keep portfolio content safe</h3>
+        <p data-i18n="about.principle3Desc">Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.</p>
       </article>
     </div>
   </section>

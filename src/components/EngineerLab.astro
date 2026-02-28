@@ -1,30 +1,30 @@
 <section class="engineer-lab panel panel-soft section-surface" aria-labelledby="engineer-lab-title" data-engineer-lab>
   <div class="section-header-row engineer-lab-header">
-    <h2 id="engineer-lab-title">Engineer Lab · Live Linux + AI Simulation</h2>
-    <span class="engineer-lab-status" aria-live="polite">stream: ready</span>
+    <h2 id="engineer-lab-title" data-i18n="engineerLab.title">Engineer Lab · Live Linux + AI Simulation</h2>
+    <span class="engineer-lab-status" aria-live="polite" data-i18n="engineerLab.status">stream: ready</span>
   </div>
 
   <div class="engineer-lab-shell" role="region" aria-label="Interactive command simulation">
     <div class="engineer-lab-toolbar" role="tablist" aria-label="Simulation mode">
-      <button class="lab-tab active" type="button" role="tab" aria-selected="true" data-mode="ops">ops stream</button>
-      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-mode="ansible">ansible rollout</button>
-      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-mode="ai">ai inference</button>
+      <button class="lab-tab active" type="button" role="tab" aria-selected="true" data-mode="ops" data-i18n="engineerLab.tabOps">ops stream</button>
+      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-mode="ansible" data-i18n="engineerLab.tabAnsible">ansible rollout</button>
+      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-mode="ai" data-i18n="engineerLab.tabAi">ai inference</button>
     </div>
 
     <div class="engineer-terminal" data-terminal aria-live="polite" aria-atomic="false"></div>
 
     <div class="engineer-metrics" aria-label="System indicators">
       <div class="metric-card">
-        <span class="metric-label">host</span>
-        <span class="metric-value">rhel-prod-09</span>
+        <span class="metric-label" data-i18n="metric.host">host</span>
+        <span class="metric-value" data-i18n="metric.hostValue">rhel-prod-09</span>
       </div>
       <div class="metric-card">
-        <span class="metric-label">automation</span>
-        <span class="metric-value">ansible-playbook --check</span>
+        <span class="metric-label" data-i18n="metric.automation">automation</span>
+        <span class="metric-value" data-i18n="metric.automationValue">ansible-playbook --check</span>
       </div>
       <div class="metric-card">
-        <span class="metric-label">ai mode</span>
-        <span class="metric-value">low-latency edge validation</span>
+        <span class="metric-label" data-i18n="metric.aiMode">ai mode</span>
+        <span class="metric-value" data-i18n="metric.aiModeValue">low-latency edge validation</span>
       </div>
     </div>
   </div>
@@ -84,12 +84,20 @@
 
       let mode = 'ops';
       let timer;
+      let resumeTimer;
 
       const getCycleInterval = () => (document.body.classList.contains('hardcore-mode') ? 5200 : 12000);
 
       const startCycle = () => {
         if (timer) window.clearInterval(timer);
         timer = window.setInterval(cycle, getCycleInterval());
+      };
+
+      const pauseCycle = () => {
+        if (timer) window.clearInterval(timer);
+        timer = null;
+        if (resumeTimer) window.clearTimeout(resumeTimer);
+        resumeTimer = window.setTimeout(() => { startCycle(); }, 30000);
       };
 
       const render = () => {
@@ -126,6 +134,8 @@
           const nextMode = tab.dataset.mode;
           if (!nextMode || nextMode === mode) return;
           setMode(nextMode);
+          /* Pause auto-cycle on manual interaction, resume after 30s */
+          pauseCycle();
         });
       });
 
@@ -148,6 +158,7 @@
         'astro:before-swap',
         () => {
           if (timer) window.clearInterval(timer);
+          if (resumeTimer) window.clearTimeout(resumeTimer);
         },
         { once: true }
       );

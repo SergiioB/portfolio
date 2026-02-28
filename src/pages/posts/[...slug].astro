@@ -29,12 +29,12 @@ const caseItems = [
 ---
 
 <BaseLayout title={`${title} | ${SITE.author}`} description={description}>
-  <a href={withBase()} class="back-link">← Back to posts</a>
+  <a href={withBase()} class="back-link" data-i18n="nav.backToPosts">← Back to posts</a>
 
   <article class="article-shell">
     <header class="article-header">
       <nav class="breadcrumbs" aria-label="Breadcrumb">
-        <a href={withBase()}>Home</a>
+        <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
         <span>/</span>
         <a href={withBase(`${category}/`)}>{getCategoryLabel(category)}</a>
       </nav>
@@ -48,7 +48,7 @@ const caseItems = [
           })}
         </time>
         <span aria-hidden="true">•</span>
-        <span>{readingTime} min read</span>
+        <span>{readingTime} <span data-i18n="posts.minRead">min read</span></span>
         {updatedDate && (
           <>
             <span aria-hidden="true">•</span>
@@ -71,7 +71,7 @@ const caseItems = [
 
     {caseItems.length > 0 && (
       <section class="case-snapshot panel panel-soft" aria-label="Case snapshot">
-        <h2>Case Snapshot</h2>
+        <h2 data-i18n="post.caseSnapshot">Case Snapshot</h2>
         <div class="case-grid">
           {caseItems.map((item) => (
             <article class="case-card">
@@ -88,7 +88,7 @@ const caseItems = [
     </div>
 
     <footer class="article-footer">
-      <a href={withBase('archive/')} class="back-link">← Browse archive</a>
+      <a href={withBase('archive/')} class="back-link" data-i18n="nav.browseArchive">← Browse archive</a>
     </footer>
   </article>
 </BaseLayout>
