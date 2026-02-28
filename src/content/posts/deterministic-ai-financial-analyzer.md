@@ -61,7 +61,7 @@ By combining pre-computed mathematics, aggressive JSON scrubbing, and highly str
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Engineering a Deterministic AI Financial Analyzer execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Engineering a Deterministic AI Financial Analyzer execution diagram](/portfolio/images/diagrams/post-framework/ai-pipeline.svg)
 
 This diagram supports **Engineering a Deterministic AI Financial Analyzer** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

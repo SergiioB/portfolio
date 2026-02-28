@@ -111,9 +111,9 @@ rm -rf /opt_old
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Migrating an Application Directory to a New LVM Volume execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Migrating an Application Directory to a New LVM Volume execution diagram](/portfolio/images/diagrams/post-framework/lvm-migration-flow.svg)
 
-This diagram supports **Migrating an Application Directory to a New LVM Volume** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram visualizes the **Zero-Downtime LVM Migration Flow**, moving from a high-risk state where application data shares fate with `rootfs` via a shared partition, to an isolated state using a dedicated Logical Volume mounted logically to the same `/opt` path, allowing transparent application startup.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Change storage allocation safely with reversible checkpoints.**

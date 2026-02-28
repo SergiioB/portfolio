@@ -60,7 +60,7 @@ This design is explicitly aimed at the "lost in the middle" failure mode of long
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Context Folding on Edge LLMs: Fatigue Thresholds and Hierarchical Compression execution diagram](/images/diagrams/post-framework/local-ai-memory.svg)
+![Context Folding on Edge LLMs: Fatigue Thresholds and Hierarchical Compression execution diagram](/portfolio/images/diagrams/post-framework/local-ai-memory.svg)
 
 This diagram supports **Context Folding on Edge LLMs: Fatigue Thresholds and Hierarchical Compression** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

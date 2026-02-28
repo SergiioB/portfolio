@@ -90,7 +90,7 @@ Running `git pull origin main` directly while you have a dirty working tree can 
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Safely Resolving Git Merge Conflicts execution diagram](/images/diagrams/post-framework/snippets-runbook.svg)
+![Safely Resolving Git Merge Conflicts execution diagram](/portfolio/images/diagrams/post-framework/snippets-runbook.svg)
 
 This diagram supports **Safely Resolving Git Merge Conflicts** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

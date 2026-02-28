@@ -71,9 +71,9 @@ When `su` fails on an AD-joined Linux server:
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Troubleshooting 'su' Authentication: The PAM system-auth Pitfall execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Troubleshooting 'su' Authentication: The PAM system-auth Pitfall execution diagram](/portfolio/images/diagrams/post-framework/pam-auth-flow.svg)
 
-This diagram supports **Troubleshooting 'su' Authentication: The PAM system-auth Pitfall** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram visualizes the **PAM Stack Fail-Fast condition**. When falling back to `system-auth`, unexpected modules like `pam_fprintd.so` can trigger an immediate denial before `pam_unix.so` or SSSD is even evaluated. Explicitly routing `su` requests through `password-auth` ensures strict alignment with `sshd` and reliable Active Directory validation.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Harden service integration points and reduce operational surprises.**

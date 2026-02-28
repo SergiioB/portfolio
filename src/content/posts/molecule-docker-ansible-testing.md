@@ -107,7 +107,7 @@ molecule test
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Testing Ansible Roles Locally with Molecule and Docker execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Testing Ansible Roles Locally with Molecule and Docker execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Testing Ansible Roles Locally with Molecule and Docker** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

@@ -83,7 +83,7 @@ lsblk
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Safely Shrinking an LVM ext4 Filesystem execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Safely Shrinking an LVM ext4 Filesystem execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Safely Shrinking an LVM ext4 Filesystem** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

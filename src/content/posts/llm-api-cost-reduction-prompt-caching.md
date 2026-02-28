@@ -81,7 +81,7 @@ If the provider offers cached-input pricing (for example, $0.28/1M standard inpu
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Slashing LLM API Costs with System Prompt Caching execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Slashing LLM API Costs with System Prompt Caching execution diagram](/portfolio/images/diagrams/post-framework/ai-pipeline.svg)
 
 This diagram supports **Slashing LLM API Costs with System Prompt Caching** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

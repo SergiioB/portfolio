@@ -67,7 +67,7 @@ This approach kept the core predictive logic clean and language-agnostic while d
 <!-- portfolio:expanded-v2 -->
 
 ## Conceptual Diagram
-![Conceptual illustration of a Multilingual AI routing node](/images/diagrams/post-framework/multilingual-ai-backend.png)
+![Conceptual illustration of a Multilingual AI routing node](/portfolio/images/diagrams/post-framework/multilingual-ai-backend.png)
 
 This diagram conceptually supports **Building a Multilingual AI Backend for Part Recognition**. It illustrates the core architectural concept: disparate language streams (EN, ES, FR) flowing into a central, unified intelligence node, which then parses them into a single canonical standard.
 

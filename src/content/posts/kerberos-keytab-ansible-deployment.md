@@ -63,7 +63,7 @@ This model keeps the workflow general, secure, and portable across environments:
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating Kerberos Keytab Deployment for Apache SSO execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Automating Kerberos Keytab Deployment for Apache SSO execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Automating Kerberos Keytab Deployment for Apache SSO** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

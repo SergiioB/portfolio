@@ -40,7 +40,7 @@ If you're in infrastructure and curious about app development, try letting AI ta
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Shipping My First Android App: IntelliFlow execution diagram](/images/diagrams/post-framework/cloud-ops.svg)
+![Shipping My First Android App: IntelliFlow execution diagram](/portfolio/images/diagrams/post-framework/cloud-ops.svg)
 
 This architecture diagram visualizes the critical path constructed for IntelliFlow. It highlights the explicit boundaries and control mechanisms:
 

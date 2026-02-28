@@ -94,9 +94,9 @@ When dealing with `Permission Denied` on NFS mounts, always verify:
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Troubleshooting NFS Mounts: Permission Denied and Network Routing execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Troubleshooting NFS Mounts: Permission Denied and Network Routing execution diagram](/portfolio/images/diagrams/post-framework/nfs-routing-tshoot.svg)
 
-This diagram supports **Troubleshooting NFS Mounts: Permission Denied and Network Routing** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram visualizes root cause of the **NFS Permission Denied** error triggered by a multi-homed routing mismatch. When traffic spans the Production interface but DNS inversely maps the hostname to a Management/Backup interface, the `rpc.mountd` server correctly rejects the mismatched source IP. The fix involves a rigid static mapping.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Harden service integration points and reduce operational surprises.**

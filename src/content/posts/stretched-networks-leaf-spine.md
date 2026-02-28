@@ -48,9 +48,9 @@ By combining Leaf-Spine stability with DWDM connectivity, we achieve a highly re
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Understanding Stretched Networks and Leaf-Spine Architecture execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Understanding Stretched Networks and Leaf-Spine Architecture execution diagram](/portfolio/images/diagrams/post-framework/leaf-spine-stretched.svg)
 
-This diagram supports **Understanding Stretched Networks and Leaf-Spine Architecture** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram visualizes the **Leaf-Spine Stretched Network Architecture** bridging two geographical data center zones (`SITE-A` and `SITE-B`). The high-bandwidth DWDM link extends the Layer 2 domain (VLAN 200), allowing seamless workloads migration (like `vMotion`) while retaining the exact same internal IP mappings.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Harden service integration points and reduce operational surprises.**

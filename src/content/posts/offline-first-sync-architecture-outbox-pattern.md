@@ -54,7 +54,7 @@ By monitoring the Outbox table, the UI can easily observe the `pendingCount`. Th
 <!-- portfolio:expanded-v2 -->
 
 ## Conceptual Diagram
-![Conceptual illustration of the Offline-First Outbox Pattern](/images/diagrams/post-framework/offline-first-outbox.png)
+![Conceptual illustration of the Offline-First Outbox Pattern](/portfolio/images/diagrams/post-framework/offline-first-outbox.png)
 
 This diagram conceptually supports **Implementing the Outbox Pattern for Offline-First Sync**. It illustrates a mobile device intelligently decoupling from the main cloud graph, securely storing local data packets within a neon-lined outbox queue until reconnection is re-established.
 

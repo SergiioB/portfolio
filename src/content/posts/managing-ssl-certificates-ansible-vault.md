@@ -79,7 +79,7 @@ Ansible seamlessly decrypts the file in memory during execution, transfers the p
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Securely Managing SSL Certificates in Ansible Repositories execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Securely Managing SSL Certificates in Ansible Repositories execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Securely Managing SSL Certificates in Ansible Repositories** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

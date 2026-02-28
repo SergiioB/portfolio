@@ -75,7 +75,7 @@ This combination of rendering performance and rapid accessibility transformed th
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Modernizing Android UX: High Refresh Rates & App Shortcuts execution diagram](/images/diagrams/post-framework/kotlin-mobile.svg)
+![Modernizing Android UX: High Refresh Rates & App Shortcuts execution diagram](/portfolio/images/diagrams/post-framework/kotlin-mobile.svg)
 
 This diagram supports **Modernizing Android UX: High Refresh Rates & App Shortcuts** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

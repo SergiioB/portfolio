@@ -58,7 +58,7 @@ The useful part is not any single check, it’s the explicit layering:
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Security Layering for Edge AI APIs: Encryption, Rate Limits, Validation, and Monitoring execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Security Layering for Edge AI APIs: Encryption, Rate Limits, Validation, and Monitoring execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Security Layering for Edge AI APIs: Encryption, Rate Limits, Validation, and Monitoring** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

@@ -26,7 +26,7 @@ I can now "read" massive documentation sets without my local model hallucinating
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Recursive Language Models & Context Rot execution diagram](/images/diagrams/post-framework/local-ai-memory.svg)
+![Recursive Language Models & Context Rot execution diagram](/portfolio/images/diagrams/post-framework/local-ai-memory.svg)
 
 This diagram supports **Recursive Language Models & Context Rot** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

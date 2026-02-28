@@ -62,7 +62,7 @@ If tomorrow you need a static site instead of a proxy, you just point `app_apach
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Flexible Apache Reverse Proxy Configuration with Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Flexible Apache Reverse Proxy Configuration with Ansible execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Flexible Apache Reverse Proxy Configuration with Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
