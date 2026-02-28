@@ -1,0 +1,81 @@
+---
+import { CATEGORY_META } from '../content/categories';
+import { withBase } from '../utils/paths';
+import { estimateReadingTime } from '../utils/readingTime';
+
+interface Props {
+  post: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      category: 'infrastructure' | 'automation' | 'ai' | 'cloud' | 'local-ai' | 'kotlin' | 'snippets' | 'career';
+      tags?: string[];
+      issue?: string;
+      solution?: string;
+      usedIn?: string;
+      impact?: string;
+    };
+    body: string;
+  };
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, category, tags, issue, solution, usedIn } = post.data;
+const readingTime = estimateReadingTime(post.body);
+const postUrl = withBase(`posts/${post.id}/`);
+const searchText = [
+  title,
+  description,
+  category,
+  issue ?? '',
+  solution ?? '',
+  usedIn ?? '',
+  ...(tags ?? []),
+].join(' ');
+---
+
+<article
+  class:list={['post-card', 'panel', 'panel-soft', `category-${category}`]}
+  data-search-item
+  data-search={searchText}
+>
+  <div class="post-meta">
+    <time class="post-date" datetime={pubDate.toISOString()}>
+      {pubDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })}
+    </time>
+    <span aria-hidden="true">•</span>
+    <a href={withBase(`${category}/`)} class:list={['post-category', `post-category-${category}`]}>
+      {CATEGORY_META[category].label}
+    </a>
+    <span aria-hidden="true">•</span>
+    <span>{readingTime} min read</span>
+  </div>
+
+  <h2 class="post-title">
+    <a href={postUrl}>{title}</a>
+  </h2>
+
+  <p class="post-excerpt">{description}</p>
+
+  {(issue || solution || usedIn) && (
+    <ul class="post-highlights" aria-label="Case study highlights">
+      {issue && <li><strong>Issue:</strong> {issue}</li>}
+      {solution && <li><strong>Solution:</strong> {solution}</li>}
+      {usedIn && <li><strong>Used In:</strong> {usedIn}</li>}
+    </ul>
+  )}
+
+  {tags && tags.length > 0 && (
+    <div class="post-tags" aria-label="Post tags">
+      {tags.map((tag) => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  )}
+</article>

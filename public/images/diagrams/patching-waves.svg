@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="appGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="specialGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">Patching Waves Orchestration</text>
+  
+  <!-- Wave 1: Database -->
+  <rect x="50" y="100" width="220" height="140" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+  <text x="160" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#92400e">Wave 1: Database</text>
+  
+  <rect x="70" y="150" width="180" height="70" rx="8" fill="url(#dbGrad)"/>
+  <text x="160" y="175" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="white">dev_patch_wave01_db</text>
+  <text x="160" y="195" text-anchor="middle" font-family="monospace" font-size="11" fill="#fef3c7">patching.yml</text>
+  <text x="160" y="210" text-anchor="middle" font-family="monospace" font-size="11" fill="#fef3c7">--limit='wave01'</text>
+  
+  <!-- Wave 2: Application -->
+  <rect x="290" y="100" width="220" height="140" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
+  <text x="400" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#1e40af">Wave 2: Application</text>
+  
+  <rect x="310" y="150" width="180" height="70" rx="8" fill="url(#appGrad)"/>
+  <text x="400" y="175" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="white">dev_patch_wave02_app</text>
+  <text x="400" y="195" text-anchor="middle" font-family="monospace" font-size="11" fill="#dbeafe">patching.yml</text>
+  <text x="400" y="210" text-anchor="middle" font-family="monospace" font-size="11" fill="#dbeafe">--limit='wave02'</text>
+  
+  <!-- Wave 3: Special -->
+  <rect x="530" y="100" width="220" height="140" rx="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="3"/>
+  <text x="640" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#5b21b6">Wave 3: Special</text>
+  
+  <rect x="550" y="150" width="180" height="70" rx="8" fill="url(#specialGrad)"/>
+  <text x="640" y="175" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="white">dev_patch_wave03_special</text>
+  <text x="640" y="195" text-anchor="middle" font-family="monospace" font-size="11" fill="#f3e8ff">patching.yml</text>
+  <text x="640" y="210" text-anchor="middle" font-family="monospace" font-size="11" fill="#f3e8ff">--limit='wave03'</text>
+  
+  <!-- Arrows between waves -->
+  <line x1="270" y1="170" x2="290" y2="170" stroke="#22c55e" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="510" y1="170" x2="530" y2="170" stroke="#22c55e" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Checkmarks -->
+  <circle cx="280" cy="170" r="12" fill="#22c55e"/>
+  <text x="280" y="175" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="white">✓</text>
+  
+  <circle cx="520" cy="170" r="12" fill="#22c55e"/>
+  <text x="520" y="175" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="white">✓</text>
+  
+  <!-- Workflow Steps -->
+  <rect x="50" y="280" width="700" height="180" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+  <text x="400" y="310" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#475569">Workflow Steps (Per Wave)</text>
+  
+  <!-- Step 1 -->
+  <circle cx="120" cy="360" r="25" fill="#3b82f6"/>
+  <text x="120" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="white">1</text>
+  <text x="120" y="410" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">Verify Targets</text>
+  <text x="120" y="430" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">--list-hosts</text>
+  
+  <!-- Step 2 -->
+  <circle cx="300" cy="360" r="25" fill="#3b82f6"/>
+  <text x="300" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="white">2</text>
+  <text x="300" y="410" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">Patch</text>
+  <text x="300" y="430" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">dnf update</text>
+  
+  <!-- Step 3 -->
+  <circle cx="480" cy="360" r="25" fill="#3b82f6"/>
+  <text x="480" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="white">3</text>
+  <text x="480" y="410" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">Reboot</text>
+  <text x="480" y="430" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">rebooting.yml</text>
+  
+  <!-- Step 4 -->
+  <circle cx="660" cy="360" r="25" fill="#3b82f6"/>
+  <text x="660" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" fill="white">4</text>
+  <text x="660" y="410" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">Validate</text>
+  <text x="660" y="430" text-anchor="middle" font-family="monospace" font-size="10" fill="#64748b">Health checks</text>
+  
+  <!-- Arrows -->
+  <line x1="145" y1="360" x2="275" y2="360" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="325" y1="360" x2="455" y2="360" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="505" y1="360" x2="635" y2="360" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Key principle -->
+  <rect x="200" y="465" width="400" height="30" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="400" y="485" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#92400e">⏱️ Wait for DB confirmation before patching Application tier</text>
+</svg>
