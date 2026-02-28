@@ -60,12 +60,17 @@
     return dict[key][currentLang] || dict[key].en || key;
   };
 
-  /** Swap all `[data-i18n]` elements on the page to the current language. */
+  /** Swap all `[data-i18n]` elements on the page to the current language.
+   *  Safety: if T(key) returns the key itself (dict missing / CSP block),
+   *  we leave the SSR-rendered text untouched. */
   const applyI18nDom = () => {
+    const dictReady = !!window.__i18n;
+    if (!dictReady) return;  /* dict not loaded, keep SSR text */
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.getAttribute('data-i18n');
       if (!key) return;
       const text = T(key);
+      if (text === key) return;  /* translation missing, keep existing text */
       if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
         el.setAttribute('placeholder', text);
       } else {
@@ -74,11 +79,15 @@
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.getAttribute('data-i18n-placeholder');
-      if (key) el.setAttribute('placeholder', T(key));
+      if (!key) return;
+      const text = T(key);
+      if (text !== key) el.setAttribute('placeholder', text);
     });
     document.querySelectorAll('[data-i18n-label]').forEach((el) => {
       const key = el.getAttribute('data-i18n-label');
-      if (key) el.setAttribute('aria-label', T(key));
+      if (!key) return;
+      const text = T(key);
+      if (text !== key) el.setAttribute('aria-label', text);
     });
     document.documentElement.lang = currentLang;
   };
