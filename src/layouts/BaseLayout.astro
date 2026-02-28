@@ -64,6 +64,44 @@ const csp = [
     <ViewTransitions />
   </head>
   <body>
+    <div class="boot-sequence" data-boot-sequence aria-hidden="true">
+      <div class="boot-shell" role="presentation">
+        <div class="boot-head">
+          <span class="boot-title">Booting Engineer Runtime</span>
+          <span class="boot-host">ssh://sergiio@rhel-core-01</span>
+        </div>
+        <div class="boot-output" data-boot-output></div>
+        <div class="boot-gate" data-boot-gate hidden>
+          <label for="boot-gate-input" class="boot-gate-label">Type unlock to continue</label>
+          <div class="boot-gate-row">
+            <span class="boot-gate-prompt">root@runtime:~#</span>
+            <input id="boot-gate-input" class="boot-gate-input" data-boot-gate-input type="text" autocomplete="off" spellcheck="false" />
+          </div>
+        </div>
+        <div class="boot-progress" aria-hidden="true">
+          <span data-boot-progress></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="command-palette" data-command-palette hidden>
+      <div class="command-palette-backdrop" data-command-palette-close></div>
+      <div class="command-palette-shell" role="dialog" aria-modal="true" aria-labelledby="command-palette-title">
+        <div class="command-palette-head">
+          <h2 id="command-palette-title">Engineer Command Palette</h2>
+          <span class="command-palette-hint">Ctrl/Cmd + K</span>
+        </div>
+        <input
+          class="command-palette-input"
+          data-command-palette-input
+          type="text"
+          placeholder="Search commands... (mode, nav, boot)"
+          autocomplete="off"
+        />
+        <div class="command-palette-list" data-command-palette-list></div>
+      </div>
+    </div>
+
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <div class="site-shell">

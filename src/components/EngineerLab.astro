@@ -1,0 +1,158 @@
+<section class="engineer-lab panel panel-soft section-surface" aria-labelledby="engineer-lab-title" data-engineer-lab>
+  <div class="section-header-row engineer-lab-header">
+    <h2 id="engineer-lab-title">Engineer Lab · Live Linux + AI Simulation</h2>
+    <span class="engineer-lab-status" aria-live="polite">stream: ready</span>
+  </div>
+
+  <div class="engineer-lab-shell" role="region" aria-label="Interactive command simulation">
+    <div class="engineer-lab-toolbar" role="tablist" aria-label="Simulation mode">
+      <button class="lab-tab active" type="button" role="tab" aria-selected="true" data-mode="ops">ops stream</button>
+      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-mode="ansible">ansible rollout</button>
+      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-mode="ai">ai inference</button>
+    </div>
+
+    <div class="engineer-terminal" data-terminal aria-live="polite" aria-atomic="false"></div>
+
+    <div class="engineer-metrics" aria-label="System indicators">
+      <div class="metric-card">
+        <span class="metric-label">host</span>
+        <span class="metric-value">rhel-prod-09</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">automation</span>
+        <span class="metric-value">ansible-playbook --check</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">ai mode</span>
+        <span class="metric-value">low-latency edge validation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initEngineerLab() {
+    const labs = document.querySelectorAll('[data-engineer-lab]:not([data-initialized])');
+
+    labs.forEach((lab) => {
+      lab.setAttribute('data-initialized', 'true');
+
+      const tabs = Array.from(lab.querySelectorAll('.lab-tab'));
+      const terminal = lab.querySelector('[data-terminal]');
+      const status = lab.querySelector('.engineer-lab-status');
+
+      if (!terminal || !status || tabs.length === 0) return;
+
+      const streams = {
+        ops: [
+          '$ ssh sre@rhel-prod-09',
+          '[ok] authentication publickey accepted',
+          '$ top -b -n 1 | head -n 8',
+          'Tasks: 312 total,   1 running, 311 sleeping, 0 stopped, 0 zombie',
+          '%Cpu(s): 11.4 us, 3.2 sy, 0.0 ni, 83.9 id, 1.1 wa, 0.0 hi',
+          'MiB Mem : 32098.2 total, 10214.4 free, 11042.9 used, 10840.9 buff/cache',
+          '$ journalctl -u api-gateway --since "-5m" | tail -n 3',
+          '[info] mTLS handshake successful from edge-node-17',
+          '[warn] token refresh latency 142ms (threshold 120ms)',
+          '[ok] auto-remediation policy reduced p95 to 109ms'
+        ],
+        ansible: [
+          '$ ansible-playbook site.yml -l rhel9_wave_b --diff',
+          'PLAY [Patch RHEL wave B] ************************************************',
+          'TASK [Gathering Facts] ****************************************************',
+          'ok: [rhel-node-12] ok: [rhel-node-13] ok: [rhel-node-19]',
+          'TASK [Apply security errata] **********************************************',
+          'changed: [rhel-node-12] changed: [rhel-node-13] changed: [rhel-node-19]',
+          'TASK [Validate services] ***************************************************',
+          'ok: [rhel-node-12] => nginx active, selinux enforcing',
+          'ok: [rhel-node-13] => postgresql active, wal archiving on',
+          'PLAY RECAP ****************************************************************',
+          'rhel-node-12 : ok=14 changed=4 failed=0 unreachable=0'
+        ],
+        ai: [
+          '$ ./serve-llm --model qwen3.5 --kv-cache int4 --target rk3588',
+          '[init] npu warmup complete · memory budget 5.8GB',
+          '[trace] prompt-cache hit=78.4% · token/s=42.3',
+          '[route] fallback policy disabled · deterministic mode enabled',
+          '[guard] pii scrubber active · regex + embedding filter online',
+          '[eval] extraction_f1=0.93 normalization_f1=0.91',
+          '[ok] latency p95 187ms under 200ms SLO',
+          '$ python edge_validator.py --scenario invoice-multi-lang',
+          '[ok] 128/128 checks passed with schema lock enabled'
+        ]
+      };
+
+      let mode = 'ops';
+      let timer;
+
+      const getCycleInterval = () => (document.body.classList.contains('hardcore-mode') ? 5200 : 12000);
+
+      const startCycle = () => {
+        if (timer) window.clearInterval(timer);
+        timer = window.setInterval(cycle, getCycleInterval());
+      };
+
+      const render = () => {
+        terminal.innerHTML = '';
+        const lines = streams[mode];
+        lines.forEach((line, index) => {
+          const row = document.createElement('div');
+          row.className = 'terminal-line';
+          if (line.startsWith('$')) row.classList.add('terminal-cmd');
+          if (line.includes('[ok]')) row.classList.add('terminal-ok');
+          if (line.includes('[warn]')) row.classList.add('terminal-warn');
+          if (line.includes('failed=0') || line.includes('checks passed')) row.classList.add('terminal-ok');
+          row.style.animationDelay = `${Math.min(index * 55, 420)}ms`;
+          row.textContent = line;
+          terminal.appendChild(row);
+        });
+
+        const profile = document.body.classList.contains('hardcore-mode') ? 'hardcore' : 'normal';
+        status.textContent = `stream: ${mode} · ${profile}`;
+      };
+
+      const setMode = (nextMode) => {
+        mode = nextMode;
+        tabs.forEach((tab) => {
+          const active = tab.dataset.mode === nextMode;
+          tab.classList.toggle('active', active);
+          tab.setAttribute('aria-selected', String(active));
+        });
+        render();
+      };
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const nextMode = tab.dataset.mode;
+          if (!nextMode || nextMode === mode) return;
+          setMode(nextMode);
+        });
+      });
+
+      const cycle = () => {
+        const modes = ['ops', 'ansible', 'ai'];
+        const currentIndex = modes.indexOf(mode);
+        const next = modes[(currentIndex + 1) % modes.length];
+        setMode(next);
+      };
+
+      startCycle();
+      render();
+
+      window.addEventListener('portfolio-mode-change', () => {
+        startCycle();
+        render();
+      });
+
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          if (timer) window.clearInterval(timer);
+        },
+        { once: true }
+      );
+    });
+  }
+
+  document.addEventListener('astro:page-load', initEngineerLab);
+</script>

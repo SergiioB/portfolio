@@ -6,6 +6,9 @@ import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
 import { PUBLIC_CV, SITE } from '../config/site';
 import { withBase } from '../utils/paths';
 import CategoryAnimation from '../components/CategoryAnimation.astro';
+import EngineerLab from '../components/EngineerLab.astro';
+import OpsDeck from '../components/OpsDeck.astro';
+import NetworkTopology from '../components/NetworkTopology.astro';
 
 const posts = await getCollection('posts');
 const publishedPosts = posts
@@ -113,6 +116,12 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       </article>
     </div>
   </section>
+
+  <EngineerLab />
+
+  <OpsDeck />
+
+  <NetworkTopology />
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
     <div class="section-header-row">

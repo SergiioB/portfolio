@@ -1,0 +1,428 @@
+<section class="ops-deck section-block panel panel-soft section-surface" aria-labelledby="ops-deck-title" data-ops-deck>
+  <div class="section-header-row ops-deck-header">
+    <h2 id="ops-deck-title">Ops Cockpit · top + command sandbox</h2>
+    <div class="ops-head-actions">
+      <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false">Mode: Normal</button>
+      <span class="ops-deck-status" data-ops-status>load avg: 0.72 0.61 0.43</span>
+    </div>
+  </div>
+
+  <div class="ops-alert-stream" data-alert-stream aria-live="polite">[telemetry] awaiting stream...</div>
+
+  <div class="ops-kpis" aria-label="Live infrastructure signals">
+    <article class="ops-kpi-card panel panel-soft" data-kpi="cpu">
+      <p class="ops-kpi-label">CPU load</p>
+      <p class="ops-kpi-value" data-kpi-value>32%</p>
+      <div class="ops-kpi-bar"><span data-kpi-bar style="width: 32%"></span></div>
+    </article>
+    <article class="ops-kpi-card panel panel-soft" data-kpi="memory">
+      <p class="ops-kpi-label">Memory pressure</p>
+      <p class="ops-kpi-value" data-kpi-value>44%</p>
+      <div class="ops-kpi-bar"><span data-kpi-bar style="width: 44%"></span></div>
+    </article>
+    <article class="ops-kpi-card panel panel-soft" data-kpi="errors">
+      <p class="ops-kpi-label">Error rate</p>
+      <p class="ops-kpi-value" data-kpi-value>0.6%</p>
+      <div class="ops-kpi-bar"><span data-kpi-bar style="width: 6%"></span></div>
+    </article>
+    <article class="ops-kpi-card panel panel-soft" data-kpi="cache">
+      <p class="ops-kpi-label">Prompt cache hit</p>
+      <p class="ops-kpi-value" data-kpi-value>78%</p>
+      <div class="ops-kpi-bar"><span data-kpi-bar style="width: 78%"></span></div>
+    </article>
+  </div>
+
+  <div class="ops-grid">
+    <article class="ops-top panel panel-soft" aria-labelledby="ops-top-title">
+      <div class="ops-top-head">
+        <h3 id="ops-top-title">Process monitor</h3>
+        <p class="ops-top-meta">click headers to sort · values stream live</p>
+      </div>
+
+      <div class="ops-top-table-wrap" role="region" aria-label="Live process table">
+        <table class="ops-top-table">
+          <thead>
+            <tr>
+              <th><button type="button" class="ops-sort active" data-sort="name">process</button></th>
+              <th><button type="button" class="ops-sort" data-sort="cpu">cpu%</button></th>
+              <th><button type="button" class="ops-sort" data-sort="mem">mem%</button></th>
+              <th><button type="button" class="ops-sort" data-sort="threads">threads</button></th>
+              <th><button type="button" class="ops-sort" data-sort="state">state</button></th>
+            </tr>
+          </thead>
+          <tbody data-process-body></tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="ops-cli panel panel-soft" aria-labelledby="ops-cli-title">
+      <div class="ops-cli-head">
+        <h3 id="ops-cli-title">Command sandbox</h3>
+        <p class="ops-top-meta">try: top · journalctl -n 5 · ansible --version · ai.health</p>
+      </div>
+
+      <div class="ops-cli-output" data-cli-output aria-live="polite" aria-atomic="false"></div>
+
+      <form class="ops-cli-form" data-cli-form>
+        <label for="ops-cli-input" class="sr-only">Linux command input</label>
+        <span class="ops-prompt">sergio@rhel-lab:~$</span>
+        <input id="ops-cli-input" type="text" name="command" autocomplete="off" placeholder="Type a command..." />
+        <button type="submit">Run</button>
+      </form>
+
+      <div class="ops-cli-chips" aria-label="Quick commands">
+        <button type="button" class="ops-chip" data-command="top">top</button>
+        <button type="button" class="ops-chip" data-command="journalctl -n 5">journalctl -n 5</button>
+        <button type="button" class="ops-chip" data-command="ansible --version">ansible --version</button>
+        <button type="button" class="ops-chip" data-command="ai.health">ai.health</button>
+        <button type="button" class="ops-chip" data-command="mode hardcore">mode hardcore</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script>
+  function initOpsDeck() {
+    const decks = document.querySelectorAll('[data-ops-deck]:not([data-initialized])');
+
+    decks.forEach((deck) => {
+      deck.setAttribute('data-initialized', 'true');
+
+      const processBody = deck.querySelector('[data-process-body]');
+      const status = deck.querySelector('[data-ops-status]');
+      const modeToggle = deck.querySelector('[data-mode-toggle]');
+      const alertStream = deck.querySelector('[data-alert-stream]');
+      const output = deck.querySelector('[data-cli-output]');
+      const form = deck.querySelector('[data-cli-form]');
+      const input = form?.querySelector('input[name="command"]');
+      const sortButtons = Array.from(deck.querySelectorAll('.ops-sort'));
+      const chips = Array.from(deck.querySelectorAll('.ops-chip'));
+      const kpiCards = Array.from(deck.querySelectorAll('.ops-kpi-card'));
+
+      if (!processBody || !status || !modeToggle || !alertStream || !output || !form || !input || sortButtons.length === 0) return;
+
+      const processes = [
+        { name: 'kubelet', cpu: 8.6, mem: 3.2, threads: 41, state: 'S' },
+        { name: 'sshd', cpu: 1.1, mem: 0.6, threads: 9, state: 'S' },
+        { name: 'postgres', cpu: 14.2, mem: 12.1, threads: 58, state: 'R' },
+        { name: 'nginx', cpu: 3.9, mem: 1.8, threads: 14, state: 'S' },
+        { name: 'ansible-pull', cpu: 5.8, mem: 2.7, threads: 6, state: 'R' },
+        { name: 'inference-gw', cpu: 11.4, mem: 7.9, threads: 23, state: 'R' },
+        { name: 'vector-agent', cpu: 2.8, mem: 1.2, threads: 16, state: 'S' },
+      ];
+
+      let sortKey = 'name';
+      let sortDirection = 'asc';
+      let mode = 'normal';
+      let renderInterval;
+      let metricsInterval;
+      let noiseInterval;
+      let alertInterval;
+      const maxLines = 120;
+
+      const commands = {
+        help: ['Available commands: top, journalctl -n 5, ansible --version, ai.health, mode normal, mode hardcore, palette, clear'],
+        'ansible --version': [
+          'ansible [core 2.17.5]',
+          'python version = 3.12.2',
+          'config file = /etc/ansible/ansible.cfg',
+          'collection location = /usr/share/ansible/collections',
+        ],
+        'journalctl -n 5': [
+          '-- Logs begin at Thu 2026-02-27 08:01:14 CET --',
+          'api-gateway[4121]: [info] policy refresh ok',
+          'inference-gw[7002]: [warn] p95 drift +12ms',
+          'ansible-pull[9210]: [ok] role baseline.rhel completed',
+          'vector-agent[1554]: [ok] stream export healthy',
+        ],
+        'ai.health': [
+          'model=qwen3.5-edge status=healthy',
+          'latency_p95=186ms throughput=41.8 tok/s',
+          'cache_hit=79.2% fallback=disabled',
+          'guardrails=enabled deterministic=true',
+        ],
+      };
+
+      const telemetryMessages = [
+        '[telemetry] selinux=enforcing · policy checks passing',
+        '[telemetry] ansible drift window: 0 nodes out-of-policy',
+        '[telemetry] inference p95 stable under target threshold',
+        '[telemetry] wal archive stream lag: 0.7s',
+        '[telemetry] satellite sync healthy · errata feed updated',
+      ];
+
+      const hardcoreNoise = [
+        '[warn] packet jitter spike detected on edge-node-12',
+        '[trace] watchdog resumed process inference-gw (self-heal)',
+        '[info] autoscaler raised worker pool from 6 to 8',
+        '[warn] cache churn increased after model refresh',
+        '[ok] rollback checkpoint healthy and available',
+      ];
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+      const getCadence = () => {
+        if (mode === 'hardcore') {
+          return { process: 850, metrics: 1250, noise: 1400, alert: 1900 };
+        }
+
+        return { process: 2200, metrics: 3200, noise: 0, alert: 4200 };
+      };
+
+      const formatProcessRow = (process) => {
+        const stateClass = process.state === 'R' ? 'state-run' : 'state-sleep';
+        return `
+          <tr>
+            <td class="proc-name">${process.name}</td>
+            <td>${process.cpu.toFixed(1)}</td>
+            <td>${process.mem.toFixed(1)}</td>
+            <td>${process.threads}</td>
+            <td><span class="proc-state ${stateClass}">${process.state}</span></td>
+          </tr>
+        `;
+      };
+
+      const sortProcesses = () => {
+        const sorted = [...processes].sort((a, b) => {
+          const aValue = a[sortKey];
+          const bValue = b[sortKey];
+
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+          }
+
+          return sortDirection === 'asc' ? Number(aValue) - Number(bValue) : Number(bValue) - Number(aValue);
+        });
+
+        processBody.innerHTML = sorted.map(formatProcessRow).join('');
+      };
+
+      const updateProcesses = () => {
+        processes.forEach((process) => {
+          const cpuDrift = mode === 'hardcore' ? 2.7 : 1.7;
+          const memDrift = mode === 'hardcore' ? 1.1 : 0.6;
+          const threadDrift = mode === 'hardcore' ? 3 : 2;
+
+          process.cpu = clamp(process.cpu + (Math.random() * (cpuDrift * 2) - cpuDrift), 0.4, 38);
+          process.mem = clamp(process.mem + (Math.random() * (memDrift * 2) - memDrift), 0.3, 24);
+          process.threads = Math.round(clamp(process.threads + (Math.random() * (threadDrift * 2) - threadDrift), 4, 72));
+          process.state = Math.random() > (mode === 'hardcore' ? 0.18 : 0.28) ? 'R' : 'S';
+        });
+
+        const multiplier = mode === 'hardcore' ? 1.65 : 1;
+        const l1 = (0.46 + Math.random() * 0.82 * multiplier).toFixed(2);
+        const l5 = (0.31 + Math.random() * 0.73 * multiplier).toFixed(2);
+        const l15 = (0.18 + Math.random() * 0.67 * multiplier).toFixed(2);
+        status.textContent = `load avg: ${l1} ${l5} ${l15} · ${mode}`;
+
+        sortProcesses();
+      };
+
+      const updateKpis = () => {
+        const values = {
+          cpu: Math.round((mode === 'hardcore' ? 36 : 28) + Math.random() * 29),
+          memory: Math.round((mode === 'hardcore' ? 44 : 37) + Math.random() * 34),
+          errors: Number((Math.random() * (mode === 'hardcore' ? 2.6 : 1.4)).toFixed(1)),
+          cache: Math.round((mode === 'hardcore' ? 67 : 71) + Math.random() * 20),
+        };
+
+        kpiCards.forEach((card) => {
+          const type = card.getAttribute('data-kpi');
+          const valueNode = card.querySelector('[data-kpi-value]');
+          const barNode = card.querySelector('[data-kpi-bar]');
+          if (!type || !valueNode || !barNode) return;
+
+          if (type === 'errors') {
+            valueNode.textContent = `${values.errors}%`;
+            barNode.style.width = `${Math.round(values.errors * 10)}%`;
+          } else {
+            valueNode.textContent = `${values[type]}%`;
+            barNode.style.width = `${values[type]}%`;
+          }
+        });
+      };
+
+      const appendLine = (line, type = 'info') => {
+        const row = document.createElement('div');
+        row.className = `ops-line ops-line-${type}`;
+        row.textContent = line;
+        output.appendChild(row);
+
+        while (output.childElementCount > maxLines) {
+          output.removeChild(output.firstElementChild);
+        }
+
+        output.scrollTop = output.scrollHeight;
+      };
+
+      const emitHardcoreNoise = () => {
+        if (mode !== 'hardcore') return;
+        const line = hardcoreNoise[Math.floor(Math.random() * hardcoreNoise.length)];
+        const tone = line.includes('[warn]') ? 'warn' : line.includes('[ok]') ? 'ok' : 'info';
+        appendLine(line, tone);
+      };
+
+      const updateTelemetry = () => {
+        const pick = telemetryMessages[Math.floor(Math.random() * telemetryMessages.length)];
+        if (mode === 'hardcore') {
+          alertStream.textContent = `${pick} · alert-window=high`; 
+          return;
+        }
+        alertStream.textContent = pick;
+      };
+
+      const clearTimers = () => {
+        if (renderInterval) window.clearInterval(renderInterval);
+        if (metricsInterval) window.clearInterval(metricsInterval);
+        if (noiseInterval) window.clearInterval(noiseInterval);
+        if (alertInterval) window.clearInterval(alertInterval);
+      };
+
+      const startTimers = () => {
+        clearTimers();
+        const cadence = getCadence();
+        renderInterval = window.setInterval(updateProcesses, cadence.process);
+        metricsInterval = window.setInterval(updateKpis, cadence.metrics);
+        alertInterval = window.setInterval(updateTelemetry, cadence.alert);
+        if (cadence.noise > 0) {
+          noiseInterval = window.setInterval(emitHardcoreNoise, cadence.noise);
+        }
+      };
+
+      const setMode = (nextMode, persist = true) => {
+        if (nextMode !== 'normal' && nextMode !== 'hardcore') return;
+        mode = nextMode;
+        const hardcoreEnabled = mode === 'hardcore';
+        document.body.classList.toggle('hardcore-mode', hardcoreEnabled);
+        modeToggle.textContent = hardcoreEnabled ? 'Mode: Hardcore' : 'Mode: Normal';
+        modeToggle.setAttribute('aria-pressed', String(hardcoreEnabled));
+        if (persist) {
+          window.localStorage.setItem('portfolio-mode', mode);
+        }
+        window.dispatchEvent(new CustomEvent('portfolio-mode-change', { detail: { mode } }));
+        updateTelemetry();
+        updateKpis();
+        updateProcesses();
+        startTimers();
+      };
+
+      const runCommand = (rawCommand) => {
+        const command = rawCommand.trim();
+        if (!command) return;
+
+        appendLine(`sergio@rhel-lab:~$ ${command}`, 'cmd');
+
+        if (command === 'clear') {
+          output.innerHTML = '';
+          return;
+        }
+
+        if (command === 'top') {
+          appendLine('top - 17:22:01 up 16 days,  3:18,  1 user,  load average: 0.72, 0.61, 0.43');
+          appendLine('Tasks: 312 total,   2 running, 310 sleeping,   0 stopped,   0 zombie');
+          appendLine('%Cpu(s): 15.3 us,  4.1 sy,  0.0 ni, 79.8 id,  0.8 wa,  0.0 hi');
+          const topList = [...processes]
+            .sort((a, b) => b.cpu - a.cpu)
+            .slice(0, 4)
+            .map((proc) => `${proc.name.padEnd(13)} cpu=${proc.cpu.toFixed(1)} mem=${proc.mem.toFixed(1)} state=${proc.state}`);
+          topList.forEach((line) => appendLine(line));
+          return;
+        }
+
+        if (command === 'mode hardcore') {
+          setMode('hardcore');
+          appendLine('[ok] hardcore mode enabled', 'ok');
+          return;
+        }
+
+        if (command === 'mode normal') {
+          setMode('normal');
+          appendLine('[ok] normal mode enabled', 'ok');
+          return;
+        }
+
+        if (command === 'palette') {
+          window.dispatchEvent(new CustomEvent('portfolio-open-palette'));
+          appendLine('[ok] opening command palette', 'ok');
+          return;
+        }
+
+        const outputLines = commands[command];
+        if (outputLines) {
+          outputLines.forEach((line) => {
+            const tone = line.includes('[warn]') ? 'warn' : line.includes('[ok]') || line.includes('healthy') ? 'ok' : 'info';
+            appendLine(line, tone);
+          });
+        } else {
+          appendLine(`bash: ${command}: command not found`, 'error');
+          appendLine('Try `help` for available commands.', 'warn');
+        }
+      };
+
+      sortButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const nextKey = button.getAttribute('data-sort');
+          if (!nextKey) return;
+
+          if (sortKey === nextKey) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+          } else {
+            sortKey = nextKey;
+            sortDirection = nextKey === 'name' || nextKey === 'state' ? 'asc' : 'desc';
+          }
+
+          sortButtons.forEach((btn) => btn.classList.toggle('active', btn === button));
+          sortProcesses();
+        });
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const value = input.value;
+        runCommand(value);
+        input.value = '';
+      });
+
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const value = chip.getAttribute('data-command');
+          if (!value) return;
+          input.value = value;
+          runCommand(value);
+          input.value = '';
+          input.focus();
+        });
+      });
+
+      modeToggle.addEventListener('click', () => {
+        setMode(mode === 'hardcore' ? 'normal' : 'hardcore');
+      });
+
+      window.addEventListener('portfolio-request-mode', (event) => {
+        const nextMode = event?.detail?.mode;
+        if (nextMode === 'hardcore' || nextMode === 'normal') {
+          setMode(nextMode);
+          appendLine(`[ok] ${nextMode} mode enabled via command palette`, 'ok');
+        }
+      });
+
+      const savedMode = window.localStorage.getItem('portfolio-mode');
+      setMode(savedMode === 'hardcore' ? 'hardcore' : 'normal', false);
+
+      runCommand('help');
+      runCommand('top');
+      updateTelemetry();
+      sortProcesses();
+
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          clearTimers();
+        },
+        { once: true }
+      );
+    });
+  }
+
+  document.addEventListener('astro:page-load', initOpsDeck);
+</script>
