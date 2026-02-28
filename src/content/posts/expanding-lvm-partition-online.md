@@ -79,43 +79,46 @@ lvextend -r -l +100%FREE /dev/mapper/vg_system-root
 
 The filesystem is now expanded online, and the new space is immediately available.
 
-<!-- portfolio:expanded-v1 -->
+<!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Expanding an LVM Partition and Filesystem Online supporting diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Expanding an LVM Partition and Filesystem Online execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
-This visual summarizes the implementation flow and control points for **Expanding an LVM Partition and Filesystem Online**.
+This diagram supports **Expanding an LVM Partition and Filesystem Online** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
-## Deep Dive
-This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **platform reliability, lifecycle controls, and repeatable Linux delivery**, with decisions made to keep implementation repeatable under production constraints.
+## Post-Specific Engineering Lens
+For this post, the primary objective is: **Change storage allocation safely with reversible checkpoints.**
 
-### Design choices
-- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
-- Treated **lvm** and **fdisk** as the main risk vectors during implementation.
-- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+### Implementation decisions for this case
+- Chose a staged approach centered on **lvm** to avoid high-blast-radius rollouts.
+- Used **fdisk** checkpoints to make regressions observable before full rollout.
+- Treated **storage** documentation as part of delivery, not a post-task artifact.
 
-### Operational sequence
-1. Baseline current state.
-2. Apply change in controlled stage.
-3. Run post-change validation.
-4. Document handoff and rollback point.
+### Practical command path
+These are representative execution checkpoints relevant to this post:
 
-## Validation and Evidence
-Use this checklist to prove the change is production-ready:
-- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
-- Post-change checks executed from at least two viewpoints (service-level and system-level).
-- Failure scenario tested with a known rollback path.
-- Runbook updated with final command set and ownership boundaries.
+```bash
+lsblk -f
+lvdisplay; vgdisplay; pvdisplay
+resize2fs /dev/mapper/<lv>
+```
 
-## Risks and Mitigations
-| Risk | Why it matters | Mitigation |
+## Validation Matrix
+| Validation goal | What to baseline | What confirms success |
 |---|---|---|
-| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
-| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
-| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+| Functional stability | service availability, package state, SELinux/firewall posture | `systemctl --failed` stays empty |
+| Operational safety | rollback ownership + change window | `journalctl -p err -b` has no new regressions |
+| Production readiness | monitoring visibility and handoff notes | critical endpoint checks pass from at least two network zones |
 
-## Reusable Takeaways
-- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
-- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
-- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+## Failure Modes and Mitigations
+| Failure mode | Why it appears in this type of work | Mitigation used in this post pattern |
+|---|---|---|
+| Incorrect device target | Data loss risk increases immediately | Require device mapping verification and maintenance window gate |
+| Insufficient free extents | Resize fails mid-operation | Pre-calculate growth/shrink plan before execution |
+| Rollback ambiguity | Recovery time extends during incident | Create snapshot/backup and rollback notes ahead of change |
+
+## Recruiter-Readable Impact Summary
+- **Scope:** deliver Linux platform changes with controlled blast radius.
+- **Execution quality:** guarded by staged checks and explicit rollback triggers.
+- **Outcome signal:** repeatable implementation that can be handed over without hidden steps.
 

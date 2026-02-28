@@ -37,43 +37,46 @@ If you're in infrastructure and curious about app development, try letting AI ta
 *You can test it out with one month of Premium for free (Code: LINKEDIN2026).*
 [Download IntelliFlow from the Play Store](https://lnkd.in/eU5HKBJH)
 
-<!-- portfolio:expanded-v1 -->
+<!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Shipping My First Android App: IntelliFlow supporting diagram](/images/diagrams/post-framework/cloud-ops.svg)
+![Shipping My First Android App: IntelliFlow execution diagram](/images/diagrams/post-framework/cloud-ops.svg)
 
-This visual summarizes the implementation flow and control points for **Shipping My First Android App: IntelliFlow**.
+This diagram supports **Shipping My First Android App: IntelliFlow** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
-## Deep Dive
-This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **cost-aware operations, resiliency, and secure service boundaries**, with decisions made to keep implementation repeatable under production constraints.
+## Post-Specific Engineering Lens
+For this post, the primary objective is: **Improve perceived responsiveness and reduce tap-to-task friction.**
 
-### Design choices
-- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
-- Treated **googlecloud** and **android** as the main risk vectors during implementation.
-- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+### Implementation decisions for this case
+- Chose a staged approach centered on **GoogleCloud** to avoid high-blast-radius rollouts.
+- Used **Android** checkpoints to make regressions observable before full rollout.
+- Treated **Security** documentation as part of delivery, not a post-task artifact.
 
-### Operational sequence
-1. Define service boundary and SLO.
-2. Deploy with policy checks.
-3. Observe latency/errors/cost.
-4. Tune capacity and controls.
+### Practical command path
+These are representative execution checkpoints relevant to this post:
 
-## Validation and Evidence
-Use this checklist to prove the change is production-ready:
-- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
-- Post-change checks executed from at least two viewpoints (service-level and system-level).
-- Failure scenario tested with a known rollback path.
-- Runbook updated with final command set and ownership boundaries.
+```bash
+adb shell dumpsys SurfaceFlinger | findstr refresh
+adb shell am start -a android.intent.action.VIEW -d "myapp://..."
+adb shell dumpsys gfxinfo <package>
+```
 
-## Risks and Mitigations
-| Risk | Why it matters | Mitigation |
+## Validation Matrix
+| Validation goal | What to baseline | What confirms success |
 |---|---|---|
-| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
-| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
-| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+| Functional stability | latency, error budget burn, and cost profile | SLO dashboard remains within target after rollout |
+| Operational safety | rollback ownership + change window | autoscaling and quotas stay inside guardrails |
+| Production readiness | monitoring visibility and handoff notes | security policy checks pass in CI and runtime |
 
-## Reusable Takeaways
-- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
-- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
-- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+## Failure Modes and Mitigations
+| Failure mode | Why it appears in this type of work | Mitigation used in this post pattern |
+|---|---|---|
+| Device-specific behavior | UX differs across OEM implementations | Test across at least one mid and one high-tier device |
+| Navigation edge case | Deep links break when app state is partial | Normalize entry routing through a single handler |
+| Performance regression | Small UI changes impact frame pacing | Track frame timing in CI/perf checks |
+
+## Recruiter-Readable Impact Summary
+- **Scope:** improve reliability while keeping cloud spend predictable.
+- **Execution quality:** guarded by staged checks and explicit rollback triggers.
+- **Outcome signal:** repeatable implementation that can be handed over without hidden steps.
 

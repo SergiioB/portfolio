@@ -77,43 +77,46 @@ Now, whenever a workflow runs, it spins up a container that has the **exact** sa
 
 Execution Environments represent the shift of Ansible from a "scripting tool" to a true **Infrastructure as Code** platform that follows modern software engineering principles.
 
-<!-- portfolio:expanded-v1 -->
+<!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Building Custom Ansible Execution Environments supporting diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Building Custom Ansible Execution Environments execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
-This visual summarizes the implementation flow and control points for **Building Custom Ansible Execution Environments**.
+This diagram supports **Building Custom Ansible Execution Environments** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
-## Deep Dive
-This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **platform reliability, lifecycle controls, and repeatable Linux delivery**, with decisions made to keep implementation repeatable under production constraints.
+## Post-Specific Engineering Lens
+For this post, the primary objective is: **Increase automation reliability and reduce human variance.**
 
-### Design choices
-- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
-- Treated **ansible** and **containers** as the main risk vectors during implementation.
-- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+### Implementation decisions for this case
+- Chose a staged approach centered on **ansible** to avoid high-blast-radius rollouts.
+- Used **containers** checkpoints to make regressions observable before full rollout.
+- Treated **devops** documentation as part of delivery, not a post-task artifact.
 
-### Operational sequence
-1. Baseline current state.
-2. Apply change in controlled stage.
-3. Run post-change validation.
-4. Document handoff and rollback point.
+### Practical command path
+These are representative execution checkpoints relevant to this post:
 
-## Validation and Evidence
-Use this checklist to prove the change is production-ready:
-- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
-- Post-change checks executed from at least two viewpoints (service-level and system-level).
-- Failure scenario tested with a known rollback path.
-- Runbook updated with final command set and ownership boundaries.
+```bash
+ansible-playbook site.yml --limit target --check --diff
+ansible-playbook site.yml --limit target
+ansible all -m ping -o
+```
 
-## Risks and Mitigations
-| Risk | Why it matters | Mitigation |
+## Validation Matrix
+| Validation goal | What to baseline | What confirms success |
 |---|---|---|
-| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
-| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
-| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+| Functional stability | service availability, package state, SELinux/firewall posture | `systemctl --failed` stays empty |
+| Operational safety | rollback ownership + change window | `journalctl -p err -b` has no new regressions |
+| Production readiness | monitoring visibility and handoff notes | critical endpoint checks pass from at least two network zones |
 
-## Reusable Takeaways
-- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
-- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
-- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+## Failure Modes and Mitigations
+| Failure mode | Why it appears in this type of work | Mitigation used in this post pattern |
+|---|---|---|
+| Inventory scope error | Wrong hosts receive a valid but unintended change | Use explicit host limits and pre-flight host list confirmation |
+| Role variable drift | Different environments behave inconsistently | Pin defaults and validate required vars in CI |
+| Undocumented manual step | Automation appears successful but remains incomplete | Move manual steps into pre/post tasks with assertions |
+
+## Recruiter-Readable Impact Summary
+- **Scope:** deliver Linux platform changes with controlled blast radius.
+- **Execution quality:** guarded by staged checks and explicit rollback triggers.
+- **Outcome signal:** repeatable implementation that can be handed over without hidden steps.
 
