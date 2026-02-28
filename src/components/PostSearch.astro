@@ -1,0 +1,81 @@
+---
+interface Props {
+  /** CSS selector for items to filter. Items must have data-search populated. */
+  itemSelector: string;
+  /** Optional selector for section wrappers to hide when all child items are hidden. */
+  sectionSelector?: string;
+  placeholder?: string;
+}
+
+const { itemSelector, sectionSelector, placeholder } = Astro.props;
+const inputId = `post-search-input-${Astro.url.pathname.replaceAll('/', '-') || 'root'}`;
+const statusId = `post-search-status-${Astro.url.pathname.replaceAll('/', '-') || 'root'}`;
+const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll('/', '-') || 'root'}`;
+---
+
+<section class="post-search panel panel-soft" aria-label="Post search">
+  <label class="post-search-label" for={inputId}>Search posts</label>
+  <input
+    id={inputId}
+    class="post-search-input"
+    type="search"
+    name="q"
+    autocomplete="off"
+    placeholder={placeholder ?? 'Search by title, issue, tags...'}
+  />
+  <p id={statusId} class="post-search-status" aria-live="polite"></p>
+  <p id={emptyId} class="post-search-empty" hidden>No matches.</p>
+</section>
+
+<script is:inline define:vars={{ inputId, statusId, emptyId, itemSelector, sectionSelector }}>
+  function normalize(value) {
+    return String(value ?? '').toLowerCase().trim();
+  }
+
+  const input = document.getElementById(inputId);
+  const status = document.getElementById(statusId);
+  const empty = document.getElementById(emptyId);
+  const items = Array.from(document.querySelectorAll(itemSelector));
+  const sections = sectionSelector ? Array.from(document.querySelectorAll(sectionSelector)) : [];
+
+  function applyQuery(rawQuery) {
+    const query = normalize(rawQuery);
+    let visibleCount = 0;
+
+    for (const item of items) {
+      const haystack = normalize(item.dataset.search);
+      const matches = query.length === 0 || haystack.includes(query);
+      item.hidden = !matches;
+      if (matches) visibleCount++;
+    }
+
+    if (sections.length > 0) {
+      for (const section of sections) {
+        // Hide empty year blocks while searching.
+        const hasAnyVisible = section.querySelector(`${itemSelector}:not([hidden])`) !== null;
+        section.hidden = !hasAnyVisible;
+      }
+    }
+
+    if (status) {
+      status.textContent = query.length === 0 ? '' : `${visibleCount} match${visibleCount === 1 ? '' : 'es'}`;
+    }
+    if (empty) {
+      empty.hidden = !(query.length > 0 && visibleCount === 0);
+    }
+  }
+
+  if (input) {
+    const params = new URLSearchParams(window.location.search);
+    const initial = params.get('q');
+    if (initial) {
+      input.value = initial;
+      applyQuery(initial);
+    }
+
+    input.addEventListener('input', (event) => {
+      applyQuery(event.target.value);
+    });
+  }
+</script>
+
