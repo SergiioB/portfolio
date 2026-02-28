@@ -294,6 +294,12 @@ body.booting .site-shell {
   padding: 0.7rem 0.8rem 0.45rem;
 }
 
+.command-palette-head-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .command-palette-head h2 {
   font-size: 0.94rem;
   color: var(--heading-2);
@@ -305,6 +311,25 @@ body.booting .site-shell {
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text-muted);
+}
+
+.command-palette-close {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(22, 27, 34, 0.82);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.26rem 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.command-palette-close:hover {
+  color: var(--text-strong);
+  border-color: var(--heading-2);
 }
 
 .command-palette-input {
@@ -2876,6 +2901,11 @@ body.hardcore-mode .ops-alert-stream {
   .command-palette-head {
     flex-direction: column;
     align-items: start;
+  }
+
+  .command-palette-head-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .command-palette-input,

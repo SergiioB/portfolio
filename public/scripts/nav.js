@@ -11,6 +11,11 @@
     escHandler: null,
   };
 
+  const paletteRuntime = {
+    bound: false,
+    setOpen: null,
+  };
+
   const clearBootTimers = () => {
     if (bootRuntime.lineTimer) window.clearTimeout(bootRuntime.lineTimer);
     if (bootRuntime.failSafeTimer) window.clearTimeout(bootRuntime.failSafeTimer);
@@ -169,11 +174,11 @@
 
   const initCommandPalette = () => {
     const palette = document.querySelector('[data-command-palette]');
-    const closeTarget = document.querySelector('[data-command-palette-close]');
+    const closeTargets = Array.from(document.querySelectorAll('[data-command-palette-close]'));
     const input = document.querySelector('[data-command-palette-input]');
     const list = document.querySelector('[data-command-palette-list]');
 
-    if (!palette || !closeTarget || !input || !list) return;
+    if (!palette || closeTargets.length === 0 || !input || !list) return;
 
     const base = ensureTrailingSlash(getHomeHref());
     const navigate = (target) => {
@@ -189,6 +194,42 @@
         input.focus();
       }
     };
+
+    paletteRuntime.setOpen = setPaletteOpen;
+
+    if (!paletteRuntime.bound) {
+      paletteRuntime.bound = true;
+
+      closeTargets.forEach((target) => {
+        target.addEventListener('click', () => setPaletteOpen(false));
+      });
+
+      palette.addEventListener('mousedown', (event) => {
+        if (event.target === palette) {
+          setPaletteOpen(false);
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        const isHotkey = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
+        if (isHotkey) {
+          event.preventDefault();
+          setPaletteOpen(palette.hidden);
+          return;
+        }
+
+        if (event.key === 'Escape' && !palette.hidden) {
+          event.preventDefault();
+          setPaletteOpen(false);
+        }
+      });
+
+      window.addEventListener('portfolio-open-palette', () => {
+        setPaletteOpen(true);
+      });
+    }
+
+    setPaletteOpen(false);
 
     const commands = [
       {
@@ -320,24 +361,13 @@
       }
     });
 
-    closeTarget.addEventListener('click', () => setPaletteOpen(false));
-
-    document.addEventListener('keydown', (event) => {
-      const isHotkey = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
-      if (isHotkey) {
-        event.preventDefault();
-        setPaletteOpen(palette.hidden);
-        return;
-      }
-
-      if (event.key === 'Escape' && !palette.hidden) {
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
         setPaletteOpen(false);
-      }
-    });
-
-    window.addEventListener('portfolio-open-palette', () => {
-      setPaletteOpen(true);
-    });
+      },
+      { once: true }
+    );
   };
 
   const initSidebar = () => {
