@@ -18,8 +18,6 @@ This project is designed to serve two purposes:
 1. A professional portfolio surface (focus areas, experience summary, engineering approach)
 2. A technical knowledge base (short posts and implementation notes)
 
-The architecture optimizes for low maintenance and low attack surface, not for dynamic features.
-
 ## Stack (and why it fits)
 
 - `Astro 5`: static-first rendering, Markdown-native content, minimal client JavaScript
