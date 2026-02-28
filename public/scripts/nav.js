@@ -3,7 +3,31 @@
   const getHomeHref = () => document.querySelector('.site-brand')?.getAttribute('href') || '/';
   const ensureTrailingSlash = (path) => (path.endsWith('/') ? path : `${path}/`);
 
-  const initBootSequence = ({ force = false } = {}) => {
+  const bootRuntime = {
+    runId: 0,
+    lineTimer: 0,
+    failSafeTimer: 0,
+    finishTimer: 0,
+    escHandler: null,
+  };
+
+  const clearBootTimers = () => {
+    if (bootRuntime.lineTimer) window.clearTimeout(bootRuntime.lineTimer);
+    if (bootRuntime.failSafeTimer) window.clearTimeout(bootRuntime.failSafeTimer);
+    if (bootRuntime.finishTimer) window.clearTimeout(bootRuntime.finishTimer);
+    bootRuntime.lineTimer = 0;
+    bootRuntime.failSafeTimer = 0;
+    bootRuntime.finishTimer = 0;
+  };
+
+  const detachEscHandler = () => {
+    if (bootRuntime.escHandler) {
+      document.removeEventListener('keydown', bootRuntime.escHandler);
+      bootRuntime.escHandler = null;
+    }
+  };
+
+  const runBootSequence = ({ force = false } = {}) => {
     const shell = document.querySelector('[data-boot-sequence]');
     const output = document.querySelector('[data-boot-output]');
     const progressBar = document.querySelector('[data-boot-progress]');
@@ -13,12 +37,12 @@
 
     if (!shell || !output || !progressBar || !progressText || !gate || !gateInput) return;
 
-    const storageKey = 'portfolio.boot.sequence.v1';
-    const gateKey = 'portfolio.boot.gate';
-    const alreadyShown = window.sessionStorage.getItem(storageKey) === '1';
-    const gateEnabled = window.localStorage.getItem(gateKey) === '1';
-    let lineTimer;
-    let failSafeTimer;
+    bootRuntime.runId += 1;
+    const currentRun = bootRuntime.runId;
+    clearBootTimers();
+    detachEscHandler();
+
+    const gateEnabled = window.localStorage.getItem('portfolio.boot.gate') === '1';
 
     output.innerHTML = '';
     progressBar.style.width = '0%';
@@ -27,33 +51,12 @@
     gateInput.value = '';
     shell.classList.remove('done');
     shell.classList.remove('gate-error');
-
-    if (gateEnabled) {
-      shell.classList.add('gate-enabled');
-    } else {
-      shell.classList.remove('gate-enabled');
-    }
-
-    const finalizeBoot = () => {
-      shell.classList.add('done');
-      document.body.classList.remove('booting');
-      window.sessionStorage.setItem(storageKey, '1');
-      window.dispatchEvent(new CustomEvent('portfolio-boot-complete'));
-      if (failSafeTimer) {
-        window.clearTimeout(failSafeTimer);
-      }
-    };
-
-    if (!force && (alreadyShown || prefersReducedMotion)) {
-      shell.classList.add('done');
-      window.sessionStorage.setItem(storageKey, '1');
-      window.dispatchEvent(new CustomEvent('portfolio-boot-complete'));
-      return;
-    }
+    shell.classList.toggle('gate-enabled', gateEnabled);
 
     document.body.classList.add('booting');
 
     const bootLines = [
+      '$ date -Ins',
       '$ uname -a',
       'Linux rhel-core-01 5.14.0-503.35.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC',
       '$ systemctl is-system-running',
@@ -65,13 +68,53 @@
       '[auth] publickey accepted for sergiio',
       '$ ansible all -m ping --one-line',
       '128 hosts reachable · 0 unreachable',
+      '$ podman ps --format "table {{.Names}}\t{{.Status}}"',
+      'inference-gw\tUp 2h',
       '$ ./serve-llm --healthcheck qwen3.5-edge',
       '[ai] model runtime warmed · deterministic policy active',
       '[ok] engineer cockpit ready',
     ];
 
-    let lineIndex = 0;
-    let progress = 0;
+    const setProgress = (value) => {
+      const normalized = Math.max(0, Math.min(100, value));
+      progressBar.style.width = `${normalized}%`;
+      progressText.textContent = `${Math.round(normalized)}%`;
+    };
+
+    const finalizeBoot = () => {
+      if (currentRun !== bootRuntime.runId) return;
+      clearBootTimers();
+      detachEscHandler();
+      shell.classList.add('done');
+      document.body.classList.remove('booting');
+      window.dispatchEvent(new CustomEvent('portfolio-boot-complete'));
+    };
+
+    const skipBoot = () => {
+      setProgress(100);
+      finalizeBoot();
+    };
+
+    shell.onclick = () => skipBoot();
+    bootRuntime.escHandler = (event) => {
+      if (event.key === 'Escape') {
+        skipBoot();
+      }
+    };
+    document.addEventListener('keydown', bootRuntime.escHandler);
+
+    gateInput.onkeydown = (event) => {
+      if (event.key !== 'Enter') return;
+      const value = gateInput.value.trim().toLowerCase();
+      if (value === 'unlock') {
+        skipBoot();
+        return;
+      }
+
+      shell.classList.add('gate-error');
+      window.setTimeout(() => shell.classList.remove('gate-error'), 260);
+      gateInput.select();
+    };
 
     const appendLine = (text) => {
       const line = document.createElement('div');
@@ -79,61 +122,48 @@
       if (text.includes('[ok]')) line.classList.add('boot-ok');
       if (text.includes('[warn]')) line.classList.add('boot-warn');
       if (text.includes('[ssh]') || text.includes('[auth]')) line.classList.add('boot-accent');
+      if (text.startsWith('$')) line.classList.add('boot-accent');
       line.textContent = text;
       output.appendChild(line);
       output.scrollTop = output.scrollHeight;
     };
 
+    if (prefersReducedMotion && !force) {
+      appendLine('[ok] reduced-motion profile active · instant ready');
+      setProgress(100);
+      bootRuntime.finishTimer = window.setTimeout(finalizeBoot, 120);
+      return;
+    }
+
+    let lineIndex = 0;
+
     const tick = () => {
+      if (currentRun !== bootRuntime.runId) return;
+
       if (lineIndex >= bootLines.length) {
-        progressBar.style.width = '100%';
+        setProgress(100);
         if (gateEnabled) {
           gate.hidden = false;
           gateInput.focus();
           return;
         }
 
-        lineTimer = window.setTimeout(finalizeBoot, 320);
+        bootRuntime.finishTimer = window.setTimeout(finalizeBoot, 260);
         return;
       }
 
       appendLine(bootLines[lineIndex]);
       lineIndex += 1;
-      progress = Math.min(100, progress + Math.round(100 / bootLines.length));
-      progressBar.style.width = `${progress}%`;
-      progressText.textContent = `${progress}%`;
-      lineTimer = window.setTimeout(tick, 135 + Math.random() * 110);
+      setProgress((lineIndex / bootLines.length) * 100);
+      bootRuntime.lineTimer = window.setTimeout(tick, 95 + Math.random() * 85);
     };
 
-    const skipBoot = () => {
-      if (lineTimer) window.clearTimeout(lineTimer);
+    bootRuntime.failSafeTimer = window.setTimeout(() => {
+      if (currentRun !== bootRuntime.runId) return;
+      setProgress(100);
       finalizeBoot();
-      document.removeEventListener('keydown', onEsc);
-    };
+    }, 9000);
 
-    const onEsc = (event) => {
-      if (event.key === 'Escape') skipBoot();
-    };
-
-    gateInput.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter') return;
-      const value = gateInput.value.trim().toLowerCase();
-      if (value === 'unlock') {
-        if (lineTimer) window.clearTimeout(lineTimer);
-        finalizeBoot();
-        return;
-      }
-
-      shell.classList.add('gate-error');
-      window.setTimeout(() => shell.classList.remove('gate-error'), 280);
-      gateInput.select();
-    });
-
-    shell.addEventListener('click', skipBoot, { once: true });
-    document.addEventListener('keydown', onEsc);
-    failSafeTimer = window.setTimeout(() => {
-      finalizeBoot();
-    }, 12000);
     tick();
   };
 
@@ -208,10 +238,7 @@
       {
         label: 'Replay Boot Sequence',
         tags: 'boot preloader ssh startup replay',
-        run: () => {
-          window.sessionStorage.removeItem('portfolio.boot.sequence.v1');
-          initBootSequence({ force: true });
-        },
+        run: () => runBootSequence({ force: true }),
       },
       {
         label: 'Toggle Boot Unlock Gate',
@@ -313,14 +340,16 @@
     });
   };
 
-  initBootSequence();
-  initCommandPalette();
+  const initSidebar = () => {
+    const sidebar = document.querySelector('[data-sidebar]');
+    const toggle = document.querySelector('[data-menu-toggle]');
+    const overlay = document.querySelector('[data-overlay]');
 
-  const sidebar = document.querySelector('[data-sidebar]');
-  const toggle = document.querySelector('[data-menu-toggle]');
-  const overlay = document.querySelector('[data-overlay]');
+    if (!sidebar || !toggle || !overlay) return;
+    if (toggle.dataset.bound === '1') return;
 
-  if (sidebar && toggle && overlay) {
+    toggle.dataset.bound = '1';
+
     const setOpen = (open) => {
       sidebar.classList.toggle('open', open);
       overlay.classList.toggle('active', open);
@@ -347,45 +376,70 @@
         }
       });
     });
-  }
+  };
 
-  const revealTargets = [
-    '.hero',
-    '.section-block',
-    '.timeline-item',
-    '.skill-card',
-    '.principles-grid .panel',
-    '.engineer-lab',
-    '.network-panel',
-  ];
+  const initReveal = () => {
+    const revealTargets = [
+      '.hero',
+      '.section-block',
+      '.timeline-item',
+      '.skill-card',
+      '.principles-grid .panel',
+      '.engineer-lab',
+      '.network-panel',
+    ];
 
-  const elements = document.querySelectorAll(revealTargets.join(','));
+    const elements = document.querySelectorAll(revealTargets.join(','));
+    if (elements.length === 0) return;
 
-  if (elements.length === 0) return;
-
-  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-    elements.forEach((element) => element.classList.add('in-view'));
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    {
-      threshold: 0.12,
-      rootMargin: '0px 0px -8% 0px',
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      elements.forEach((element) => element.classList.add('in-view'));
+      return;
     }
-  );
 
-  elements.forEach((element, index) => {
-    element.classList.add('reveal');
-    element.style.transitionDelay = `${Math.min(index * 26, 170)}ms`;
-    observer.observe(element);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -8% 0px',
+      }
+    );
+
+    elements.forEach((element, index) => {
+      if (element.classList.contains('reveal')) return;
+      element.classList.add('reveal');
+      element.style.transitionDelay = `${Math.min(index * 26, 170)}ms`;
+      observer.observe(element);
+    });
+  };
+
+  const initPage = () => {
+    runBootSequence();
+    initCommandPalette();
+    initSidebar();
+    initReveal();
+  };
+
+  let initialized = false;
+  document.addEventListener('astro:page-load', () => {
+    initialized = true;
+    initPage();
   });
+
+  window.addEventListener(
+    'load',
+    () => {
+      if (!initialized) {
+        initPage();
+      }
+    },
+    { once: true }
+  );
 })();
