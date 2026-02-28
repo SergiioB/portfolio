@@ -1,5 +1,6 @@
 (function () {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const BOOT_COMPLETED_KEY = 'portfolio.boot.completed';
   const getHomeHref = () => document.querySelector('.site-brand')?.getAttribute('href') || '/';
   const ensureTrailingSlash = (path) => (path.endsWith('/') ? path : `${path}/`);
 
@@ -33,6 +34,22 @@
     }
   };
 
+  const hasCompletedBoot = () => {
+    try {
+      return window.sessionStorage.getItem(BOOT_COMPLETED_KEY) === '1';
+    } catch {
+      return false;
+    }
+  };
+
+  const markBootCompleted = () => {
+    try {
+      window.sessionStorage.setItem(BOOT_COMPLETED_KEY, '1');
+    } catch {
+      // sessionStorage can be unavailable in strict browser contexts
+    }
+  };
+
   const runBootSequence = ({ force = false } = {}) => {
     const shell = document.querySelector('[data-boot-sequence]');
     const output = document.querySelector('[data-boot-output]');
@@ -42,6 +59,14 @@
     const gateInput = document.querySelector('[data-boot-gate-input]');
 
     if (!shell || !output || !progressBar || !progressText || !gate || !gateInput) return;
+
+    if (!force && hasCompletedBoot()) {
+      clearBootTimers();
+      detachEscHandler();
+      shell.classList.add('done');
+      document.body.classList.remove('booting');
+      return;
+    }
 
     bootRuntime.runId += 1;
     const currentRun = bootRuntime.runId;
@@ -93,6 +118,7 @@
       detachEscHandler();
       shell.classList.add('done');
       document.body.classList.remove('booting');
+      markBootCompleted();
       window.dispatchEvent(new CustomEvent('portfolio-boot-complete'));
     };
 
