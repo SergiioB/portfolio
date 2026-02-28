@@ -1,5 +1,6 @@
 export const CATEGORY_ORDER = [
   'infrastructure',
+  'automation',
   'ai',
   'cloud',
   'local-ai',
@@ -14,6 +15,10 @@ export const CATEGORY_META: Record<CategorySlug, { label: string; description: s
   infrastructure: {
     label: 'Infrastructure',
     description: 'RHEL lifecycle, automation, virtualization, and production operations.',
+  },
+  automation: {
+    label: 'Automation',
+    description: 'Ansible playbooks, task automation, and configuration management.',
   },
   ai: {
     label: 'AI',

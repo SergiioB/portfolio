@@ -10,6 +10,12 @@
   --text-soft: #8b949e;
   --text-muted: #6e7681;
   --heading: #f0f6fc;
+  --heading-2: #79c0ff;
+  /* Light blue */
+  --heading-3: #d2a8ff;
+  /* Purple */
+  --heading-4: #ff7b72;
+  /* Red/Orange */
   --link: #58a6ff;
   --link-hover: #79c0ff;
   --accent: #238636;
@@ -129,6 +135,18 @@ h3 {
   font-family: var(--font-display);
 }
 
+h2 {
+  color: var(--heading-2);
+}
+
+h3 {
+  color: var(--heading-3);
+}
+
+h4 {
+  color: var(--heading-4);
+}
+
 ul,
 ol {
   padding-left: 1.2rem;
@@ -216,7 +234,7 @@ li+li {
 }
 
 .sidebar-search {
-  padding: 0.8rem 1.1rem 0.2rem;
+  padding: 0.5rem 1.1rem 0.8rem;
   border-bottom: 1px solid var(--border);
   background: transparent;
 }
@@ -264,12 +282,14 @@ li+li {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .sidebar-search-submit:hover {
-  border-color: var(--link);
-  box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+  border-color: var(--accent);
+  background: rgba(35, 134, 54, 0.15);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(35, 134, 54, 0.4);
 }
 
 .sidebar-nav {

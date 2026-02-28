@@ -33,7 +33,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 <aside class="sidebar" id="site-sidebar" data-sidebar>
   <div class="sidebar-header">
     <a href={withBase()} class="site-brand" aria-label="Homepage">
-      <span class="brand-name">{SITE.brand}</span>
+      <span class="brand-name glitch" data-text={SITE.brand}>{SITE.brand}</span>
       <span class="brand-tagline">{SITE.role}</span>
     </a>
     <p class="sidebar-intro">{SITE.profileSummary}</p>

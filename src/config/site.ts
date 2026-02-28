@@ -1,14 +1,14 @@
 export const SITE = {
   author: 'Sergio B.',
-  brand: 'SB / Field Notes',
-  role: 'Infrastructure Engineer',
-  tagline: 'Infrastructure, automation, cloud, and practical AI notes',
+  brand: 'Sergio B. / Field Notes',
+  role: 'Linux & Virtualization Engineer',
+  tagline: 'Infrastructure delivery, automation, and applied enterprise AI',
   description:
-    'A static knowledge portfolio focused on production operations, infrastructure automation, cloud delivery, and privacy-aware local AI experiments.',
+    'Case-study driven portfolio focused on Linux platform engineering, virtualization, Ansible automation, RHEL lifecycle modernization, and practical AI integration in enterprise environments.',
   profileSummary:
-    'Production-minded infrastructure engineering with a focus on reliable automation, platform operations, and practical AI enablement.',
-  publicLocation: 'Europe (UTC+1)',
-  showExactLocation: false,
+    'Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.',
+  publicLocation: 'Madrid, Spain (Hybrid)',
+  showExactLocation: true,
   copyrightName: 'Sergio B.',
 } as const;
 
@@ -18,7 +18,7 @@ export const PUBLIC_LINKS: Array<{ label: string; href: string }> = [
 
 export const PUBLIC_CV = {
   enabled: true,
-  label: 'View CV',
+  label: 'Open Public CV',
   href: 'docs/cv-public.pdf',
   external: false,
   openInNewTab: true,
