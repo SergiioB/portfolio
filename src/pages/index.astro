@@ -9,6 +9,7 @@ import CategoryAnimation from '../components/CategoryAnimation.astro';
 import EngineerLab from '../components/EngineerLab.astro';
 import OpsDeck from '../components/OpsDeck.astro';
 import NetworkTopology from '../components/NetworkTopology.astro';
+import AudienceMode from '../components/AudienceMode.astro';
 
 const posts = await getCollection('posts');
 const publishedPosts = posts
@@ -117,11 +118,26 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     </div>
   </section>
 
-  <EngineerLab />
+  <AudienceMode />
 
-  <OpsDeck />
+  <section class="engineer-zone-teaser panel panel-soft section-surface" data-engineer-zone-teaser>
+    <div class="section-header-row">
+      <h2>Engineer Labs</h2>
+      <button type="button" class="action-link" data-set-audience="engineer">Switch to Engineer Mode</button>
+    </div>
+    <p>
+      Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry,
+      command simulation, and network topology labs.
+    </p>
+  </section>
 
-  <NetworkTopology />
+  <div class="engineer-zone" data-engineer-zone>
+    <EngineerLab />
+
+    <OpsDeck />
+
+    <NetworkTopology />
+  </div>
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
     <div class="section-header-row">
