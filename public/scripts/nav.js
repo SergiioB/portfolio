@@ -255,6 +255,7 @@
   /* ═══════════════════════════════════════════════════════════════════════════
    *  Scroll progress bar
    * ═══════════════════════════════════════════════════════════════════════ */
+  let scrollProgressBound = false;
   const initScrollProgress = () => {
     let bar = document.querySelector('.scroll-progress-bar');
     if (!bar) {
@@ -262,14 +263,21 @@
       bar.className = 'scroll-progress-bar';
       document.body.appendChild(bar);
     }
-    const update = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      bar.style.width = progress + '%';
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    if (!scrollProgressBound) {
+      scrollProgressBound = true;
+      window.addEventListener('scroll', () => {
+        const b = document.querySelector('.scroll-progress-bar');
+        if (!b) return;
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        b.style.width = progress + '%';
+      }, { passive: true });
+    }
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = progress + '%';
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -310,10 +318,10 @@
   const sessionStart = Date.now();
 
   const initUptimeCounter = () => {
-    const el = document.querySelector('[data-uptime]');
-    if (!el) return;
     if (uptimeInterval) window.clearInterval(uptimeInterval);
     const update = () => {
+      const el = document.querySelector('[data-uptime]');
+      if (!el) return;
       const s = Math.floor((Date.now() - sessionStart) / 1000);
       const m = Math.floor(s / 60);
       const h = Math.floor(m / 60);
