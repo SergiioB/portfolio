@@ -264,9 +264,13 @@ body.booting .site-shell {
   position: fixed;
   inset: 0;
   z-index: 10010;
-  display: grid;
+  display: none;              /* hidden by default */
   place-items: start center;
   padding: 10vh 1rem 1rem;
+}
+
+.command-palette.is-open {
+  display: grid;              /* shown only when JS adds .is-open */
 }
 
 .command-palette-backdrop {

@@ -1,10 +1,51 @@
+/**
+ * nav.js — Portfolio runtime orchestration
+ *
+ * Architecture:
+ *   • Global listeners are registered ONCE and survive Astro ViewTransitions
+ *     page swaps (the `document` object persists across client-side navigation).
+ *   • Per-page DOM bindings are re-attached on every `astro:page-load`.
+ *   • Palette visibility uses a CSS class (.is-open) instead of the `hidden`
+ *     HTML attribute, because `[hidden]` is overridden by `display: grid` in
+ *     the stylesheet — the root cause of the "palette won't close" bug.
+ *   • Navigation commands use a synthetic <a> click so Astro's ViewTransitions
+ *     router intercepts them (SPA-style) instead of `window.location.href`
+ *     which causes a hard full-page reload and re-triggers the boot sequence.
+ */
 (function () {
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Constants & utilities
+   * ═══════════════════════════════════════════════════════════════════════ */
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const BOOT_COMPLETED_KEY = 'portfolio.boot.completed';
-  const getHomeHref = () => document.querySelector('.site-brand')?.getAttribute('href') || '/';
-  const ensureTrailingSlash = (path) => (path.endsWith('/') ? path : `${path}/`);
 
-  const bootRuntime = {
+  const getBase = () => {
+    const brand = document.querySelector('.site-brand');
+    const href = brand ? brand.getAttribute('href') || '/' : '/';
+    return href.endsWith('/') ? href : href + '/';
+  };
+
+  const normalizePath = (p) => (p.endsWith('/') ? p : p + '/');
+
+  /**
+   * Navigate using Astro's ViewTransitions router.
+   * We create a temporary <a>, click it, and remove it.  Astro intercepts <a>
+   * clicks automatically, so this gives us SPA transitions — no hard reload,
+   * no boot replay, no palette-still-showing flash.
+   */
+  const spaNavigate = (url) => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Boot sequence
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const boot = {
     runId: 0,
     lineTimer: 0,
     failSafeTimer: 0,
@@ -12,43 +53,37 @@
     escHandler: null,
   };
 
-  const paletteRuntime = {
-    bound: false,
-    setOpen: null,
-    close: null,
-    toggleHandler: null,
-  };
-
   const clearBootTimers = () => {
-    if (bootRuntime.lineTimer) window.clearTimeout(bootRuntime.lineTimer);
-    if (bootRuntime.failSafeTimer) window.clearTimeout(bootRuntime.failSafeTimer);
-    if (bootRuntime.finishTimer) window.clearTimeout(bootRuntime.finishTimer);
-    bootRuntime.lineTimer = 0;
-    bootRuntime.failSafeTimer = 0;
-    bootRuntime.finishTimer = 0;
+    if (boot.lineTimer) window.clearTimeout(boot.lineTimer);
+    if (boot.failSafeTimer) window.clearTimeout(boot.failSafeTimer);
+    if (boot.finishTimer) window.clearTimeout(boot.finishTimer);
+    boot.lineTimer = 0;
+    boot.failSafeTimer = 0;
+    boot.finishTimer = 0;
   };
 
-  const detachEscHandler = () => {
-    if (bootRuntime.escHandler) {
-      document.removeEventListener('keydown', bootRuntime.escHandler);
-      bootRuntime.escHandler = null;
+  const detachBootEsc = () => {
+    if (boot.escHandler) {
+      document.removeEventListener('keydown', boot.escHandler);
+      boot.escHandler = null;
     }
   };
 
   const hasCompletedBoot = () => {
-    try {
-      return window.sessionStorage.getItem(BOOT_COMPLETED_KEY) === '1';
-    } catch {
-      return false;
-    }
+    try { return window.sessionStorage.getItem(BOOT_COMPLETED_KEY) === '1'; } catch { return false; }
   };
 
   const markBootCompleted = () => {
-    try {
-      window.sessionStorage.setItem(BOOT_COMPLETED_KEY, '1');
-    } catch {
-      // sessionStorage can be unavailable in strict browser contexts
-    }
+    try { window.sessionStorage.setItem(BOOT_COMPLETED_KEY, '1'); } catch {}
+  };
+
+  /** Immediately hide boot overlay — safe to call at any time. */
+  const dismissBoot = () => {
+    clearBootTimers();
+    detachBootEsc();
+    const shell = document.querySelector('[data-boot-sequence]');
+    if (shell) shell.classList.add('done');
+    document.body.classList.remove('booting');
   };
 
   const runBootSequence = ({ force = false } = {}) => {
@@ -61,18 +96,16 @@
 
     if (!shell || !output || !progressBar || !progressText || !gate || !gateInput) return;
 
+    /* Guard: skip if already played this session (unless forced). */
     if (!force && hasCompletedBoot()) {
-      clearBootTimers();
-      detachEscHandler();
-      shell.classList.add('done');
-      document.body.classList.remove('booting');
+      dismissBoot();
       return;
     }
 
-    bootRuntime.runId += 1;
-    const currentRun = bootRuntime.runId;
+    boot.runId += 1;
+    const currentRun = boot.runId;
     clearBootTimers();
-    detachEscHandler();
+    detachBootEsc();
 
     const gateEnabled = window.localStorage.getItem('portfolio.boot.gate') === '1';
 
@@ -84,7 +117,6 @@
     shell.classList.remove('done');
     shell.classList.remove('gate-error');
     shell.classList.toggle('gate-enabled', gateEnabled);
-
     document.body.classList.add('booting');
 
     const bootLines = [
@@ -107,43 +139,28 @@
       '[ok] engineer cockpit ready',
     ];
 
-    const setProgress = (value) => {
-      const normalized = Math.max(0, Math.min(100, value));
-      progressBar.style.width = `${normalized}%`;
-      progressText.textContent = `${Math.round(normalized)}%`;
+    const setProgress = (v) => {
+      const n = Math.max(0, Math.min(100, v));
+      progressBar.style.width = n + '%';
+      progressText.textContent = Math.round(n) + '%';
     };
 
     const finalizeBoot = () => {
-      if (currentRun !== bootRuntime.runId) return;
-      clearBootTimers();
-      detachEscHandler();
-      shell.classList.add('done');
-      document.body.classList.remove('booting');
+      if (currentRun !== boot.runId) return;
+      dismissBoot();
       markBootCompleted();
       window.dispatchEvent(new CustomEvent('portfolio-boot-complete'));
     };
 
-    const skipBoot = () => {
-      setProgress(100);
-      finalizeBoot();
-    };
+    const skipBoot = () => { setProgress(100); finalizeBoot(); };
 
-    shell.onclick = () => skipBoot();
-    bootRuntime.escHandler = (event) => {
-      if (event.key === 'Escape') {
-        skipBoot();
-      }
-    };
-    document.addEventListener('keydown', bootRuntime.escHandler);
+    shell.onclick = skipBoot;
+    boot.escHandler = (e) => { if (e.key === 'Escape') skipBoot(); };
+    document.addEventListener('keydown', boot.escHandler);
 
-    gateInput.onkeydown = (event) => {
-      if (event.key !== 'Enter') return;
-      const value = gateInput.value.trim().toLowerCase();
-      if (value === 'unlock') {
-        skipBoot();
-        return;
-      }
-
+    gateInput.onkeydown = (e) => {
+      if (e.key !== 'Enter') return;
+      if (gateInput.value.trim().toLowerCase() === 'unlock') { skipBoot(); return; }
       shell.classList.add('gate-error');
       window.setTimeout(() => shell.classList.remove('gate-error'), 260);
       gateInput.select();
@@ -164,188 +181,130 @@
     if (prefersReducedMotion && !force) {
       appendLine('[ok] reduced-motion profile active · instant ready');
       setProgress(100);
-      bootRuntime.finishTimer = window.setTimeout(finalizeBoot, 120);
+      boot.finishTimer = window.setTimeout(finalizeBoot, 120);
       return;
     }
 
     let lineIndex = 0;
-
     const tick = () => {
-      if (currentRun !== bootRuntime.runId) return;
-
+      if (currentRun !== boot.runId) return;
       if (lineIndex >= bootLines.length) {
         setProgress(100);
-        if (gateEnabled) {
-          gate.hidden = false;
-          gateInput.focus();
-          return;
-        }
-
-        bootRuntime.finishTimer = window.setTimeout(finalizeBoot, 260);
+        if (gateEnabled) { gate.hidden = false; gateInput.focus(); return; }
+        boot.finishTimer = window.setTimeout(finalizeBoot, 260);
         return;
       }
-
       appendLine(bootLines[lineIndex]);
       lineIndex += 1;
       setProgress((lineIndex / bootLines.length) * 100);
-      bootRuntime.lineTimer = window.setTimeout(tick, 95 + Math.random() * 85);
+      boot.lineTimer = window.setTimeout(tick, 95 + Math.random() * 85);
     };
 
-    bootRuntime.failSafeTimer = window.setTimeout(() => {
-      if (currentRun !== bootRuntime.runId) return;
-      setProgress(100);
-      finalizeBoot();
+    boot.failSafeTimer = window.setTimeout(() => {
+      if (currentRun === boot.runId) { setProgress(100); finalizeBoot(); }
     }, 9000);
 
     tick();
   };
 
-  const initCommandPalette = () => {
-    const palette = document.querySelector('[data-command-palette]');
-    const closeTargets = Array.from(document.querySelectorAll('[data-command-palette-close]'));
-    const input = document.querySelector('[data-command-palette-input]');
-    const list = document.querySelector('[data-command-palette-list]');
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Command palette
+   *
+   *  Visibility is controlled via the CSS class `.is-open` on the palette
+   *  element, NOT the `hidden` HTML attribute.  The previous implementation
+   *  used `hidden`, but CSS `display: grid` on `.command-palette` silently
+   *  overrode it — so closing the palette via `el.hidden = true` had zero
+   *  visual effect.
+   * ═══════════════════════════════════════════════════════════════════════ */
+  let paletteIsOpen = false;
+  let globalPaletteListenersBound = false;
 
-    if (!palette || closeTargets.length === 0 || !input || !list) return;
+  const closePalette = () => {
+    paletteIsOpen = false;
+    const el = document.querySelector('[data-command-palette]');
+    if (el) el.classList.remove('is-open');
+    document.body.classList.remove('palette-open');
+  };
 
-    const base = ensureTrailingSlash(getHomeHref());
-    const navigate = (target) => {
-      window.location.href = target;
-    };
+  const openPalette = () => {
+    const el = document.querySelector('[data-command-palette]');
+    if (!el) return;
+    paletteIsOpen = true;
+    el.classList.add('is-open');
+    document.body.classList.add('palette-open');
+    const input = el.querySelector('[data-command-palette-input]');
+    if (input) { input.value = ''; input.focus(); }
+    renderCommands('');
+  };
 
-    const setPaletteOpen = (open) => {
-      const livePalette = document.querySelector('[data-command-palette]');
-      const liveInput = document.querySelector('[data-command-palette-input]');
-      if (!livePalette) return;
+  const togglePalette = () => { paletteIsOpen ? closePalette() : openPalette(); };
 
-      livePalette.hidden = !open;
-      document.body.classList.toggle('palette-open', open);
-      if (open && liveInput) {
-        liveInput.value = '';
-        renderCommands('');
-        liveInput.focus();
+  /** Close palette, then run a command after the close paints. */
+  const execCommand = (cmd) => {
+    closePalette();
+    requestAnimationFrame(() => cmd.run());
+  };
+
+  /* ─── commands (no DOM dependency, rebuilt each page load) ─── */
+  let commands = [];
+
+  const buildCommands = () => {
+    const base = getBase();
+
+    /**
+     * Scroll to an element on the current page, or SPA-navigate to
+     * the home page with a hash if the element doesn't exist yet.
+     */
+    const scrollOrNav = (elementId) => {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + elementId);
+        return;
       }
+      spaNavigate(base + '#' + elementId);
     };
 
-    paletteRuntime.setOpen = setPaletteOpen;
-    paletteRuntime.close = () => setPaletteOpen(false);
-
-    closeTargets.forEach((target) => {
-      if (target.dataset.bound === '1') return;
-      target.dataset.bound = '1';
-      target.addEventListener('click', () => setPaletteOpen(false));
-    });
-
-    if (palette.dataset.bound !== '1') {
-      palette.dataset.bound = '1';
-      palette.addEventListener('mousedown', (event) => {
-        if (event.target === palette) {
-          setPaletteOpen(false);
-        }
-      });
-
-      palette.addEventListener('click', (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLElement)) return;
-        if (!target.closest('[data-command-palette-close]')) return;
-        event.preventDefault();
-        setPaletteOpen(false);
-      });
-    }
-
-    if (!paletteRuntime.bound) {
-      paletteRuntime.bound = true;
-
-      paletteRuntime.toggleHandler = (event) => {
-        const livePalette = document.querySelector('[data-command-palette]');
-        if (!livePalette || !paletteRuntime.setOpen) return;
-
-        const isHotkey = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
-        if (isHotkey) {
-          event.preventDefault();
-          paletteRuntime.setOpen(livePalette.hidden);
-          return;
-        }
-
-        if (event.key === 'Escape' && !livePalette.hidden) {
-          event.preventDefault();
-          paletteRuntime.setOpen(false);
-        }
-      };
-
-      document.addEventListener('keydown', paletteRuntime.toggleHandler);
-
-      document.addEventListener(
-        'click',
-        (event) => {
-          const target = event.target;
-          if (!(target instanceof Element)) return;
-          if (!target.closest('a[href]')) return;
-          if (paletteRuntime.close) {
-            paletteRuntime.close();
-          }
-        },
-        true
-      );
-
-      window.addEventListener('hashchange', () => {
-        if (paletteRuntime.close) {
-          paletteRuntime.close();
-        }
-      });
-
-      window.addEventListener('popstate', () => {
-        if (paletteRuntime.close) {
-          paletteRuntime.close();
-        }
-      });
-
-      window.addEventListener('portfolio-open-palette', () => {
-        if (paletteRuntime.setOpen) {
-          paletteRuntime.setOpen(true);
-        }
-      });
-    }
-
-    const commands = [
+    commands = [
       {
+        id: 'nav-home',
         label: 'Go to Home',
         tags: 'navigation home index',
-        run: () => navigate(base),
+        run: () => {
+          /* If already on homepage, scroll to top instead of navigating. */
+          if (normalizePath(window.location.pathname) === normalizePath(new URL(base, window.location.origin).pathname)) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+          }
+          spaNavigate(base);
+        },
       },
       {
+        id: 'nav-archive',
         label: 'Go to Archive',
         tags: 'navigation archive posts',
-        run: () => navigate(`${base}archive/`),
+        run: () => spaNavigate(base + 'archive/'),
       },
       {
+        id: 'nav-about',
         label: 'Go to About',
         tags: 'navigation about cv profile',
-        run: () => navigate(`${base}about/`),
+        run: () => spaNavigate(base + 'about/'),
       },
       {
+        id: 'nav-recruiter',
         label: 'Go to Recruiter Snapshot',
         tags: 'navigation recruiter hiring summary profile fit',
-        run: () => {
-          if (window.location.pathname.startsWith(`${base}`) && document.getElementById('recruiter-view')) {
-            document.getElementById('recruiter-view')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            return;
-          }
-          navigate(`${base}#recruiter-view`);
-        },
+        run: () => scrollOrNav('recruiter-view'),
       },
       {
+        id: 'nav-topology',
         label: 'Go to Network Topology',
         tags: 'navigation network topology latency map',
-        run: () => {
-          if (window.location.pathname.startsWith(`${base}`) && document.getElementById('network-topology')) {
-            document.getElementById('network-topology')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            return;
-          }
-          navigate(`${base}#network-topology`);
-        },
+        run: () => scrollOrNav('network-topology'),
       },
       {
+        id: 'mode-hardcore',
         label: 'Enable Hardcore Mode',
         tags: 'mode hardcore glitch intense',
         run: () => {
@@ -355,6 +314,7 @@
         },
       },
       {
+        id: 'mode-normal',
         label: 'Enable Normal Mode',
         tags: 'mode normal calm',
         run: () => {
@@ -364,6 +324,7 @@
         },
       },
       {
+        id: 'audience-recruiter',
         label: 'Switch to Recruiter Mode',
         tags: 'audience recruiter hiring concise',
         run: () => {
@@ -374,6 +335,7 @@
         },
       },
       {
+        id: 'audience-engineer',
         label: 'Switch to Engineer Mode',
         tags: 'audience engineer labs technical',
         run: () => {
@@ -384,112 +346,164 @@
         },
       },
       {
+        id: 'boot-replay',
         label: 'Replay Boot Sequence',
         tags: 'boot preloader ssh startup replay',
         run: () => runBootSequence({ force: true }),
       },
       {
+        id: 'boot-gate',
         label: 'Toggle Boot Unlock Gate',
         tags: 'boot unlock gate type unlock security',
         run: () => {
           const key = 'portfolio.boot.gate';
-          const enabled = window.localStorage.getItem(key) === '1';
-          window.localStorage.setItem(key, enabled ? '0' : '1');
-          window.dispatchEvent(new CustomEvent('portfolio-boot-gate-change', { detail: { enabled: !enabled } }));
+          const on = window.localStorage.getItem(key) === '1';
+          window.localStorage.setItem(key, on ? '0' : '1');
+          window.dispatchEvent(new CustomEvent('portfolio-boot-gate-change', { detail: { enabled: !on } }));
         },
       },
     ];
-
-    const renderCommands = (query) => {
-      const value = query.trim().toLowerCase();
-      const filtered = commands.filter((command) => {
-        if (!value) return true;
-        return command.label.toLowerCase().includes(value) || command.tags.toLowerCase().includes(value);
-      });
-
-      if (filtered.length === 0) {
-        list.innerHTML = '<div class="command-item-empty">No command matched.</div>';
-        return;
-      }
-
-      list.innerHTML = filtered
-        .map(
-          (command, index) =>
-            `<button type="button" class="command-item${index === 0 ? ' active' : ''}" data-command-index="${commands.indexOf(command)}">${command.label}</button>`
-        )
-        .join('');
-    };
-
-    const runActiveCommand = () => {
-      const active = list.querySelector('.command-item.active');
-      if (!active) return;
-      const index = Number(active.getAttribute('data-command-index'));
-      if (Number.isNaN(index) || !commands[index]) return;
-      setPaletteOpen(false);
-      commands[index].run();
-    };
-
-    const moveActive = (direction) => {
-      const items = Array.from(list.querySelectorAll('.command-item'));
-      if (items.length === 0) return;
-      const activeIndex = items.findIndex((item) => item.classList.contains('active'));
-      const nextIndex = activeIndex < 0 ? 0 : (activeIndex + direction + items.length) % items.length;
-      items.forEach((item) => item.classList.remove('active'));
-      items[nextIndex].classList.add('active');
-      items[nextIndex].scrollIntoView({ block: 'nearest' });
-    };
-
-    list.addEventListener('click', (event) => {
-      const target = event.target;
-      if (!(target instanceof HTMLElement)) return;
-      if (!target.classList.contains('command-item')) return;
-      const index = Number(target.getAttribute('data-command-index'));
-      if (Number.isNaN(index) || !commands[index]) return;
-      setPaletteOpen(false);
-      commands[index].run();
-    });
-
-    input.addEventListener('input', () => {
-      renderCommands(input.value);
-    });
-
-    input.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        moveActive(1);
-      }
-      if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        moveActive(-1);
-      }
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        runActiveCommand();
-      }
-    });
-
-    renderCommands('');
-    setPaletteOpen(false);
-
-    document.addEventListener(
-      'astro:before-swap',
-      () => {
-        if (paletteRuntime.close) {
-          paletteRuntime.close();
-        }
-      },
-      { once: true }
-    );
   };
 
+  /* ─── render / interaction helpers ─── */
+  const renderCommands = (query) => {
+    const list = document.querySelector('[data-command-palette-list]');
+    if (!list) return;
+    const q = (query || '').trim().toLowerCase();
+    const filtered = commands.filter((c) => {
+      if (!q) return true;
+      return c.label.toLowerCase().includes(q) || c.tags.toLowerCase().includes(q);
+    });
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="command-item-empty">No command matched.</div>';
+      return;
+    }
+    list.innerHTML = filtered
+      .map((c, i) =>
+        '<button type="button" class="command-item' + (i === 0 ? ' active' : '') + '" data-cmd-id="' + c.id + '">' + c.label + '</button>'
+      )
+      .join('');
+  };
+
+  const moveActive = (dir) => {
+    const list = document.querySelector('[data-command-palette-list]');
+    if (!list) return;
+    const items = Array.from(list.querySelectorAll('.command-item'));
+    if (items.length === 0) return;
+    const cur = items.findIndex((i) => i.classList.contains('active'));
+    const next = cur < 0 ? 0 : (cur + dir + items.length) % items.length;
+    items.forEach((i) => i.classList.remove('active'));
+    items[next].classList.add('active');
+    items[next].scrollIntoView({ block: 'nearest' });
+  };
+
+  const runActiveCommand = () => {
+    const list = document.querySelector('[data-command-palette-list]');
+    if (!list) return;
+    const active = list.querySelector('.command-item.active');
+    if (!active) return;
+    const id = active.getAttribute('data-cmd-id');
+    const cmd = commands.find((c) => c.id === id);
+    if (cmd) execCommand(cmd);
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Global listeners (registered exactly ONCE, survive page swaps)
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const bindGlobalListeners = () => {
+    if (globalPaletteListenersBound) return;
+    globalPaletteListenersBound = true;
+
+    /* Ctrl/Cmd+K to toggle, Escape to close */
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        togglePalette();
+        return;
+      }
+      if (e.key === 'Escape' && paletteIsOpen) {
+        e.preventDefault();
+        closePalette();
+      }
+    });
+
+    /* Close when any anchor is clicked (capture phase) */
+    document.addEventListener('click', (e) => {
+      if (!(e.target instanceof Element)) return;
+      if (e.target.closest('a[href]')) closePalette();
+    }, true);
+
+    /* Close on URL changes */
+    window.addEventListener('hashchange', closePalette);
+    window.addEventListener('popstate', closePalette);
+
+    /* Astro ViewTransitions: close before DOM swap (persists across swaps) */
+    document.addEventListener('astro:before-swap', closePalette);
+
+    /* External event to open palette */
+    window.addEventListener('portfolio-open-palette', openPalette);
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Per-page palette DOM bindings (runs on every page load)
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const bindPalettePage = () => {
+    const el = document.querySelector('[data-command-palette]');
+    if (!el) return;
+
+    /* Ensure palette starts closed on every new page */
+    el.classList.remove('is-open');
+    paletteIsOpen = false;
+    document.body.classList.remove('palette-open');
+
+    /* Backdrop / close-button clicks */
+    el.addEventListener('mousedown', (e) => {
+      if (e.target === el || (e.target instanceof Element && e.target.hasAttribute('data-command-palette-close'))) {
+        closePalette();
+      }
+    });
+
+    el.querySelectorAll('[data-command-palette-close]').forEach((btn) => {
+      btn.addEventListener('click', (e) => { e.preventDefault(); closePalette(); });
+    });
+
+    /* Input filtering */
+    const input = el.querySelector('[data-command-palette-input]');
+    if (input) {
+      input.addEventListener('input', () => renderCommands(input.value));
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); moveActive(1); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
+        if (e.key === 'Enter') { e.preventDefault(); runActiveCommand(); }
+      });
+    }
+
+    /* Command button clicks (delegated on list container) */
+    const list = el.querySelector('[data-command-palette-list]');
+    if (list) {
+      list.addEventListener('click', (e) => {
+        if (!(e.target instanceof HTMLElement)) return;
+        const btn = e.target.closest('.command-item');
+        if (!btn) return;
+        const id = btn.getAttribute('data-cmd-id');
+        const cmd = commands.find((c) => c.id === id);
+        if (cmd) execCommand(cmd);
+      });
+    }
+
+    /* Initial render */
+    renderCommands('');
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Sidebar
+   * ═══════════════════════════════════════════════════════════════════════ */
   const initSidebar = () => {
     const sidebar = document.querySelector('[data-sidebar]');
     const toggle = document.querySelector('[data-menu-toggle]');
     const overlay = document.querySelector('[data-overlay]');
-
     if (!sidebar || !toggle || !overlay) return;
     if (toggle.dataset.bound === '1') return;
-
     toggle.dataset.bound = '1';
 
     const setOpen = (open) => {
@@ -499,43 +513,33 @@
       toggle.setAttribute('aria-expanded', String(open));
     };
 
-    toggle.addEventListener('click', () => {
-      setOpen(!sidebar.classList.contains('open'));
-    });
-
+    toggle.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
     overlay.addEventListener('click', () => setOpen(false));
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
     });
 
     sidebar.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', () => {
-        if (window.matchMedia('(max-width: 960px)').matches) {
-          setOpen(false);
-        }
+        if (window.matchMedia('(max-width: 960px)').matches) setOpen(false);
       });
     });
   };
 
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Reveal (scroll-triggered entrance animations)
+   * ═══════════════════════════════════════════════════════════════════════ */
   const initReveal = () => {
-    const revealTargets = [
-      '.hero',
-      '.section-block',
-      '.timeline-item',
-      '.skill-card',
-      '.principles-grid .panel',
-      '.engineer-lab',
-      '.network-panel',
+    const selectors = [
+      '.hero', '.section-block', '.timeline-item', '.skill-card',
+      '.principles-grid .panel', '.engineer-lab', '.network-panel',
     ];
-
-    const elements = document.querySelectorAll(revealTargets.join(','));
+    const elements = document.querySelectorAll(selectors.join(','));
     if (elements.length === 0) return;
 
     if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-      elements.forEach((element) => element.classList.add('in-view'));
+      elements.forEach((el) => el.classList.add('in-view'));
       return;
     }
 
@@ -548,53 +552,59 @@
           }
         });
       },
-      {
-        threshold: 0.12,
-        rootMargin: '0px 0px -8% 0px',
-      }
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
 
-    elements.forEach((element, index) => {
-      if (element.classList.contains('reveal')) return;
-      element.classList.add('reveal');
-      element.style.transitionDelay = `${Math.min(index * 26, 170)}ms`;
-      observer.observe(element);
+    elements.forEach((el, i) => {
+      if (el.classList.contains('reveal')) return;
+      el.classList.add('reveal');
+      el.style.transitionDelay = Math.min(i * 26, 170) + 'ms';
+      observer.observe(el);
     });
   };
 
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Page init (runs on every Astro page load)
+   * ═══════════════════════════════════════════════════════════════════════ */
   const initPage = () => {
-    if (paletteRuntime.close) {
-      paletteRuntime.close();
-    }
+    /* 1. Immediately guarantee overlays are closed */
+    closePalette();
+    dismissBoot();
+
+    /* 2. Boot (sessionStorage-guarded) */
     runBootSequence();
-    initCommandPalette();
+
+    /* 3. Palette */
+    buildCommands();
+    bindGlobalListeners();   /* no-op after first call */
+    bindPalettePage();
+
+    /* 4. Other systems */
     initSidebar();
     initReveal();
 
-    document.querySelectorAll('[data-set-audience]').forEach((button) => {
-      if (button.dataset.bound === '1') return;
-      button.dataset.bound = '1';
-      button.addEventListener('click', () => {
-        const mode = button.getAttribute('data-set-audience');
-        if (!mode) return;
-        window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode } }));
+    /* 5. Audience buttons */
+    document.querySelectorAll('[data-set-audience]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-set-audience');
+        if (mode) window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode } }));
       });
     });
   };
 
+  /* ═══════════════════════════════════════════════════════════════════════════
+   *  Entry points
+   * ═══════════════════════════════════════════════════════════════════════ */
   let initialized = false;
+
   document.addEventListener('astro:page-load', () => {
     initialized = true;
     initPage();
   });
 
-  window.addEventListener(
-    'load',
-    () => {
-      if (!initialized) {
-        initPage();
-      }
-    },
-    { once: true }
-  );
+  window.addEventListener('load', () => {
+    if (!initialized) initPage();
+  }, { once: true });
 })();
