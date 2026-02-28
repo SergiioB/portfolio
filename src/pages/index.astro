@@ -83,7 +83,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       </div>
       <div class="panel panel-soft stat-card">
         <div class="stat-label">Published posts</div>
-        <div class="stat-value">{publishedPosts.length}</div>
+        <div class="stat-value" data-count-to={String(publishedPosts.length)}>0</div>
         <div class="stat-meta">Case-study driven technical notes</div>
       </div>
       <div class="panel panel-soft stat-card">
@@ -126,6 +126,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       <h2 id="recruiter-title">Recruiter Snapshot</h2>
       <a href={withBase('about/')} class="subtle-link">Full profile</a>
     </div>
+    <div class="recruiter-badge">● Recruiter-ready overview</div>
     <p class="recruiter-summary">
       Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability,
       and practical enterprise AI implementation.
@@ -165,6 +166,10 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           )}
         </ul>
       </article>
+    </div>
+    <div class="recruiter-cta-card">
+      <p>Ready to review full experience and delivery outcomes?</p>
+      <a href={withBase('about/')} class="action-link">Open Profile &amp; CV</a>
     </div>
   </section>
 

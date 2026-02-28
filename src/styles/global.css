@@ -342,25 +342,6 @@ body.booting .site-shell {
   border-color: var(--heading-2);
 }
 
-.command-palette-close {
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(22, 27, 34, 0.82);
-  color: var(--text-soft);
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.26rem 0.5rem;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.command-palette-close:hover {
-  color: var(--text-strong);
-  border-color: var(--heading-2);
-}
-
 .command-palette-input {
   width: calc(100% - 1.2rem);
   margin: 0 0.6rem 0.6rem;
@@ -3095,4 +3076,292 @@ body.hardcore-mode .ops-alert-stream {
   .command-item-empty {
     font-size: 0.72rem;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ *  OVERHAUL v2 — Boot phases, Toast, Scroll progress, Grouped palette,
+ *  Post-card glow, Timeline connector, Recruiter upgrade, Uptime, Micro-UX
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* ─── Boot phase headers ─── */
+.boot-phase {
+  color: var(--accent-warm, #f0883e);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+}
+
+.boot-ready {
+  color: #7ee787;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-shadow: 0 0 14px rgba(126, 231, 135, 0.55), 0 0 30px rgba(126, 231, 135, 0.25);
+  animation: boot-ready-pulse 1.2s ease;
+}
+
+@keyframes boot-ready-pulse {
+  0%   { opacity: 0; transform: scale(0.96); }
+  40%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Toast notifications ─── */
+#toast-container {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 10050;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast-notification {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-strong);
+  background: rgba(22, 27, 34, 0.94);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--heading-2);
+  border-radius: var(--radius-sm);
+  padding: 0.58rem 0.9rem;
+  backdrop-filter: blur(12px);
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 320ms ease;
+  pointer-events: auto;
+}
+
+.toast-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-notification.hide {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+/* ─── Scroll progress bar ─── */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, #238636, #79c0ff, #d2a8ff);
+  z-index: 10000;
+  pointer-events: none;
+  transition: width 60ms linear;
+}
+
+/* ─── Command palette grouped rendering ─── */
+.command-group-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 0.5rem 0.58rem 0.18rem;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  margin-bottom: 0.12rem;
+}
+
+.command-group-label:first-child {
+  padding-top: 0;
+}
+
+.command-icon {
+  margin-right: 0.48rem;
+  font-size: 0.82rem;
+  vertical-align: middle;
+}
+
+/* ─── Post card category glow on hover ─── */
+.post-card.category-infrastructure:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(63, 185, 80, 0.18);
+}
+.post-card.category-automation:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(210, 168, 255, 0.18);
+}
+.post-card.category-ai:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(121, 192, 255, 0.22);
+}
+.post-card.category-cloud:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(88, 166, 255, 0.18);
+}
+.post-card.category-local-ai:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(240, 136, 62, 0.2);
+}
+.post-card.category-kotlin:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(169, 131, 255, 0.18);
+}
+.post-card.category-snippets:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(126, 231, 135, 0.16);
+}
+.post-card.category-career:hover {
+  box-shadow: var(--shadow-lg), 0 0 18px rgba(227, 179, 65, 0.18);
+}
+
+/* ─── Timeline vertical connector ─── */
+.timeline {
+  position: relative;
+  padding-left: 1.6rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.48rem;
+  width: 2px;
+  background: linear-gradient(180deg, var(--heading-2), rgba(88, 166, 255, 0.18) 90%, transparent);
+}
+
+.timeline-item {
+  position: relative;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.6rem;
+  top: 1.2rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--heading-2);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 8px rgba(88, 166, 255, 0.35);
+  z-index: 1;
+}
+
+.timeline-item:first-child::before {
+  background: #7ee787;
+  box-shadow: 0 0 10px rgba(126, 231, 135, 0.4);
+}
+
+/* ─── Recruiter section upgrade ─── */
+.recruiter-focus {
+  position: relative;
+  border-image: linear-gradient(135deg, rgba(88, 166, 255, 0.4), rgba(210, 168, 255, 0.3), rgba(126, 231, 135, 0.3)) 1;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.recruiter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--heading-2);
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+  border-radius: 999px;
+  padding: 0.18rem 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.recruiter-cta-card {
+  margin-top: 0.8rem;
+  padding: 0.82rem 1rem;
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(88, 166, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.recruiter-cta-card p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+}
+
+/* ─── Sidebar uptime + palette hint ─── */
+.sidebar-uptime {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sidebar-uptime::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7ee787;
+  box-shadow: 0 0 6px rgba(126, 231, 135, 0.5);
+  flex-shrink: 0;
+}
+
+.sidebar-palette-hint {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  margin-top: 0.28rem;
+}
+
+.sidebar-palette-hint kbd {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.05rem 0.32rem;
+  background: rgba(22, 27, 34, 0.7);
+  color: var(--text-soft);
+}
+
+/* ─── Animated stat counter shimmer ─── */
+.stat-value[data-count-to] {
+  transition: color 300ms ease;
+}
+
+/* ─── Micro-interactions ─── */
+.action-link {
+  transition: transform var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast),
+    background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.action-link:hover {
+  transform: translateY(-1px);
+}
+
+.action-link:active {
+  transform: translateY(0);
+}
+
+.signal-card,
+.skill-card,
+.recruiter-card {
+  transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
+}
+
+.signal-card:hover,
+.skill-card:hover,
+.recruiter-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.category-tile {
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-fast);
+}
+
+.category-tile:hover {
+  transform: translateY(-2px) scale(1.01);
 }
