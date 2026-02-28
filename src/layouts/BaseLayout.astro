@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 import { SITE } from '../config/site';
 import { withBase } from '../utils/paths';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -18,9 +19,9 @@ const csp = [
   "form-action 'none'",
   "object-src 'none'",
   "script-src 'self'",
-  "style-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: https:",
-  "font-src 'self' data:",
+  "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'none'",
   "frame-src 'none'",
   "manifest-src 'self'",
@@ -37,13 +38,17 @@ const csp = [
     <meta name="author" content={SITE.author} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b0f19" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#0d1117" />
     <meta http-equiv="Content-Security-Policy" content={csp} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <meta property="og:site_name" content={SITE.brand} />
     <meta property="og:title" content={title} />
@@ -56,6 +61,7 @@ const csp = [
 
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <ViewTransitions />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -72,9 +78,7 @@ const csp = [
           <div class="footer-content">
             <span>{SITE.brand}</span>
             <span aria-hidden="true">•</span>
-            <span>Astro static site</span>
-            <span aria-hidden="true">•</span>
-            <span>GitHub Pages deployment</span>
+            <span>Case-study driven engineering portfolio</span>
           </div>
         </footer>
       </main>

@@ -5,6 +5,8 @@ import PostCard from '../components/PostCard.astro';
 import { CATEGORY_META, CATEGORY_ORDER, getCategoryLabel, type CategorySlug } from '../content/categories';
 import { SITE } from '../config/site';
 import { withBase } from '../utils/paths';
+import PostSearch from '../components/PostSearch.astro';
+import CategoryAnimation from '../components/CategoryAnimation.astro';
 
 export async function getStaticPaths() {
   return CATEGORY_ORDER.map((category) => ({
@@ -33,16 +35,23 @@ const catDescription =
     <span>{catName}</span>
   </nav>
 
-  <header class="page-header page-header-tight">
-    <span class={`category-badge ${category}`}>{catName}</span>
-    <h1>{catName}</h1>
-    <p class="page-description">{catDescription}</p>
-    <p class="post-count">{filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} published</p>
+  <header class="page-header page-header-tight" style="position: relative; overflow: hidden;">
+    <CategoryAnimation category={category as string} />
+    <div style="position: relative; z-index: 10;">
+      <span class={`category-badge ${category}`}>{catName}</span>
+      <h1>{catName}</h1>
+      <p class="page-description">{catDescription}</p>
+      <p class="post-count">{filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} published</p>
+    </div>
   </header>
 
   <section class="category-summary panel panel-soft" aria-label={`${catName} category summary`}>
-    <p>Posts in this category focus on practical implementation details and repeatable approaches.</p>
+    <p>
+      Each post in this domain is written in case-study format: situation, issue, solution, usage context, and delivery impact.
+    </p>
   </section>
+
+  <PostSearch itemSelector="[data-search-item]" placeholder={`Search ${catName} posts...`} />
 
   <section class="post-feed" aria-label={`Posts in ${catName}`}>
     {filteredPosts.map((post) => (
