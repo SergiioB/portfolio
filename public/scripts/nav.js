@@ -948,6 +948,39 @@
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
+   *  Magnetic Buttons & Links
+   * ═══════════════════════════════════════════════════════════════════════════ */
+  const initMagneticElements = () => {
+    if (prefersReducedMotion) return;
+    const magneticElements = document.querySelectorAll('.nav-link, .sidebar-search-submit, .command-palette-close');
+    
+    magneticElements.forEach((el) => {
+      if (el.dataset.magneticBound === '1') return;
+      el.dataset.magneticBound = '1';
+      
+      const intensity = 0.15;
+      
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distX = e.clientX - centerX;
+        const distY = e.clientY - centerY;
+        
+        el.style.transform = `translate(${distX * intensity}px, ${distY * intensity}px)`;
+        // Force a fast transition while moving to avoid cursor lag
+        el.style.transition = 'transform 0.1s ease-out, background 0.1s ease-out';
+      });
+      
+      el.addEventListener('mouseleave', () => {
+        // Clearing the inline styles hands control back to global.css definitions
+        el.style.transform = '';
+        el.style.transition = '';
+      });
+    });
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════════
    *  Page init (runs on every Astro page load)
    * ═══════════════════════════════════════════════════════════════════════ */
   const initPage = () => {
@@ -981,6 +1014,7 @@
     initScrollProgress();
     initAnimatedCounters();
     initUptimeCounter();
+    initMagneticElements();
 
     /* 6. Typewriter (hero WHOAMI animation) */
     initTypewriter();

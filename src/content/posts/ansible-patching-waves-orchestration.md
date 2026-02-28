@@ -77,10 +77,10 @@ By strictly using `--limit` and well-defined inventory groups, we prevent accide
 
 <!-- portfolio:expanded-v2 -->
 
-## Architecture Diagram
-![Orchestrating Complex Patching Waves with Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+## Pipeline Architecture Diagram
+![Ansible Patching Waves Orchestration Timeline](/images/diagrams/post-framework/ansible-waves.svg)
 
-This diagram supports **Orchestrating Complex Patching Waves with Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This architecture diagram visualizes the **Ansible Patching Orchestration** timeline. It illustrates the enforced, dependency-aware sequence: starting with the critical Database tier (Wave 1), gating subsequent execution until validation passes, cascading to Application servers (Wave 2), and finally isolating Specialized systems (Wave 3). The right panel highlights the invariant blast-radius controls applied regardless of the wave limit.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Increase automation reliability and reduce human variance.**

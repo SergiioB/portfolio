@@ -36,7 +36,11 @@ That single idea took my inference from ~4 t/s to ~55 t/s. Stop optimizing for c
 ## Architecture Diagram
 ![Local AI: Stop Optimizing for VRAM Capacity. Start Optimizing for Bandwidth. execution diagram](/images/diagrams/post-framework/local-ai-memory.svg)
 
-This diagram supports **Local AI: Stop Optimizing for VRAM Capacity. Start Optimizing for Bandwidth.** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram visualizes the *Bandwidth Wall*, a critical concept in local AI inference based on the Roofline model.
+
+- **GPU VRAM (The Green Zone)**: Highlights the high-performance region where all model layers reside entirely in VRAM. Taking advantage of the ~1,800 GB/s bandwidth yields a stable generation speed around ~55 tokens per second.
+- **System RAM (The Red Zone)**: Illustrates the steep performance cliff that occurs the moment *any* layers spill over into system memory. Constrained by the PCIe bottleneck and ~80 GB/s bandwidth, generation speed plummets to a mere ~4 tokens per second.
+- **The Core Lesson**: The visual demonstrates why optimizing for capacity (making the model fit partially in RAM) is a false economy compared to optimizing strictly for bandwidth.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Balance model quality with deterministic runtime constraints.**

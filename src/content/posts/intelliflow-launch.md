@@ -42,7 +42,12 @@ If you're in infrastructure and curious about app development, try letting AI ta
 ## Architecture Diagram
 ![Shipping My First Android App: IntelliFlow execution diagram](/images/diagrams/post-framework/cloud-ops.svg)
 
-This diagram supports **Shipping My First Android App: IntelliFlow** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This architecture diagram visualizes the critical path constructed for IntelliFlow. It highlights the explicit boundaries and control mechanisms:
+
+- **Client / Edge**: The Android app acts as the primary user interface, built to minimize perceived latency while enforcing strict state management.
+- **IAM / PAM Policies**: The critical security gateway. All ingress traffic hits this perimeter first, guaranteeing least-privilege access and robust validation before any compute resources are provisioned.
+- **Compute Layer (Cloud Functions)**: Segregating logic into isolated Serverless functions (Business Logic, Payment Validation, AI Categorization) limits the blast radius and simplifies observability, tracking latency tight to < 50ms.
+- **Data Storage**: Firestore is strictly firewalled behind the Compute Layer, ensuring no direct client-to-database connections are permitted, safeguarding the integrity of the data.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Improve perceived responsiveness and reduce tap-to-task friction.**

@@ -58,10 +58,10 @@ On RK3588, CPU-only inference can be too slow even on small models for interacti
 
 <!-- portfolio:expanded-v2 -->
 
-## Architecture Diagram
-![RK3588 LLM Performance: NPU vs CPU in a Discord Agent execution diagram](/images/diagrams/post-framework/local-ai-memory.svg)
+## Benchmark Comparison Chart
+![RK3588 NPU vs CPU Inference Benchmark](/images/diagrams/post-framework/rk3588-benchmarks.svg)
 
-This diagram supports **RK3588 LLM Performance: NPU vs CPU in a Discord Agent** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This chart quantifies the **RK3588 LLM Performance** delta. It illustrates the stark contrast between running Qwen2.5 (1.5B) on the CPU via Ollama (yielding an unusable ~0.21 t/s) versus offloading to the NPU via RKLLM. The NPU accelerates larger models (like Qwen3 4B and DeepSeek-R1 1.5B) to stable, interactive streaming speeds—achieving up to a 53x throughput multiplier over the CPU baseline.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Balance model quality with deterministic runtime constraints.**
