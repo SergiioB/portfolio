@@ -56,6 +56,13 @@
   box-sizing: border-box;
 }
 
+/* Prevent CSS display rules from overriding the [hidden] attribute.
+   Class selectors (e.g. display:grid on .archive-post) beat the UA
+   stylesheet's [hidden] → display:none, so we re-enforce it here. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
   overflow-wrap: anywhere;
