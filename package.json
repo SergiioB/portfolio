@@ -2,6 +2,9 @@
   "name": "portfolio",
   "type": "module",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=18.20.8"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,10 +13,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.2.0",
-    "@astrojs/rss": "^4.0.10"
+    "@astrojs/rss": "^4.0.10",
+    "astro": "^5.2.0"
   },
   "devDependencies": {
+    "playwright": "^1.58.2",
     "typescript": "^5.4.0"
   }
 }

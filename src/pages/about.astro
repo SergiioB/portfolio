@@ -6,7 +6,7 @@ import { withBase } from '../utils/paths';
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 ---
 
-<BaseLayout title={`About | ${SITE.author}`} description="Professional profile, focus areas, and operating principles.">
+<BaseLayout title={`About | ${SITE.author}`} description="Professional profile, impact statements, and CV summary.">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href={withBase()}>Home</a>
     <span>/</span>
@@ -14,27 +14,126 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   </nav>
 
   <header class="page-header page-header-tight">
-    <p class="eyebrow">Professional profile</p>
-    <h1>Operations-first infrastructure engineering.</h1>
+    <p class="eyebrow">Profile</p>
+    <h1>Linux & Virtualization Engineer with automation-first execution.</h1>
     <p class="page-description">
-      Public-safe snapshot of role focus, delivery strengths, and core technology areas.
+      I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge
+      infrastructure operations with practical Generative AI implementations.
     </p>
   </header>
 
   <section class="about-section" aria-labelledby="summary-title">
-    <h2 id="summary-title">What this portfolio shows</h2>
+    <h2 id="summary-title">Professional Snapshot</h2>
     <div class="signal-grid">
       <article class="panel panel-soft signal-card">
-        <h3>Platform execution</h3>
-        <p>Linux operations, virtualization, middleware runtime support, and production change delivery.</p>
+        <h3>Infrastructure lifecycle ownership</h3>
+        <p>RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>Automation maturity</h3>
-        <p>Ansible-driven workflows, peer-reviewed changes, repeatable provisioning, and operational standardization.</p>
+        <h3>Automation discipline</h3>
+        <p>Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.</p>
       </article>
       <article class="panel panel-soft signal-card">
-        <h3>Applied AI enablement</h3>
-        <p>Practical AI integration and local/private experimentation with a focus on security and operational fit.</p>
+        <h3>AI integration for business cases</h3>
+        <p>Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="about-section" aria-labelledby="experience-title">
+    <h2 id="experience-title">Experience</h2>
+    <div class="timeline">
+      <article class="timeline-item panel panel-soft">
+        <div class="timeline-head">
+          <div>
+            <h3>Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG</h3>
+            <p class="timeline-subtitle">Full-time · Hybrid · Madrid, Comunidad de Madrid, España</p>
+          </div>
+          <p class="timeline-period">Jul 2025 - Present</p>
+        </div>
+        <ul>
+          <li>Architect automated server deployment and lifecycle workflows with Ansible + Git version control.</li>
+          <li>Lead RHEL 7/8 to RHEL 9 migration strategy and Satellite-based provisioning and software distribution.</li>
+          <li>Operate Apache Tomcat and JBoss web environments for high-demand application workloads.</li>
+          <li>Own end-to-end patching and hardening cycles with compliance-oriented operational controls.</li>
+          <li>Manage HA clusters and participate in DR plan execution/testing across distributed datacenters.</li>
+          <li>Drive VMware vSphere administration for provisioning, reconfiguration, and platform maintenance.</li>
+          <li>Collaborate on GenAI business use cases with Azure AI Foundry and document intelligence pipelines.</li>
+          <li>Act as infrastructure consultant for application owners, translating requirements into delivery plans.</li>
+        </ul>
+      </article>
+
+      <article class="timeline-item panel panel-soft">
+        <div class="timeline-head">
+          <div>
+            <h3>Information Technology Application Specialist - Linux System Administrator · Sopra Steria</h3>
+            <p class="timeline-subtitle">Full-time · Hybrid · Madrid, Community of Madrid, Spain</p>
+          </div>
+          <p class="timeline-period">Nov 2023 - Jul 2025</p>
+        </div>
+        <ul>
+          <li>Handled incidents, service requests, and change operations in ITSM-governed environments.</li>
+          <li>Supported Linux/Windows application platforms with strong troubleshooting and SLA execution.</li>
+          <li>Administered Active Directory connected workflows and operational support for enterprise users.</li>
+        </ul>
+      </article>
+
+      <article class="timeline-item panel panel-soft">
+        <div class="timeline-head">
+          <div>
+            <h3>Information Technology Application Specialist · Sopra Steria</h3>
+            <p class="timeline-subtitle">Full-time · Madrid, Community of Madrid, Spain</p>
+          </div>
+          <p class="timeline-period">Apr 2023 - Jan 2025</p>
+        </div>
+        <ul>
+          <li>Delivered advanced technical support across multiple technologies in enterprise production contexts.</li>
+          <li>Contributed to cloud-transition support initiatives and workplace modernization programs.</li>
+          <li>Worked across global collaboration environments with structured escalation and resolution flows.</li>
+        </ul>
+      </article>
+
+      <article class="timeline-item panel panel-soft">
+        <div class="timeline-head">
+          <div>
+            <h3>Internship Trainee · Sopra Steria</h3>
+            <p class="timeline-subtitle">Internship · Madrid, Community of Madrid, Spain</p>
+          </div>
+          <p class="timeline-period">Apr 2023 - Jun 2023</p>
+        </div>
+        <ul>
+          <li>Built foundations in incident handling, directory services, and enterprise support workflows.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="about-section" aria-labelledby="areas-title">
+    <h2 id="areas-title">Core Areas</h2>
+    <div class="skills-grid">
+      <article class="skill-card panel panel-soft">
+        <h3>Linux Platform Engineering</h3>
+        <p>RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.</p>
+      </article>
+      <article class="skill-card panel panel-soft">
+        <h3>Automation & Governance</h3>
+        <p>Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.</p>
+      </article>
+      <article class="skill-card panel panel-soft">
+        <h3>Virtualization & Datacenter Ops</h3>
+        <p>VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.</p>
+      </article>
+      <article class="skill-card panel panel-soft">
+        <h3>Middleware Operations</h3>
+        <p>Apache Tomcat/JBoss environments, SSL and identity integrations, and performance-focused runtime support.</p>
+      </article>
+      <article class="skill-card panel panel-soft">
+        <h3>Cloud + AI Integration</h3>
+        <p>Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.</p>
+      </article>
+      <article class="skill-card panel panel-soft">
+        <h3>Cross-Team Delivery</h3>
+        <p>Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.</p>
       </article>
     </div>
   </section>
@@ -42,9 +141,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <section class="about-section" aria-labelledby="cv-title">
     <h2 id="cv-title">CV / Resume</h2>
     <article class="panel panel-soft cv-card">
-      <p>
-        Public CV is shared as a redacted PDF while source documents remain private.
-      </p>
+      <p>Detailed CV is available as a PDF with role scope, delivery outcomes, and full technology coverage.</p>
       {PUBLIC_CV.enabled ? (
         <a
           href={publicCvHref}
@@ -55,108 +152,25 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           {PUBLIC_CV.label}
         </a>
       ) : (
-        <p class="cv-disabled-note">
-          CV link is currently disabled in <code>src/config/site.ts</code>.
-        </p>
+        <p class="cv-disabled-note">CV link is temporarily unavailable.</p>
       )}
     </article>
   </section>
 
-  <section class="about-section" aria-labelledby="experience-title">
-    <h2 id="experience-title">Experience</h2>
-    <div class="timeline">
-      <article class="timeline-item panel panel-soft">
-        <div class="timeline-head">
-          <div>
-            <h3>Infrastructure & Platform Engineer (current focus)</h3>
-            <p class="timeline-subtitle">Enterprise-scale Linux, virtualization, middleware, and automation delivery</p>
-          </div>
-          <p class="timeline-period">2025-present</p>
-        </div>
-        <ul>
-          <li>Infrastructure automation for server lifecycle and configuration delivery.</li>
-          <li>OS migration planning and execution using repeatable Ansible workflows.</li>
-          <li>Security patching cycles, hardening, monitoring, and resilience readiness.</li>
-          <li>Cloud and AI initiative support where operational integration matters.</li>
-        </ul>
-      </article>
-
-      <article class="timeline-item panel panel-soft">
-        <div class="timeline-head">
-          <div>
-            <h3>Systems Administration / Managed Operations</h3>
-            <p class="timeline-subtitle">Production support, change management, and service delivery</p>
-          </div>
-          <p class="timeline-period">2023-2025</p>
-        </div>
-        <ul>
-          <li>Incident, request, and change handling in enterprise environments.</li>
-          <li>Linux and Windows administration with cloud-connected workloads.</li>
-          <li>Automation-first approach to reduce manual operational tasks.</li>
-        </ul>
-      </article>
-
-      <article class="timeline-item panel panel-soft">
-        <div class="timeline-head">
-          <div>
-            <h3>Support Engineering Foundations</h3>
-            <p class="timeline-subtitle">Identity, endpoint, and workplace platform support</p>
-          </div>
-          <p class="timeline-period">Early career</p>
-        </div>
-        <ul>
-          <li>Identity and workplace platform administration (device management, collaboration, messaging).</li>
-          <li>Customer-facing troubleshooting and prioritization under operational constraints.</li>
-          <li>Cross-team coordination in international environments.</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <section class="about-section" aria-labelledby="areas-title">
-    <h2 id="areas-title">Core areas</h2>
-    <div class="skills-grid">
-      <article class="skill-card panel panel-soft">
-        <h3>Infrastructure & OS</h3>
-        <p>Linux administration, RHEL lifecycle, Windows Server operations, system tuning, and platform troubleshooting.</p>
-      </article>
-      <article class="skill-card panel panel-soft">
-        <h3>Automation & Delivery</h3>
-        <p>Ansible, Git workflows, repeatable provisioning, change control, and operational standardization.</p>
-      </article>
-      <article class="skill-card panel panel-soft">
-        <h3>Cloud & AI</h3>
-        <p>Cloud service integration, practical GenAI enablement, and private/local model workflows where appropriate.</p>
-      </article>
-      <article class="skill-card panel panel-soft">
-        <h3>Middleware & Runtime Ops</h3>
-        <p>Web/application server operations, patching, and reliability support for critical workloads.</p>
-      </article>
-      <article class="skill-card panel panel-soft">
-        <h3>Monitoring & Resilience</h3>
-        <p>Monitoring, hardening, patching cadence, HA/DR readiness, and operational risk reduction.</p>
-      </article>
-      <article class="skill-card panel panel-soft">
-        <h3>Virtualization</h3>
-        <p>VM provisioning, lifecycle operations, and performance-aware platform management.</p>
-      </article>
-    </div>
-  </section>
-
   <section class="about-section" aria-labelledby="principles-title">
-    <h2 id="principles-title">Principles</h2>
+    <h2 id="principles-title">Operating Principles</h2>
     <div class="principles-grid">
       <article class="panel panel-soft">
-        <h3>Automate repeatable work</h3>
-        <p>Manual fixes are useful for diagnosis, but stable teams need reproducible runbooks and code-backed changes.</p>
+        <h3>Codify repeatable operations</h3>
+        <p>Every recurring action should move from ad-hoc command execution into tested automation.</p>
       </article>
       <article class="panel panel-soft">
-        <h3>Prefer evidence</h3>
-        <p>Design and architecture claims should be supported by implementation notes, constraints, and outcomes.</p>
+        <h3>State the problem before the tool</h3>
+        <p>Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.</p>
       </article>
       <article class="panel panel-soft">
-        <h3>Minimize public exposure</h3>
-        <p>Portfolio content should demonstrate capability without leaking employer details, internal architecture, or direct contact data.</p>
+        <h3>Keep portfolio content safe</h3>
+        <p>Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.</p>
       </article>
     </div>
   </section>

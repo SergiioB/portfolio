@@ -30,9 +30,26 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     <CategoryAnimation category="ai" />
     <div class="hero-content" style="position: relative; z-index: 10;">
       <div class="hero-kicker" style="color: var(--accent); font-weight: 600;">sergio@portfolio:~$ whoami</div>
-      <h1 id="home-hero-title" class="hero-title">
-        Production ops and platform modernization field notes<span style="animation: blink 1s step-end infinite;">_</span>
+      <h1 id="home-hero-title" class="hero-title glitch" data-text="Production ops and platform modernization field notes_" style="min-height: 2.3em;">
+        <span id="typewriter"></span><span class="cursor-blink" style="color: var(--accent);">_</span>
       </h1>
+      <script>
+        document.addEventListener('astro:page-load', () => {
+          const text = "Production ops and platform modernization field notes";
+          const el = document.getElementById('typewriter');
+          if (!el || el.dataset.typed) return;
+          el.dataset.typed = 'true';
+          let i = 0;
+          function type() {
+            if (i < text.length) {
+              el.innerHTML += text.charAt(i);
+              i++;
+              setTimeout(type, Math.random() * 40 + 20);
+            }
+          }
+          setTimeout(type, 150);
+        });
+      </script>
       <p class="hero-description">
         Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.
       </p>

@@ -4,6 +4,9 @@ dist/
 # Astro internal cache
 .astro/
 
+# Local assistant scratchpad
+.gemini/
+
 # Dependencies
 node_modules/
 
@@ -26,7 +29,15 @@ npm-debug.log*
 PRIVATE_NOTES.md
 private/
 private-docs/
-*.md
+agent/
+*.ipynb
+[Nn]otebook*
+*notebook1*
+*notebook_1*
+*notebook-1*
+*notebook3*
+*notebook_3*
+*notebook-3*
 
 # Syncthing internals
 .stfolder/
