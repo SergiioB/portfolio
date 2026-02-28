@@ -14,6 +14,7 @@
   const paletteRuntime = {
     bound: false,
     setOpen: null,
+    toggleHandler: null,
   };
 
   const clearBootTimers = () => {
@@ -197,39 +198,49 @@
 
     paletteRuntime.setOpen = setPaletteOpen;
 
-    if (!paletteRuntime.bound) {
-      paletteRuntime.bound = true;
+    closeTargets.forEach((target) => {
+      if (target.dataset.bound === '1') return;
+      target.dataset.bound = '1';
+      target.addEventListener('click', () => setPaletteOpen(false));
+    });
 
-      closeTargets.forEach((target) => {
-        target.addEventListener('click', () => setPaletteOpen(false));
-      });
-
+    if (palette.dataset.bound !== '1') {
+      palette.dataset.bound = '1';
       palette.addEventListener('mousedown', (event) => {
         if (event.target === palette) {
           setPaletteOpen(false);
         }
       });
+    }
 
-      document.addEventListener('keydown', (event) => {
+    if (!paletteRuntime.bound) {
+      paletteRuntime.bound = true;
+
+      paletteRuntime.toggleHandler = (event) => {
+        const livePalette = document.querySelector('[data-command-palette]');
+        if (!livePalette || !paletteRuntime.setOpen) return;
+
         const isHotkey = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
         if (isHotkey) {
           event.preventDefault();
-          setPaletteOpen(palette.hidden);
+          paletteRuntime.setOpen(livePalette.hidden);
           return;
         }
 
-        if (event.key === 'Escape' && !palette.hidden) {
+        if (event.key === 'Escape' && !livePalette.hidden) {
           event.preventDefault();
-          setPaletteOpen(false);
+          paletteRuntime.setOpen(false);
         }
-      });
+      };
+
+      document.addEventListener('keydown', paletteRuntime.toggleHandler);
 
       window.addEventListener('portfolio-open-palette', () => {
-        setPaletteOpen(true);
+        if (paletteRuntime.setOpen) {
+          paletteRuntime.setOpen(true);
+        }
       });
     }
-
-    setPaletteOpen(false);
 
     const commands = [
       {
@@ -277,6 +288,26 @@
         },
       },
       {
+        label: 'Switch to Recruiter Mode',
+        tags: 'audience recruiter hiring concise',
+        run: () => {
+          window.localStorage.setItem('portfolio.audience.mode', 'recruiter');
+          document.body.classList.add('audience-recruiter');
+          document.body.classList.remove('audience-engineer');
+          window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode: 'recruiter' } }));
+        },
+      },
+      {
+        label: 'Switch to Engineer Mode',
+        tags: 'audience engineer labs technical',
+        run: () => {
+          window.localStorage.setItem('portfolio.audience.mode', 'engineer');
+          document.body.classList.add('audience-engineer');
+          document.body.classList.remove('audience-recruiter');
+          window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode: 'engineer' } }));
+        },
+      },
+      {
         label: 'Replay Boot Sequence',
         tags: 'boot preloader ssh startup replay',
         run: () => runBootSequence({ force: true }),
@@ -297,7 +328,7 @@
       const value = query.trim().toLowerCase();
       const filtered = commands.filter((command) => {
         if (!value) return true;
-        return command.label.toLowerCase().includes(value) || command.tags.includes(value);
+        return command.label.toLowerCase().includes(value) || command.tags.toLowerCase().includes(value);
       });
 
       if (filtered.length === 0) {
@@ -360,6 +391,9 @@
         runActiveCommand();
       }
     });
+
+    renderCommands('');
+    setPaletteOpen(false);
 
     document.addEventListener(
       'astro:before-swap',
@@ -455,6 +489,16 @@
     initCommandPalette();
     initSidebar();
     initReveal();
+
+    document.querySelectorAll('[data-set-audience]').forEach((button) => {
+      if (button.dataset.bound === '1') return;
+      button.dataset.bound = '1';
+      button.addEventListener('click', () => {
+        const mode = button.getAttribute('data-set-audience');
+        if (!mode) return;
+        window.dispatchEvent(new CustomEvent('portfolio-request-audience', { detail: { mode } }));
+      });
+    });
   };
 
   let initialized = false;
