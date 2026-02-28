@@ -1,0 +1,212 @@
+<section class="network-panel section-block panel panel-soft section-surface" id="network-topology" aria-labelledby="network-topology-title" data-network-panel>
+  <div class="section-header-row network-header">
+    <h2 id="network-topology-title">Live Network Topology</h2>
+    <span class="network-status" data-network-status>mode: normal · mesh stable</span>
+  </div>
+
+  <div class="network-shell" role="region" aria-label="Topology latency map">
+    <svg class="network-canvas" viewBox="0 0 100 58" preserveAspectRatio="xMidYMid meet">
+      <g data-network-links></g>
+      <g data-network-pulses></g>
+      <g data-network-nodes></g>
+    </svg>
+
+    <div class="network-legend" data-network-legend></div>
+  </div>
+</section>
+
+<script>
+  function initNetworkPanel() {
+    const panels = document.querySelectorAll('[data-network-panel]:not([data-initialized])');
+
+    panels.forEach((panel) => {
+      panel.setAttribute('data-initialized', 'true');
+
+      const linksLayer = panel.querySelector('[data-network-links]');
+      const nodesLayer = panel.querySelector('[data-network-nodes]');
+      const pulsesLayer = panel.querySelector('[data-network-pulses]');
+      const legend = panel.querySelector('[data-network-legend]');
+      const status = panel.querySelector('[data-network-status]');
+
+      if (!linksLayer || !nodesLayer || !pulsesLayer || !legend || !status) return;
+
+      const nodes = [
+        { id: 'edge', label: 'edge-rhel', x: 12, y: 29 },
+        { id: 'api', label: 'api-gw', x: 37, y: 15 },
+        { id: 'queue', label: 'event-bus', x: 56, y: 42 },
+        { id: 'core', label: 'core-db', x: 79, y: 20 },
+        { id: 'ai', label: 'ai-node', x: 88, y: 44 },
+      ];
+
+      const links = [
+        { id: 'l1', from: 'edge', to: 'api', base: 5.8, jitter: 1.4, value: 5.8 },
+        { id: 'l2', from: 'api', to: 'core', base: 7.9, jitter: 1.9, value: 7.9 },
+        { id: 'l3', from: 'api', to: 'queue', base: 6.4, jitter: 1.5, value: 6.4 },
+        { id: 'l4', from: 'queue', to: 'ai', base: 9.2, jitter: 2.2, value: 9.2 },
+        { id: 'l5', from: 'core', to: 'ai', base: 8.1, jitter: 2.1, value: 8.1 },
+      ];
+
+      const nodeMap = new Map(nodes.map((node) => [node.id, node]));
+      const pulseMap = new Map();
+      let mode = 'normal';
+      let metricsTimer;
+      let rafId;
+      let lastTime = 0;
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const getModeMultiplier = () => (mode === 'hardcore' ? 1.55 : 1);
+
+      const createSvg = (tag) => document.createElementNS('http://www.w3.org/2000/svg', tag);
+
+      const drawStaticMap = () => {
+        linksLayer.innerHTML = '';
+        nodesLayer.innerHTML = '';
+        pulsesLayer.innerHTML = '';
+
+        links.forEach((link) => {
+          const from = nodeMap.get(link.from);
+          const to = nodeMap.get(link.to);
+          if (!from || !to) return;
+
+          const baseLine = createSvg('line');
+          baseLine.setAttribute('x1', String(from.x));
+          baseLine.setAttribute('y1', String(from.y));
+          baseLine.setAttribute('x2', String(to.x));
+          baseLine.setAttribute('y2', String(to.y));
+          baseLine.setAttribute('class', 'network-link');
+
+          const glowLine = createSvg('line');
+          glowLine.setAttribute('x1', String(from.x));
+          glowLine.setAttribute('y1', String(from.y));
+          glowLine.setAttribute('x2', String(to.x));
+          glowLine.setAttribute('y2', String(to.y));
+          glowLine.setAttribute('class', 'network-link-glow');
+
+          linksLayer.appendChild(baseLine);
+          linksLayer.appendChild(glowLine);
+
+          const pulse = createSvg('circle');
+          pulse.setAttribute('r', '0.95');
+          pulse.setAttribute('class', 'network-pulse');
+          pulsesLayer.appendChild(pulse);
+
+          pulseMap.set(link.id, {
+            link,
+            from,
+            to,
+            progress: Math.random(),
+            speed: 0.18 + Math.random() * 0.15,
+            el: pulse,
+          });
+        });
+
+        nodes.forEach((node) => {
+          const wrapper = createSvg('g');
+          wrapper.setAttribute('class', 'network-node-group');
+
+          const dot = createSvg('circle');
+          dot.setAttribute('cx', String(node.x));
+          dot.setAttribute('cy', String(node.y));
+          dot.setAttribute('r', '2.15');
+          dot.setAttribute('class', 'network-node');
+
+          const halo = createSvg('circle');
+          halo.setAttribute('cx', String(node.x));
+          halo.setAttribute('cy', String(node.y));
+          halo.setAttribute('r', '3.35');
+          halo.setAttribute('class', 'network-node-halo');
+
+          const label = createSvg('text');
+          label.setAttribute('x', String(node.x + 2.4));
+          label.setAttribute('y', String(node.y - 2.8));
+          label.setAttribute('class', 'network-node-label');
+          label.textContent = node.label;
+
+          wrapper.appendChild(halo);
+          wrapper.appendChild(dot);
+          wrapper.appendChild(label);
+          nodesLayer.appendChild(wrapper);
+        });
+      };
+
+      const renderLegend = () => {
+        legend.innerHTML = links
+          .map((link) => {
+            const severity = link.value > 14 ? 'hot' : link.value > 10.5 ? 'warn' : 'ok';
+            return `
+              <div class="network-legend-row ${severity}">
+                <span>${link.from} → ${link.to}</span>
+                <span>${link.value.toFixed(1)} ms</span>
+              </div>
+            `;
+          })
+          .join('');
+      };
+
+      const updateMetrics = () => {
+        const multiplier = getModeMultiplier();
+        links.forEach((link) => {
+          const drift = (Math.random() * link.jitter * 2 - link.jitter) * multiplier;
+          link.value = clamp(link.base + drift, 2.8, 24);
+        });
+
+        const hotspot = links.reduce((acc, current) => (current.value > acc.value ? current : acc), links[0]);
+        status.textContent = `mode: ${mode} · hotspot ${hotspot.from}->${hotspot.to} ${hotspot.value.toFixed(1)}ms`;
+        renderLegend();
+      };
+
+      const getCadence = () => (mode === 'hardcore' ? 850 : 1800);
+
+      const startMetricsLoop = () => {
+        if (metricsTimer) window.clearInterval(metricsTimer);
+        metricsTimer = window.setInterval(updateMetrics, getCadence());
+      };
+
+      const animatePulses = (time) => {
+        if (!lastTime) lastTime = time;
+        const delta = Math.min((time - lastTime) / 1000, 0.05);
+        lastTime = time;
+
+        pulseMap.forEach((pulseData) => {
+          const speedScale = mode === 'hardcore' ? 1.95 : 1;
+          pulseData.progress += pulseData.speed * speedScale * delta;
+          if (pulseData.progress > 1) pulseData.progress -= 1;
+
+          const x = pulseData.from.x + (pulseData.to.x - pulseData.from.x) * pulseData.progress;
+          const y = pulseData.from.y + (pulseData.to.y - pulseData.from.y) * pulseData.progress;
+          pulseData.el.setAttribute('cx', x.toFixed(2));
+          pulseData.el.setAttribute('cy', y.toFixed(2));
+          pulseData.el.setAttribute('opacity', String(mode === 'hardcore' ? 0.95 : 0.75));
+        });
+
+        rafId = window.requestAnimationFrame(animatePulses);
+      };
+
+      const setMode = (nextMode) => {
+        mode = nextMode === 'hardcore' ? 'hardcore' : 'normal';
+        panel.classList.toggle('hardcore', mode === 'hardcore');
+        updateMetrics();
+        startMetricsLoop();
+      };
+
+      drawStaticMap();
+      setMode(window.localStorage.getItem('portfolio-mode') === 'hardcore' ? 'hardcore' : 'normal');
+      rafId = window.requestAnimationFrame(animatePulses);
+
+      window.addEventListener('portfolio-mode-change', (event) => {
+        setMode(event?.detail?.mode);
+      });
+
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          if (metricsTimer) window.clearInterval(metricsTimer);
+          if (rafId) window.cancelAnimationFrame(rafId);
+        },
+        { once: true }
+      );
+    });
+  }
+
+  document.addEventListener('astro:page-load', initNetworkPanel);
+</script>
