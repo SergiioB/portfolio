@@ -66,10 +66,10 @@ This approach kept the core predictive logic clean and language-agnostic while d
 
 <!-- portfolio:expanded-v2 -->
 
-## Architecture Diagram
-![Building a Multilingual AI Backend for Part Recognition execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+## Conceptual Diagram
+![Conceptual illustration of a Multilingual AI routing node](/images/diagrams/post-framework/multilingual-ai-backend.png)
 
-This diagram supports **Building a Multilingual AI Backend for Part Recognition** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram conceptually supports **Building a Multilingual AI Backend for Part Recognition**. It illustrates the core architectural concept: disparate language streams (EN, ES, FR) flowing into a central, unified intelligence node, which then parses them into a single canonical standard.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Balance model quality with deterministic runtime constraints.**
