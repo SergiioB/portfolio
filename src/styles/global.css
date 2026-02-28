@@ -2975,32 +2975,62 @@ body.hardcore-mode .ops-alert-stream {
 }
 
 @media (max-width: 960px) {
+  .site-shell {
+    flex-direction: column;
+  }
+
   .mobile-header {
-    display: flex;
+    display: none !important;
   }
 
   .sidebar {
-    transform: translateX(-106%);
-    transition: transform var(--transition-base);
-    width: min(86vw, 330px);
+    position: relative;
+    width: 100%;
+    transform: none !important;
+    min-height: auto;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    box-shadow: none;
   }
 
-  .sidebar.open {
-    transform: translateX(0);
+  .sidebar-body,
+  .sidebar-nav {
+    overflow-y: visible;
+    min-height: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .nav-item {
+    margin: 0;
+  }
+
+  .nav-link {
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .compact-list .nav-link {
+    padding: 0.35rem 0.5rem;
   }
 
   .main-content {
     width: 100%;
     margin-left: 0;
-    padding-top: 58px;
+    padding-top: 0;
   }
 
   .content-wrapper {
-    padding: 1rem 0.95rem;
+    padding: 1.5rem 0.95rem;
   }
 
   .site-footer {
-    padding: 0.75rem 0.95rem 1rem;
+    padding: 0.75rem 0.95rem 1.5rem;
   }
 }
 
