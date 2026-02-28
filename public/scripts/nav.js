@@ -7,19 +7,22 @@
     const shell = document.querySelector('[data-boot-sequence]');
     const output = document.querySelector('[data-boot-output]');
     const progressBar = document.querySelector('[data-boot-progress]');
+    const progressText = document.querySelector('[data-boot-percent]');
     const gate = document.querySelector('[data-boot-gate]');
     const gateInput = document.querySelector('[data-boot-gate-input]');
 
-    if (!shell || !output || !progressBar || !gate || !gateInput) return;
+    if (!shell || !output || !progressBar || !progressText || !gate || !gateInput) return;
 
     const storageKey = 'portfolio.boot.sequence.v1';
     const gateKey = 'portfolio.boot.gate';
     const alreadyShown = window.sessionStorage.getItem(storageKey) === '1';
     const gateEnabled = window.localStorage.getItem(gateKey) === '1';
     let lineTimer;
+    let failSafeTimer;
 
     output.innerHTML = '';
     progressBar.style.width = '0%';
+    progressText.textContent = '0%';
     gate.hidden = true;
     gateInput.value = '';
     shell.classList.remove('done');
@@ -36,6 +39,9 @@
       document.body.classList.remove('booting');
       window.sessionStorage.setItem(storageKey, '1');
       window.dispatchEvent(new CustomEvent('portfolio-boot-complete'));
+      if (failSafeTimer) {
+        window.clearTimeout(failSafeTimer);
+      }
     };
 
     if (!force && (alreadyShown || prefersReducedMotion)) {
@@ -48,14 +54,19 @@
     document.body.classList.add('booting');
 
     const bootLines = [
-      '[boot] initializing workstation profile: linux-ansible-ai',
-      '[boot] loading kernel modules: overlay, nf_conntrack, kvm',
-      '[boot] bringing up network interfaces... ok',
-      '[ssh] handshake with rhel-core-01 established',
+      '$ uname -a',
+      'Linux rhel-core-01 5.14.0-503.35.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC',
+      '$ systemctl is-system-running',
+      'running',
+      '$ nmcli -t -f STATE g',
+      'connected',
+      '$ ssh -o BatchMode=yes sergiio@rhel-core-01',
+      '[ssh] handshake established · curve25519-sha256',
       '[auth] publickey accepted for sergiio',
-      '[ansible] inventory loaded: 128 hosts / 4 groups',
-      '[ai] model runtime warmed: qwen3.5-edge',
-      '[guard] policy engine online, deterministic mode enabled',
+      '$ ansible all -m ping --one-line',
+      '128 hosts reachable · 0 unreachable',
+      '$ ./serve-llm --healthcheck qwen3.5-edge',
+      '[ai] model runtime warmed · deterministic policy active',
       '[ok] engineer cockpit ready',
     ];
 
@@ -90,11 +101,11 @@
       lineIndex += 1;
       progress = Math.min(100, progress + Math.round(100 / bootLines.length));
       progressBar.style.width = `${progress}%`;
+      progressText.textContent = `${progress}%`;
       lineTimer = window.setTimeout(tick, 135 + Math.random() * 110);
     };
 
     const skipBoot = () => {
-      if (gateEnabled) return;
       if (lineTimer) window.clearTimeout(lineTimer);
       finalizeBoot();
       document.removeEventListener('keydown', onEsc);
@@ -120,6 +131,9 @@
 
     shell.addEventListener('click', skipBoot, { once: true });
     document.addEventListener('keydown', onEsc);
+    failSafeTimer = window.setTimeout(() => {
+      finalizeBoot();
+    }, 12000);
     tick();
   };
 

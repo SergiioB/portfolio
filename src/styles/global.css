@@ -157,6 +157,32 @@ body.booting .site-shell {
   background: linear-gradient(180deg, rgba(33, 38, 45, 0.85), rgba(13, 17, 23, 0.65));
 }
 
+.boot-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.38rem 0.74rem 0.42rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(13, 17, 23, 0.76);
+}
+
+.boot-percent,
+.boot-hint {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.boot-percent {
+  color: var(--heading-2);
+}
+
+.boot-hint {
+  color: var(--text-muted);
+}
+
 .boot-title,
 .boot-host {
   font-family: var(--font-mono);
@@ -2823,6 +2849,11 @@ body.hardcore-mode .ops-alert-stream {
   }
 
   .boot-head {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .boot-meta {
     flex-direction: column;
     align-items: start;
   }
