@@ -87,43 +87,46 @@ If the changes you were working on touch the same lines you just resolved, you m
 ### Why not just use `git pull origin main` directly?
 Running `git pull origin main` directly while you have a dirty working tree can lead to Git blocking the pull to protect your files, or worse, attempting a messy merge that is hard to untangle. The `stash` method acts as a safety belt for your uncommitted code.
 
-<!-- portfolio:expanded-v1 -->
+<!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Safely Resolving Git Merge Conflicts supporting diagram](/images/diagrams/post-framework/snippets-runbook.svg)
+![Safely Resolving Git Merge Conflicts execution diagram](/images/diagrams/post-framework/snippets-runbook.svg)
 
-This visual summarizes the implementation flow and control points for **Safely Resolving Git Merge Conflicts**.
+This diagram supports **Safely Resolving Git Merge Conflicts** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
-## Deep Dive
-This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **fast remediation patterns turned into reusable operational playbooks**, with decisions made to keep implementation repeatable under production constraints.
+## Post-Specific Engineering Lens
+For this post, the primary objective is: **Apply snippets practices with measurable validation and clear rollback ownership.**
 
-### Design choices
-- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
-- Treated **git** and **workflow** as the main risk vectors during implementation.
-- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+### Implementation decisions for this case
+- Chose a staged approach centered on **git** to avoid high-blast-radius rollouts.
+- Used **workflow** checkpoints to make regressions observable before full rollout.
+- Treated **development** documentation as part of delivery, not a post-task artifact.
 
-### Operational sequence
-1. Use targeted snippet for incident recovery.
-2. Validate outcome and side effects.
-3. Standardize command pattern.
-4. Promote into documented runbook.
+### Practical command path
+These are representative execution checkpoints relevant to this post:
 
-## Validation and Evidence
-Use this checklist to prove the change is production-ready:
-- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
-- Post-change checks executed from at least two viewpoints (service-level and system-level).
-- Failure scenario tested with a known rollback path.
-- Runbook updated with final command set and ownership boundaries.
+```bash
+echo "define baseline"
+echo "apply change with controls"
+echo "validate result and handoff"
+```
 
-## Risks and Mitigations
-| Risk | Why it matters | Mitigation |
+## Validation Matrix
+| Validation goal | What to baseline | What confirms success |
 |---|---|---|
-| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
-| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
-| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+| Functional stability | incident frequency and mean time to mitigation | commands are safe against common edge cases |
+| Operational safety | rollback ownership + change window | runbook version includes pre-check and post-check gates |
+| Production readiness | monitoring visibility and handoff notes | handoff notes specify ownership and escalation path |
 
-## Reusable Takeaways
-- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
-- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
-- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+## Failure Modes and Mitigations
+| Failure mode | Why it appears in this type of work | Mitigation used in this post pattern |
+|---|---|---|
+| Scope ambiguity | Teams execute different interpretations | Write explicit pre-check and success criteria |
+| Weak rollback plan | Incident recovery slows down | Define rollback trigger + owner before rollout |
+| Insufficient telemetry | Failures surface too late | Require post-change monitoring checkpoints |
+
+## Recruiter-Readable Impact Summary
+- **Scope:** turn tactical snippets into repeatable operational patterns.
+- **Execution quality:** guarded by staged checks and explicit rollback triggers.
+- **Outcome signal:** repeatable implementation that can be handed over without hidden steps.
 

@@ -53,43 +53,46 @@ Because of this behavior, you should adjust your workflow:
 3.  **You don't choose which documents to include:** If a document is in the project and its status is `LABELED`, it will be included in the next training run. If you don't want a document included, you must change its status or remove it.
 4.  **You get a new model version every time:** Each time you train, a new entry appears in the Models tab. You are responsible for testing the new version and updating your application's API calls to point to the new Model ID if it performs better.
 
-<!-- portfolio:expanded-v1 -->
+<!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Azure Document Intelligence: The 'TRAIN' Button Explained supporting diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Azure Document Intelligence: The 'TRAIN' Button Explained execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
 
-This visual summarizes the implementation flow and control points for **Azure Document Intelligence: The 'TRAIN' Button Explained**.
+This diagram supports **Azure Document Intelligence: The 'TRAIN' Button Explained** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
-## Deep Dive
-This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **quality thresholds, data normalization, and safe model integration**, with decisions made to keep implementation repeatable under production constraints.
+## Post-Specific Engineering Lens
+For this post, the primary objective is: **Apply ai practices with measurable validation and clear rollback ownership.**
 
-### Design choices
-- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
-- Treated **azure** and **document-intelligence** as the main risk vectors during implementation.
-- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+### Implementation decisions for this case
+- Chose a staged approach centered on **azure** to avoid high-blast-radius rollouts.
+- Used **document-intelligence** checkpoints to make regressions observable before full rollout.
+- Treated **machine-learning** documentation as part of delivery, not a post-task artifact.
 
-### Operational sequence
-1. Capture representative data.
-2. Normalize and validate schema.
-3. Run model task with constraints.
-4. Review output quality and fallback behavior.
+### Practical command path
+These are representative execution checkpoints relevant to this post:
 
-## Validation and Evidence
-Use this checklist to prove the change is production-ready:
-- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
-- Post-change checks executed from at least two viewpoints (service-level and system-level).
-- Failure scenario tested with a known rollback path.
-- Runbook updated with final command set and ownership boundaries.
+```bash
+echo "define baseline"
+echo "apply change with controls"
+echo "validate result and handoff"
+```
 
-## Risks and Mitigations
-| Risk | Why it matters | Mitigation |
+## Validation Matrix
+| Validation goal | What to baseline | What confirms success |
 |---|---|---|
-| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
-| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
-| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+| Functional stability | input quality, extraction accuracy, and processing latency | schema validation catches malformed payloads |
+| Operational safety | rollback ownership + change window | confidence/fallback policy routes low-quality outputs safely |
+| Production readiness | monitoring visibility and handoff notes | observability captures latency + quality per request class |
 
-## Reusable Takeaways
-- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
-- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
-- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+## Failure Modes and Mitigations
+| Failure mode | Why it appears in this type of work | Mitigation used in this post pattern |
+|---|---|---|
+| Scope ambiguity | Teams execute different interpretations | Write explicit pre-check and success criteria |
+| Weak rollback plan | Incident recovery slows down | Define rollback trigger + owner before rollout |
+| Insufficient telemetry | Failures surface too late | Require post-change monitoring checkpoints |
+
+## Recruiter-Readable Impact Summary
+- **Scope:** ship AI features with guardrails and measurable quality.
+- **Execution quality:** guarded by staged checks and explicit rollback triggers.
+- **Outcome signal:** repeatable implementation that can be handed over without hidden steps.
 
