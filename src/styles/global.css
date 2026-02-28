@@ -2227,6 +2227,55 @@ li+li {
   color: var(--text-soft);
 }
 
+.recruiter-focus {
+  margin-top: 1rem;
+  border-color: rgba(88, 166, 255, 0.28);
+}
+
+.recruiter-summary {
+  margin: 0.2rem 0 0.7rem;
+  color: var(--text-soft);
+}
+
+.recruiter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.68rem;
+}
+
+.recruiter-card {
+  padding: 0.75rem;
+  border-color: rgba(121, 192, 255, 0.26);
+}
+
+.recruiter-card h3 {
+  margin-bottom: 0.38rem;
+}
+
+.recruiter-card ul {
+  margin: 0;
+  padding-left: 1.05rem;
+  display: grid;
+  gap: 0.32rem;
+  color: var(--text-soft);
+}
+
+.recruiter-card li::marker {
+  color: var(--accent);
+}
+
+.recruiter-card a {
+  color: var(--heading-2);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(88, 166, 255, 0.28);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.recruiter-card a:hover {
+  color: var(--text-strong);
+  border-color: rgba(88, 166, 255, 0.6);
+}
+
 .engineer-zone {
   display: grid;
   gap: 1rem;
@@ -2248,12 +2297,21 @@ body.audience-recruiter .engineer-zone-teaser {
   display: block;
 }
 
+body.audience-recruiter .recruiter-focus {
+  display: block;
+}
+
 body.audience-engineer .engineer-zone {
   display: grid;
 }
 
 body.audience-engineer .engineer-zone-teaser {
   display: none;
+}
+
+body.audience-engineer .recruiter-focus {
+  border-color: rgba(88, 166, 255, 0.18);
+  opacity: 0.82;
 }
 
 body.audience-recruiter .glitch {
@@ -2326,6 +2384,10 @@ body.audience-recruiter .glitch {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 0.7rem;
+
+  .recruiter-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ops-top,

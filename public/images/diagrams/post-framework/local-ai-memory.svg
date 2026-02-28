@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Local AI memory and latency map">
+  <rect width="1200" height="650" fill="#0b1220"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Local AI Runtime Budget Map</text>
+  <rect x="80" y="160" width="1040" height="120" rx="16" fill="#111827" stroke="#334155"/>
+  <text x="120" y="230" fill="#93c5fd" font-size="24" font-family="Segoe UI, Arial">Prompt ingest → Prefill → Decode → Post-process</text>
+  <rect x="80" y="330" width="320" height="210" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="122" y="392" fill="#86efac" font-size="24" font-family="Segoe UI, Arial">Model weights</text>
+  <text x="122" y="430" fill="#cbd5e1" font-size="20" font-family="Segoe UI, Arial">Static memory floor</text>
+  <rect x="440" y="330" width="320" height="210" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="490" y="392" fill="#fde68a" font-size="24" font-family="Segoe UI, Arial">KV cache</text>
+  <text x="490" y="430" fill="#cbd5e1" font-size="20" font-family="Segoe UI, Arial">Grows with context</text>
+  <rect x="800" y="330" width="320" height="210" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="855" y="392" fill="#fca5a5" font-size="24" font-family="Segoe UI, Arial">Concurrency</text>
+  <text x="855" y="430" fill="#cbd5e1" font-size="20" font-family="Segoe UI, Arial">Latency pressure</text>
+</svg>

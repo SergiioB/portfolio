@@ -52,3 +52,44 @@ Because of this behavior, you should adjust your workflow:
 2.  **Batch Labeling:** Label a meaningful batch of documents (e.g., 20, 50, or 100) before hitting `TRAIN`.
 3.  **You don't choose which documents to include:** If a document is in the project and its status is `LABELED`, it will be included in the next training run. If you don't want a document included, you must change its status or remove it.
 4.  **You get a new model version every time:** Each time you train, a new entry appears in the Models tab. You are responsible for testing the new version and updating your application's API calls to point to the new Model ID if it performs better.
+
+<!-- portfolio:expanded-v1 -->
+
+## Architecture Diagram
+![Azure Document Intelligence: The 'TRAIN' Button Explained supporting diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+
+This visual summarizes the implementation flow and control points for **Azure Document Intelligence: The 'TRAIN' Button Explained**.
+
+## Deep Dive
+This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **quality thresholds, data normalization, and safe model integration**, with decisions made to keep implementation repeatable under production constraints.
+
+### Design choices
+- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
+- Treated **azure** and **document-intelligence** as the main risk vectors during implementation.
+- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+
+### Operational sequence
+1. Capture representative data.
+2. Normalize and validate schema.
+3. Run model task with constraints.
+4. Review output quality and fallback behavior.
+
+## Validation and Evidence
+Use this checklist to prove the change is production-ready:
+- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
+- Post-change checks executed from at least two viewpoints (service-level and system-level).
+- Failure scenario tested with a known rollback path.
+- Runbook updated with final command set and ownership boundaries.
+
+## Risks and Mitigations
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
+| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
+| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+
+## Reusable Takeaways
+- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
+- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
+- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+

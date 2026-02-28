@@ -86,3 +86,44 @@ If the changes you were working on touch the same lines you just resolved, you m
 
 ### Why not just use `git pull origin main` directly?
 Running `git pull origin main` directly while you have a dirty working tree can lead to Git blocking the pull to protect your files, or worse, attempting a messy merge that is hard to untangle. The `stash` method acts as a safety belt for your uncommitted code.
+
+<!-- portfolio:expanded-v1 -->
+
+## Architecture Diagram
+![Safely Resolving Git Merge Conflicts supporting diagram](/images/diagrams/post-framework/snippets-runbook.svg)
+
+This visual summarizes the implementation flow and control points for **Safely Resolving Git Merge Conflicts**.
+
+## Deep Dive
+This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **fast remediation patterns turned into reusable operational playbooks**, with decisions made to keep implementation repeatable under production constraints.
+
+### Design choices
+- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
+- Treated **git** and **workflow** as the main risk vectors during implementation.
+- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+
+### Operational sequence
+1. Use targeted snippet for incident recovery.
+2. Validate outcome and side effects.
+3. Standardize command pattern.
+4. Promote into documented runbook.
+
+## Validation and Evidence
+Use this checklist to prove the change is production-ready:
+- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
+- Post-change checks executed from at least two viewpoints (service-level and system-level).
+- Failure scenario tested with a known rollback path.
+- Runbook updated with final command set and ownership boundaries.
+
+## Risks and Mitigations
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
+| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
+| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+
+## Reusable Takeaways
+- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
+- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
+- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+

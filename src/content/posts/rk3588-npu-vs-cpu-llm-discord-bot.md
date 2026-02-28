@@ -56,3 +56,43 @@ To make measurements stable and repeatable, the benchmark run documented these b
 ## Takeaway
 On RK3588, CPU-only inference can be too slow even on small models for interactive chat. NPU acceleration is the enabling constraint: without it, the Discord UX degrades into 30+ second response times for trivial questions; with it, you can sustain streaming replies at multi-token-per-second throughput.
 
+<!-- portfolio:expanded-v1 -->
+
+## Architecture Diagram
+![RK3588 LLM Performance: NPU vs CPU in a Discord Agent supporting diagram](/images/diagrams/post-framework/local-ai-memory.svg)
+
+This visual summarizes the implementation flow and control points for **RK3588 LLM Performance: NPU vs CPU in a Discord Agent**.
+
+## Deep Dive
+This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **memory budgeting, latency behavior, and stable edge inference**, with decisions made to keep implementation repeatable under production constraints.
+
+### Design choices
+- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
+- Treated **rk3588** and **npu** as the main risk vectors during implementation.
+- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+
+### Operational sequence
+1. Measure baseline runtime footprint.
+2. Tune quantization/context/runtime flags.
+3. Benchmark latency and memory impact.
+4. Select production-safe profile.
+
+## Validation and Evidence
+Use this checklist to prove the change is production-ready:
+- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
+- Post-change checks executed from at least two viewpoints (service-level and system-level).
+- Failure scenario tested with a known rollback path.
+- Runbook updated with final command set and ownership boundaries.
+
+## Risks and Mitigations
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
+| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
+| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+
+## Reusable Takeaways
+- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
+- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
+- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+

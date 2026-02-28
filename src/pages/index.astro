@@ -59,6 +59,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       </p>
 
       <div class="hero-actions">
+      <a href="#recruiter-view" class="action-link">Recruiter View</a>
       <a href={withBase('about/')} class="action-link action-link-secondary">About + CV</a>
       <a href={withBase('archive/')} class="action-link action-link-secondary">Archive</a>
       {PUBLIC_CV.enabled && (
@@ -119,6 +120,53 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   </section>
 
   <AudienceMode />
+
+  <section id="recruiter-view" class="section-block panel panel-soft section-surface recruiter-focus" aria-labelledby="recruiter-title">
+    <div class="section-header-row">
+      <h2 id="recruiter-title">Recruiter Snapshot</h2>
+      <a href={withBase('about/')} class="subtle-link">Full profile</a>
+    </div>
+    <p class="recruiter-summary">
+      Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability,
+      and practical enterprise AI implementation.
+    </p>
+    <div class="recruiter-grid">
+      <article class="panel panel-soft recruiter-card">
+        <h3>Role fit</h3>
+        <ul>
+          <li>Linux platform administration in enterprise environments</li>
+          <li>Infrastructure as code with Ansible + Git workflow discipline</li>
+          <li>Cross-team delivery from design through operational handoff</li>
+        </ul>
+      </article>
+      <article class="panel panel-soft recruiter-card">
+        <h3>Top outcomes</h3>
+        <ul>
+          <li>Patch and lifecycle orchestration patterns for safer rollouts</li>
+          <li>RHEL modernization playbooks for controlled migrations</li>
+          <li>Applied AI pilots documented from prototype to operations</li>
+        </ul>
+      </article>
+      <article class="panel panel-soft recruiter-card">
+        <h3>Quick actions</h3>
+        <ul>
+          <li><a href={withBase('about/')}>Open profile and experience summary</a></li>
+          <li><a href={withBase('archive/')}>Review all case studies</a></li>
+          {PUBLIC_CV.enabled && (
+            <li>
+              <a
+                href={publicCvHref}
+                target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+                rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+              >
+                {PUBLIC_CV.label}
+              </a>
+            </li>
+          )}
+        </ul>
+      </article>
+    </div>
+  </section>
 
   <section class="engineer-zone-teaser panel panel-soft section-surface" data-engineer-zone-teaser>
     <div class="section-header-row">
