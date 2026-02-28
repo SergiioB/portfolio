@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { CATEGORY_META, CATEGORY_ORDER, getCategoryLabel, type CategorySlug } from '../content/categories';
+import { SITE } from '../config/site';
+import { withBase } from '../utils/paths';
+import PostSearch from '../components/PostSearch.astro';
+
+export async function getStaticPaths() {
+  return CATEGORY_ORDER.map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.params;
+const posts = await getCollection('posts');
+const filteredPosts = posts
+  .filter((post) => post.data.category === category && !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const catName = getCategoryLabel(category as string);
+const catDescription =
+  category && category in CATEGORY_META
+    ? CATEGORY_META[category as CategorySlug].description
+    : `Articles about ${category}`;
+---
+
+<BaseLayout title={`${catName} | ${SITE.author}`} description={catDescription}>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href={withBase()}>Home</a>
+    <span>/</span>
+    <span>{catName}</span>
+  </nav>
+
+  <header class="page-header page-header-tight">
+    <span class={`category-badge ${category}`}>{catName}</span>
+    <h1>{catName}</h1>
+    <p class="page-description">{catDescription}</p>
+    <p class="post-count">{filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} published</p>
+  </header>
+
+  <section class="category-summary panel panel-soft" aria-label={`${catName} category summary`}>
+    <p>
+      Each post in this domain is written in case-study format: situation, issue, solution, usage context, and delivery impact.
+    </p>
+  </section>
+
+  <PostSearch itemSelector="[data-search-item]" placeholder={`Search ${catName} posts...`} />
+
+  <section class="post-feed" aria-label={`Posts in ${catName}`}>
+    {filteredPosts.map((post) => (
+      <PostCard post={post} />
+    ))}
+
+    {filteredPosts.length === 0 && <p class="empty-state panel panel-soft">No posts in this category yet.</p>}
+  </section>
+</BaseLayout>

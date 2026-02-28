@@ -1,0 +1,129 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from '../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
+import { PUBLIC_CV, SITE } from '../config/site';
+import { withBase } from '../utils/paths';
+
+const posts = await getCollection('posts');
+const publishedPosts = posts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const latestPosts = publishedPosts.slice(0, 10);
+const categoryCounts = CATEGORY_ORDER.map((category) => ({
+  slug: category,
+  label: CATEGORY_META[category].label,
+  description: CATEGORY_META[category].description,
+  count: publishedPosts.filter((post) => post.data.category === category).length,
+}));
+
+const activeCategories = categoryCounts.filter((category) => category.count > 0);
+const latestDate = publishedPosts[0]?.data.pubDate;
+const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
+---
+
+<BaseLayout title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`} description={SITE.description}>
+  <section class="hero panel" aria-labelledby="home-hero-title">
+    <div class="hero-kicker">Linux, Virtualization, Automation, GenAI</div>
+    <h1 id="home-hero-title" class="hero-title">
+      Field notes from production operations and platform modernization work.
+    </h1>
+    <p class="hero-description">
+      Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.
+    </p>
+
+    <div class="hero-actions">
+      <a href={withBase('about/')} class="action-link action-link-secondary">About + CV</a>
+      <a href={withBase('archive/')} class="action-link action-link-secondary">Archive</a>
+      {PUBLIC_CV.enabled && (
+        <a
+          href={publicCvHref}
+          class="action-link"
+          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+        >
+          {PUBLIC_CV.label}
+        </a>
+      )}
+    </div>
+
+    <div class="hero-grid">
+      <div class="panel panel-soft stat-card">
+        <div class="stat-label">Current role</div>
+        <div class="stat-value stat-value-sm">Linux & Virtualization Engineer</div>
+        <div class="stat-meta">Deutsche Pfandbriefbank AG · Madrid · Hybrid</div>
+      </div>
+      <div class="panel panel-soft stat-card">
+        <div class="stat-label">Published posts</div>
+        <div class="stat-value">{publishedPosts.length}</div>
+        <div class="stat-meta">Case-study driven technical notes</div>
+      </div>
+      <div class="panel panel-soft stat-card">
+        <div class="stat-label">Last update</div>
+        <div class="stat-value stat-value-sm">
+          {latestDate
+            ? latestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : 'No posts yet'}
+        </div>
+        <div class="stat-meta">Archive-first publishing flow</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block panel panel-soft section-surface" aria-labelledby="focus-title">
+    <div class="section-header-row">
+      <h2 id="focus-title">Delivery Focus</h2>
+      <a href={withBase('about/')} class="subtle-link">Profile</a>
+    </div>
+    <div class="signal-grid">
+      <article class="panel panel-soft signal-card">
+        <h3>Infrastructure automation at scale</h3>
+        <p>Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.</p>
+      </article>
+      <article class="panel panel-soft signal-card">
+        <h3>RHEL modernization</h3>
+        <p>RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.</p>
+      </article>
+      <article class="panel panel-soft signal-card">
+        <h3>Applied enterprise AI</h3>
+        <p>Azure AI Foundry and document intelligence pilots translated into operationally viable workloads.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
+    <div class="section-header-row">
+      <h2 id="domains-title">Domains</h2>
+      <a href={withBase('archive/')} class="subtle-link">Browse all</a>
+    </div>
+    <div class="category-grid">
+      {categoryCounts.map((category) => (
+        <a href={withBase(`${category.slug}/`)} class={`category-tile panel panel-soft category-${category.slug}`}>
+          <div class="category-tile-top">
+            <span class={`category-badge ${category.slug}`}>{category.label}</span>
+            <span class="category-tile-count">{category.count}</span>
+          </div>
+          <p>{category.description}</p>
+        </a>
+      ))}
+    </div>
+    <p class="post-count">{activeCategories.length} active domains with published case studies.</p>
+  </section>
+
+  <section class="section-block panel panel-soft section-surface" aria-labelledby="latest-posts-title">
+    <div class="section-header-row">
+      <h2 id="latest-posts-title">Recent Case Studies</h2>
+      <a href={withBase('archive/')} class="subtle-link">All posts</a>
+    </div>
+
+    <div class="post-feed" aria-label="Latest posts">
+      {latestPosts.map((post) => (
+        <PostCard post={post} />
+      ))}
+
+      {publishedPosts.length === 0 && <p class="empty-state panel panel-soft">No posts published yet.</p>}
+    </div>
+  </section>
+</BaseLayout>

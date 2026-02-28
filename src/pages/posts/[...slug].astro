@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCategoryLabel } from '../../content/categories';
+import { SITE } from '../../config/site';
+import { withBase } from '../../utils/paths';
+import { estimateReadingTime } from '../../utils/readingTime';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const { title, description, pubDate, category, tags, updatedDate, situation, issue, solution, usedIn, impact } = post.data;
+const readingTime = estimateReadingTime(post.body);
+
+const caseItems = [
+  { label: 'Situation', value: situation },
+  { label: 'Issue', value: issue },
+  { label: 'Solution', value: solution },
+  { label: 'Used In', value: usedIn },
+  { label: 'Impact', value: impact },
+].filter((item) => item.value);
+---
+
+<BaseLayout title={`${title} | ${SITE.author}`} description={description}>
+  <a href={withBase()} class="back-link">← Back to posts</a>
+
+  <article class="article-shell">
+    <header class="article-header">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href={withBase()}>Home</a>
+        <span>/</span>
+        <a href={withBase(`${category}/`)}>{getCategoryLabel(category)}</a>
+      </nav>
+
+      <div class="article-meta">
+        <time datetime={pubDate.toISOString()}>
+          {pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </time>
+        <span aria-hidden="true">•</span>
+        <span>{readingTime} min read</span>
+        {updatedDate && (
+          <>
+            <span aria-hidden="true">•</span>
+            <span>Updated {updatedDate.toLocaleDateString('en-US')}</span>
+          </>
+        )}
+      </div>
+
+      <h1 class="article-title">{title}</h1>
+      <p class="page-description">{description}</p>
+
+      {tags && tags.length > 0 && (
+        <div class="post-tags post-tags-spaced" aria-label="Post tags">
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    {caseItems.length > 0 && (
+      <section class="case-snapshot panel panel-soft" aria-label="Case snapshot">
+        <h2>Case Snapshot</h2>
+        <div class="case-grid">
+          {caseItems.map((item) => (
+            <article class="case-card">
+              <h3>{item.label}</h3>
+              <p>{item.value}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <div class="article-content prose-shell">
+      <Content />
+    </div>
+
+    <footer class="article-footer">
+      <a href={withBase('archive/')} class="back-link">← Browse archive</a>
+    </footer>
+  </article>
+</BaseLayout>

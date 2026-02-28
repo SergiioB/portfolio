@@ -1,0 +1,45 @@
+# Build output
+dist/
+
+# Astro internal cache
+.astro/
+
+# Local assistant scratchpad
+.gemini/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.kdbx
+
+# Private notes
+PRIVATE_NOTES.md
+private/
+private-docs/
+agent/
+*.ipynb
+[Nn]otebook*
+*notebook1*
+*notebook_1*
+*notebook-1*
+*notebook3*
+*notebook_3*
+*notebook-3*
+
+# Syncthing internals
+.stfolder/
+.stversions/
+.stignore

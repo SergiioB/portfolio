@@ -1,0 +1,147 @@
+---
+import { getCollection } from 'astro:content';
+import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
+import { PUBLIC_CV, PUBLIC_LINKS, SITE } from '../config/site';
+import { withBase } from '../utils/paths';
+
+const posts = await getCollection('posts');
+const publishedPosts = posts.filter((post) => !post.data.draft);
+
+const categoryCounts = CATEGORY_ORDER.map((category) => ({
+  slug: category,
+  label: CATEGORY_META[category].label,
+  count: publishedPosts.filter((post) => post.data.category === category).length,
+}));
+
+const years = [...new Set(publishedPosts.map((post) => post.data.pubDate.getFullYear()))].sort((a, b) => b - a);
+const currentPath = Astro.url.pathname;
+
+function isActive(path: string): boolean {
+  if (path === withBase()) {
+    return currentPath === withBase() || currentPath === '/portfolio/' || currentPath === '/portfolio';
+  }
+  return currentPath.startsWith(path);
+}
+
+function isCategoryActive(category: string): boolean {
+  return currentPath.includes(`/${category}/`);
+}
+
+const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
+---
+
+<aside class="sidebar" id="site-sidebar" data-sidebar>
+  <div class="sidebar-header">
+    <a href={withBase()} class="site-brand" aria-label="Homepage">
+      <span class="brand-name">{SITE.brand}</span>
+      <span class="brand-tagline">{SITE.role}</span>
+    </a>
+    <p class="sidebar-intro">{SITE.profileSummary}</p>
+  </div>
+
+  <div class="sidebar-body" id="sidebar-nav-shell">
+    <form class="sidebar-search" role="search" method="get" action={withBase('archive/')}>
+      <label class="sidebar-search-label" for="sidebar-post-search">Search</label>
+      <div class="sidebar-search-row">
+        <input
+          id="sidebar-post-search"
+          class="sidebar-search-input"
+          type="search"
+          name="q"
+          autocomplete="off"
+          placeholder="Find a post..."
+        />
+        <button class="sidebar-search-submit" type="submit">Go</button>
+      </div>
+    </form>
+
+    <nav class="sidebar-nav" aria-label="Primary navigation">
+      <div class="nav-section">
+        <div class="nav-section-title">Portfolio</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href={withBase()} class:list={['nav-link', { active: isActive(withBase()) }]}>Home</a>
+          </li>
+          <li class="nav-item">
+            <a href={withBase('archive/')} class:list={['nav-link', { active: isActive(withBase('archive/')) }]}>Archive</a>
+          </li>
+          <li class="nav-item">
+            <a href={withBase('about/')} class:list={['nav-link', { active: isActive(withBase('about/')) }]}>About + CV</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Domains</div>
+        <ul class="nav-list">
+          {categoryCounts.map((cat) => (
+            <li class="nav-item">
+              <a
+                href={withBase(`${cat.slug}/`)}
+                class:list={['nav-link', `category-${cat.slug}`, { active: isCategoryActive(cat.slug) }]}
+              >
+                <span>{cat.label}</span>
+                <span class="count">{cat.count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {years.length > 0 && (
+        <div class="nav-section">
+          <div class="nav-section-title">Years</div>
+          <ul class="nav-list compact-list">
+            {years.slice(0, 8).map((year) => (
+              <li class="nav-item">
+                <a href={withBase(`archive/#year-${year}`)} class="nav-link">{year}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </nav>
+
+    <div class="sidebar-footer">
+      {PUBLIC_CV.enabled && (
+        <a
+          href={publicCvHref}
+          class="action-link"
+          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+        >
+          {PUBLIC_CV.label}
+        </a>
+      )}
+
+      {PUBLIC_LINKS.length > 0 && (
+        <div class="sidebar-links" aria-label="Public links">
+          <div class="sidebar-links-title">Links</div>
+          <div class="quick-links">
+            {PUBLIC_LINKS.map((link) => (
+              <a href={link.href} target="_blank" rel="noopener noreferrer" class="quick-link">{link.label}</a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</aside>
+
+<header class="mobile-header">
+  <button
+    class="mobile-menu-toggle"
+    type="button"
+    data-menu-toggle
+    aria-label="Toggle navigation menu"
+    aria-controls="site-sidebar"
+    aria-expanded="false"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+    </svg>
+  </button>
+  <a href={withBase()} class="mobile-brand">{SITE.brand}</a>
+</header>
+
+<div class="mobile-overlay" data-overlay></div>
