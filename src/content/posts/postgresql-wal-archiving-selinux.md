@@ -66,7 +66,7 @@ Once the SELinux context matches what the PostgreSQL process is allowed to acces
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![PostgreSQL WAL Archiving and SELinux Conflicts execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![PostgreSQL WAL Archiving and SELinux Conflicts execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **PostgreSQL WAL Archiving and SELinux Conflicts** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

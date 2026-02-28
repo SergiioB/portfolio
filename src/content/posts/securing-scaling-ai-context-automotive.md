@@ -53,7 +53,7 @@ If a pattern matches, the request is immediately rejected with a `JAILBREAK_DETE
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Securing and Scaling AI Context in an Automotive Assistant execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Securing and Scaling AI Context in an Automotive Assistant execution diagram](/portfolio/images/diagrams/post-framework/ai-pipeline.svg)
 
 This diagram supports **Securing and Scaling AI Context in an Automotive Assistant** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

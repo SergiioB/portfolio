@@ -61,7 +61,7 @@ Even small per-request KV reductions can be the difference between stable multi-
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![KV Cache Quantization on Qwen 3.5 (27B): Cutting Memory Without Breaking Latency execution diagram](/images/diagrams/post-framework/local-ai-memory.svg)
+![KV Cache Quantization on Qwen 3.5 (27B): Cutting Memory Without Breaking Latency execution diagram](/portfolio/images/diagrams/post-framework/local-ai-memory.svg)
 
 This diagram supports **KV Cache Quantization on Qwen 3.5 (27B): Cutting Memory Without Breaking Latency** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

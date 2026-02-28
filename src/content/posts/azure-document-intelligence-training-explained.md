@@ -56,7 +56,7 @@ Because of this behavior, you should adjust your workflow:
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Azure Document Intelligence: The 'TRAIN' Button Explained execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Azure Document Intelligence: The 'TRAIN' Button Explained execution diagram](/portfolio/images/diagrams/post-framework/ai-pipeline.svg)
 
 This diagram supports **Azure Document Intelligence: The 'TRAIN' Button Explained** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

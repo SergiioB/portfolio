@@ -76,9 +76,9 @@ source "vsphere-clone" "rhel-common" {
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating Golden Images with Packer and StackGuardian execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Automating Golden Images with Packer and StackGuardian execution diagram](/portfolio/images/diagrams/post-framework/packer-workflow.svg)
 
-This diagram supports **Automating Golden Images with Packer and StackGuardian** and highlights where controls, validation, and ownership boundaries sit in the workflow.
+This diagram visualizes the **Two-Phase Automated Golden Image Pipeline** orchestrating Packer through StackGuardian. It demonstrates separation of concerns: an infrequent heavy `vsphere-iso` base build, decoupled from the frequent `vsphere-clone` automation that applies shifting CIS controls and configuration management logic before sealing the resulting asset into vCenter formats.
 
 ## Post-Specific Engineering Lens
 For this post, the primary objective is: **Apply infrastructure practices with measurable validation and clear rollback ownership.**

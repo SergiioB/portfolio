@@ -76,7 +76,7 @@ The core software installation is technically a "non-Ansible process" (Ansible i
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Silent Software Installations on Linux using Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Silent Software Installations on Linux using Ansible execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Silent Software Installations on Linux using Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

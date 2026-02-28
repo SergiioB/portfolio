@@ -65,7 +65,7 @@ After these steps, your network mounts will wait for the local storage stack, wa
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Ensuring Reliable Network Filesystem Mounts on Boot execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Ensuring Reliable Network Filesystem Mounts on Boot execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Ensuring Reliable Network Filesystem Mounts on Boot** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

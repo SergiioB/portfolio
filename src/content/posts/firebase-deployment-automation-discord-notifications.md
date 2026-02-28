@@ -44,7 +44,7 @@ The result is a deployment flow where:
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating Firebase Deployments: Multi-Account Routing and Discord Notifications execution diagram](/images/diagrams/post-framework/cloud-ops.svg)
+![Automating Firebase Deployments: Multi-Account Routing and Discord Notifications execution diagram](/portfolio/images/diagrams/post-framework/cloud-ops.svg)
 
 This diagram supports **Automating Firebase Deployments: Multi-Account Routing and Discord Notifications** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

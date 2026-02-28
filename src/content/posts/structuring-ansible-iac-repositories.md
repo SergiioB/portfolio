@@ -74,7 +74,7 @@ This architecture reduces human error, makes the repository easier to navigate, 
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Infrastructure as Code: Structuring Ansible Repositories execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Infrastructure as Code: Structuring Ansible Repositories execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Infrastructure as Code: Structuring Ansible Repositories** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

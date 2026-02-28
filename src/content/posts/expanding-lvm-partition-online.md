@@ -82,7 +82,7 @@ The filesystem is now expanded online, and the new space is immediately availabl
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Expanding an LVM Partition and Filesystem Online execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Expanding an LVM Partition and Filesystem Online execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Expanding an LVM Partition and Filesystem Online** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

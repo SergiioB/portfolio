@@ -62,7 +62,7 @@ By putting the fine-tuned LLM at the end of your extraction pipeline, you replac
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Fine-Tuning LLMs for Complex Data Normalization execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Fine-Tuning LLMs for Complex Data Normalization execution diagram](/portfolio/images/diagrams/post-framework/ai-pipeline.svg)
 
 This diagram supports **Fine-Tuning LLMs for Complex Data Normalization** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

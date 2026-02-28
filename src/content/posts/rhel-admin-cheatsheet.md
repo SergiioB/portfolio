@@ -147,7 +147,7 @@ Let's share knowledge and grow together! If you'd like a more detailed guide or 
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Essential Red Hat Linux Administrator Commands execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Essential Red Hat Linux Administrator Commands execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Essential Red Hat Linux Administrator Commands** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

@@ -72,7 +72,7 @@ If the `sudoers` file on the Linux server is configured to allow members of that
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Active Directory Integration: Mapping UNIX Users to AD Groups execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Active Directory Integration: Mapping UNIX Users to AD Groups execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Active Directory Integration: Mapping UNIX Users to AD Groups** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

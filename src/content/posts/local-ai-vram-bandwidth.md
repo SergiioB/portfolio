@@ -34,7 +34,7 @@ That single idea took my inference from ~4 t/s to ~55 t/s. Stop optimizing for c
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Local AI: Stop Optimizing for VRAM Capacity. Start Optimizing for Bandwidth. execution diagram](/images/diagrams/post-framework/local-ai-memory.svg)
+![Local AI: Stop Optimizing for VRAM Capacity. Start Optimizing for Bandwidth. execution diagram](/portfolio/images/diagrams/post-framework/local-ai-memory.svg)
 
 This diagram visualizes the *Bandwidth Wall*, a critical concept in local AI inference based on the Roofline model.
 

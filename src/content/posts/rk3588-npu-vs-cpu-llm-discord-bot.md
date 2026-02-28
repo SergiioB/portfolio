@@ -59,7 +59,7 @@ On RK3588, CPU-only inference can be too slow even on small models for interacti
 <!-- portfolio:expanded-v2 -->
 
 ## Benchmark Comparison Chart
-![RK3588 NPU vs CPU Inference Benchmark](/images/diagrams/post-framework/rk3588-benchmarks.svg)
+![RK3588 NPU vs CPU Inference Benchmark](/portfolio/images/diagrams/post-framework/rk3588-benchmarks.svg)
 
 This chart quantifies the **RK3588 LLM Performance** delta. It illustrates the stark contrast between running Qwen2.5 (1.5B) on the CPU via Ollama (yielding an unusable ~0.21 t/s) versus offloading to the NPU via RKLLM. The NPU accelerates larger models (like Qwen3 4B and DeepSeek-R1 1.5B) to stable, interactive streaming speeds—achieving up to a 53x throughput multiplier over the CPU baseline.
 

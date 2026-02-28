@@ -96,7 +96,7 @@ By separating the data (`unix_local_users.yml`) from the logic (the Ansible task
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Managing Linux Technical Users: UIDs, GIDs, and Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Managing Linux Technical Users: UIDs, GIDs, and Ansible execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Managing Linux Technical Users: UIDs, GIDs, and Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

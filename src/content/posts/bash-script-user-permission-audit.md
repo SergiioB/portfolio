@@ -85,7 +85,7 @@ This script provides a clean, readable audit trail that you can easily pipe into
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating Linux User Permission Audits with Bash execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Automating Linux User Permission Audits with Bash execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Automating Linux User Permission Audits with Bash** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

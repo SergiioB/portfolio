@@ -57,7 +57,7 @@ This allows you to quickly generate a list of exactly which servers in your envi
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Tracking Required Reboots in RHEL with Tracer execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Tracking Required Reboots in RHEL with Tracer execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Tracking Required Reboots in RHEL with Tracer** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

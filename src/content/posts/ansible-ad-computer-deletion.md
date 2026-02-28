@@ -55,7 +55,7 @@ Because we don't want to leave plaintext passwords in logs or process lists, we 
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating AD Computer Object Deletion on Linux Decommission execution diagram](/images/diagrams/post-framework/automation-loop.svg)
+![Automating AD Computer Object Deletion on Linux Decommission execution diagram](/portfolio/images/diagrams/post-framework/automation-loop.svg)
 
 This diagram supports **Automating AD Computer Object Deletion on Linux Decommission** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

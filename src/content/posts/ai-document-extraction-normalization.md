@@ -61,7 +61,7 @@ The fine-tuned LLM acts as an intelligent normalization engine, capable of under
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Data Normalization Strategies for AI Document Extraction execution diagram](/images/diagrams/post-framework/ai-pipeline.svg)
+![Data Normalization Strategies for AI Document Extraction execution diagram](/portfolio/images/diagrams/post-framework/ai-pipeline.svg)
 
 This diagram supports **Data Normalization Strategies for AI Document Extraction** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

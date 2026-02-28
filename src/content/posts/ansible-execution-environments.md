@@ -80,7 +80,7 @@ Execution Environments represent the shift of Ansible from a "scripting tool" to
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Building Custom Ansible Execution Environments execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+![Building Custom Ansible Execution Environments execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Building Custom Ansible Execution Environments** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
