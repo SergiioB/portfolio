@@ -34,30 +34,43 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <div class="sidebar-header">
     <a href={withBase()} class="site-brand" aria-label="Homepage">
       <span class="brand-name">{SITE.brand}</span>
-      <span class="brand-tagline">{SITE.tagline}</span>
+      <span class="brand-tagline">{SITE.role}</span>
     </a>
     <p class="sidebar-intro">{SITE.profileSummary}</p>
   </div>
 
   <div class="sidebar-body" id="sidebar-nav-shell">
+    <form class="sidebar-search" role="search" method="get" action={withBase('archive/')}>
+      <label class="sidebar-search-label" for="sidebar-post-search">Search</label>
+      <div class="sidebar-search-row">
+        <div style="position: relative; display: flex; align-items: center; width: 100%;">
+          <span style="position: absolute; left: 0.7rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent);">~$</span>
+          <input
+            id="sidebar-post-search"
+            class="sidebar-search-input"
+            type="search"
+            name="q"
+            autocomplete="off"
+            placeholder="grep post..."
+            style="padding-left: 2rem;"
+          />
+        </div>
+        <button class="sidebar-search-submit" type="submit">Go</button>
+      </div>
+    </form>
+
     <nav class="sidebar-nav" aria-label="Primary navigation">
       <div class="nav-section">
-        <div class="nav-section-title">Pages</div>
+        <div class="nav-section-title">Portfolio</div>
         <ul class="nav-list">
           <li class="nav-item">
-            <a href={withBase()} class:list={['nav-link', { active: isActive(withBase()) }]}>
-              <span>Home</span>
-            </a>
+            <a href={withBase()} class:list={['nav-link', { active: isActive(withBase()) }]}>Home</a>
           </li>
           <li class="nav-item">
-            <a href={withBase('archive/')} class:list={['nav-link', { active: isActive(withBase('archive/')) }]}>
-              <span>Archive</span>
-            </a>
+            <a href={withBase('archive/')} class:list={['nav-link', { active: isActive(withBase('archive/')) }]}>Archive</a>
           </li>
           <li class="nav-item">
-            <a href={withBase('about/')} class:list={['nav-link', { active: isActive(withBase('about/')) }]}>
-              <span>About</span>
-            </a>
+            <a href={withBase('about/')} class:list={['nav-link', { active: isActive(withBase('about/')) }]}>About + CV</a>
           </li>
         </ul>
       </div>
@@ -83,11 +96,9 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         <div class="nav-section">
           <div class="nav-section-title">Years</div>
           <ul class="nav-list compact-list">
-            {years.slice(0, 6).map((year) => (
+            {years.slice(0, 8).map((year) => (
               <li class="nav-item">
-                <a href={withBase('archive/')} class="nav-link">
-                  <span>{year}</span>
-                </a>
+                <a href={withBase(`archive/#year-${year}`)} class="nav-link">{year}</a>
               </li>
             ))}
           </ul>
