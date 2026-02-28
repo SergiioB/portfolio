@@ -15,6 +15,7 @@
   const paletteRuntime = {
     bound: false,
     setOpen: null,
+    close: null,
     toggleHandler: null,
   };
 
@@ -213,16 +214,21 @@
     };
 
     const setPaletteOpen = (open) => {
-      palette.hidden = !open;
+      const livePalette = document.querySelector('[data-command-palette]');
+      const liveInput = document.querySelector('[data-command-palette-input]');
+      if (!livePalette) return;
+
+      livePalette.hidden = !open;
       document.body.classList.toggle('palette-open', open);
-      if (open) {
-        input.value = '';
+      if (open && liveInput) {
+        liveInput.value = '';
         renderCommands('');
-        input.focus();
+        liveInput.focus();
       }
     };
 
     paletteRuntime.setOpen = setPaletteOpen;
+    paletteRuntime.close = () => setPaletteOpen(false);
 
     closeTargets.forEach((target) => {
       if (target.dataset.bound === '1') return;
@@ -236,6 +242,14 @@
         if (event.target === palette) {
           setPaletteOpen(false);
         }
+      });
+
+      palette.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (!target.closest('[data-command-palette-close]')) return;
+        event.preventDefault();
+        setPaletteOpen(false);
       });
     }
 
@@ -260,6 +274,31 @@
       };
 
       document.addEventListener('keydown', paletteRuntime.toggleHandler);
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          if (!target.closest('a[href]')) return;
+          if (paletteRuntime.close) {
+            paletteRuntime.close();
+          }
+        },
+        true
+      );
+
+      window.addEventListener('hashchange', () => {
+        if (paletteRuntime.close) {
+          paletteRuntime.close();
+        }
+      });
+
+      window.addEventListener('popstate', () => {
+        if (paletteRuntime.close) {
+          paletteRuntime.close();
+        }
+      });
 
       window.addEventListener('portfolio-open-palette', () => {
         if (paletteRuntime.setOpen) {
@@ -386,8 +425,8 @@
       if (!active) return;
       const index = Number(active.getAttribute('data-command-index'));
       if (Number.isNaN(index) || !commands[index]) return;
-      commands[index].run();
       setPaletteOpen(false);
+      commands[index].run();
     };
 
     const moveActive = (direction) => {
@@ -406,8 +445,8 @@
       if (!target.classList.contains('command-item')) return;
       const index = Number(target.getAttribute('data-command-index'));
       if (Number.isNaN(index) || !commands[index]) return;
-      commands[index].run();
       setPaletteOpen(false);
+      commands[index].run();
     });
 
     input.addEventListener('input', () => {
@@ -435,7 +474,9 @@
     document.addEventListener(
       'astro:before-swap',
       () => {
-        setPaletteOpen(false);
+        if (paletteRuntime.close) {
+          paletteRuntime.close();
+        }
       },
       { once: true }
     );
@@ -522,6 +563,9 @@
   };
 
   const initPage = () => {
+    if (paletteRuntime.close) {
+      paletteRuntime.close();
+    }
     runBootSequence();
     initCommandPalette();
     initSidebar();
