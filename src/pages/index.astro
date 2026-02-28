@@ -82,29 +82,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     </div>
   </section>
 
-  <section class="section-block panel panel-soft section-surface" aria-labelledby="focus-title">
-    <div class="section-header-row">
-      <h2 id="focus-title" data-i18n="focus.title">Delivery Focus</h2>
-      <a href={withBase('about/')} class="subtle-link" data-i18n="focus.profile">Profile</a>
-    </div>
-    <div class="signal-grid">
-      <article class="panel panel-soft signal-card">
-        <h3 data-i18n="focus.infraTitle">Infrastructure automation at scale</h3>
-        <p data-i18n="focus.infraDesc">Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.</p>
-      </article>
-      <article class="panel panel-soft signal-card">
-        <h3 data-i18n="focus.rhelTitle">RHEL modernization</h3>
-        <p data-i18n="focus.rhelDesc">RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.</p>
-      </article>
-      <article class="panel panel-soft signal-card">
-        <h3 data-i18n="focus.aiTitle">Applied enterprise AI</h3>
-        <p data-i18n="focus.aiDesc">Azure AI Foundry and document intelligence pilots translated into operationally viable workloads.</p>
-      </article>
-    </div>
-  </section>
-
-  <AudienceMode />
-
+  <!-- Recruiter snapshot first — this is what recruiters care about -->
   <section id="recruiter-view" class="section-block panel panel-soft section-surface recruiter-focus" aria-labelledby="recruiter-title">
     <div class="section-header-row">
       <h2 id="recruiter-title" data-i18n="recruiter.title">Recruiter Snapshot</h2>
@@ -157,15 +135,41 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     </div>
   </section>
 
+  <section class="section-block panel panel-soft section-surface" aria-labelledby="focus-title">
+    <div class="section-header-row">
+      <h2 id="focus-title" data-i18n="focus.title">Delivery Focus</h2>
+      <a href={withBase('about/')} class="subtle-link" data-i18n="focus.profile">Profile</a>
+    </div>
+    <div class="signal-grid">
+      <article class="panel panel-soft signal-card">
+        <h3 data-i18n="focus.infraTitle">Infrastructure automation at scale</h3>
+        <p data-i18n="focus.infraDesc">Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.</p>
+      </article>
+      <article class="panel panel-soft signal-card">
+        <h3 data-i18n="focus.rhelTitle">RHEL modernization</h3>
+        <p data-i18n="focus.rhelDesc">RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.</p>
+      </article>
+      <article class="panel panel-soft signal-card">
+        <h3 data-i18n="focus.aiTitle">Applied enterprise AI</h3>
+        <p data-i18n="focus.aiDesc">Azure AI Foundry and document intelligence pilots translated into operationally viable workloads.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Audience toggle + Engineer teaser — clear mode switch -->
+  <AudienceMode />
+
   <section class="engineer-zone-teaser panel panel-soft section-surface" data-engineer-zone-teaser>
     <div class="section-header-row">
       <h2 data-i18n="engineer.labsTitle">Engineer Labs</h2>
-      <button type="button" class="action-link" data-set-audience="engineer" data-i18n="engineer.switchButton">Switch to Engineer Mode</button>
     </div>
     <p data-i18n="engineer.teaserText">
       Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry,
       command simulation, and network topology labs.
     </p>
+    <div class="engineer-teaser-cta">
+      <button type="button" class="action-link engineer-switch-btn" data-set-audience="engineer" data-i18n="engineer.switchButton">Switch to Engineer Mode</button>
+    </div>
   </section>
 
   <div class="engineer-zone" data-engineer-zone>
