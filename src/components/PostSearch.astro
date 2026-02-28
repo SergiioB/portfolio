@@ -28,54 +28,59 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll('/', '-') || 
 </section>
 
 <script is:inline define:vars={{ inputId, statusId, emptyId, itemSelector, sectionSelector }}>
-  function normalize(value) {
-    return String(value ?? '').toLowerCase().trim();
-  }
-
-  const input = document.getElementById(inputId);
-  const status = document.getElementById(statusId);
-  const empty = document.getElementById(emptyId);
-  const items = Array.from(document.querySelectorAll(itemSelector));
-  const sections = sectionSelector ? Array.from(document.querySelectorAll(sectionSelector)) : [];
-
-  function applyQuery(rawQuery) {
-    const query = normalize(rawQuery);
-    let visibleCount = 0;
-
-    for (const item of items) {
-      const haystack = normalize(item.dataset.search);
-      const matches = query.length === 0 || haystack.includes(query);
-      item.hidden = !matches;
-      if (matches) visibleCount++;
+  // Defer until the full DOM is parsed — the search items are rendered
+  // *below* this component in the page, so an inline synchronous query
+  // would return an empty NodeList if run at parse time.
+  document.addEventListener('DOMContentLoaded', () => {
+    function normalize(value) {
+      return String(value ?? '').toLowerCase().trim();
     }
 
-    if (sections.length > 0) {
-      for (const section of sections) {
-        // Hide empty year blocks while searching.
-        const hasAnyVisible = section.querySelector(`${itemSelector}:not([hidden])`) !== null;
-        section.hidden = !hasAnyVisible;
+    const input = document.getElementById(inputId);
+    const status = document.getElementById(statusId);
+    const empty = document.getElementById(emptyId);
+    const items = Array.from(document.querySelectorAll(itemSelector));
+    const sections = sectionSelector ? Array.from(document.querySelectorAll(sectionSelector)) : [];
+
+    function applyQuery(rawQuery) {
+      const query = normalize(rawQuery);
+      let visibleCount = 0;
+
+      for (const item of items) {
+        const haystack = normalize(item.dataset.search);
+        const matches = query.length === 0 || haystack.includes(query);
+        item.hidden = !matches;
+        if (matches) visibleCount++;
+      }
+
+      if (sections.length > 0) {
+        for (const section of sections) {
+          // Hide empty year blocks while searching.
+          const hasAnyVisible = section.querySelector(`${itemSelector}:not([hidden])`) !== null;
+          section.hidden = !hasAnyVisible;
+        }
+      }
+
+      if (status) {
+        status.textContent = query.length === 0 ? '' : `${visibleCount} match${visibleCount === 1 ? '' : 'es'}`;
+      }
+      if (empty) {
+        empty.hidden = !(query.length > 0 && visibleCount === 0);
       }
     }
 
-    if (status) {
-      status.textContent = query.length === 0 ? '' : `${visibleCount} match${visibleCount === 1 ? '' : 'es'}`;
-    }
-    if (empty) {
-      empty.hidden = !(query.length > 0 && visibleCount === 0);
-    }
-  }
+    if (input) {
+      const params = new URLSearchParams(window.location.search);
+      const initial = params.get('q');
+      if (initial) {
+        input.value = initial;
+        applyQuery(initial);
+      }
 
-  if (input) {
-    const params = new URLSearchParams(window.location.search);
-    const initial = params.get('q');
-    if (initial) {
-      input.value = initial;
-      applyQuery(initial);
+      input.addEventListener('input', (event) => {
+        applyQuery(event.target.value);
+      });
     }
-
-    input.addEventListener('input', (event) => {
-      applyQuery(event.target.value);
-    });
-  }
+  });
 </script>
 
