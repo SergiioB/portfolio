@@ -93,7 +93,10 @@ const csp = [
       <div class="command-palette-shell" role="dialog" aria-modal="true" aria-labelledby="command-palette-title">
         <div class="command-palette-head">
           <h2 id="command-palette-title">Engineer Command Palette</h2>
-          <span class="command-palette-hint">Ctrl/Cmd + K</span>
+          <div class="command-palette-head-actions">
+            <span class="command-palette-hint">Ctrl/Cmd + K</span>
+            <button class="command-palette-close" type="button" data-command-palette-close aria-label="Close command palette">Close</button>
+          </div>
         </div>
         <input
           class="command-palette-input"
