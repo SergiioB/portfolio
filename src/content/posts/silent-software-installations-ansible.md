@@ -72,3 +72,44 @@ Because this process can take a long time, we use the `ansible.builtin.command` 
 ### Key Takeaway
 
 The core software installation is technically a "non-Ansible process" (Ansible isn't managing the individual files the vendor installer places). However, Ansible is the **orchestrator**: it sets the stage perfectly, triggers the silent install script, and then takes over again to configure the systemd services to manage the newly installed application.
+
+<!-- portfolio:expanded-v1 -->
+
+## Architecture Diagram
+![Silent Software Installations on Linux using Ansible supporting diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+
+This visual summarizes the implementation flow and control points for **Silent Software Installations on Linux using Ansible**.
+
+## Deep Dive
+This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **platform reliability, lifecycle controls, and repeatable Linux delivery**, with decisions made to keep implementation repeatable under production constraints.
+
+### Design choices
+- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
+- Treated **ansible** and **linux** as the main risk vectors during implementation.
+- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+
+### Operational sequence
+1. Baseline current state.
+2. Apply change in controlled stage.
+3. Run post-change validation.
+4. Document handoff and rollback point.
+
+## Validation and Evidence
+Use this checklist to prove the change is production-ready:
+- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
+- Post-change checks executed from at least two viewpoints (service-level and system-level).
+- Failure scenario tested with a known rollback path.
+- Runbook updated with final command set and ownership boundaries.
+
+## Risks and Mitigations
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
+| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
+| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+
+## Reusable Takeaways
+- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
+- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
+- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+

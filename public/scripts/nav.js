@@ -259,6 +259,17 @@
         run: () => navigate(`${base}about/`),
       },
       {
+        label: 'Go to Recruiter Snapshot',
+        tags: 'navigation recruiter hiring summary profile fit',
+        run: () => {
+          if (window.location.pathname.startsWith(`${base}`) && document.getElementById('recruiter-view')) {
+            document.getElementById('recruiter-view')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+          }
+          navigate(`${base}#recruiter-view`);
+        },
+      },
+      {
         label: 'Go to Network Topology',
         tags: 'navigation network topology latency map',
         run: () => {

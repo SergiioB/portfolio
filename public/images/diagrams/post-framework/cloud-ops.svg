@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Cloud operations architecture">
+  <rect width="1200" height="650" fill="#0b1020"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Cloud Operations Control Plane</text>
+  <rect x="100" y="160" width="300" height="150" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="155" y="245" fill="#93c5fd" font-size="26" font-family="Segoe UI, Arial">Ingress + API</text>
+  <rect x="450" y="160" width="300" height="150" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="520" y="245" fill="#86efac" font-size="26" font-family="Segoe UI, Arial">Services</text>
+  <rect x="800" y="160" width="300" height="150" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="855" y="245" fill="#fde68a" font-size="26" font-family="Segoe UI, Arial">Storage</text>
+  <rect x="280" y="390" width="640" height="170" rx="16" fill="#111827" stroke="#334155"/>
+  <text x="340" y="455" fill="#fca5a5" font-size="24" font-family="Segoe UI, Arial">Observability + Cost + Security policy loop</text>
+  <line x1="400" y1="235" x2="450" y2="235" stroke="#60a5fa" stroke-width="4"/>
+  <line x1="750" y1="235" x2="800" y2="235" stroke="#60a5fa" stroke-width="4"/>
+</svg>

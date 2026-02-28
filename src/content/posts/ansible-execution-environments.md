@@ -76,3 +76,44 @@ Now, whenever a workflow runs, it spins up a container that has the **exact** sa
 *   **Speed**: By using caching layers in our container build, we can add a single new collection and rebuild the image in seconds.
 
 Execution Environments represent the shift of Ansible from a "scripting tool" to a true **Infrastructure as Code** platform that follows modern software engineering principles.
+
+<!-- portfolio:expanded-v1 -->
+
+## Architecture Diagram
+![Building Custom Ansible Execution Environments supporting diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
+
+This visual summarizes the implementation flow and control points for **Building Custom Ansible Execution Environments**.
+
+## Deep Dive
+This case is strongest when explained as an execution narrative instead of only a command sequence. The core focus here is **platform reliability, lifecycle controls, and repeatable Linux delivery**, with decisions made to keep implementation repeatable under production constraints.
+
+### Design choices
+- Preferred deterministic configuration over one-off remediation to reduce variance between environments.
+- Treated **ansible** and **containers** as the main risk vectors during implementation.
+- Kept rollback behavior explicit so operational ownership can be transferred safely across teams.
+
+### Operational sequence
+1. Baseline current state.
+2. Apply change in controlled stage.
+3. Run post-change validation.
+4. Document handoff and rollback point.
+
+## Validation and Evidence
+Use this checklist to prove the change is production-ready:
+- Baseline metrics captured before execution (latency, error rate, resource footprint, or service health).
+- Post-change checks executed from at least two viewpoints (service-level and system-level).
+- Failure scenario tested with a known rollback path.
+- Runbook updated with final command set and ownership boundaries.
+
+## Risks and Mitigations
+| Risk | Why it matters | Mitigation |
+|---|---|---|
+| Configuration drift | Reduces reproducibility across environments | Enforce declarative config and drift checks |
+| Hidden dependency | Causes fragile deployments | Validate dependencies during pre-check stage |
+| Observability gap | Delays incident triage | Require telemetry and post-change verification points |
+
+## Reusable Takeaways
+- Convert one successful fix into a reusable delivery pattern with clear pre-check and post-check gates.
+- Attach measurable outcomes to each implementation step so stakeholders can validate impact quickly.
+- Keep documentation concise, operational, and versioned with the same lifecycle as code.
+

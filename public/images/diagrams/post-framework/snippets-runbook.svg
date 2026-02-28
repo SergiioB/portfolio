@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Ops snippet runbook flow">
+  <rect width="1200" height="650" fill="#0b1220"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Snippet-to-Runbook Escalation Pattern</text>
+  <rect x="90" y="170" width="260" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="142" y="238" fill="#93c5fd" font-size="24" font-family="Segoe UI, Arial">Quick fix</text>
+  <rect x="420" y="170" width="260" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="456" y="238" fill="#fde68a" font-size="24" font-family="Segoe UI, Arial">Standardize</text>
+  <rect x="750" y="170" width="260" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="818" y="238" fill="#86efac" font-size="24" font-family="Segoe UI, Arial">Automate</text>
+  <line x1="350" y1="230" x2="420" y2="230" stroke="#60a5fa" stroke-width="4"/>
+  <line x1="680" y1="230" x2="750" y2="230" stroke="#60a5fa" stroke-width="4"/>
+  <rect x="90" y="360" width="920" height="180" rx="16" fill="#111827" stroke="#334155"/>
+  <text x="130" y="430" fill="#cbd5e1" font-size="24" font-family="Segoe UI, Arial">Escalation rule: if repeated twice, convert snippet to tested runbook.</text>
+</svg>
