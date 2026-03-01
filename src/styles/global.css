@@ -598,6 +598,7 @@ li+li {
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: hidden;
 }
 
 .sidebar-search {
