@@ -938,8 +938,7 @@
   const initReveal = () => {
     const selectors = [
       '.hero', '.section-block', '.timeline-item', '.skill-card',
-      '.principles-grid .panel', '.engineer-lab', '.network-panel',
-      '.archive-year'
+      '.principles-grid .panel', '.engineer-lab', '.network-panel'
     ];
     const elements = document.querySelectorAll(selectors.join(','));
     if (elements.length === 0) return;
