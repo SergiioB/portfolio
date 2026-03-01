@@ -109,23 +109,29 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     </nav>
 
     <div class="sidebar-footer">
-      {PUBLIC_CV.enabled && (
-        <a
-          href={publicCvHref}
-          class="action-link"
-          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
-        >
-          {PUBLIC_CV.label}
-        </a>
-      )}
+      <div class="sidebar-footer-actions">
+        {PUBLIC_CV.enabled && (
+          <a
+            href={publicCvHref}
+            class="sidebar-cv-btn"
+            target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+            rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+            data-i18n="about.cvLabel"
+          >
+            {PUBLIC_CV.label}
+          </a>
+        )}
+        <button class="lang-toggle-btn" type="button" data-lang-toggle aria-label="Switch language" data-i18n-label="lang.switchLabel">
+          <span data-i18n="lang.switch">ES</span>
+        </button>
+      </div>
 
-      <div class="sidebar-uptime" data-i18n-session><span data-i18n="nav.session">Session:</span> <span data-uptime>0s</span></div>
-      <div class="sidebar-palette-hint"><span data-i18n="nav.commandPalette">Command palette:</span> <kbd>Ctrl</kbd>+<kbd>K</kbd></div>
-
-      <button class="lang-toggle-btn" type="button" data-lang-toggle aria-label="Switch language" data-i18n-label="lang.switchLabel">
-        <span data-i18n="lang.switch">ES</span>
-      </button>
+      <div class="sidebar-meta-row">
+        <span class="sidebar-uptime-dot"></span>
+        <span data-i18n-session><span data-i18n="nav.session">Session:</span> <span data-uptime>0s</span></span>
+        <span class="sidebar-meta-sep">·</span>
+        <kbd>Ctrl</kbd>+<kbd>K</kbd>
+      </div>
 
       {PUBLIC_LINKS.length > 0 && (
         <div class="sidebar-links" aria-label="Public links">
