@@ -1,8 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://SergiioB.github.io',
-  base: '/portfolio',
+  site: 'https://sergiiob.dev',
   output: 'static',
   integrations: [],
   markdown: {
