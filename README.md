@@ -1,32 +1,6 @@
-# Technical Portfolio (Astro + GitHub Pages)
+# Technical Portfolio
 
-Static portfolio and technical notes site built with Astro and deployed to GitHub Pages.
-
-This repository is intentionally kept public-safe:
-
-- No secrets or `.env` files
-- No private contact details in source/docs
-- No employer-internal details in posts
-- Static hosting only (no backend, no database)
-
-See `SECURITY.md` for reporting, response, and pre-push security workflow.
-
-## Project Intent
-
-This project is designed to serve two purposes:
-
-1. A professional portfolio surface (focus areas, experience summary, engineering approach)
-2. A technical knowledge base (short posts and implementation notes)
-
-## Stack (and why it fits)
-
-- `Astro 5`: static-first rendering, Markdown-native content, minimal client JavaScript
-- `GitHub Pages`: simple hosting for a static site
-- `GitHub Actions`: automated build/deploy on push
-- `Vanilla CSS`: easy to audit, no styling framework lock-in
-- `Astro Content Collections`: typed frontmatter and predictable content structure
-
-This is a strong choice for a writing-first portfolio/blog where speed, simplicity, and public safety matter more than dynamic interactivity.
+Portfolio and technical notes site built with Astro, deployed to GitHub Pages.
 
 ## Local Development
 
