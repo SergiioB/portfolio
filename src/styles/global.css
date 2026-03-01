@@ -1034,7 +1034,20 @@ li+li {
   max-width: 22ch;
   font-size: clamp(1.8rem, 4.1vw, 2.9rem);
   color: var(--text-strong);
-  text-shadow: 0 0 28px rgba(88, 166, 255, 0.18);
+  text-shadow:
+    0 0 28px rgba(88, 166, 255, 0.18),
+    0 0 60px rgba(88, 166, 255, 0.06);
+}
+
+/* Typewriter glow while typing */
+#typewriter {
+  text-shadow: 0 0 8px rgba(88, 166, 255, 0.15);
+  animation: typewriter-glow 3s ease-in-out infinite;
+}
+
+@keyframes typewriter-glow {
+  0%, 100% { text-shadow: 0 0 8px rgba(88, 166, 255, 0.15); }
+  50% { text-shadow: 0 0 16px rgba(88, 166, 255, 0.25), 0 0 40px rgba(88, 166, 255, 0.08); }
 }
 
 .hero-description {
@@ -2765,47 +2778,209 @@ body.audience-recruiter .glitch {
   color: #ffb2ac;
 }
 
-body.hardcore-mode::after {
-  opacity: 0.28;
-  animation: scan-jitter 3.2s linear infinite;
+/* ── Hardcore Mode — dramatic CRT / cyberpunk overhaul ────────── */
+
+body.hardcore-mode {
+  animation: hc-vignette-pulse 6s ease-in-out infinite;
 }
 
+/* CRT curvature + heavier scanlines */
+body.hardcore-mode::after {
+  opacity: 0.38;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-size: 100% 3px, 120px 120px;
+  animation: scan-jitter 2s linear infinite, hc-scanline-drift 8s linear infinite;
+}
+
+/* Red atmospheric tint behind everything */
+body.hardcore-mode::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(255, 30, 30, 0.06) 100%);
+  animation: hc-vignette-pulse 6s ease-in-out infinite;
+}
+
+/* Glitch — much more aggressive and frequent */
 body.hardcore-mode .glitch {
-  animation-duration: 2.4s;
+  animation: hc-glitch-flicker 1.6s infinite steps(1);
+  text-shadow: 0 0 8px rgba(255, 123, 114, 0.3);
 }
 
 body.hardcore-mode .glitch::before,
 body.hardcore-mode .glitch::after {
-  opacity: 0.26;
+  opacity: 0.55;
 }
 
+body.hardcore-mode .glitch::before {
+  animation: hc-glitch-shift-1 2.2s infinite steps(1);
+  color: rgba(88, 220, 255, 0.9);
+}
+
+body.hardcore-mode .glitch::after {
+  animation: hc-glitch-shift-2 2.2s infinite steps(1);
+  color: rgba(255, 90, 80, 0.85);
+}
+
+/* Panel glow + subtle border pulse */
 body.hardcore-mode .panel {
-  box-shadow: 0 0 0 1px rgba(255, 123, 114, 0.15), var(--shadow-lg);
+  box-shadow:
+    0 0 0 1px rgba(255, 123, 114, 0.2),
+    0 0 18px rgba(255, 60, 50, 0.06),
+    inset 0 0 40px rgba(255, 60, 50, 0.02),
+    var(--shadow-lg);
+  animation: hc-border-breathe 4s ease-in-out infinite;
 }
 
+/* Headings get chromatic aberration */
+body.hardcore-mode h1,
+body.hardcore-mode h2,
+body.hardcore-mode h3 {
+  text-shadow:
+    -1px 0 rgba(255, 80, 80, 0.25),
+    1px 0 rgba(80, 180, 255, 0.25),
+    0 0 12px rgba(255, 123, 114, 0.12);
+}
+
+/* Engineer terminals — deeper CRT look */
 body.hardcore-mode .engineer-terminal::before,
 body.hardcore-mode .ops-cli-output::before {
-  opacity: 0.3;
+  opacity: 0.4;
+  background-size: 100% 2px;
+}
+
+body.hardcore-mode .engineer-terminal,
+body.hardcore-mode .ops-cli-output {
+  box-shadow:
+    inset 0 0 60px rgba(0, 255, 60, 0.03),
+    0 0 20px rgba(255, 60, 50, 0.08);
+  border-color: rgba(255, 123, 114, 0.3);
 }
 
 body.hardcore-mode .terminal-line,
 body.hardcore-mode .ops-line {
-  animation-duration: 130ms;
+  animation-duration: 90ms;
+  text-shadow: 0 0 4px rgba(166, 255, 189, 0.3);
 }
 
+/* Alert stream — pulsing red */
 body.hardcore-mode .ops-alert-stream {
-  border-color: rgba(255, 123, 114, 0.5);
+  border-color: rgba(255, 123, 114, 0.6);
   color: #ffb2ac;
   background: rgba(48, 16, 16, 0.46);
+  animation: hc-alert-pulse 2s ease-in-out infinite;
 }
 
+/* Category badges get glow */
+body.hardcore-mode .category-badge {
+  text-shadow: 0 0 6px currentColor;
+}
+
+/* Links get a subtle neon effect */
+body.hardcore-mode a:not(.action-link):hover {
+  text-shadow: 0 0 8px rgba(88, 166, 255, 0.4);
+}
+
+/* Action links get red glow */
+body.hardcore-mode .action-link {
+  box-shadow: 0 0 12px rgba(255, 60, 50, 0.15);
+}
+
+body.hardcore-mode .action-link:hover {
+  box-shadow: 0 0 20px rgba(255, 60, 50, 0.3), 0 0 40px rgba(255, 60, 50, 0.1);
+}
+
+/* Mode toggle button — intense glow when active */
+body.hardcore-mode .mode-toggle[aria-pressed='true'] {
+  box-shadow:
+    0 0 12px rgba(255, 123, 114, 0.4),
+    0 0 30px rgba(255, 60, 50, 0.15),
+    inset 0 0 8px rgba(255, 60, 50, 0.1);
+}
+
+/* Stats get monochrome red accent */
+body.hardcore-mode .stat-value {
+  text-shadow: 0 0 12px rgba(255, 123, 114, 0.3);
+}
+
+/* Network panel — full red takeover */
 .network-panel.hardcore .network-pulse {
   fill: #ffb2ac;
-  filter: drop-shadow(0 0 6px rgba(255, 123, 114, 0.55));
+  filter: drop-shadow(0 0 8px rgba(255, 123, 114, 0.7));
 }
 
 .network-panel.hardcore .network-link-glow {
-  stroke: rgba(255, 123, 114, 0.26);
+  stroke: rgba(255, 123, 114, 0.35);
+}
+
+.network-panel.hardcore .network-node {
+  fill: #ffb2ac;
+  filter: drop-shadow(0 0 4px rgba(255, 123, 114, 0.4));
+}
+
+/* Hardcore keyframes */
+@keyframes hc-glitch-flicker {
+  0%, 100% { filter: none; }
+  7% { filter: brightness(1.15) saturate(1.4); }
+  7.5% { filter: brightness(0.92); }
+  8% { filter: none; }
+  30% { filter: none; }
+  30.3% { filter: brightness(1.08) hue-rotate(3deg); }
+  30.8% { filter: none; }
+  55% { filter: none; }
+  55.2% { filter: contrast(1.3) brightness(1.1); }
+  55.7% { filter: none; }
+  78% { filter: none; }
+  78.3% { filter: brightness(0.9) saturate(1.6); }
+  78.8% { filter: none; }
+}
+
+@keyframes hc-glitch-shift-1 {
+  0%, 100% { opacity: 0; }
+  7% { opacity: 0.7; clip-path: inset(8% 0 65% 0); transform: translate(3px, -2px); }
+  9% { opacity: 0; }
+  30% { opacity: 0.6; clip-path: inset(40% 0 30% 0); transform: translate(-4px, 1px); }
+  32% { opacity: 0; }
+  55% { opacity: 0.65; clip-path: inset(70% 0 5% 0); transform: translate(2px, 1px); }
+  57% { opacity: 0; }
+  78% { opacity: 0.5; clip-path: inset(15% 0 50% 0); transform: translate(-2px, -1px); }
+  80% { opacity: 0; }
+}
+
+@keyframes hc-glitch-shift-2 {
+  0%, 100% { opacity: 0; }
+  8% { opacity: 0.65; clip-path: inset(60% 0 10% 0); transform: translate(-3px, 2px); }
+  10% { opacity: 0; }
+  31% { opacity: 0.55; clip-path: inset(5% 0 70% 0); transform: translate(3px, -1px); }
+  33% { opacity: 0; }
+  56% { opacity: 0.6; clip-path: inset(25% 0 45% 0); transform: translate(-2px, 1px); }
+  58% { opacity: 0; }
+  79% { opacity: 0.55; clip-path: inset(50% 0 20% 0); transform: translate(4px, -2px); }
+  81% { opacity: 0; }
+}
+
+@keyframes hc-border-breathe {
+  0%, 100% { border-color: var(--border); }
+  50% { border-color: rgba(255, 123, 114, 0.2); }
+}
+
+@keyframes hc-alert-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; border-color: rgba(255, 80, 60, 0.8); }
+}
+
+@keyframes hc-vignette-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes hc-scanline-drift {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 0 100%, 0 0; }
 }
 
 .sr-only {
@@ -2834,58 +3009,36 @@ body.hardcore-mode .ops-alert-stream {
 }
 
 @keyframes glitch-flicker {
-
-  0%,
-  89%,
-  100% {
-    filter: none;
-  }
-
-  90% {
-    filter: brightness(1.07);
-  }
-
-  91% {
-    filter: contrast(1.16);
-  }
+  0%, 100% { filter: none; }
+  10% { filter: brightness(1.08); }
+  10.5% { filter: contrast(1.12); }
+  11% { filter: none; }
+  42% { filter: none; }
+  42.3% { filter: brightness(1.06) saturate(1.15); }
+  42.8% { filter: none; }
+  73% { filter: none; }
+  73.2% { filter: brightness(0.95) contrast(1.1); }
+  73.7% { filter: none; }
 }
 
 @keyframes glitch-shift-1 {
-
-  0%,
-  90%,
-  100% {
-    opacity: 0;
-  }
-
-  91% {
-    opacity: 0.62;
-    clip-path: inset(10% 0 55% 0);
-    transform: translate(2px, -1px);
-  }
-
-  93% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 0; }
+  10% { opacity: 0.62; clip-path: inset(10% 0 55% 0); transform: translate(2px, -1px); }
+  12% { opacity: 0; }
+  42% { opacity: 0.5; clip-path: inset(45% 0 25% 0); transform: translate(-3px, 1px); }
+  44% { opacity: 0; }
+  73% { opacity: 0.55; clip-path: inset(65% 0 10% 0); transform: translate(2px, 0); }
+  75% { opacity: 0; }
 }
 
 @keyframes glitch-shift-2 {
-
-  0%,
-  89%,
-  100% {
-    opacity: 0;
-  }
-
-  90% {
-    opacity: 0.58;
-    clip-path: inset(55% 0 10% 0);
-    transform: translate(-2px, 1px);
-  }
-
-  92% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 0; }
+  11% { opacity: 0.58; clip-path: inset(55% 0 10% 0); transform: translate(-2px, 1px); }
+  13% { opacity: 0; }
+  43% { opacity: 0.48; clip-path: inset(20% 0 50% 0); transform: translate(3px, -1px); }
+  45% { opacity: 0; }
+  74% { opacity: 0.52; clip-path: inset(5% 0 70% 0); transform: translate(-2px, 1px); }
+  76% { opacity: 0; }
 }
 
 @keyframes terminal-line-in {

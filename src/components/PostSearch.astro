@@ -31,7 +31,8 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll('/', '-') || 
   // Defer until the full DOM is parsed — the search items are rendered
   // *below* this component in the page, so an inline synchronous query
   // would return an empty NodeList if run at parse time.
-  document.addEventListener('DOMContentLoaded', () => {
+  // Use both DOMContentLoaded (initial load) AND astro:page-load (SPA navigations).
+  function initPostSearch() {
     function normalize(value) {
       return String(value ?? '').toLowerCase().trim();
     }
@@ -81,6 +82,8 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll('/', '-') || 
         applyQuery(event.target.value);
       });
     }
-  });
+  }
+  document.addEventListener('DOMContentLoaded', initPostSearch);
+  document.addEventListener('astro:page-load', initPostSearch);
 </script>
 
