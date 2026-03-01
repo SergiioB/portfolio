@@ -86,7 +86,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
                 href={withBase(`${cat.slug}/`)}
                 class:list={['nav-link', `category-${cat.slug}`, { active: isCategoryActive(cat.slug) }]}
               >
-                <span>{cat.label}</span>
+                <span data-i18n={`cat.${cat.slug}`}>{cat.label}</span>
                 <span class="count">{cat.count}</span>
               </a>
             </li>
