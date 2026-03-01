@@ -14,19 +14,23 @@
       --accent-light: #e8f0fc;
       --border: #ddd;
       --bg: #fff;
-      --section-gap: 0.9rem;
+      --section-gap: 0.75rem;
     }
 
     @media print {
       @page {
         size: A4;
-        margin: 12mm 14mm 12mm 14mm;
+        margin: 11mm 13mm 11mm 13mm;
       }
-      body { font-size: 9.2pt; }
+      body { font-size: 9pt; }
       .no-print { display: none !important; }
       a { color: var(--text) !important; text-decoration: none !important; }
-      .section { break-inside: avoid; }
-      .job { break-inside: avoid; }
+      /* Let sections flow naturally across pages */
+      h2 { break-after: avoid; }
+      .job-header { break-after: avoid; }
+      .edu-row { break-inside: avoid; }
+      .skills-grid { break-inside: avoid; }
+      .lang-grid { break-inside: avoid; }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,7 +55,7 @@
     }
 
     h1 {
-      font-size: 20pt;
+      font-size: 18pt;
       font-weight: 700;
       color: var(--text);
       letter-spacing: 0.02em;
@@ -108,7 +112,7 @@
 
     /* ── Jobs ── */
     .job {
-      margin-bottom: 0.7rem;
+      margin-bottom: 0.55rem;
     }
 
     .job:last-child {
@@ -152,8 +156,8 @@
     }
 
     .job li {
-      margin-bottom: 0.12rem;
-      font-size: 9.5pt;
+      margin-bottom: 0.08rem;
+      font-size: 9.2pt;
       color: var(--text-soft);
     }
 

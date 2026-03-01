@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sergio Barrientos — Ingeniero Linux y Virtualización</title>
+  <style>
+    /* ── CV optimizado para ATS — HTML semántico, columna única, sin imágenes ── */
+    :root {
+      --text: #1a1a1a;
+      --text-soft: #444;
+      --text-muted: #666;
+      --accent: #1a5fb4;
+      --accent-light: #e8f0fc;
+      --border: #ddd;
+      --bg: #fff;
+      --section-gap: 0.75rem;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 11mm 13mm 11mm 13mm;
+      }
+      body { font-size: 9pt; }
+      .no-print { display: none !important; }
+      a { color: var(--text) !important; text-decoration: none !important; }
+      h2 { break-after: avoid; }
+      .job-header { break-after: avoid; }
+      .edu-row { break-inside: avoid; }
+      .skills-grid { break-inside: avoid; }
+      .lang-grid { break-inside: avoid; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.48;
+      color: var(--text);
+      background: var(--bg);
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 14mm;
+    }
+
+    .header {
+      text-align: center;
+      padding-bottom: 0.7rem;
+      border-bottom: 2px solid var(--accent);
+      margin-bottom: var(--section-gap);
+    }
+
+    h1 {
+      font-size: 18pt;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.15rem;
+    }
+
+    .subtitle {
+      font-size: 11.5pt;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.45rem;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.2rem;
+      font-size: 9.2pt;
+      color: var(--text-soft);
+    }
+
+    .contact-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .contact-row a:hover {
+      text-decoration: underline;
+    }
+
+    .section {
+      margin-bottom: var(--section-gap);
+    }
+
+    h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary {
+      font-size: 9.8pt;
+      color: var(--text-soft);
+      line-height: 1.52;
+    }
+
+    .job {
+      margin-bottom: 0.55rem;
+    }
+
+    .job:last-child {
+      margin-bottom: 0;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.15rem 1rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .job-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .job-company {
+      font-weight: 400;
+      color: var(--text-soft);
+    }
+
+    .job-period {
+      font-size: 9pt;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .job-meta {
+      font-size: 8.5pt;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .job ul {
+      padding-left: 1.2rem;
+    }
+
+    .job li {
+      margin-bottom: 0.08rem;
+      font-size: 9.2pt;
+      color: var(--text-soft);
+    }
+
+    .job li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 0.8rem;
+      font-size: 9.5pt;
+    }
+
+    .skill-label {
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .skill-value {
+      color: var(--text-soft);
+    }
+
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.1rem 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .edu-title {
+      font-weight: 600;
+      font-size: 9.5pt;
+    }
+
+    .edu-detail {
+      font-size: 9pt;
+      color: var(--text-muted);
+    }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem 2rem;
+      font-size: 9.5pt;
+    }
+
+    .lang-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lang-item strong {
+      font-weight: 600;
+      font-size: 10pt;
+    }
+
+    .lang-item span {
+      color: var(--text-muted);
+      font-size: 9pt;
+    }
+
+    .print-bar {
+      text-align: center;
+      padding: 1rem 0 0.5rem;
+    }
+
+    .print-btn {
+      display: inline-block;
+      padding: 0.5rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 10pt;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+    }
+
+    .print-btn:hover {
+      background: #154a93;
+    }
+
+    .print-note {
+      font-size: 8pt;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>SERGIO BARRIENTOS</h1>
+    <div class="subtitle">Ingeniero de Sistemas Linux y Virtualización</div>
+    <div class="contact-row">
+      <span>Madrid, España</span>
+      <span>·</span>
+      <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+      <span>·</span>
+      <a href="https://sergiiob.dev/">sergiiob.dev</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>Perfil Profesional</h2>
+    <p class="summary">
+      Ingeniero de Sistemas Linux y Virtualización con responsabilidad sobre más de 300 servidores RHEL
+      en producción dentro de una institución financiera europea supervisada por BaFin y el BCE. Actualmente
+      al frente de la migración RHEL 7/8 a RHEL 9, la automatización del ciclo de vida con Ansible y Git,
+      y el desarrollo de soluciones con IA generativa mediante Azure AI Foundry. Experiencia previa
+      liderando un equipo de 5 técnicos a cargo de más de 100 servidores para un cliente financiero
+      noruego internacional con estrictos requisitos de SLA.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Experiencia Laboral</h2>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">Linux and Virtualization Engineer <span class="job-company">· Deutsche Pfandbriefbank AG</span></div>
+        <div class="job-period">Jul 2025 – Actualidad</div>
+      </div>
+      <div class="job-meta">Jornada completa · Híbrido · Madrid, España · Institución financiera regulada (BaFin/BCE) · más de 300 servidores Linux</div>
+      <ul>
+        <li><strong>Gestión de Infraestructura:</strong> Integrado en el equipo de infraestructura Linux responsable de más de 300 servidores RHEL en producción distribuidos en múltiples centros de datos bajo supervisión regulatoria BaFin/BCE.</li>
+        <li><strong>Migración RHEL:</strong> Liderando la migración escalonada de RHEL 7/8 a RHEL 9 en más de 300 servidores, con aprovisionamiento centralizado mediante Satellite y cumplimiento normativo garantizado sin interrupciones no planificadas.</li>
+        <li><strong>Automatización e IaC:</strong> Diseño de pipelines Ansible + Git para aprovisionamiento, corrección de deriva de configuración y operaciones de ciclo de vida, eliminando tareas manuales y habilitando cambios auditables y revisados en equipo.</li>
+        <li><strong>Alta Disponibilidad y DR:</strong> Operación de clústeres HA basados en Pacemaker y ejecución de simulacros de recuperación ante desastres en centros de datos geográficamente distribuidos.</li>
+        <li><strong>Middleware:</strong> Gestión de entornos Apache Tomcat y JBoss para aplicaciones bancarias de alta demanda, con bastionado SSL/TLS y optimización del rendimiento en producción.</li>
+        <li><strong>Parcheo y Bastionado:</strong> Responsable del ciclo completo de parcheo en más de 300 servidores, con controles de cumplimiento alineados a los requisitos BaFin/BCE y coordinación con propietarios de aplicaciones para minimizar el impacto operativo.</li>
+        <li><strong>Virtualización:</strong> Administración de entornos VMware vSphere para aprovisionamiento, reconfiguración, planificación de capacidad y mantenimiento del ciclo de vida de máquinas virtuales.</li>
+        <li><strong>IA Aplicada:</strong> Desarrollo de casos de uso empresariales con Azure AI Foundry: pipelines de inteligencia de documentos para extracción automatizada de datos y flujos de fine-tuning de modelos para la automatización de procesos internos.</li>
+        <li><strong>Consultoría Técnica:</strong> Rol de consultor técnico de infraestructura para propietarios de aplicaciones, traduciendo requisitos de negocio en planes de entrega concretos y gestionando expectativas con equipos multidisciplinares.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">Linux Red-Hat Specialist / IT Application Specialist <span class="job-company">· Sopra Steria</span></div>
+        <div class="job-period">Nov 2023 – Jul 2025</div>
+      </div>
+      <div class="job-meta">Jornada completa · Híbrido · Madrid, España · Outsourcing empresarial para cliente financiero noruego · más de 100 servidores</div>
+      <ul>
+        <li><strong>Liderazgo de Equipo:</strong> Lideré un equipo de 5 técnicos a cargo de más de 100 servidores Linux y Windows para un cliente financiero noruego, en un entorno íntegramente en inglés, garantizando el cumplimiento continuo de los objetivos de SLA.</li>
+        <li><strong>Gestión de Sistemas:</strong> Mantenimiento del cumplimiento normativo RHEL en más de 100 servidores con Red Hat Satellite; desarrollo de automatizaciones Ansible que redujeron los tiempos de despliegue de horas a minutos.</li>
+        <li><strong>Virtualización:</strong> Gestión de entornos VMware vSphere y vCenter (nube e instalaciones locales), incluyendo ciclo de vida de VMs, gestión de snapshots y optimización de recursos.</li>
+        <li><strong>Operaciones ITSM:</strong> Resolución de incidencias y gestión de cambios en ServiceNow dentro de los plazos de SLA; documentación estructurada de escalado y mantenimiento de la base de conocimiento del equipo.</li>
+        <li><strong>Active Directory:</strong> Administración del ciclo de vida de objetos de equipo en Active Directory, políticas de grupo e integración Kerberos para servidores Linux dentro de los flujos de gestión de identidades empresariales.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">IT Application Specialist <span class="job-company">· Sopra Steria</span></div>
+        <div class="job-period">Abr 2023 – Ene 2025</div>
+      </div>
+      <div class="job-meta">Jornada completa · Madrid, España · Soporte técnico multitecnología en entorno empresarial</div>
+      <ul>
+        <li>Soporte técnico avanzado sobre plataformas Linux, Windows y cloud en entornos de producción con objetivos de resolución basados en SLA.</li>
+        <li>Participación en iniciativas de transición a la nube y programas de modernización del puesto de trabajo.</li>
+        <li>Trabajo en equipos globales con flujos estructurados de escalado y resolución de incidencias.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">Internship Trainee <span class="job-company">· Sopra Steria</span></div>
+        <div class="job-period">Abr 2023 – Jun 2023</div>
+      </div>
+      <div class="job-meta">Prácticas · Madrid, España</div>
+      <ul>
+        <li>Adquisición de conocimientos base en gestión de incidencias, servicios de directorio y flujos de soporte empresarial en un servicio de asistencia técnica regido por ITIL.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Competencias Técnicas</h2>
+    <div class="skills-grid">
+      <span class="skill-label">Sistemas Linux</span>
+      <span class="skill-value">RHEL 7 / 8 / 9, Red Hat Satellite, Clústeres HA, Pacemaker, LVM, systemd, SELinux, Kickstart</span>
+
+      <span class="skill-label">Automatización e IaC</span>
+      <span class="skill-value">Ansible (playbooks, roles, Execution Environments), scripting Bash, flujos Git, pipelines CI/CD</span>
+
+      <span class="skill-label">Virtualización</span>
+      <span class="skill-value">VMware vSphere, vCenter, ciclo de vida de VMs, optimización de recursos</span>
+
+      <span class="skill-label">Middleware</span>
+      <span class="skill-value">Apache HTTP Server, Apache Tomcat, JBoss / WildFly, SSL/TLS, configuración de proxy inverso</span>
+
+      <span class="skill-label">Cloud e IA</span>
+      <span class="skill-value">Microsoft Azure, Azure AI Foundry, Document Intelligence, fine-tuning de LLMs, pipelines RAG</span>
+
+      <span class="skill-label">Monitorización e ITSM</span>
+      <span class="skill-value">CheckMK, ServiceNow (incidencias/cambios/CMDB), procesos ITIL</span>
+
+      <span class="skill-label">Servicios de Directorio</span>
+      <span class="skill-value">Active Directory, integración Kerberos / keytab, mapeo de grupos AD en Linux</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Certificaciones y Formación</h2>
+
+    <div class="edu-row">
+      <span class="edu-title">RHCSA — Red Hat Certified System Administrator</span>
+      <span class="edu-detail">Sep 2024</span>
+    </div>
+
+    <div class="edu-row">
+      <span class="edu-title">RHCE — Red Hat Certified Engineer</span>
+      <span class="edu-detail">Previsto 2026</span>
+    </div>
+
+    <div class="edu-row">
+      <span class="edu-title">Técnico Superior en Administración de Sistemas Informáticos en Red</span>
+      <span class="edu-detail">Jun 2023 · Madrid, España</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Idiomas</h2>
+    <div class="lang-grid">
+      <div class="lang-item">
+        <strong>Español</strong>
+        <span>Nativo</span>
+      </div>
+      <div class="lang-item">
+        <strong>Inglés</strong>
+        <span>Nivel profesional avanzado</span>
+      </div>
+      <div class="lang-item">
+        <strong>Francés</strong>
+        <span>Básico</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Portfolio y Proyectos</h2>
+    <p style="font-size: 9.5pt; color: var(--text-soft);">
+      <a href="https://sergiiob.dev/" style="font-weight: 600;">sergiiob.dev</a>
+      — Portfolio de ingeniería con más de 40 casos prácticos sobre automatización de infraestructura,
+      gestión del ciclo de vida RHEL, integración de IA aplicada y operaciones de plataforma.
+      Cada artículo sigue un formato estructurado: situación, problema, solución, contexto de uso e impacto en la entrega.
+    </p>
+  </section>
+
+  <div class="print-bar no-print">
+    <button class="print-btn" onclick="window.print()">⬇ Guardar como PDF</button>
+    <div class="print-note">Selecciona «Guardar como PDF» como destino de impresión para obtener un PDF limpio y optimizado para ATS.</div>
+  </div>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import { withBase } from '../utils/paths';
 import { t } from '../config/i18n';
 
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
+const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
 ---
 
 <BaseLayout title={`About | ${SITE.author}`} description="Professional profile, impact statements, and CV summary.">
@@ -148,10 +149,14 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       <p data-i18n="about.cvDesc">Detailed CV is available as a PDF with role scope, delivery outcomes, and full technology coverage.</p>
       {PUBLIC_CV.enabled ? (
         <a
+          id="cv-action-link"
           href={publicCvHref}
+          data-href-en={publicCvHref}
+          data-href-es={publicCvHrefEs}
           class="action-link"
           target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
           rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+          data-i18n="about.cvLabel"
         >
           {PUBLIC_CV.label}
         </a>
