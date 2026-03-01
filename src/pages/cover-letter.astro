@@ -20,22 +20,100 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
     <p class="eyebrow" data-i18n="about.coverLetterTitle">Cover Letter</p>
     <h1 data-i18n="about.coverLetterTitle">Cover Letter</h1>
     <p class="page-description" data-i18n="about.coverLetterDesc">
-      General-purpose cover letter summarizing experience, automation focus, and delivery outcomes.
+      Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.
     </p>
   </header>
 
   <section class="about-section">
-    <div class="cover-letter-embed">
-      <iframe
-        id="cover-letter-frame"
-        src={coverHref}
-        data-src-en={coverHref}
-        data-src-es={coverHrefEs}
-        title="Cover Letter"
-        style="width: 100%; height: 80vh; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff;"
-        loading="lazy"
-      ></iframe>
-    </div>
+    <!-- EN version -->
+    <article id="cover-letter-en" class="cover-letter-inline" data-lang="en">
+      <header class="cl-header">
+        <h2>SERGIO BARRIENTOS</h2>
+        <div class="cl-subtitle">Linux &amp; Virtualization Engineer</div>
+        <div class="cl-contact">
+          <span>Madrid, Spain</span>
+          <span class="cl-sep">·</span>
+          <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+          <span class="cl-sep">·</span>
+          <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+          <span class="cl-sep">·</span>
+          <a href="https://sergiiob.dev/">sergiiob.dev</a>
+        </div>
+      </header>
+
+      <div class="cl-date">March 2026</div>
+      <div class="cl-greeting">Hello,</div>
+
+      <div class="cl-body">
+        <p>
+          My name is Sergio Barrientos. I am a Linux systems administrator and virtualization engineer based in Madrid, and this page is a brief introduction to my background and the kind of work I do.
+        </p>
+        <p>
+          Currently I am part of the infrastructure team at <strong>Deutsche Pfandbriefbank</strong>, a European bank regulated under BaFin and the ECB. We manage over 300 Red Hat Enterprise Linux servers across multiple datacenters, and my responsibilities cover the full server lifecycle: provisioning through Red Hat Satellite, large-scale patching coordination, ongoing RHEL 9 migrations, and general platform reliability. Working in a strictly regulated banking environment means every change is documented, reviewed, and fully auditable.
+        </p>
+        <p>
+          Improving operational efficiency through automation has been a consistent focus throughout my career. Using <strong>Ansible and Git</strong> I have built version-controlled infrastructure workflows that replaced unreliable manual processes with repeatable, peer-reviewed code. I also work regularly at the application layer managing platforms such as <strong>Nginx, Apache, Tomcat, JBoss, and PostgreSQL</strong>, covering everything from reverse proxy configuration and SSL management to deployment troubleshooting and database tuning.
+        </p>
+        <p>
+          Before joining pbb, I led a small technical team at <strong>Sopra Steria</strong> supporting a Norwegian financial client across mixed Linux and Windows environments, with all communication in English. That experience strengthened both my technical range and my ability to manage delivery alongside a team.
+        </p>
+        <p>
+          Outside my main role I dedicate a significant amount of time to applied AI, working with Azure AI Foundry to build document intelligence pipelines and experimenting with local language models. I document this work alongside infrastructure solutions on my website <strong><a href="https://sergiiob.dev/">sergiiob.dev</a></strong>, which now has over 40 technical posts based on real problems I have encountered and solved.
+        </p>
+        <p>
+          I currently hold the <strong>RHCSA</strong> certification and am actively preparing for the RHCE. I am also comfortable working with VMware vSphere, Active Directory and Kerberos integrations, and ServiceNow workflows. This portfolio is a practical showcase of how I work and what I build.
+        </p>
+      </div>
+
+      <div class="cl-closing">
+        <p>Sergio Barrientos</p>
+      </div>
+    </article>
+
+    <!-- ES version -->
+    <article id="cover-letter-es" class="cover-letter-inline" data-lang="es" style="display:none;">
+      <header class="cl-header">
+        <h2>SERGIO BARRIENTOS</h2>
+        <div class="cl-subtitle">Ingeniero Linux y Virtualización</div>
+        <div class="cl-contact">
+          <span>Madrid, España</span>
+          <span class="cl-sep">·</span>
+          <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+          <span class="cl-sep">·</span>
+          <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+          <span class="cl-sep">·</span>
+          <a href="https://sergiiob.dev/">sergiiob.dev</a>
+        </div>
+      </header>
+
+      <div class="cl-date">Marzo 2026</div>
+      <div class="cl-greeting">Hola,</div>
+
+      <div class="cl-body">
+        <p>
+          Mi nombre es Sergio Barrientos. Soy administrador de sistemas Linux e ingeniero de virtualización trabajando desde Madrid, y esta página es una presentación breve de mi trayectoria y del tipo de trabajo que realizo.
+        </p>
+        <p>
+          Actualmente formo parte del equipo de infraestructura en <strong>Deutsche Pfandbriefbank</strong>, un banco europeo regulado por BaFin y el BCE. Gestionamos más de 300 servidores Red Hat Enterprise Linux repartidos en varios centros de datos, y mis responsabilidades abarcan todo el ciclo de vida del servidor: aprovisionamiento con Red Hat Satellite, coordinación de grandes oleadas de parcheo, migraciones continuas a RHEL 9 y fiabilidad general de la plataforma. Trabajar en un entorno bancario estrictamente regulado significa que cada cambio está documentado, revisado y completamente auditable.
+        </p>
+        <p>
+          Mejorar la eficiencia operativa a través de la automatización ha sido un objetivo constante en mi trabajo. Utilizando <strong>Ansible y Git</strong> he construido flujos de trabajo de infraestructura como código que sustituyeron procesos manuales poco fiables por procedimientos repetibles y sometidos a revisión entre pares. También trabajo habitualmente en la capa de aplicaciones gestionando plataformas como <strong>Nginx, Apache, Tomcat, JBoss y PostgreSQL</strong>, cubriendo desde la configuración de proxies inversos y gestión de certificados SSL hasta la resolución de problemas de despliegue y el ajuste de bases de datos.
+        </p>
+        <p>
+          Antes de incorporarme a pbb lideré un pequeño equipo técnico en <strong>Sopra Steria</strong> dando soporte a un cliente financiero noruego en entornos mixtos de Linux y Windows, con toda la comunicación en inglés. Esa experiencia reforzó tanto mi capacidad técnica como mi habilidad para gestionar la entrega trabajando en equipo.
+        </p>
+        <p>
+          Fuera de mi puesto principal dedico buena parte de mi tiempo a la inteligencia artificial aplicada, trabajando con Azure AI Foundry para construir pipelines de inteligencia documental y experimentando con modelos de lenguaje locales. Documento este trabajo junto con soluciones de infraestructura en mi sitio web <strong><a href="https://sergiiob.dev/">sergiiob.dev</a></strong>, que cuenta actualmente con más de 40 artículos técnicos basados en problemas reales que he encontrado y resuelto.
+        </p>
+        <p>
+          Poseo la certificación <strong>RHCSA</strong> y estoy preparando activamente el RHCE. También me desenvuelvo con comodidad en entornos VMware vSphere, integraciones con Active Directory y Kerberos, y flujos de trabajo en ServiceNow. Este portfolio es una muestra práctica de cómo trabajo y qué construyo.
+        </p>
+      </div>
+
+      <div class="cl-closing">
+        <p>Sergio Barrientos</p>
+      </div>
+    </article>
 
     <div class="cv-actions" style="display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap;">
       {PUBLIC_COVER_LETTER.enabled && (
@@ -49,9 +127,17 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
           rel="noopener noreferrer"
           data-i18n="about.coverLetterLabel"
         >
-          View Cover Letter
+          Download PDF
         </a>
       )}
+      <button
+        id="cover-letter-print-btn"
+        class="action-link"
+        style="cursor:pointer; border:none;"
+        onclick="window.print()"
+      >
+        ⬇ Print / Save as PDF
+      </button>
       <a
         href={withBase('about/')}
         class="action-link"
@@ -64,21 +150,164 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
   </section>
 </BaseLayout>
 
+<style>
+  .cover-letter-inline {
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg, 12px);
+    padding: 2.5rem 2.2rem;
+    max-width: 780px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .cl-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent, #1a5fb4);
+  }
+  .cl-header h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.15rem;
+  }
+  .cl-subtitle {
+    font-size: 1.05rem;
+    color: var(--accent, #1a5fb4);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+  .cl-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    font-size: 0.82rem;
+    color: var(--text-soft, #444);
+  }
+  .cl-contact a {
+    color: var(--accent, #1a5fb4);
+    text-decoration: none;
+  }
+  .cl-sep { opacity: 0.5; }
+
+  .cl-date {
+    margin-bottom: 1.3rem;
+    font-size: 0.85rem;
+    color: var(--text-muted, #666);
+  }
+  .cl-greeting {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .cl-body p {
+    margin-bottom: 0.85rem;
+    text-align: justify;
+    color: var(--text-soft, #444);
+    font-size: 0.92rem;
+    line-height: 1.72;
+  }
+  .cl-body p strong {
+    color: var(--text, #1a1a1a);
+    font-weight: 600;
+  }
+  .cl-body p a {
+    color: var(--accent, #1a5fb4);
+    text-decoration: none;
+  }
+
+  .cl-closing {
+    margin-top: 1.5rem;
+  }
+  .cl-closing p {
+    margin-bottom: 0.2rem;
+    font-size: 0.92rem;
+    color: var(--text-soft, #444);
+  }
+  .cl-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text, #1a1a1a);
+    margin-top: 0.8rem;
+  }
+
+  @media print {
+    .breadcrumbs, .page-header, .cv-actions { display: none !important; }
+    .cover-letter-inline { border: none; padding: 0; max-width: 100%; }
+    .cover-letter-inline[style*="display:none"] { display: none !important; }
+  }
+
+  /* Global print overrides for sidebar and layout chrome */
+  @media print {
+    :global(.sidebar),
+    :global(.site-footer),
+    :global(.boot-sequence),
+    :global(.command-palette),
+    :global(.skip-link) {
+      display: none !important;
+    }
+    :global(.site-shell) {
+      display: block !important;
+      grid-template-columns: 1fr !important;
+    }
+    :global(.main-content) {
+      margin: 0 !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cover-letter-inline { padding: 1.3rem 1rem; }
+    .cl-contact { flex-direction: column; gap: 0.2rem; }
+  }
+</style>
+
 <script>
   document.addEventListener('astro:page-load', () => {
-    const frame = document.getElementById('cover-letter-frame') as HTMLIFrameElement | null;
+    const enBlock = document.getElementById('cover-letter-en');
+    const esBlock = document.getElementById('cover-letter-es');
     const link = document.getElementById('cover-letter-action-link') as HTMLAnchorElement | null;
-    if (!frame || !link) return;
+    const printBtn = document.getElementById('cover-letter-print-btn');
+    if (!enBlock || !esBlock) return;
 
-    const update = () => {
-      const lang = document.documentElement.lang || 'en';
-      const isEs = lang === 'es';
-      frame.src = (isEs ? frame.dataset.srcEs : frame.dataset.srcEn) || frame.src;
-      link.href = (isEs ? link.dataset.hrefEs : link.dataset.hrefEn) || link.href;
+    const LANG_KEY = 'portfolio.lang';
+
+    /** Resolve current language from multiple sources (localStorage is the truth). */
+    const resolveLang = (): string => {
+      try {
+        const stored = window.localStorage.getItem(LANG_KEY);
+        if (stored === 'es') return 'es';
+      } catch { /* storage unavailable */ }
+      const docLang = document.documentElement.lang;
+      if (docLang === 'es') return 'es';
+      return 'en';
     };
 
-    update();
-    const obs = new MutationObserver(update);
+    const apply = () => {
+      const isEs = resolveLang() === 'es';
+      enBlock.style.display = isEs ? 'none' : '';
+      esBlock.style.display = isEs ? '' : 'none';
+      if (link) {
+        link.href = (isEs ? link.dataset.hrefEs : link.dataset.hrefEn) || link.href;
+      }
+      if (printBtn) {
+        printBtn.textContent = isEs ? '⬇ Imprimir / Guardar como PDF' : '⬇ Print / Save as PDF';
+      }
+    };
+
+    /* Run immediately */
+    apply();
+
+    /* Re-run whenever nav.js (or anything) flips document.documentElement.lang */
+    const obs = new MutationObserver(apply);
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+    /* Also listen for storage events (other tabs changing language) */
+    window.addEventListener('storage', (e) => {
+      if (e.key === LANG_KEY) apply();
+    });
   });
 </script>

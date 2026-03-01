@@ -51,7 +51,8 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           href={publicCvHref}
           class="action-link"
           target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+          rel={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+          data-i18n="about.cvLabel"
         >
           {PUBLIC_CV.label}
         </a>
@@ -121,6 +122,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
                 href={publicCvHref}
                 target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
                 rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+                data-i18n="about.cvLabel"
               >
                 {PUBLIC_CV.label}
               </a>
