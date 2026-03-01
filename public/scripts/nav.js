@@ -109,6 +109,13 @@
       if (h1) h1.setAttribute('data-text', T('hero.typewriter') + '_');
     }
 
+    /* Swap CV link to language-specific version */
+    const cvLink = document.getElementById('cv-action-link');
+    if (cvLink) {
+      const newHref = cvLink.getAttribute(`data-href-${currentLang}`);
+      if (newHref) cvLink.setAttribute('href', newHref);
+    }
+
     window.dispatchEvent(new CustomEvent('portfolio-lang-change', { detail: { lang: currentLang } }));
   };
 
