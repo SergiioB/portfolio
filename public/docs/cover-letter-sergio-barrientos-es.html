@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta de Presentación — Sergio Barrientos</title>
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --text-soft: #444;
+      --text-muted: #666;
+      --accent: #1a5fb4;
+      --accent-light: #e8f0fc;
+      --border: #ddd;
+      --bg: #fff;
+    }
+
+    @media print {
+      @page { size: A4; margin: 18mm 16mm; }
+      body { font-size: 10pt; }
+      .no-print { display: none !important; }
+      a { color: var(--text) !important; text-decoration: none !important; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 18mm 16mm;
+    }
+
+    .header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .header h1 {
+      font-size: 17pt;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.15rem;
+    }
+
+    .header .subtitle {
+      font-size: 11pt;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.2rem;
+      font-size: 9.2pt;
+      color: var(--text-soft);
+    }
+
+    .contact-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .date {
+      margin-bottom: 1.5rem;
+      font-size: 9.5pt;
+      color: var(--text-muted);
+    }
+
+    .greeting {
+      font-weight: 600;
+      font-size: 10.5pt;
+      margin-bottom: 0.6rem;
+    }
+
+    .body p {
+      margin-bottom: 0.8rem;
+      text-align: justify;
+      color: var(--text-soft);
+      font-size: 10pt;
+      line-height: 1.65;
+    }
+
+    .body p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .closing {
+      margin-top: 1.5rem;
+    }
+
+    .closing p {
+      margin-bottom: 0.2rem;
+      font-size: 10pt;
+      color: var(--text-soft);
+    }
+
+    .closing .name {
+      font-weight: 700;
+      font-size: 11pt;
+      color: var(--text);
+      margin-top: 0.8rem;
+    }
+
+    .print-bar {
+      text-align: center;
+      padding: 1.5rem 0 0.5rem;
+    }
+
+    .print-btn {
+      display: inline-block;
+      padding: 0.5rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 10pt;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .print-btn:hover { background: #154a93; }
+
+    .print-note {
+      font-size: 8pt;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>SERGIO BARRIENTOS</h1>
+    <div class="subtitle">Ingeniero Linux y Virtualización</div>
+    <div class="contact-row">
+      <span>Madrid, España</span>
+      <span>·</span>
+      <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+      <span>·</span>
+      <a href="https://sergiiob.dev/">sergiiob.dev</a>
+    </div>
+  </header>
+
+  <div class="date">Marzo 2026</div>
+
+  <div class="greeting">Estimado/a responsable de selección,</div>
+
+  <div class="body">
+    <p>
+      Me dirijo a usted para expresar mi interés en incorporarme a su organización como
+      <strong>Ingeniero Linux y Virtualización</strong>. Cuento con experiencia directa gestionando
+      <strong>más de 300 servidores RHEL en producción</strong> distribuidos en múltiples centros de datos
+      en una entidad financiera europea supervisada por BaFin/BCE, lo que me permite aportar fiabilidad
+      operativa, automatización a escala y valor desde la infraestructura desde el primer día.
+    </p>
+
+    <p>
+      En mi puesto actual en <strong>Deutsche Pfandbriefbank AG</strong>, soy responsable del ciclo de vida
+      completo de la infraestructura RHEL — desde el aprovisionamiento basado en Satellite y las migraciones
+      escalonadas de RHEL&nbsp;7/8&nbsp;→&nbsp;9, hasta el parcheo integral, la aplicación de cumplimiento normativo
+      y la ejecución de planes de recuperación ante desastres en clústeres HA con Pacemaker. Diseñé
+      <strong>pipelines de automatización con Ansible + Git</strong> que sustituyeron procedimientos manuales
+      por código auditable y revisado entre pares, reduciendo directamente la deriva de configuración y
+      garantizando cambios repetibles y sin sorpresas en un entorno fuertemente regulado.
+    </p>
+
+    <p>
+      Anteriormente en <strong>Sopra Steria</strong>, lideré un equipo de 5 técnicos gestionando más de 100
+      servidores Linux y Windows para un cliente financiero internacional noruego, cumpliendo
+      sistemáticamente estrictos objetivos de SLA en un entorno íntegramente en inglés. Esta experiencia
+      consolidó mi capacidad para combinar la ejecución técnica con la comunicación con stakeholders,
+      la escalación estructurada y la entrega transversal entre equipos.
+    </p>
+
+    <p>
+      Más allá de la infraestructura, impulso activamente <strong>iniciativas de IA aplicada</strong> con
+      Azure AI Foundry — construyendo pipelines de inteligencia documental, explorando flujos de fine-tuning
+      de modelos y conectando capacidades de IA generativa con procesos de negocio reales. Mantengo un
+      portfolio técnico público en <strong><a href="https://sergiiob.dev/">sergiiob.dev</a></strong> con
+      más de 40 casos de estudio técnicos que documentan patrones reales de entrega: planteamiento del
+      problema, decisiones de implementación y resultados en producción.
+    </p>
+
+    <p>
+      Dispongo de la certificación <strong>RHCSA</strong> y actualmente me preparo para el
+      <strong>RHCE</strong>. Trabajo con VMware vSphere, middleware Apache Tomcat/JBoss, integración
+      Active Directory/Kerberos y procesos ITSM con ServiceNow. Me desenvuelvo con comodidad en entornos
+      regulados donde la responsabilidad, la documentación y la revisión entre pares no son opcionales,
+      sino el estándar.
+    </p>
+
+    <p>
+      Estoy deseoso de aportar esta combinación de responsabilidad sobre la infraestructura, disciplina
+      de automatización y aprendizaje continuo a su equipo. Quedo a su disposición para ampliar cómo mi
+      experiencia se alinea con las necesidades de su organización.
+    </p>
+  </div>
+
+  <div class="closing">
+    <p>Atentamente,</p>
+    <p class="name">Sergio Barrientos</p>
+  </div>
+
+  <div class="print-bar no-print">
+    <button class="print-btn" onclick="window.print()">⬇ Guardar como PDF</button>
+    <div class="print-note">Seleccione "Guardar como PDF" como destino de impresión.</div>
+  </div>
+
+</body>
+</html>

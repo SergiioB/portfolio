@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PUBLIC_COVER_LETTER, SITE } from '../config/site';
+import { withBase } from '../utils/paths';
+
+const coverHref = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.href : withBase(PUBLIC_COVER_LETTER.href);
+const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : withBase(PUBLIC_COVER_LETTER.hrefEs);
+---
+
+<BaseLayout title={`Cover Letter | ${SITE.author}`} description="Professional cover letter — Linux & Virtualization Engineer.">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
+    <span>/</span>
+    <a href={withBase('about/')} data-i18n="about.pageTitle">About</a>
+    <span>/</span>
+    <span data-i18n="about.coverLetterTitle">Cover Letter</span>
+  </nav>
+
+  <header class="page-header page-header-tight">
+    <p class="eyebrow" data-i18n="about.coverLetterTitle">Cover Letter</p>
+    <h1 data-i18n="about.coverLetterTitle">Cover Letter</h1>
+    <p class="page-description" data-i18n="about.coverLetterDesc">
+      General-purpose cover letter summarizing experience, automation focus, and delivery outcomes.
+    </p>
+  </header>
+
+  <section class="about-section">
+    <div class="cover-letter-embed">
+      <iframe
+        id="cover-letter-frame"
+        src={coverHref}
+        data-src-en={coverHref}
+        data-src-es={coverHrefEs}
+        title="Cover Letter"
+        style="width: 100%; height: 80vh; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fff;"
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <div class="cv-actions" style="display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap;">
+      {PUBLIC_COVER_LETTER.enabled && (
+        <a
+          id="cover-letter-action-link"
+          href={coverHref}
+          data-href-en={coverHref}
+          data-href-es={coverHrefEs}
+          class="action-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="about.coverLetterLabel"
+        >
+          View Cover Letter
+        </a>
+      )}
+      <a
+        href={withBase('about/')}
+        class="action-link"
+        style="background: transparent; border-color: var(--border-strong); color: var(--text);"
+        data-i18n="about.pageTitle"
+      >
+        ← About
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const frame = document.getElementById('cover-letter-frame') as HTMLIFrameElement | null;
+    const link = document.getElementById('cover-letter-action-link') as HTMLAnchorElement | null;
+    if (!frame || !link) return;
+
+    const update = () => {
+      const lang = document.documentElement.lang || 'en';
+      const isEs = lang === 'es';
+      frame.src = (isEs ? frame.dataset.srcEs : frame.dataset.srcEn) || frame.src;
+      link.href = (isEs ? link.dataset.hrefEs : link.dataset.hrefEn) || link.href;
+    };
+
+    update();
+    const obs = new MutationObserver(update);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  });
+</script>
