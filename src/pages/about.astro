@@ -59,7 +59,7 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
           <li data-i18n="exp.pbb.0">Part of the Linux infrastructure team responsible for 300+ RHEL production servers across multiple datacenters under BaFin/ECB regulatory oversight.</li>
           <li data-i18n="exp.pbb.1">Designed Ansible + Git automation pipelines for server provisioning, configuration drift remediation, and lifecycle operations.</li>
           <li data-i18n="exp.pbb.2">Leading phased RHEL 7/8 to RHEL 9 migration across 300+ servers with Satellite-based provisioning and compliance enforcement.</li>
-          <li data-i18n="exp.pbb.3">Managing Apache Tomcat and JBoss web environments serving high-demand banking applications with SSL/TLS hardening.</li>
+          <li data-i18n="exp.pbb.3">Deploying and maintaining application stacks across Nginx, Apache, Tomcat, JBoss/WildFly, and PostgreSQL — SSL/TLS hardening, reverse proxy tuning, and production optimization for banking-critical workloads.</li>
           <li data-i18n="exp.pbb.4">Owning end-to-end patching and hardening cycles for 300+ servers aligned to financial-sector security requirements.</li>
           <li data-i18n="exp.pbb.5">Operating Pacemaker-based HA clusters and executing disaster-recovery drills across distributed datacenters.</li>
           <li data-i18n="exp.pbb.6">Administering VMware vSphere environments for VM provisioning, capacity planning, and platform lifecycle maintenance.</li>
@@ -131,8 +131,8 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
         <p data-i18n="skill.virt.desc">VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.</p>
       </article>
       <article class="skill-card panel panel-soft">
-        <h3 data-i18n="skill.mid">Middleware Operations</h3>
-        <p data-i18n="skill.mid.desc">Apache Tomcat/JBoss environments, SSL and identity integrations, and performance-focused runtime support.</p>
+        <h3 data-i18n="skill.mid">App Platforms & Databases</h3>
+        <p data-i18n="skill.mid.desc">Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS, reverse proxy, and production database operations.</p>
       </article>
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.cloud">Cloud + AI Integration</h3>
@@ -171,30 +171,15 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
   <section class="about-section" aria-labelledby="cover-letter-title">
     <h2 id="cover-letter-title" data-i18n="about.coverLetterTitle">Cover Letter</h2>
     <article class="panel panel-soft cv-card">
-      <p data-i18n="about.coverLetterDesc">General-purpose cover letter summarizing experience, automation focus, and delivery outcomes.</p>
+      <p data-i18n="about.coverLetterDesc">Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.</p>
       {PUBLIC_COVER_LETTER.enabled ? (
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <a
-            id="cover-letter-action-link"
-            href={coverHref}
-            data-href-en={coverHref}
-            data-href-es={coverHrefEs}
-            class="action-link"
-            target={PUBLIC_COVER_LETTER.openInNewTab ? '_blank' : undefined}
-            rel={PUBLIC_COVER_LETTER.openInNewTab ? 'noopener noreferrer' : undefined}
-            data-i18n="about.coverLetterLabel"
-          >
-            {PUBLIC_COVER_LETTER.label}
-          </a>
-          <a
-            href={withBase('cover-letter/')}
-            class="action-link"
-            style="background: transparent; border-color: var(--border-strong); color: var(--text);"
-            data-i18n="about.coverLetterTitle"
-          >
-            Full Page →
-          </a>
-        </div>
+        <a
+          href={withBase('cover-letter/')}
+          class="action-link"
+          data-i18n="about.coverLetterLabel"
+        >
+          {PUBLIC_COVER_LETTER.label}
+        </a>
       ) : (
         <p class="cv-disabled-note" data-i18n="about.coverLetterDisabled">Cover letter link is temporarily unavailable.</p>
       )}
