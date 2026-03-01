@@ -38,6 +38,22 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       <span class="brand-tagline" data-i18n="site.role">{SITE.role}</span>
     </a>
     <p class="sidebar-intro" data-i18n="site.profileSummary">{SITE.profileSummary}</p>
+    <div class="sidebar-header-actions">
+      {PUBLIC_CV.enabled && (
+        <a
+          href={publicCvHref}
+          class="sidebar-cv-btn"
+          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
+          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
+          data-i18n="about.cvLabel"
+        >
+          {PUBLIC_CV.label}
+        </a>
+      )}
+      <button class="lang-toggle-btn" type="button" data-lang-toggle aria-label="Switch language" data-i18n-label="lang.switchLabel">
+        <span data-i18n="lang.switch">ES</span>
+      </button>
+    </div>
   </div>
 
   <div class="sidebar-body" id="sidebar-nav-shell">
@@ -111,23 +127,6 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   </div>
 
   <div class="sidebar-footer">
-      <div class="sidebar-footer-actions">
-        {PUBLIC_CV.enabled && (
-          <a
-            href={publicCvHref}
-            class="sidebar-cv-btn"
-            target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-            rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
-            data-i18n="about.cvLabel"
-          >
-            {PUBLIC_CV.label}
-          </a>
-        )}
-        <button class="lang-toggle-btn" type="button" data-lang-toggle aria-label="Switch language" data-i18n-label="lang.switchLabel">
-          <span data-i18n="lang.switch">ES</span>
-        </button>
-      </div>
-
       <div class="sidebar-meta-row">
         <span class="sidebar-uptime-dot"></span>
         <span data-i18n-session><span data-i18n="nav.session">Session:</span> <span data-uptime>0s</span></span>

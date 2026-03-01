@@ -593,12 +593,20 @@ li+li {
   color: var(--text-soft);
 }
 
+.sidebar-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
 .sidebar-body {
   min-height: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar-search {
@@ -3730,12 +3738,7 @@ body.hardcore-mode ::selection {
 }
 
 /* ─── Sidebar footer actions row ─── */
-.sidebar-footer-actions {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
+/* ─── Sidebar CV button ─── */
 .sidebar-cv-btn {
   flex: 1;
   display: inline-flex;
@@ -3747,6 +3750,7 @@ body.hardcore-mode ::selection {
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  text-decoration: none;
   color: var(--accent);
   background: rgba(56, 139, 253, 0.08);
   border: 1px solid var(--accent);
@@ -3769,6 +3773,7 @@ body.hardcore-mode ::selection {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.06em;
+  white-space: nowrap;
   color: var(--text-soft);
   background: var(--surface-muted);
   border: 1px solid var(--border-strong);
