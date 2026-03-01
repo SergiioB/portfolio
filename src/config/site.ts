@@ -24,3 +24,12 @@ export const PUBLIC_CV = {
   external: false,
   openInNewTab: true,
 } as const;
+
+export const PUBLIC_COVER_LETTER = {
+  enabled: true,
+  label: 'View Cover Letter',
+  href: 'docs/cover-letter-sergio-barrientos.html',
+  hrefEs: 'docs/cover-letter-sergio-barrientos-es.html',
+  external: false,
+  openInNewTab: true,
+} as const;

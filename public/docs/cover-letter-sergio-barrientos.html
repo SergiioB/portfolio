@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter — Sergio Barrientos</title>
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --text-soft: #444;
+      --text-muted: #666;
+      --accent: #1a5fb4;
+      --accent-light: #e8f0fc;
+      --border: #ddd;
+      --bg: #fff;
+    }
+
+    @media print {
+      @page { size: A4; margin: 18mm 16mm; }
+      body { font-size: 10pt; }
+      .no-print { display: none !important; }
+      a { color: var(--text) !important; text-decoration: none !important; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 18mm 16mm;
+    }
+
+    .header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .header h1 {
+      font-size: 17pt;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.15rem;
+    }
+
+    .header .subtitle {
+      font-size: 11pt;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.2rem;
+      font-size: 9.2pt;
+      color: var(--text-soft);
+    }
+
+    .contact-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .date {
+      margin-bottom: 1.5rem;
+      font-size: 9.5pt;
+      color: var(--text-muted);
+    }
+
+    .greeting {
+      font-weight: 600;
+      font-size: 10.5pt;
+      margin-bottom: 0.6rem;
+    }
+
+    .body p {
+      margin-bottom: 0.8rem;
+      text-align: justify;
+      color: var(--text-soft);
+      font-size: 10pt;
+      line-height: 1.65;
+    }
+
+    .body p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .closing {
+      margin-top: 1.5rem;
+    }
+
+    .closing p {
+      margin-bottom: 0.2rem;
+      font-size: 10pt;
+      color: var(--text-soft);
+    }
+
+    .closing .name {
+      font-weight: 700;
+      font-size: 11pt;
+      color: var(--text);
+      margin-top: 0.8rem;
+    }
+
+    .print-bar {
+      text-align: center;
+      padding: 1.5rem 0 0.5rem;
+    }
+
+    .print-btn {
+      display: inline-block;
+      padding: 0.5rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 10pt;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .print-btn:hover { background: #154a93; }
+
+    .print-note {
+      font-size: 8pt;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>SERGIO BARRIENTOS</h1>
+    <div class="subtitle">Linux &amp; Virtualization Engineer</div>
+    <div class="contact-row">
+      <span>Madrid, Spain</span>
+      <span>·</span>
+      <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+      <span>·</span>
+      <a href="https://sergiiob.dev/">sergiiob.dev</a>
+    </div>
+  </header>
+
+  <div class="date">March 2026</div>
+
+  <div class="greeting">Dear Hiring Manager,</div>
+
+  <div class="body">
+    <p>
+      I am writing to express my interest in contributing to your engineering organization as a
+      <strong>Linux &amp; Virtualization Engineer</strong>. With hands-on experience managing
+      <strong>300+ RHEL production servers</strong> across distributed datacenters at a BaFin/ECB-supervised
+      European financial institution, I am confident in my ability to deliver operational reliability,
+      automation at scale, and infrastructure-driven value from day one.
+    </p>
+
+    <p>
+      In my current role at <strong>Deutsche Pfandbriefbank AG</strong>, I own the full lifecycle of RHEL
+      infrastructure — from Satellite-based provisioning and phased RHEL&nbsp;7/8&nbsp;→&nbsp;9 migrations to
+      end-to-end patching, compliance enforcement, and disaster-recovery execution across Pacemaker HA
+      clusters. I designed <strong>Ansible + Git automation pipelines</strong> that replaced manual runbook
+      steps with peer-reviewed, auditable code, directly reducing configuration drift and enabling
+      repeatable, zero-surprise changes in a heavily regulated environment.
+    </p>
+
+    <p>
+      Previously at <strong>Sopra Steria</strong>, I led a team of 5 technicians managing 100+ Linux
+      and Windows servers for an international Norwegian financial client, consistently meeting strict
+      SLA targets in a fully English-speaking environment. This role strengthened my ability to bridge
+      technical execution with stakeholder communication, structured escalation, and cross-team delivery.
+    </p>
+
+    <p>
+      Beyond core infrastructure, I actively drive <strong>applied AI initiatives</strong> using Azure AI
+      Foundry — building document intelligence pipelines, exploring model fine-tuning workflows, and
+      connecting generative AI capabilities to real business processes. I maintain a public engineering
+      portfolio at <strong><a href="https://sergiiob.dev/">sergiiob.dev</a></strong> with 40+ technical
+      case studies documenting real delivery patterns: clear problem statements, implementation decisions,
+      and production outcomes.
+    </p>
+
+    <p>
+      I hold the <strong>RHCSA certification</strong> and am currently preparing for the <strong>RHCE</strong>.
+      I work across VMware vSphere, Apache Tomcat/JBoss middleware, Active Directory/Kerberos integration,
+      and ServiceNow ITSM processes. I am comfortable operating in regulated environments where
+      accountability, documentation, and peer review are not optional — they are the standard.
+    </p>
+
+    <p>
+      I am eager to bring this combination of infrastructure ownership, automation discipline, and
+      continuous learning to your team. I would welcome the opportunity to discuss how my experience
+      aligns with your organization's needs.
+    </p>
+  </div>
+
+  <div class="closing">
+    <p>Kind regards,</p>
+    <p class="name">Sergio Barrientos</p>
+  </div>
+
+  <div class="print-bar no-print">
+    <button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+    <div class="print-note">Use "Save as PDF" as the printer destination.</div>
+  </div>
+
+</body>
+</html>

@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { PUBLIC_CV, SITE } from '../config/site';
+import { PUBLIC_CV, PUBLIC_COVER_LETTER, SITE } from '../config/site';
 import { withBase } from '../utils/paths';
 import { t } from '../config/i18n';
 
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
+const coverHref = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.href : withBase(PUBLIC_COVER_LETTER.href);
+const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : withBase(PUBLIC_COVER_LETTER.hrefEs);
 ---
 
 <BaseLayout title={`About | ${SITE.author}`} description="Professional profile, impact statements, and CV summary.">
@@ -162,6 +164,39 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
         </a>
       ) : (
         <p class="cv-disabled-note" data-i18n="about.cvDisabled">CV link is temporarily unavailable.</p>
+      )}
+    </article>
+  </section>
+
+  <section class="about-section" aria-labelledby="cover-letter-title">
+    <h2 id="cover-letter-title" data-i18n="about.coverLetterTitle">Cover Letter</h2>
+    <article class="panel panel-soft cv-card">
+      <p data-i18n="about.coverLetterDesc">General-purpose cover letter summarizing experience, automation focus, and delivery outcomes.</p>
+      {PUBLIC_COVER_LETTER.enabled ? (
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a
+            id="cover-letter-action-link"
+            href={coverHref}
+            data-href-en={coverHref}
+            data-href-es={coverHrefEs}
+            class="action-link"
+            target={PUBLIC_COVER_LETTER.openInNewTab ? '_blank' : undefined}
+            rel={PUBLIC_COVER_LETTER.openInNewTab ? 'noopener noreferrer' : undefined}
+            data-i18n="about.coverLetterLabel"
+          >
+            {PUBLIC_COVER_LETTER.label}
+          </a>
+          <a
+            href={withBase('cover-letter/')}
+            class="action-link"
+            style="background: transparent; border-color: var(--border-strong); color: var(--text);"
+            data-i18n="about.coverLetterTitle"
+          >
+            Full Page →
+          </a>
+        </div>
+      ) : (
+        <p class="cv-disabled-note" data-i18n="about.coverLetterDisabled">Cover letter link is temporarily unavailable.</p>
       )}
     </article>
   </section>
