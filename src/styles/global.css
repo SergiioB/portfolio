@@ -2806,89 +2806,78 @@ body.audience-recruiter .glitch {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
- *  HARDCORE MODE — full CRT meltdown / cyberpunk visual destruction
+ *  HARDCORE MODE — Matrix / Cyberpunk Hacker Terminal
  * ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Colour palette override ───────────────────────────────────────────── */
+/* ── Colour palette override for Matrix Cyberpunk vibe ──────────────────── */
 body.hardcore-mode {
-  --link: #ff6a3d;
-  --link-hover: #ff9466;
-  --accent: #ff4136;
-  --accent-warm: #ff6b35;
-  --heading: #fff0e6;
-  --heading-2: #ff6a3d;
-  --heading-3: #ff4ecb;
-  --heading-4: #ff4136;
-  --border: #4a2020;
-  --border-strong: #7a3030;
-  --surface: #120a0a;
-  --surface-muted: #1a0e0e;
-  --bg-alt: #080404;
-  background:
-    radial-gradient(circle at 84% -14%, rgba(255, 60, 30, 0.18), transparent 36%),
-    radial-gradient(circle at 12% 115%, rgba(200, 30, 10, 0.12), transparent 40%),
-    #080404;
-  animation: hc-vignette-pulse 6s ease-in-out infinite;
+  --link: #00ff41;
+  --link-hover: #5aff85;
+  --accent: #00ff41;
+  --accent-warm: #00ff41;
+  --heading: #d1ffdb;
+  --heading-2: #84ffb0;
+  --heading-3: #5aff85;
+  --heading-4: #00ff41;
+  --text: #a0d8b5;
+  --text-muted: #649074;
+  --border: #003b0d;
+  --border-strong: #005a14;
+  --surface: #020a04;
+  --surface-muted: #051408;
+  --bg-alt: #010602;
+  --shadow-color: rgba(0, 255, 65, 0.15);
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(0, 255, 65, 0.08), transparent 45%),
+    #010502;
 }
 
-/* ── Heavy CRT scanlines + high-freq noise ─────────────────────────────── */
+/* ── High-tech Grid and Subtle Scanlines ───────────────────────────────── */
 body.hardcore-mode::after {
-  opacity: 0.5;
+  opacity: 0.35;
   background:
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  background-size: 100% 2px, 100px 100px;
-  animation: scan-jitter 1.2s linear infinite, hc-scanline-drift 4s linear infinite;
+    linear-gradient(rgba(1, 5, 2, 0) 50%, rgba(0, 10, 3, 0.6) 50%),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+    linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+  background-size: 100% 4px, 40px 40px, 40px 40px;
+  animation: hc-scanline-drift 6s linear infinite;
 }
 
-/* ── Aggressive vignette + red atmospheric burn ────────────────────────── */
+/* ── Subtle Phosphor Burn Vignette ─────────────────────────────────────── */
 body.hardcore-mode::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  background:
-    radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(200, 10, 10, 0.14) 70%, rgba(80, 0, 0, 0.35) 100%);
-  animation: hc-vignette-pulse 4s ease-in-out infinite;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0, 15, 5, 0.3) 80%, rgba(0, 10, 2, 0.7) 100%);
+  animation: hc-vignette-pulse 10s ease-in-out infinite;
 }
 
-/* ── Screen tear — horizontal slice displacement ───────────────────────── */
-body.hardcore-mode .site-shell {
-  animation: hc-screen-tear 8s steps(1) infinite;
-}
-
-/* ── Entire page occasional flicker ────────────────────────────────────── */
-body.hardcore-mode .main-content {
-  animation: hc-page-flicker 4s steps(1) infinite;
-}
-
-/* ── Glitch title — violent and frequent ───────────────────────────────── */
+/* ── Smooth glitching for the title (No hard tearing) ──────────────────── */
 body.hardcore-mode .glitch {
-  animation: hc-glitch-flicker 0.8s infinite steps(1);
-  text-shadow:
-    0 0 10px rgba(255, 80, 40, 0.6),
-    0 0 30px rgba(255, 40, 20, 0.2);
+  animation: hc-glitch-flicker 6s infinite steps(1);
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.6), 0 0 20px rgba(0, 255, 65, 0.2);
 }
 
 body.hardcore-mode .glitch::before,
 body.hardcore-mode .glitch::after {
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 body.hardcore-mode .glitch::before {
-  animation: hc-glitch-shift-1 1.4s infinite steps(1);
-  color: rgba(0, 255, 200, 0.9);
+  animation: hc-glitch-shift-1 4s infinite steps(1);
+  color: rgba(90, 255, 133, 0.8);
   text-shadow: none;
 }
 
 body.hardcore-mode .glitch::after {
-  animation: hc-glitch-shift-2 1.4s infinite steps(1);
-  color: rgba(255, 40, 40, 0.9);
+  animation: hc-glitch-shift-2 4s infinite steps(1);
+  color: rgba(0, 200, 50, 0.8);
   text-shadow: none;
 }
 
-/* ── ALL text gets phosphor glow ───────────────────────────────────────── */
+/* ── ALL text gets soft green phosphor glow ────────────────────────────── */
 body.hardcore-mode p,
 body.hardcore-mode li,
 body.hardcore-mode span,
@@ -2896,351 +2885,232 @@ body.hardcore-mode td,
 body.hardcore-mode th,
 body.hardcore-mode label,
 body.hardcore-mode .post-meta {
-  text-shadow: 0 0 2px rgba(255, 120, 80, 0.12);
+  color: var(--text);
+  text-shadow: 0 0 2px rgba(0, 255, 65, 0.25);
 }
 
-/* ── Headings — STRONG chromatic aberration ─────────────────────────────── */
+/* ── Headings — Data Glow ──────────────────────────────────────────────── */
 body.hardcore-mode h1,
 body.hardcore-mode h2,
 body.hardcore-mode h3 {
   text-shadow:
-    -2px 0 rgba(255, 40, 40, 0.4),
-    2px 0 rgba(0, 200, 255, 0.35),
-    0 0 20px rgba(255, 80, 40, 0.25),
-    0 0 60px rgba(255, 40, 20, 0.08);
+    0 0 10px rgba(0, 255, 65, 0.3),
+    0 0 20px rgba(0, 255, 65, 0.15);
 }
 
 body.hardcore-mode h1 {
   text-shadow:
-    -3px 0 rgba(255, 40, 40, 0.5),
-    3px 0 rgba(0, 200, 255, 0.45),
-    0 0 30px rgba(255, 80, 40, 0.35),
-    0 0 80px rgba(255, 40, 20, 0.12);
+    0 0 12px rgba(0, 255, 65, 0.4),
+    0 0 25px rgba(0, 255, 65, 0.2);
 }
 
-/* ── Panels — deep inner glow + red border pulse ───────────────────────── */
+/* ── Panels — Hacker green borders ─────────────────────────────────────── */
 body.hardcore-mode .panel {
-  background: linear-gradient(180deg, rgba(30, 12, 12, 0.9), rgba(15, 6, 6, 0.95));
-  border-color: rgba(255, 60, 40, 0.25);
+  background: linear-gradient(180deg, rgba(3, 16, 6, 0.85), rgba(1, 8, 3, 0.95));
+  border-color: rgba(0, 255, 65, 0.2);
   box-shadow:
-    0 0 0 1px rgba(255, 60, 40, 0.15),
-    0 0 25px rgba(255, 40, 20, 0.08),
-    inset 0 0 60px rgba(255, 40, 20, 0.04),
-    inset 0 1px 0 rgba(255, 100, 60, 0.06),
-    var(--shadow-lg);
-  animation: hc-border-breathe 3s ease-in-out infinite;
+    0 0 0 1px rgba(0, 255, 65, 0.1),
+    0 0 15px rgba(0, 255, 65, 0.05),
+    inset 0 0 30px rgba(0, 255, 65, 0.03);
+  animation: hc-border-breathe 5s ease-in-out infinite;
 }
 
-/* ── Post cards — scan effect + red accent ──────────────────────────────── */
+/* ── Post cards — Tech grid feeling ────────────────────────────────────── */
 body.hardcore-mode .post-card {
-  background: rgba(18, 8, 8, 0.6);
-  border-color: rgba(255, 60, 40, 0.12);
-  border-left-color: var(--accent-danger);
+  background: rgba(2, 12, 4, 0.7);
+  border-color: rgba(0, 255, 65, 0.15);
+  border-left-color: var(--accent);
   position: relative;
-}
-
-body.hardcore-mode .post-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(rgba(255, 60, 40, 0) 50%, rgba(255, 60, 40, 0.02) 50%);
-  background-size: 100% 4px;
-  border-radius: inherit;
-  opacity: 0.5;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 body.hardcore-mode .post-card:hover {
-  background: rgba(30, 12, 12, 0.7);
+  background: rgba(5, 20, 8, 0.85);
   box-shadow:
-    0 16px 32px rgba(0, 0, 0, 0.7),
-    0 0 20px rgba(255, 60, 40, 0.06),
-    inset 0 1px 0 rgba(255, 100, 60, 0.08);
+    0 16px 32px rgba(0, 10, 2, 0.9),
+    0 0 20px rgba(0, 255, 65, 0.15),
+    inset 0 1px 0 rgba(0, 255, 65, 0.2);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(0, 255, 65, 0.35);
 }
 
-/* ── Post card titles — neon burn ──────────────────────────────────────── */
 body.hardcore-mode .post-card-title {
-  text-shadow: 0 0 6px rgba(255, 100, 60, 0.2);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.25);
 }
 
-/* ── Engineer terminals — deep CRT phosphor green ──────────────────────── */
-body.hardcore-mode .engineer-terminal::before,
-body.hardcore-mode .ops-cli-output::before {
-  opacity: 0.5;
-  background-size: 100% 2px;
-}
-
+/* ── Engineer terminals — Real phosphor green ──────────────────────────── */
 body.hardcore-mode .engineer-terminal,
 body.hardcore-mode .ops-cli-output {
-  background: rgba(6, 2, 2, 0.95);
+  background: rgba(1, 4, 1, 0.98);
   box-shadow:
-    inset 0 0 80px rgba(0, 255, 60, 0.04),
-    inset 0 0 200px rgba(255, 30, 10, 0.02),
-    0 0 30px rgba(255, 40, 20, 0.1);
-  border-color: rgba(255, 80, 40, 0.35);
+    inset 0 0 60px rgba(0, 255, 65, 0.06),
+    0 0 20px rgba(0, 255, 65, 0.08);
+  border-color: rgba(0, 255, 65, 0.3);
 }
 
 body.hardcore-mode .terminal-line,
 body.hardcore-mode .ops-line {
-  animation-duration: 60ms;
-  text-shadow: 0 0 6px rgba(166, 255, 189, 0.4);
-  font-family: var(--font-mono);
+  color: #00ff41;
+  text-shadow: 0 0 4px #00ff41, 0 0 8px rgba(0, 255, 65, 0.4);
 }
 
-/* ── Alert stream — aggressive pulsing red ─────────────────────────────── */
+/* ── Alert stream — Subdued matrix drop ────────────────────────────────── */
 body.hardcore-mode .ops-alert-stream {
-  border-color: rgba(255, 60, 40, 0.7);
-  color: #ff8a80;
-  background: rgba(60, 8, 8, 0.6);
-  animation: hc-alert-pulse 1.5s ease-in-out infinite;
-  box-shadow: inset 0 0 30px rgba(255, 40, 20, 0.06);
+  border-color: rgba(0, 255, 65, 0.3);
+  color: #5aff85;
+  background: rgba(2, 10, 4, 0.7);
+  box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.06);
 }
 
-/* ── Category badges — neon glow ───────────────────────────────────────── */
-body.hardcore-mode .category-badge {
-  text-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
-  filter: saturate(1.4) brightness(1.1);
-}
-
-/* ── Links — amber neon ────────────────────────────────────────────────── */
+/* ── Links — Matrix trace ──────────────────────────────────────────────── */
 body.hardcore-mode a:not(.action-link) {
-  text-shadow: 0 0 3px rgba(255, 106, 61, 0.15);
+  text-shadow: 0 0 3px rgba(0, 255, 65, 0.3);
 }
 
 body.hardcore-mode a:not(.action-link):hover {
+  color: #fff;
   text-shadow:
-    0 0 8px rgba(255, 106, 61, 0.5),
-    0 0 20px rgba(255, 60, 30, 0.15);
+    0 0 6px #00ff41,
+    0 0 12px rgba(0, 255, 65, 0.6);
 }
 
-/* ── Action buttons — red plasma glow ──────────────────────────────────── */
+/* ── Action buttons — Terminal accept ──────────────────────────────────── */
 body.hardcore-mode .action-link {
-  background: rgba(255, 60, 40, 0.12);
-  border-color: rgba(255, 60, 40, 0.3);
+  background: rgba(0, 255, 65, 0.08);
+  border-color: rgba(0, 255, 65, 0.3);
+  color: #00ff41;
   box-shadow:
-    0 0 15px rgba(255, 40, 20, 0.15),
-    inset 0 0 10px rgba(255, 60, 40, 0.05);
-  text-shadow: 0 0 6px rgba(255, 80, 40, 0.3);
+    0 0 10px rgba(0, 255, 65, 0.08),
+    inset 0 0 8px rgba(0, 255, 65, 0.04);
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.4);
 }
 
 body.hardcore-mode .action-link:hover {
-  background: rgba(255, 60, 40, 0.2);
+  background: rgba(0, 255, 65, 0.2);
+  color: #fff;
+  border-color: #00ff41;
   box-shadow:
-    0 0 25px rgba(255, 40, 20, 0.3),
-    0 0 60px rgba(255, 40, 20, 0.1),
-    inset 0 0 15px rgba(255, 60, 40, 0.08);
+    0 0 20px rgba(0, 255, 65, 0.3),
+    inset 0 0 15px rgba(0, 255, 65, 0.15);
+  text-shadow: 0 0 6px #fff, 0 0 12px #00ff41;
 }
 
-/* ── Mode toggle — intense danger glow ─────────────────────────────────── */
-body.hardcore-mode .mode-toggle[aria-pressed='true'] {
+/* ── Mode toggle — Hacker eye ──────────────────────────────────────────── */
+body.hardcore-mode .mode-toggle[aria-pressed="true"] {
   box-shadow:
-    0 0 15px rgba(255, 60, 40, 0.5),
-    0 0 40px rgba(255, 40, 20, 0.2),
-    inset 0 0 10px rgba(255, 60, 40, 0.12);
+    0 0 15px rgba(0, 255, 65, 0.4),
+    inset 0 0 10px rgba(0, 255, 65, 0.15);
 }
 
-/* ── Stats — red phosphor ──────────────────────────────────────────────── */
+/* ── Stats — Bright data nodes ─────────────────────────────────────────── */
 body.hardcore-mode .stat-value {
+  color: #5aff85;
   text-shadow:
-    0 0 12px rgba(255, 80, 40, 0.4),
-    0 0 30px rgba(255, 40, 20, 0.12);
+    0 0 8px rgba(0, 255, 65, 0.5),
+    0 0 15px rgba(0, 255, 65, 0.15);
 }
 
-/* ── Sidebar — darker, red-tinted ──────────────────────────────────────── */
+/* ── Sidebar — Dark Terminal frame ─────────────────────────────────────── */
 body.hardcore-mode .sidebar {
-  background: linear-gradient(180deg, rgba(15, 6, 6, 0.98), rgba(10, 4, 4, 0.99));
-  border-color: rgba(255, 60, 40, 0.15);
+  background: linear-gradient(180deg, rgba(2, 6, 3, 0.98), rgba(1, 3, 2, 0.99));
+  border-color: rgba(0, 255, 65, 0.15);
 }
 
 body.hardcore-mode .sidebar .nav-link:hover {
-  text-shadow: 0 0 8px rgba(255, 106, 61, 0.4);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
 }
 
-/* ── Scrollbar — blood red ─────────────────────────────────────────────── */
+/* ── Scrollbar — Hacker Green ──────────────────────────────────────────── */
 body.hardcore-mode ::-webkit-scrollbar-thumb {
-  background: rgba(255, 60, 40, 0.3);
+  background: rgba(0, 255, 65, 0.25);
 }
 
 body.hardcore-mode ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 60, 40, 0.5);
+  background: rgba(0, 255, 65, 0.5);
 }
 
 body.hardcore-mode ::-webkit-scrollbar-track {
-  background: rgba(15, 6, 6, 0.8);
+  background: rgba(2, 8, 4, 0.8);
 }
 
-/* ── Code blocks — deeper, scanlined ───────────────────────────────────── */
+/* ── Code blocks — Deep mainframe style ────────────────────────────────── */
 body.hardcore-mode pre,
 body.hardcore-mode code {
-  text-shadow: 0 0 3px rgba(0, 255, 100, 0.15);
+  color: #a0d8b5;
+  text-shadow: 0 0 2px rgba(0, 255, 65, 0.2);
 }
 
 body.hardcore-mode pre {
-  border-color: rgba(255, 60, 40, 0.2);
-  box-shadow: inset 0 0 40px rgba(255, 40, 20, 0.03);
+  border-color: rgba(0, 255, 65, 0.2);
+  background: rgba(1, 5, 2, 0.5) !important;
+  box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.03);
 }
 
-/* ── Network panel — full red takeover ─────────────────────────────────── */
+/* ── Network panel — Cyber green map ───────────────────────────────────── */
 .network-panel.hardcore .network-pulse {
-  fill: #ff8a80;
-  filter: drop-shadow(0 0 10px rgba(255, 60, 40, 0.8));
+  fill: #00ff41;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 65, 0.6));
 }
 
 .network-panel.hardcore .network-link-glow {
-  stroke: rgba(255, 60, 40, 0.4);
+  stroke: rgba(0, 255, 65, 0.3);
 }
 
 .network-panel.hardcore .network-node {
-  fill: #ff8a80;
-  filter: drop-shadow(0 0 6px rgba(255, 60, 40, 0.5));
-}
-
-/* ── Noise corruption blocks — random glitch strips ────────────────────── */
-body.hardcore-mode .main-content::before {
-  content: '';
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: rgba(255, 40, 20, 0.15);
-  pointer-events: none;
-  z-index: 9997;
-  animation: hc-corruption-strip 6s steps(1) infinite;
-  mix-blend-mode: screen;
+  fill: #5aff85;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 65, 0.4));
 }
 
 /* ── Selection colour override ─────────────────────────────────────────── */
 body.hardcore-mode ::selection {
-  background: rgba(255, 60, 40, 0.35);
+  background: rgba(0, 255, 65, 0.35);
   color: #fff;
+  text-shadow: none;
 }
 
-/* ── Hardcore keyframes ────────────────────────────────────────────────── */
+/* ── Hardcore Cyberpunk keyframes ──────────────────────────────────────── */
 
-/* Title glitch — fast, aggressive random distortion */
-@keyframes hc-glitch-flicker {
-  0%, 100% { filter: none; }
-  5% { filter: brightness(1.3) saturate(2) hue-rotate(-5deg); }
-  5.5% { filter: brightness(0.7) contrast(1.5); }
-  6% { filter: none; }
-  20% { filter: none; }
-  20.2% { filter: brightness(1.5) hue-rotate(8deg); }
-  20.5% { filter: invert(0.05) brightness(1.1); }
-  20.8% { filter: none; }
-  40% { filter: none; }
-  40.3% { filter: contrast(1.6) brightness(0.85) saturate(2); }
-  40.6% { filter: none; }
-  60% { filter: none; }
-  60.2% { filter: brightness(1.4) hue-rotate(-3deg) saturate(1.8); }
-  60.6% { filter: brightness(0.8); }
-  60.8% { filter: none; }
-  80% { filter: none; }
-  80.3% { filter: brightness(1.2) contrast(1.4); }
-  80.5% { filter: none; }
+@keyframes hc-scanline-drift {
+  0% { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 0 100%, 40px 40px, -40px 40px; }
 }
 
-/* Chromatic shift layer 1 — cyan channel tear */
-@keyframes hc-glitch-shift-1 {
-  0%, 100% { opacity: 0; }
-  5% { opacity: 0.85; clip-path: inset(5% 0 70% 0); transform: translate(6px, -2px); }
-  6.5% { opacity: 0; }
-  20% { opacity: 0.75; clip-path: inset(35% 0 35% 0); transform: translate(-8px, 1px); }
-  21.5% { opacity: 0; }
-  40% { opacity: 0.8; clip-path: inset(60% 0 10% 0); transform: translate(5px, 2px); }
-  41.5% { opacity: 0; }
-  60% { opacity: 0.7; clip-path: inset(15% 0 55% 0); transform: translate(-6px, -1px); }
-  61.5% { opacity: 0; }
-  80% { opacity: 0.6; clip-path: inset(75% 0 5% 0); transform: translate(4px, 1px); }
-  81.5% { opacity: 0; }
-}
-
-/* Chromatic shift layer 2 — red channel tear */
-@keyframes hc-glitch-shift-2 {
-  0%, 100% { opacity: 0; }
-  6% { opacity: 0.8; clip-path: inset(55% 0 15% 0); transform: translate(-5px, 2px); }
-  7.5% { opacity: 0; }
-  21% { opacity: 0.7; clip-path: inset(8% 0 65% 0); transform: translate(7px, -2px); }
-  22.5% { opacity: 0; }
-  41% { opacity: 0.75; clip-path: inset(40% 0 30% 0); transform: translate(-4px, 1px); }
-  42.5% { opacity: 0; }
-  61% { opacity: 0.65; clip-path: inset(20% 0 50% 0); transform: translate(6px, -1px); }
-  62.5% { opacity: 0; }
-  81% { opacity: 0.7; clip-path: inset(70% 0 5% 0); transform: translate(-7px, 2px); }
-  82.5% { opacity: 0; }
-}
-
-/* Panel border — slow breathing between dark and red */
-@keyframes hc-border-breathe {
-  0%, 100% { border-color: var(--border); box-shadow: 0 0 0 1px rgba(255, 60, 40, 0.1), var(--shadow-lg); }
-  50% { border-color: rgba(255, 60, 40, 0.3); box-shadow: 0 0 20px rgba(255, 40, 20, 0.08), var(--shadow-lg); }
-}
-
-/* Alert stream — aggressive red pulse */
-@keyframes hc-alert-pulse {
-  0%, 100% { opacity: 1; box-shadow: inset 0 0 30px rgba(255, 40, 20, 0.06); }
-  50% { opacity: 0.75; border-color: rgba(255, 40, 20, 0.9); box-shadow: inset 0 0 50px rgba(255, 40, 20, 0.1); }
-}
-
-/* Vignette — slow breathing of the dark edges */
 @keyframes hc-vignette-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  50% { opacity: 0.85; }
 }
 
-/* Scanline vertical drift — scrolling CRT effect */
-@keyframes hc-scanline-drift {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: 0 100%, 60px 60px; }
-}
-
-/* Screen tear — horizontal slice displacement */
-@keyframes hc-screen-tear {
-  0%, 100% { clip-path: none; transform: none; }
-  12% { clip-path: none; transform: none; }
-  12.2% { clip-path: inset(22% 0 60% 0); transform: translateX(4px); }
-  12.5% { clip-path: none; transform: none; }
-  37% { clip-path: none; transform: none; }
-  37.1% { clip-path: inset(55% 0 20% 0); transform: translateX(-6px); }
-  37.4% { clip-path: none; transform: none; }
-  62% { clip-path: none; transform: none; }
-  62.15% { clip-path: inset(10% 0 75% 0); transform: translateX(3px); }
-  62.4% { clip-path: none; transform: none; }
-  85% { clip-path: none; transform: none; }
-  85.2% { clip-path: inset(70% 0 8% 0); transform: translateX(-5px); }
-  85.5% { clip-path: none; transform: none; }
-}
-
-/* Page flicker — sudden brightness/contrast spikes */
-@keyframes hc-page-flicker {
-  0%, 100% { filter: none; }
-  15% { filter: none; }
-  15.1% { filter: brightness(1.15) contrast(1.1); }
-  15.3% { filter: brightness(0.92); }
-  15.5% { filter: none; }
+@keyframes hc-glitch-flicker {
+  0%, 100% { filter: none; opacity: 1; }
+  2% { filter: hue-rotate(15deg) brightness(1.1); transform: skewX(1deg); }
+  4% { filter: none; transform: none; }
   45% { filter: none; }
-  45.1% { filter: brightness(0.85) saturate(1.3); }
-  45.3% { filter: none; }
-  72% { filter: none; }
-  72.1% { filter: brightness(1.2) contrast(1.15) saturate(0.8); }
-  72.2% { filter: brightness(0.9); }
-  72.4% { filter: none; }
+  45.5% { filter: brightness(1.2); }
+  46% { filter: none; }
+  85% { opacity: 0.95; }
+  85.2% { opacity: 1; filter: contrast(1.1) drop-shadow(0 0 3px #00ff41); }
+  85.5% { filter: none; }
 }
 
-/* Corruption strip — horizontal noise bar that teleports around */
-@keyframes hc-corruption-strip {
-  0% { top: 15%; opacity: 0; }
-  8% { top: 15%; opacity: 0.6; height: 2px; }
-  9% { opacity: 0; }
-  25% { top: 48%; opacity: 0; }
-  26% { top: 48%; opacity: 0.5; height: 4px; }
-  27% { opacity: 0; }
-  50% { top: 72%; opacity: 0; }
-  51% { top: 72%; opacity: 0.7; height: 2px; }
+@keyframes hc-glitch-shift-1 {
+  0%, 100% { opacity: 0; clip-path: inset(10% 0 80% 0); transform: translate(0); }
+  10% { opacity: 0.6; clip-path: inset(20% 0 60% 0); transform: translate(-1px, 1px); }
+  12% { opacity: 0; }
+  50% { opacity: 0.5; clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
   52% { opacity: 0; }
-  75% { top: 33%; opacity: 0; }
-  76% { top: 33%; opacity: 0.4; height: 3px; }
-  77% { opacity: 0; }
-  100% { opacity: 0; }
+}
+
+@keyframes hc-glitch-shift-2 {
+  0%, 100% { opacity: 0; clip-path: inset(80% 0 10% 0); transform: translate(0); }
+  11% { opacity: 0.7; clip-path: inset(15% 0 70% 0); transform: translate(1px, -1px); }
+  13% { opacity: 0; }
+  51% { opacity: 0.6; clip-path: inset(45% 0 35% 0); transform: translate(-2px, 1px); }
+  53% { opacity: 0; }
+}
+
+@keyframes hc-border-breathe {
+  0%, 100% { border-color: rgba(0, 255, 65, 0.15); box-shadow: 0 0 0 1px rgba(0, 255, 65, 0.05); }
+  50% { border-color: rgba(0, 255, 65, 0.3); box-shadow: 0 0 10px rgba(0, 255, 65, 0.08), inset 0 0 15px rgba(0, 255, 65, 0.04); }
 }
 
 .sr-only {
@@ -4061,3 +3931,44 @@ body.hardcore-mode ::selection {
   transform: translateX(100%);
   transition: transform 400ms ease;
 }
+/* ── Normal Mode Subtle Animations ─────────────────────────────────────────── */
+h1:not(.glitch), h2, h3 {
+  animation: subtle-chromatic-shift 12s infinite ease-in-out;
+}
+
+@keyframes subtle-chromatic-shift {
+  0%, 100% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+  10% { text-shadow: 1px 0 0 rgba(88, 166, 255, 0.4), -1px 0 0 rgba(255, 123, 114, 0.4); }
+  20% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+  60% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+  70% { text-shadow: -1px 0 0 rgba(88, 166, 255, 0.4), 1px 0 0 rgba(255, 123, 114, 0.4); }
+  80% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+}
+
+.action-link:hover, .nav-link:hover {
+  animation: subtle-pulse 2s infinite ease-in-out;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.02); filter: brightness(1.1); }
+}
+
+.post-card, .signal-card {
+  transition: transform 0.4s cubic-bezier(0.1, 0.7, 0.1, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.post-card:hover, .signal-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-strong);
+}
+
+.site-shell {
+  animation: site-boot-in 1.2s ease-out forwards;
+}
+
+@keyframes site-boot-in {
+  from { opacity: 0; filter: blur(4px) saturate(0.8); }
+  to { opacity: 1; filter: blur(0px) saturate(1); }
+}
+/* ───────────────────────────────────────────────────────────────────────── */
