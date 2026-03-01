@@ -189,10 +189,10 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       {categoryCounts.map((category) => (
         <a href={withBase(`${category.slug}/`)} class={`category-tile panel panel-soft category-${category.slug}`}>
           <div class="category-tile-top">
-            <span class={`category-badge ${category.slug}`}>{category.label}</span>
+            <span class={`category-badge ${category.slug}`} data-i18n={`cat.${category.slug}`}>{category.label}</span>
             <span class="category-tile-count">{category.count}</span>
           </div>
-          <p>{category.description}</p>
+          <p data-i18n={`cat.${category.slug}.desc`}>{category.description}</p>
         </a>
       ))}
     </div>

@@ -50,7 +50,7 @@ const searchText = [
       })}
     </time>
     <span aria-hidden="true">•</span>
-    <a href={withBase(`${category}/`)} class:list={['post-category', `post-category-${category}`]}>
+    <a href={withBase(`${category}/`)} class:list={['post-category', `post-category-${category}`]} data-i18n={`cat.${category}`}>
       {CATEGORY_META[category].label}
     </a>
     <span aria-hidden="true">•</span>
