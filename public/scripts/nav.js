@@ -94,12 +94,21 @@
 
   const setLang = (lang) => {
     currentLang = lang === 'es' ? 'es' : 'en';
-    try { window.localStorage.setItem(LANG_KEY, currentLang); } catch {}
+    try { window.localStorage.setItem(LANG_KEY, currentLang); } catch { }
     applyI18nDom();
     buildCommands();
     renderCommands('');
     const audience = document.body.classList.contains('audience-engineer') ? 'engineer' : 'recruiter';
     applyAudienceMode(audience, false);
+
+    /* Re-render typewriter text instantly on language switch */
+    const twEl = document.getElementById('typewriter');
+    if (twEl) {
+      twEl.textContent = T('hero.typewriter');
+      const h1 = document.getElementById('home-hero-title');
+      if (h1) h1.setAttribute('data-text', T('hero.typewriter') + '_');
+    }
+
     window.dispatchEvent(new CustomEvent('portfolio-lang-change', { detail: { lang: currentLang } }));
   };
 
@@ -169,7 +178,7 @@
   };
 
   const markBootCompleted = () => {
-    try { window.sessionStorage.setItem(BOOT_COMPLETED_KEY, '1'); } catch {}
+    try { window.sessionStorage.setItem(BOOT_COMPLETED_KEY, '1'); } catch { }
   };
 
   /** Immediately hide boot overlay — safe to call at any time. */
@@ -206,7 +215,7 @@
           markBootCompleted();
           return;
         }
-      } catch {}
+      } catch { }
     }
 
     boot.runId += 1;
@@ -315,8 +324,8 @@
       setProgress((lineIndex / bootLines.length) * 100);
       /* Phase headers get a brief pause; commands are fast */
       const delay = entry.type === 'phase' ? 140 + Math.random() * 60
-                  : entry.type === 'ready' ? 180
-                  : 55 + Math.random() * 65;
+        : entry.type === 'ready' ? 180
+          : 55 + Math.random() * 65;
       boot.lineTimer = window.setTimeout(tick, delay);
     };
 
@@ -435,8 +444,8 @@
       el.textContent = h > 0
         ? h + 'h ' + (m % 60) + 'm ' + (s % 60) + 's'
         : m > 0
-        ? m + 'm ' + (s % 60) + 's'
-        : s + 's';
+          ? m + 'm ' + (s % 60) + 's'
+          : s + 's';
     };
     update();
     uptimeInterval = window.setInterval(update, 1000);
@@ -468,7 +477,7 @@
     });
 
     if (persist) {
-      try { window.localStorage.setItem(AUDIENCE_KEY, normalized); } catch {}
+      try { window.localStorage.setItem(AUDIENCE_KEY, normalized); } catch { }
     }
 
     window.dispatchEvent(new CustomEvent('portfolio-audience-change', { detail: { mode: normalized } }));
@@ -580,6 +589,17 @@
     const scrollOrNav = (elementId) => {
       const el = document.getElementById(elementId);
       if (el) {
+        /* If element is inside engineer-zone, switch to engineer mode first */
+        if (el.closest('.engineer-zone') && !document.body.classList.contains('audience-engineer')) {
+          applyAudienceMode('engineer');
+          showToast(T('toast.engineerActive'));
+          /* Wait one frame for display:grid to apply before scrolling */
+          requestAnimationFrame(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.replaceState(null, '', '#' + elementId);
+          });
+          return;
+        }
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         history.replaceState(null, '', '#' + elementId);
         return;
@@ -912,6 +932,7 @@
     const selectors = [
       '.hero', '.section-block', '.timeline-item', '.skill-card',
       '.principles-grid .panel', '.engineer-lab', '.network-panel',
+      '.post-card', '.archive-post'
     ];
     const elements = document.querySelectorAll(selectors.join(','));
     if (elements.length === 0) return;
@@ -953,25 +974,25 @@
   const initMagneticElements = () => {
     if (prefersReducedMotion) return;
     const magneticElements = document.querySelectorAll('.nav-link, .sidebar-search-submit, .command-palette-close');
-    
+
     magneticElements.forEach((el) => {
       if (el.dataset.magneticBound === '1') return;
       el.dataset.magneticBound = '1';
-      
+
       const intensity = 0.15;
-      
+
       el.addEventListener('mousemove', (e) => {
         const rect = el.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         const distX = e.clientX - centerX;
         const distY = e.clientY - centerY;
-        
+
         el.style.transform = `translate(${distX * intensity}px, ${distY * intensity}px)`;
         // Force a fast transition while moving to avoid cursor lag
         el.style.transition = 'transform 0.1s ease-out, background 0.1s ease-out';
       });
-      
+
       el.addEventListener('mouseleave', () => {
         // Clearing the inline styles hands control back to global.css definitions
         el.style.transform = '';

@@ -32,16 +32,20 @@ const catDescription =
   <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
     <span>/</span>
-    <span>{catName}</span>
+    <span data-i18n={`cat.${category}`}>{catName}</span>
   </nav>
 
   <header class="page-header page-header-tight" style="position: relative; overflow: hidden;">
     <CategoryAnimation category={category as string} />
     <div style="position: relative; z-index: 10;">
-      <span class={`category-badge ${category}`}>{catName}</span>
-      <h1>{catName}</h1>
-      <p class="page-description">{catDescription}</p>
-      <p class="post-count">{filteredPosts.length} article{filteredPosts.length === 1 ? '' : 's'} published</p>
+      <span class={`category-badge ${category}`} data-i18n={`cat.${category}`}>{catName}</span>
+      <h1 data-i18n={`cat.${category}`}>{catName}</h1>
+      <p class="page-description" data-i18n={`cat.${category}.desc`}>{catDescription}</p>
+      <p class="post-count">
+        <span>{filteredPosts.length}</span>
+        <span data-i18n={filteredPosts.length === 1 ? 'catPage.article' : 'catPage.articles'}>{filteredPosts.length === 1 ? 'article' : 'articles'}</span>
+        <span data-i18n="catPage.published">published</span>
+      </p>
     </div>
   </header>
 
