@@ -2050,6 +2050,33 @@ li+li {
   transform: translateY(0) scale(1);
 }
 
+/* Cascade-reveal: child cards stagger in when parent section reveals */
+.reveal .post-card,
+.reveal .archive-post {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.reveal.in-view .post-card,
+.reveal.in-view .archive-post {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal.in-view .post-card:nth-child(1) { transition-delay: 0ms; }
+.reveal.in-view .post-card:nth-child(2) { transition-delay: 50ms; }
+.reveal.in-view .post-card:nth-child(3) { transition-delay: 100ms; }
+.reveal.in-view .post-card:nth-child(4) { transition-delay: 150ms; }
+.reveal.in-view .post-card:nth-child(5) { transition-delay: 200ms; }
+.reveal.in-view .post-card:nth-child(n+6) { transition-delay: 250ms; }
+.reveal.in-view .archive-post:nth-child(1) { transition-delay: 0ms; }
+.reveal.in-view .archive-post:nth-child(2) { transition-delay: 40ms; }
+.reveal.in-view .archive-post:nth-child(3) { transition-delay: 80ms; }
+.reveal.in-view .archive-post:nth-child(4) { transition-delay: 120ms; }
+.reveal.in-view .archive-post:nth-child(5) { transition-delay: 160ms; }
+.reveal.in-view .archive-post:nth-child(n+6) { transition-delay: 200ms; }
+
 .engineer-lab {
   margin-top: 1rem;
   border-color: rgba(88, 166, 255, 0.35);

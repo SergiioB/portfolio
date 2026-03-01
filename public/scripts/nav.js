@@ -932,7 +932,7 @@
     const selectors = [
       '.hero', '.section-block', '.timeline-item', '.skill-card',
       '.principles-grid .panel', '.engineer-lab', '.network-panel',
-      '.post-card', '.archive-post'
+      '.archive-year'
     ];
     const elements = document.querySelectorAll(selectors.join(','));
     if (elements.length === 0) return;
@@ -966,6 +966,13 @@
       el.style.transitionDelay = Math.min(i * 26, 170) + 'ms';
       observer.observe(el);
     });
+
+    /* Safety net — force-reveal anything still stuck after 3 s */
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.in-view)').forEach((el) => {
+        el.classList.add('in-view');
+      });
+    }, 3000);
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
