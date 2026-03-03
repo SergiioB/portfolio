@@ -52,7 +52,7 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
             <article
               class="archive-post panel panel-soft"
               data-search-item
-              data-search={`${post.data.title} ${post.data.description} ${post.data.issue ?? ''} ${post.data.solution ?? ''} ${post.data.usedIn ?? ''} ${(post.data.tags ?? []).join(' ')} ${post.data.category}`}
+              data-search={`${post.data.title} ${post.data.description} ${post.data.issue ?? ''} ${post.data.solution ?? ''} ${post.data.usedIn ?? ''} ${(post.data.tags ?? []).join(' ')} ${post.data.category.join(' ')}`}
             >
               <time class="archive-post-date" datetime={post.data.pubDate.toISOString()}>
                 {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
@@ -72,9 +72,13 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
                 )}
               </div>
 
-              <span class={`category-badge archive-post-badge ${post.data.category}`} data-i18n={`cat.${post.data.category}`}>
-                {CATEGORY_META[post.data.category].label}
-              </span>
+              <div class="archive-post-categories">
+                {post.data.category.map((cat, i) => (
+                  <span class={`category-badge archive-post-badge ${cat}`} data-i18n={`cat.${cat}`}>
+                    {CATEGORY_META[cat]?.label ?? cat}
+                  </span>
+                ))}
+              </div>
             </article>
           ))}
         </div>

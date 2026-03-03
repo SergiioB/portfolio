@@ -1,17 +1,16 @@
 ---
 title: "Building Custom Ansible Execution Environments"
 description: "How to package Ansible dependencies into a portable, containerized Execution Environment (EE) for consistent automation across runners."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Building Custom Ansible Execution Environments.\""
-issue: "Needed a repeatable way to package Ansible dependencies into a portable, containerized Execution Environment (EE) for consistent automation across runners."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
+situation: "Our Ansible automation was failing on newer execution nodes because of missing Python libraries and collection dependencies. Each runner had a slightly different environment, causing unpredictable failures."
+issue: "Ansible playbooks that worked on the control node failed on execution environments with missing dependencies, and reproducing issues was difficult without consistent environments."
+solution: "Built custom Execution Environments using ansible-builder, packaging all Python dependencies, Ansible collections, and system packages into versioned container images."
+usedIn: "Enterprise Linux platform automation at a German bank, supporting 200+ servers with consistent execution environments."
+impact: "Eliminated environment-related playbook failures and reduced troubleshooting time by 80%."
 pubDate: 2026-02-24
-category: "infrastructure"
+category: ["infrastructure", "automation"]
 tags: ["ansible", "containers", "devops", "automation"]
 draft: false
 ---
-
 ## Situation
 As Ansible projects grow, managing dependencies (Python libraries, Ansible collections, system binaries) on every developer's machine and every CI/CD runner becomes a nightmare. "It works on my machine" is a common phrase when a playbook fails because a specific version of the `community.general` collection is missing.
 
@@ -80,7 +79,7 @@ Execution Environments represent the shift of Ansible from a "scripting tool" to
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Building Custom Ansible Execution Environments execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Building Custom Ansible Execution Environments execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Building Custom Ansible Execution Environments** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

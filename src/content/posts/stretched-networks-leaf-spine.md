@@ -1,17 +1,16 @@
 ---
-title: "Understanding Stretched Networks and Leaf-Spine Architecture"
-description: "A technical overview of modern data center topologies, leaf-spine designs, and the concept of stretched networks for seamless VM migration."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Understanding Stretched Networks and Leaf-Spine Architecture.\""
-issue: "Needed a repeatable way to understand and implement modern data center topologies, leaf-spine designs, and the concept of stretched networks for seamless VM migration."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-01-21
+title: "Stretched Networks and Leaf-Spine Architecture"
+description: "Understanding stretched Layer 2 networks across data centers, leaf-spine fabric design, and the trade-offs for enterprise applications."
+situation: "A disaster recovery project required stretching Layer 2 networks between primary and DR data centers. The network team proposed a leaf-spine architecture, but application teams were concerned about latency and complexity."
+issue: "Lack of understanding about stretched networks, leaf-spine trade-offs, and how application traffic patterns would be affected."
+solution: "Documented the stretched network architecture, analyzed application traffic flows, and provided clear guidance on which applications were suitable for stretched L2 vs. Layer 3 approaches."
+usedIn: "Disaster recovery architecture at a German bank, supporting SAP and critical middleware across two data centers."
+impact: "Enabled informed architecture decisions, reduced project risk by clarifying trade-offs, and provided a reference for future DR projects."
+pubDate: 2026-02-28
 category: "infrastructure"
-tags: ["networking", "architecture", "leaf-spine", "datacenter"]
+tags: ["networking", "leaf-spine", "disaster-recovery", "architecture"]
 draft: false
 ---
-
 ## Situation
 In modern enterprise data centers, the traditional three-tier architecture (Core, Distribution, Access) is increasingly being replaced by **Leaf-Spine** topologies. This shift is driven by the need for high-bandwidth, low-latency "east-west" traffic (server-to-server) and the requirement for "stretched networks" that allow virtual machines to migrate between physical locations without changing their IP addresses.
 
@@ -48,7 +47,7 @@ By combining Leaf-Spine stability with DWDM connectivity, we achieve a highly re
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Understanding Stretched Networks and Leaf-Spine Architecture execution diagram](/portfolio/images/diagrams/post-framework/leaf-spine-stretched.svg)
+![Understanding Stretched Networks and Leaf-Spine Architecture execution diagram](/images/diagrams/post-framework/leaf-spine-stretched.svg)
 
 This diagram visualizes the **Leaf-Spine Stretched Network Architecture** bridging two geographical data center zones (`SITE-A` and `SITE-B`). The high-bandwidth DWDM link extends the Layer 2 domain (VLAN 200), allowing seamless workloads migration (like `vMotion`) while retaining the exact same internal IP mappings.
 

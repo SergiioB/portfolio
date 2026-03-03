@@ -1,17 +1,16 @@
 ---
-title: "Automating Golden Images with Packer and StackGuardian"
-description: "A workflow for building CIS-hardened RHEL images using HashiCorp Packer and orchestrating the builds via StackGuardian."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Automating Golden Images with Packer and StackGuardian.\""
-issue: "Needed a repeatable way to build CIS-hardened RHEL images using HashiCorp Packer and orchestrate the builds via StackGuardian."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-06
-category: "infrastructure"
-tags: ["packer", "stackguardian", "devops", "rhel", "automation"]
+title: "Building Golden Images with Packer and StackGuardian"
+description: "How to create standardized golden images for VMware using Packer with StackGuardian integration for automated image pipelines."
+situation: "New VM provisioning took days because base images were manually built with inconsistent configurations. Each team had their own image-building process with no standardization."
+issue: "No standardized golden images, manual image building was error-prone, and configuration drift between images caused deployment failures."
+solution: "Implemented Packer with StackGuardian for automated golden image pipelines, creating standardized RHEL images with consistent configurations."
+usedIn: "VMware environment at a German bank, creating standardized RHEL 8/9 images for SAP and middleware workloads."
+impact: "Reduced image build time from days to hours, eliminated configuration drift, and enabled consistent VM provisioning across all teams."
+pubDate: 2026-02-18
+category: ["infrastructure", "automation"]
+tags: ["packer", "vmware", "golden-image", "automation"]
 draft: false
 ---
-
 ## Situation
 Maintaining a consistent "Golden Image" is the cornerstone of a stable infrastructure. A Golden Image is a pre-configured template that includes security hardening (like CIS benchmarks), standard monitoring agents, and corporate configurations. 
 
@@ -76,7 +75,7 @@ source "vsphere-clone" "rhel-common" {
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating Golden Images with Packer and StackGuardian execution diagram](/portfolio/images/diagrams/post-framework/packer-workflow.svg)
+![Automating Golden Images with Packer and StackGuardian execution diagram](/images/diagrams/post-framework/packer-workflow.svg)
 
 This diagram visualizes the **Two-Phase Automated Golden Image Pipeline** orchestrating Packer through StackGuardian. It demonstrates separation of concerns: an infrequent heavy `vsphere-iso` base build, decoupled from the frequent `vsphere-clone` automation that applies shifting CIS controls and configuration management logic before sealing the resulting asset into vCenter formats.
 

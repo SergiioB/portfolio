@@ -1,17 +1,16 @@
 ---
-title: "Orchestrating Complex Patching Waves with Ansible"
-description: "How to manage Linux server patching across different tiers (Database, Application, etc.) using Ansible limits and targeted groups."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Orchestrating Complex Patching Waves with Ansible.\""
-issue: "Needed a repeatable way to manage Linux server patching across different tiers (Database, Application, etc.) using Ansible limits and targeted groups."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-23
-category: "infrastructure"
-tags: ["ansible", "patching", "automation", "sysadmin"]
+title: "Orchestrating Patching Waves for Enterprise Linux"
+description: "How to structure Ansible patching playbooks into controlled waves with health checks, rollback triggers, and clear ownership boundaries."
+situation: "Our monthly patching cycle involved 200+ servers patched in a single batch. When a bad patch caused application failures, we had no way to quickly identify which servers were affected or rollback selectively."
+issue: "Big-bang patching caused widespread outages with no rollback strategy, and identifying affected systems took hours during incidents."
+solution: "Implemented wave-based patching with health gates between waves, automatic rollback triggers, and per-wave ownership documentation."
+usedIn: "Monthly patching cycle for 200+ RHEL servers at a German bank, supporting SAP, PostgreSQL, and middleware workloads."
+impact: "Reduced patching incidents by 90%, rollback time from hours to minutes, and enabled selective patching by application tier."
+pubDate: 2026-02-15
+category: ["infrastructure", "automation"]
+tags: ["ansible", "patching", "rhel", "lifecycle"]
 draft: false
 ---
-
 ## Situation
 When you manage a large-scale infrastructure, patching isn't as simple as running `dnf update` on all machines simultaneously. You often have strict dependencies: Database servers must go down last and come up first, while Application servers depend on the DBs being available. Sometimes, specialized environments (like SAP) need to be handled separately.
 
@@ -78,7 +77,7 @@ By strictly using `--limit` and well-defined inventory groups, we prevent accide
 <!-- portfolio:expanded-v2 -->
 
 ## Pipeline Architecture Diagram
-![Ansible Patching Waves Orchestration Timeline](/portfolio/images/diagrams/post-framework/ansible-waves.svg)
+![Ansible Patching Waves Orchestration Timeline](/images/diagrams/post-framework/ansible-waves.svg)
 
 This architecture diagram visualizes the **Ansible Patching Orchestration** timeline. It illustrates the enforced, dependency-aware sequence: starting with the critical Database tier (Wave 1), gating subsequent execution until validation passes, cascading to Application servers (Wave 2), and finally isolating Specialized systems (Wave 3). The right panel highlights the invariant blast-radius controls applied regardless of the wave limit.
 

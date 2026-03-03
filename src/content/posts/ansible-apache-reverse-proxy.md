@@ -1,17 +1,16 @@
 ---
-title: "Flexible Apache Reverse Proxy Configuration with Ansible"
-description: "How to use a single, universal Ansible role to deploy static sites, PHP apps, or complex reverse proxies just by changing host variables."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Flexible Apache Reverse Proxy Configuration with Ansible.\""
-issue: "Needed a repeatable way to use a single, universal Ansible role to deploy static sites, PHP apps, or complex reverse proxies just by changing host variables."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-25
-category: "infrastructure"
-tags: ["ansible", "apache", "proxy", "tomcat"]
+title: "Apache as a Reverse Proxy: Ansible Deployment Pattern"
+description: "How to deploy and configure Apache as a reverse proxy with Ansible, including SSL termination, load balancing, and health checks."
+situation: "Our internal applications needed a standardized reverse proxy setup for SSL termination and load balancing. Each deployment was custom-built, leading to configuration drift and security vulnerabilities."
+issue: "No consistent reverse proxy pattern, manual SSL certificate management, and inconsistent load balancer configurations across environments."
+solution: "Developed an Ansible role for Apache reverse proxy with automated SSL deployment, health check endpoints, and standardized load balancer configurations."
+usedIn: "Internal application platform at a German bank, supporting 20+ applications with standardized reverse proxy setups."
+impact: "Reduced reverse proxy deployment time from days to hours, eliminated SSL configuration errors, and standardized security posture across all applications."
+pubDate: 2026-02-20
+category: ["infrastructure", "automation"]
+tags: ["ansible", "apache", "reverse-proxy", "ssl"]
 draft: false
 ---
-
 ## Situation
 When managing dozens of web servers, you don't want a separate Ansible role for every single type of application (static HTML, PHP, reverse proxy to Tomcat, etc.). A better approach is to design a universal `app_apache` role that provides the core container (VirtualHost, SSL, Firewall rules) and injects the specific behavior via a configuration snippet.
 
@@ -62,7 +61,7 @@ If tomorrow you need a static site instead of a proxy, you just point `app_apach
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Flexible Apache Reverse Proxy Configuration with Ansible execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Flexible Apache Reverse Proxy Configuration with Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Flexible Apache Reverse Proxy Configuration with Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

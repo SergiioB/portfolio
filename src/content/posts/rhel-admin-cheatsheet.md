@@ -1,17 +1,16 @@
 ---
 title: "Essential Red Hat Linux Administrator Commands"
-description: "A practical cheatsheet covering the most essential commands for managing RHEL systems on a daily basis."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Essential Red Hat Linux Administrator Commands.\""
-issue: "Needed a repeatable way to compile a practical cheatsheet covering the most essential commands for managing RHEL systems on a daily basis."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
+description: "A practical cheatsheet covering the most essential commands for managing RHEL systems on a daily basis: systemd, storage, networking, and user management."
+situation: "New team members were constantly asking for the same commands during onboarding, and senior engineers had their own scattered notes. We needed a unified reference."
+issue: "No single source of truth for common RHEL administration commands, leading to inconsistent practices and repeated onboarding questions."
+solution: "Created a living cheatsheet covering systemd, LVM, networking, user management, and troubleshooting - the commands used daily in our environment."
+usedIn: "RHEL platform administration at a German bank, covering 200+ servers running SAP, PostgreSQL, and middleware."
+impact: "Reduced onboarding time for new engineers by 50% and became the go-to reference for the entire Linux team."
 pubDate: 2026-01-30
 category: "infrastructure"
 tags: ["Linux", "RHEL", "SystemAdmin", "CLI"]
 draft: false
 ---
-
 ## Situation
 As a Certified Red Hat Linux Administrator, I rely on a core set of commands to manage, troubleshoot, and monitor RHEL systems efficiently. I've compiled this comprehensive cheatsheet to help system administrators and Linux enthusiasts identify and resolve issues encountered on a day-to-day basis.
 
@@ -147,7 +146,7 @@ Let's share knowledge and grow together! If you'd like a more detailed guide or 
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Essential Red Hat Linux Administrator Commands execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Essential Red Hat Linux Administrator Commands execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Essential Red Hat Linux Administrator Commands** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

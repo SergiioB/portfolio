@@ -22,7 +22,7 @@ const categoryCounts = CATEGORY_ORDER.map((category) => ({
   slug: category,
   label: CATEGORY_META[category].label,
   description: CATEGORY_META[category].description,
-  count: publishedPosts.filter((post) => post.data.category === category).length,
+  count: publishedPosts.filter((post) => post.data.category.includes(category)).length,
 }));
 
 const activeCategories = categoryCounts.filter((category) => category.count > 0);

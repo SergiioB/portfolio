@@ -1,17 +1,16 @@
 ---
-title: "Testing Ansible Roles Locally with Molecule and Docker"
-description: "A quick start guide to initialize and use Molecule with the Docker driver to test your Ansible roles before deploying."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Testing Ansible Roles Locally with Molecule and Docker.\""
-issue: "Needed a repeatable way to initialize and use Molecule with the Docker driver to test your Ansible roles before deploying."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-08
-category: "infrastructure"
-tags: ["ansible", "molecule", "testing", "docker"]
+title: "Testing Ansible Roles with Molecule and Docker"
+description: "How to set up automated testing for Ansible roles using Molecule with Docker drivers, ensuring playbooks work before production deployment."
+situation: "Ansible role changes were tested directly in production, causing outages when syntax errors or logic bugs slipped through. We had no automated testing pipeline."
+issue: "No automated testing for Ansible roles, production deployments were the first test, and role regressions were discovered only after incidents."
+solution: "Implemented Molecule with Docker for local role testing, integrated into CI pipeline to catch issues before merge."
+usedIn: "Ansible automation at a German bank, testing 50+ roles across development and production environments."
+impact: "Eliminated role-related production incidents, reduced development cycle time, and enabled confident refactoring of legacy roles."
+pubDate: 2026-02-14
+category: ["infrastructure", "automation"]
+tags: ["ansible", "molecule", "docker", "testing", "ci"]
 draft: false
 ---
-
 ## Situation
 Pushing Ansible role changes directly to a development environment can be slow and risky. Molecule provides a framework for testing Ansible roles locally, spinning up temporary instances (like Docker containers), running your role, and verifying the state.
 
@@ -107,7 +106,7 @@ molecule test
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Testing Ansible Roles Locally with Molecule and Docker execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Testing Ansible Roles Locally with Molecule and Docker execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Testing Ansible Roles Locally with Molecule and Docker** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

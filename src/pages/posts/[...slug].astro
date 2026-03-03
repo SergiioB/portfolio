@@ -18,6 +18,7 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 const { title, description, pubDate, category, tags, updatedDate, situation, issue, solution, usedIn, impact } = post.data;
 const readingTime = estimateReadingTime(post.body);
+const primaryCategory = category[0]; // First category is primary for breadcrumb
 
 const caseItems = [
   { label: 'Situation', value: situation },
@@ -36,7 +37,17 @@ const caseItems = [
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
         <span>/</span>
-        <a href={withBase(`${category}/`)}>{getCategoryLabel(category)}</a>
+        <a href={withBase(`${primaryCategory}/`)}>{getCategoryLabel(primaryCategory)}</a>
+        {category.length > 1 && (
+          <>
+            <span>/</span>
+            <span class="category-tags">
+              {category.slice(1).map((cat, i) => (
+                <>{i > 0 && ', '}<a href={withBase(`${cat}/`)} class="secondary-category">{getCategoryLabel(cat)}</a></>
+              ))}
+            </span>
+          </>
+        )}
       </nav>
 
       <div class="article-meta">

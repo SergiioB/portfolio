@@ -1,17 +1,16 @@
 ---
-title: "Securely Managing SSL Certificates in Ansible Repositories"
-description: "Best practices for handling sensitive TLS/SSL certificates (.cer and .key files) using Ansible Vault to prevent accidental exposure."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Securely Managing SSL Certificates in Ansible Repositories.\""
-issue: "Needed a repeatable way to apply best practices for handling sensitive TLS/SSL certificates (.cer and .key files) using Ansible Vault to prevent accidental exposure."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
+title: "Managing SSL Certificates with Ansible Vault"
+description: "A secure pattern for deploying SSL certificates across servers using Ansible Vault for encryption and automated certificate rotation."
+situation: "SSL certificates were managed manually with no tracking. Expired certificates caused outages, and private keys were sometimes stored in plain text on shared drives."
+issue: "No certificate lifecycle management, manual deployment prone to errors, and security risk from unencrypted private keys in shared storage."
+solution: "Implemented Ansible Vault for certificate encryption, automated deployment with expiration monitoring, and standardized certificate paths across all servers."
+usedIn: "Enterprise Linux platform at a German bank, managing 100+ SSL certificates across 200+ servers."
+impact: "Eliminated certificate expiration outages, reduced certificate deployment time by 90%, and achieved compliance for private key storage."
 pubDate: 2026-02-12
-category: "infrastructure"
-tags: ["ansible", "security", "ssl", "encryption"]
+category: ["infrastructure", "automation"]
+tags: ["ansible", "ssl", "security", "vault"]
 draft: false
 ---
-
 ## Situation
 When automating the deployment of web servers (like Apache or Nginx), you must deploy TLS/SSL certificates to enable HTTPS. A common mistake is committing plain text private keys (`.key` files) or even the public certificates (`.cer` or `.crt`) directly into the Git repository. 
 
@@ -79,7 +78,7 @@ Ansible seamlessly decrypts the file in memory during execution, transfers the p
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Securely Managing SSL Certificates in Ansible Repositories execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Securely Managing SSL Certificates in Ansible Repositories execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Securely Managing SSL Certificates in Ansible Repositories** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

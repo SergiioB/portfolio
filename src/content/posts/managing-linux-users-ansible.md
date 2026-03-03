@@ -1,17 +1,16 @@
 ---
-title: "Managing Linux Technical Users: UIDs, GIDs, and Ansible"
-description: "A practical guide to standardize technical user creation, assigning static UIDs/GIDs, and avoiding conflicts in a large server fleet using Ansible."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Managing Linux Technical Users: UIDs, GIDs, and Ansible.\""
-issue: "Needed a repeatable way to standardize technical user creation, assigning static UIDs/GIDs, and avoiding conflicts in a large server fleet using Ansible."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-13
-category: "infrastructure"
-tags: ["ansible", "linux", "users", "sysadmin"]
+title: "Managing Linux Users and Groups with Ansible"
+description: "A practical pattern for managing local users, groups, and sudo access across Linux servers using Ansible with host-specific variables."
+situation: "User management was manual and inconsistent. Service accounts had different UIDs across servers, sudo access was granted via one-off edits, and onboarding new servers required hours of manual work."
+issue: "No centralized user management for local accounts, UID/GID inconsistencies breaking applications, and sudo access scattered across individual sudoers files."
+solution: "Implemented Ansible-based user management with host_vars for server-specific accounts, standardized UID/GID ranges, and templated sudoers configurations."
+usedIn: "Linux platform at a German bank, managing 50+ service accounts and 200+ servers with consistent user configurations."
+impact: "Reduced user provisioning time from hours to minutes, eliminated UID/GID conflicts, and enabled audit-compliant sudo access management."
+pubDate: 2026-02-10
+category: ["infrastructure", "automation"]
+tags: ["ansible", "linux", "user-management", "sudo"]
 draft: false
 ---
-
 ## Situation
 When deploying new applications, you frequently need to provision technical users (service accounts) on Linux servers. In an enterprise environment, especially when dealing with clustered applications or shared storage (like NFS), it is critical that these users have **identical UIDs and GIDs across all servers**. 
 
@@ -96,7 +95,7 @@ By separating the data (`unix_local_users.yml`) from the logic (the Ansible task
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Managing Linux Technical Users: UIDs, GIDs, and Ansible execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Managing Linux Technical Users: UIDs, GIDs, and Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Managing Linux Technical Users: UIDs, GIDs, and Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

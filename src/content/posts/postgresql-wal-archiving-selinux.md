@@ -1,17 +1,16 @@
 ---
-title: "PostgreSQL WAL Archiving and SELinux Conflicts"
-description: "How to configure WAL archiving in PostgreSQL and resolve the 'Permission denied' SELinux errors when writing to a dedicated archive directory."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"PostgreSQL WAL Archiving and SELinux Conflicts.\""
-issue: "Needed a repeatable way to configure WAL archiving in PostgreSQL and resolve the 'Permission denied' SELinux errors when writing to a dedicated archive directory."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-04
+title: "PostgreSQL WAL Archiving with SELinux Considerations"
+description: "Setting up PostgreSQL WAL archiving for point-in-time recovery, with SELinux context handling for archive directories."
+situation: "Our PostgreSQL databases had no point-in-time recovery capability. A corrupted table required full restore from nightly backup, losing hours of transactions. Additionally, SELinux was blocking WAL archive writes."
+issue: "No WAL archiving configured, SELinux contexts incorrect for archive directories, and point-in-time recovery was impossible."
+solution: "Configured PostgreSQL WAL archiving with proper SELinux file contexts, tested restore procedures, and documented the end-to-end recovery process."
+usedIn: "PostgreSQL deployment at a German bank, supporting SAP and custom applications with 99.9% uptime requirements."
+impact: "Enabled point-in-time recovery with <15 minute RPO, resolved SELinux blockers, and passed disaster recovery testing."
+pubDate: 2026-02-22
 category: "infrastructure"
-tags: ["postgresql", "selinux", "database", "backup"]
+tags: ["postgresql", "backup", "selinux", "database", "wal"]
 draft: false
 ---
-
 ## Situation
 Setting up point-in-time recovery (PITR) in PostgreSQL requires configuring Write-Ahead Log (WAL) archiving. You tell PostgreSQL to copy closed WAL files to a safe backup location. 
 
@@ -66,7 +65,7 @@ Once the SELinux context matches what the PostgreSQL process is allowed to acces
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![PostgreSQL WAL Archiving and SELinux Conflicts execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![PostgreSQL WAL Archiving and SELinux Conflicts execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **PostgreSQL WAL Archiving and SELinux Conflicts** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

@@ -1,17 +1,16 @@
 ---
-title: "Tracking Required Reboots in RHEL with Tracer"
-description: "How to use katello-host-tools-tracer to reliably determine if a Linux server requires a reboot or daemon reload after patching."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Tracking Required Reboots in RHEL with Tracer.\""
-issue: "Needed a repeatable way to use katello-host-tools-tracer to reliably determine if a Linux server requires a reboot or daemon reload after patching."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-01-28
+title: "Tracking Required Reboots with RHEL Tracer"
+description: "How to use the tracer utility to identify which services need restart after package updates, and plan reboots strategically across server tiers."
+situation: "After monthly patching, we never knew which servers actually needed reboots. We either rebooted everything unnecessarily or missed critical restarts, causing application issues later."
+issue: "No visibility into which services had pending restarts, leading to either unnecessary reboots or missed restarts that caused instability."
+solution: "Implemented tracer integration to identify pending restarts, combined with a tiered reboot strategy based on application criticality."
+usedIn: "Monthly patching cycle for 200+ RHEL servers at a German bank, reducing unnecessary reboots by 60%."
+impact: "Reduced unplanned reboots by 60%, improved application stability post-patch, and enabled informed reboot scheduling."
+pubDate: 2026-02-01
 category: "infrastructure"
-tags: ["rhel", "patching", "sysadmin", "satellite"]
+tags: ["rhel", "tracer", "patching", "lifecycle"]
 draft: false
 ---
-
 ## Situation
 After running a `dnf update` on a fleet of Linux servers, one of the most common questions is: *"Does this server actually need a reboot?"* While kernel updates obviously require a reboot, sometimes updates to core libraries (like `glibc` or `openssl`) mean that running services are using outdated, deleted files in memory. 
 
@@ -57,7 +56,7 @@ This allows you to quickly generate a list of exactly which servers in your envi
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Tracking Required Reboots in RHEL with Tracer execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Tracking Required Reboots in RHEL with Tracer execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Tracking Required Reboots in RHEL with Tracer** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

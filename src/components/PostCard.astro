@@ -10,7 +10,7 @@ interface Props {
       title: string;
       description: string;
       pubDate: Date;
-      category: 'infrastructure' | 'automation' | 'ai' | 'cloud' | 'local-ai' | 'kotlin' | 'snippets' | 'career';
+      category: string[];
       tags?: string[];
       issue?: string;
       solution?: string;
@@ -25,10 +25,11 @@ const { post } = Astro.props;
 const { title, description, pubDate, category, tags, issue, solution, usedIn } = post.data;
 const readingTime = estimateReadingTime(post.body);
 const postUrl = withBase(`posts/${post.id}/`);
+const primaryCategory = category[0];
 const searchText = [
   title,
   description,
-  category,
+  ...category,
   issue ?? '',
   solution ?? '',
   usedIn ?? '',
@@ -37,7 +38,7 @@ const searchText = [
 ---
 
 <article
-  class:list={['post-card', 'panel', 'panel-soft', `category-${category}`]}
+  class:list={['post-card', 'panel', 'panel-soft', `category-${primaryCategory}`]}
   data-search-item
   data-search={searchText}
 >
@@ -50,9 +51,13 @@ const searchText = [
       })}
     </time>
     <span aria-hidden="true">•</span>
-    <a href={withBase(`${category}/`)} class:list={['post-category', `post-category-${category}`]} data-i18n={`cat.${category}`}>
-      {CATEGORY_META[category].label}
-    </a>
+    <div class="post-categories">
+      {category.map((cat, i) => (
+        <a href={withBase(`${cat}/`)} class:list={['post-category', `post-category-${cat}`]} data-i18n={`cat.${cat}`}>
+          {CATEGORY_META[cat]?.label ?? cat}
+        </a>
+      ))}
+    </div>
     <span aria-hidden="true">•</span>
     <span>{readingTime} <span data-i18n="posts.minRead">min read</span></span>
   </div>

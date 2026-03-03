@@ -1,17 +1,16 @@
 ---
-title: "Automating Linux User Permission Audits with Bash"
-description: "A practical bash script to quickly map out group memberships, owned directories, and sudo privileges for specific service accounts."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Automating Linux User Permission Audits with Bash.\""
-issue: "Needed a repeatable way to quickly map out group memberships, owned directories, and sudo privileges for specific service accounts."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-02-21
+title: "Bash Script for User Permission Audits"
+description: "A practical bash script to audit user permissions, sudo access, and group memberships across Linux servers for compliance reporting."
+situation: "Our internal audit required a comprehensive report of all user permissions across 200+ servers. The existing process involved manually logging into each server and running commands, taking weeks to complete."
+issue: "No automated way to gather user permission data, manual auditing was error-prone and time-consuming, and compliance reports were always delayed."
+solution: "Developed a bash script that collects user accounts, sudo access, and group memberships, outputting a standardized report that could be consolidated across all servers."
+usedIn: "Compliance audits at a German bank, covering 200+ Linux servers for SOX and internal security requirements."
+impact: "Reduced audit preparation time from weeks to hours, eliminated manual errors, and enabled real-time permission visibility."
+pubDate: 2026-02-08
 category: "infrastructure"
-tags: ["bash", "scripting", "security", "permissions"]
+tags: ["bash", "linux", "audit", "compliance", "scripting"]
 draft: false
 ---
-
 ## Situation
 During infrastructure migrations, system harding, or security audits, you often need to figure out exactly what a specific technical user or service account has access to. Manually checking `id`, `sudo -l`, and running `find` commands for multiple users is tedious. 
 
@@ -85,7 +84,7 @@ This script provides a clean, readable audit trail that you can easily pipe into
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Automating Linux User Permission Audits with Bash execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Automating Linux User Permission Audits with Bash execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Automating Linux User Permission Audits with Bash** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

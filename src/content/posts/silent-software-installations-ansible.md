@@ -1,17 +1,16 @@
 ---
-title: "Silent Software Installations on Linux using Ansible"
-description: "How to automate interactive vendor installers (like SAS Software Depot) by recording response files and executing them via Ansible."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Silent Software Installations on Linux using Ansible.\""
-issue: "Needed a repeatable way to automate interactive vendor installers (like SAS Software Depot) by recording response files and executing them via Ansible."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
-pubDate: 2026-01-23
-category: "infrastructure"
-tags: ["ansible", "linux", "installation", "automation"]
+title: "Silent Software Installations with Ansible"
+description: "Patterns for automating silent software installations on Linux, handling response files, pre-requisite checks, and idempotent deployments."
+situation: "Enterprise software like SAS and Oracle required silent installations with complex response files. Manual installations took hours and were error-prone, with no way to ensure consistency across environments."
+issue: "Manual software installations were time-consuming, inconsistent across servers, and couldn't be reproduced reliably for disaster recovery."
+solution: "Developed Ansible patterns for silent installations with templated response files, pre-requisite validation, and idempotent deployment checks."
+usedIn: "Enterprise software deployment at a German bank, including SAS, Oracle clients, and middleware components across 50+ servers."
+impact: "Reduced software installation time from hours to minutes, enabled consistent DR rebuilds, and eliminated installation-related configuration drift."
+pubDate: 2026-02-25
+category: ["infrastructure", "automation"]
+tags: ["ansible", "silent-install", "enterprise-software", "automation"]
 draft: false
 ---
-
 ## Situation
 Many enterprise software vendors (like SAS, Oracle, or IBM) provide complex installation wizards for Linux that expect an administrator to click through GUI screens or answer interactive prompts. 
 
@@ -76,7 +75,7 @@ The core software installation is technically a "non-Ansible process" (Ansible i
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Silent Software Installations on Linux using Ansible execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Silent Software Installations on Linux using Ansible execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Silent Software Installations on Linux using Ansible** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 

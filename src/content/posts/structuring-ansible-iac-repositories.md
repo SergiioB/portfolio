@@ -1,17 +1,16 @@
 ---
 title: "Infrastructure as Code: Structuring Ansible Repositories"
 description: "Best practices for organizing your Ansible inventory, group_vars, and host_vars to cleanly separate development and production environments."
-situation: "During enterprise Linux and virtualization operations across multi-team environments, this case came from work related to \"Infrastructure as Code: Structuring Ansible Repositories.\""
-issue: "Needed a repeatable way to apply best practices for organizing your Ansible inventory, group_vars, and host_vars to cleanly separate development and production environments."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
-usedIn: "Used in Linux platform engineering, middleware operations, and datacenter modernization projects in regulated environments."
-impact: "Improved repeatability, reduced incident risk, and made operational handoffs clearer across teams."
+situation: "Our Ansible repository had grown to 200+ playbooks with inconsistent variable naming, making it unclear which variables applied to which environments. A developer accidentally ran a production playbook against dev hosts."
+issue: "No clear separation between dev and prod environments, inconsistent variable hierarchy, and accidental cross-environment changes were becoming common."
+solution: "Implemented a standardized repository structure with separate inventory directories, clear group_vars/host_vars hierarchy, and environment-specific variable overrides."
+usedIn: "Enterprise Linux platform at a German bank, supporting 200+ servers across dev, test, and prod environments."
+impact: "Eliminated cross-environment accidents, reduced onboarding time for new engineers, and made variable debugging straightforward."
 pubDate: 2026-01-20
-category: "infrastructure"
+category: ["infrastructure", "automation"]
 tags: ["ansible", "iac", "devops", "architecture"]
 draft: false
 ---
-
 ## Situation
 As your Ansible automation scales from a few scripts to manage hundreds of servers, a flat repository structure quickly becomes unmanageable. Hardcoded variables leak between environments, and it becomes difficult to determine exactly what configuration applies to a specific server.
 
@@ -74,7 +73,7 @@ This architecture reduces human error, makes the repository easier to navigate, 
 <!-- portfolio:expanded-v2 -->
 
 ## Architecture Diagram
-![Infrastructure as Code: Structuring Ansible Repositories execution diagram](/portfolio/images/diagrams/post-framework/infrastructure-flow.svg)
+![Infrastructure as Code: Structuring Ansible Repositories execution diagram](/images/diagrams/post-framework/infrastructure-flow.svg)
 
 This diagram supports **Infrastructure as Code: Structuring Ansible Repositories** and highlights where controls, validation, and ownership boundaries sit in the workflow.
 
