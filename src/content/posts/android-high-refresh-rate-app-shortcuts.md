@@ -1,18 +1,24 @@
 ---
 title: "Modernizing Android UX: High Refresh Rates & App Shortcuts"
 description: "How to request 90Hz/120Hz rendering and implement static deep-linked app shortcuts to improve mobile application usability."
-situation: "An Android application felt sluggish on modern flagship devices and lacked quick-access entry points for power users."
+situation: "IntelliFlow felt sluggish on modern flagship devices and lacked quick-access entry points for power users."
 issue: "The app was locked to standard 60Hz rendering, causing sub-optimal scrolling experiences on devices capable of 90Hz or 120Hz. Additionally, users had to navigate through multiple screens to perform frequent actions."
 solution: "Detected 90Hz+ display modes and configured window post-processing preferences for smoother rendering, then implemented static XML-based app shortcuts routed via deep links."
-usedIn: "Used to modernize an Android mobile application built with Jetpack Compose."
-impact: "Significantly improved perceived performance and fluidity, while reducing friction for core user journeys."
+usedIn: "Used in IntelliFlow—an Android personal finance app built with Jetpack Compose."
+impact: "Significantly improved perceived performance and fluidity, while reducing friction for core user journeys like adding transactions."
 pubDate: 2026-02-26
-category: "kotlin"
-tags: ["android", "ux", "performance", "kotlin"]
+updatedDate: 2026-03-03
+category: ["kotlin", "ai"]
+tags: ["android", "ux", "performance", "kotlin", "intelliflow"]
 draft: false
 ---
 
 ## Situation
+
+This UX modernization was implemented in **IntelliFlow**. For the complete app architecture and security details, see:
+
+**→ [IntelliFlow: Building a Production-Ready Finance App with AI](/posts/intelliflow-production-finance-app-ai)**
+
 As mobile hardware advances, user expectations for fluidity and accessibility increase. An Android application was functioning correctly but felt distinctly "last generation."
 
 Two main issues were identified:

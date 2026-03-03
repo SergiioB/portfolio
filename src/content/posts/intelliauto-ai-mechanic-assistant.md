@@ -7,8 +7,8 @@ solution: "Designed IntelliAuto with AutoMind AI assistant featuring backend pro
 usedIn: "Android automotive maintenance application with AI diagnostics, currently in production deployment."
 impact: "Enables intelligent car care guidance with secure monetization through affiliate commerce while maintaining user trust through privacy-first AI design and injection attack prevention."
 pubDate: 2026-03-03
-category: "local-ai"
-tags: ["android", "ai", "kotlin", "mobile", "security"]
+category: ["kotlin", "ai"]
+tags: ["android", "ai", "kotlin", "mobile", "security", "llm"]
 draft: false
 ---
 
