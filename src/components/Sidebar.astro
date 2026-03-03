@@ -11,7 +11,7 @@ const publishedPosts = posts.filter((post) => !post.data.draft);
 const categoryCounts = CATEGORY_ORDER.map((category) => ({
   slug: category,
   label: CATEGORY_META[category].label,
-  count: publishedPosts.filter((post) => post.data.category === category).length,
+  count: publishedPosts.filter((post) => post.data.category.includes(category)).length,
 }));
 
 const years = [...new Set(publishedPosts.map((post) => post.data.pubDate.getFullYear()))].sort((a, b) => b - a);
