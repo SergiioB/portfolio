@@ -28,6 +28,7 @@ const categoryCounts = CATEGORY_ORDER.map((category) => ({
 const activeCategories = categoryCounts.filter((category) => category.count > 0);
 const latestDate = publishedPosts[0]?.data.pubDate;
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
+const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
 ---
 
 <BaseLayout title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`} description={SITE.description}>
@@ -49,6 +50,8 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
       {PUBLIC_CV.enabled && (
         <a
           href={publicCvHref}
+          data-href-en={publicCvHref}
+          data-href-es={publicCvHrefEs}
           class="action-link"
           target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
           rel={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
@@ -120,6 +123,8 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
             <li>
               <a
                 href={publicCvHref}
+                data-href-en={publicCvHref}
+                data-href-es={publicCvHrefEs}
                 target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
                 rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
                 data-i18n="about.cvLabel"

@@ -92,10 +92,20 @@
     document.documentElement.lang = currentLang;
   };
 
+
+  /** Swap localized links (`data-href-en` / `data-href-es`) to current language. */
+  const applyLocalizedHrefs = () => {
+    document.querySelectorAll('[data-href-en][data-href-es]').forEach((el) => {
+      const newHref = currentLang === 'es' ? el.getAttribute('data-href-es') : el.getAttribute('data-href-en');
+      if (newHref) el.setAttribute('href', newHref);
+    });
+  };
+
   const setLang = (lang) => {
     currentLang = lang === 'es' ? 'es' : 'en';
     try { window.localStorage.setItem(LANG_KEY, currentLang); } catch { }
     applyI18nDom();
+    applyLocalizedHrefs();
     buildCommands();
     renderCommands('');
     const audience = document.body.classList.contains('audience-engineer') ? 'engineer' : 'recruiter';
@@ -109,12 +119,7 @@
       if (h1) h1.setAttribute('data-text', T('hero.typewriter') + '_');
     }
 
-    /* Swap CV link to language-specific version */
-    const cvLink = document.getElementById('cv-action-link');
-    if (cvLink) {
-      const newHref = cvLink.getAttribute(`data-href-${currentLang}`);
-      if (newHref) cvLink.setAttribute('href', newHref);
-    }
+    applyLocalizedHrefs();
 
     window.dispatchEvent(new CustomEvent('portfolio-lang-change', { detail: { lang: currentLang } }));
   };
@@ -1059,6 +1064,7 @@
     /* 8. Language switcher + apply i18n DOM text */
     initLangSwitcher();
     applyI18nDom();
+    applyLocalizedHrefs();
 
     /* 9. Console Easter egg */
     printConsoleEgg();
