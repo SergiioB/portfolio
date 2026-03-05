@@ -1,0 +1,40 @@
+---
+import { withBase } from '../utils/paths';
+
+const cvEn = withBase('docs/cv-sergio-barrientos.html');
+const cvEs = withBase('docs/cv-sergio-barrientos-es.html');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Redirecting CV...</title>
+    <meta http-equiv="refresh" content={`0;url=${cvEn}`} />
+    <script is:inline define:vars={{ cvEn, cvEs }}>
+      (function () {
+        var lang = 'en';
+        try {
+          lang = window.localStorage.getItem('portfolio.lang') === 'es' ? 'es' : 'en';
+        } catch (_) {}
+
+        if (lang !== 'es') {
+          var docLang = document.documentElement.lang || '';
+          var navLang = (navigator.language || '').toLowerCase();
+          if (docLang === 'es' || navLang.startsWith('es')) lang = 'es';
+        }
+
+        window.location.replace(lang === 'es' ? cvEs : cvEn);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to CV...</p>
+    <p>
+      <a href={cvEn}>Open English CV</a>
+      |
+      <a href={cvEs}>Abrir CV en Espanol</a>
+    </p>
+  </body>
+</html>
