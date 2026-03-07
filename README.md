@@ -16,6 +16,10 @@ npm install
 npm run dev       # local dev server
 npm run build     # production build
 npm run preview   # preview the build
+npm run lint      # run ESLint
+npm run lint:fix  # fix linting issues
+npm run format    # format code with Prettier
+npm run format:check  # check code formatting
 ```
 
 ## Adding Content

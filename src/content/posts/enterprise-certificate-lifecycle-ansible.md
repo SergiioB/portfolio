@@ -15,6 +15,7 @@ draft: false
 ## Situation
 
 Certificate management in enterprise environments is notoriously difficult. You have:
+
 - Multiple environments (dev, test, prod) with different CAs
 - Different certificate types (single domain, wildcard, multi-SAN)
 - Various deployment targets (Apache, Nginx, load balancers, databases)
@@ -22,6 +23,7 @@ Certificate management in enterprise environments is notoriously difficult. You 
 - Complex renewal workflows across teams
 
 When I took over certificate management, the situation was critical:
+
 - **No tracking system**: Certificates tracked in shared spreadsheets
 - **Manual deployment**: SCP transfers, manual service restarts
 - **Security violations**: Private keys stored unencrypted on shared drives
@@ -78,6 +80,7 @@ openssl req -new -newkey rsa:2048 -nodes \
 ```
 
 **Critical components**:
+
 - **2048-bit RSA key**: Industry standard (3072-bit for high-security)
 - **Nodes flag**: Creates unencrypted private key (protected by file permissions and Vault)
 - **Proper subject structure**: Country, State, Organization, OU, CN
@@ -101,6 +104,7 @@ DNS:api.domain.local"
 ```
 
 **Benefits**:
+
 - Single certificate for multiple services
 - Reduced management overhead
 - Consistent expiration dates across services
@@ -108,6 +112,7 @@ DNS:api.domain.local"
 ### Submit CSR to Certificate Authority
 
 Send the `.csr` file to your CA team (or submit via PKI portal). They will return:
+
 1. `<hostname>.cer` or `<hostname>.crt` - The signed server certificate
 2. `ca-chain.crt` or `certificatetrustchain.crt` - The CA intermediate/root chain
 
@@ -118,6 +123,7 @@ Send the `.csr` file to your CA team (or submit via PKI portal). They will retur
 ### Why Vault Encryption is Mandatory
 
 **Never commit unencrypted private keys to Git**, even in private repositories:
+
 - Compliance violations (PCI-DSS, SOC2, ISO 27001)
 - Insider threat exposure
 - Accidental repository exposure
@@ -142,12 +148,14 @@ cat files/<hostname>/tls_cert_<hostname>.key
 ### Vault Password Management
 
 **Best practices**:
+
 - Store vault password in secure location (not in Git)
 - Use different vault passwords per environment (dev/test/prod)
 - Rotate vault passwords annually
 - Limit access to vault password file (chmod 600)
 
 **Directory structure**:
+
 ```
 ~/.secrets/ansible-vault/
 ├── dev-password
@@ -196,7 +204,7 @@ roles/
     dest: "/etc/pki/tls/private/{{ inventory_hostname }}.key"
     owner: root
     group: root
-    mode: "0600"  # CRITICAL: Restrictive permissions
+    mode: "0600" # CRITICAL: Restrictive permissions
   notify: Restart affected services
   when: certificate_deploy | default(true)
 
@@ -285,30 +293,30 @@ certificate_services:
 <VirtualHost *:443>
     ServerName webserver01.domain.local
     ServerAlias webserver01
-    
+
     # SSL Configuration
     SSLEngine on
     SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
     SSLHonorCipherOrder on
     SSLCompression off
-    
+
     # Certificate files
     SSLCertificateFile /etc/pki/tls/certs/webserver01.crt
     SSLCertificateKeyFile /etc/pki/tls/private/webserver01.key
     SSLCertificateChainFile /etc/pki/tls/certs/ca-chain.crt
-    
+
     # HSTS (HTTP Strict Transport Security)
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    
+
     # Logging
     ErrorLog logs/webserver01-ssl_error_log
     TransferLog logs/webserver01-ssl_access_log
     CustomLog logs/webserver01-ssl_access_log combined
-    
+
     # Application-specific configuration
     DocumentRoot /var/www/html
-    
+
     <Directory /var/www/html>
         Options -Indexes +IncludesNOEXEC -SymLinksIfOwnerMatch
         AllowOverride None
@@ -359,7 +367,7 @@ for cert in "$CERT_DIR"/*.crt; do
         expiry_epoch=$(date -d "$expiry_date" +%s)
         current_epoch=$(date +%s)
         days_left=$(( ($expiry_epoch - $current_epoch) / 86400 ))
-        
+
         if [ $days_left -lt $DAYS_THRESHOLD ]; then
             echo "WARNING: Certificate $cert expires in $days_left days ($expiry_date)"
             # Send to monitoring system (Nagios, Prometheus, etc.)
@@ -377,14 +385,14 @@ done
 
 ### Renewal Timeline
 
-| Days Before Expiration | Action |
-|------------------------|---------|
-| 90 | Monitoring alert sent to certificate owner |
-| 60 | Generate new CSR (same process as initial) |
-| 45 | Submit CSR to CA, receive new certificate |
-| 30 | Deploy new certificate via Ansible (zero-downtime) |
-| 7 | Force renewal if not completed, escalate to management |
-| 0 | **OUTAGE** (should never happen with this process) |
+| Days Before Expiration | Action                                                 |
+| ---------------------- | ------------------------------------------------------ |
+| 90                     | Monitoring alert sent to certificate owner             |
+| 60                     | Generate new CSR (same process as initial)             |
+| 45                     | Submit CSR to CA, receive new certificate              |
+| 30                     | Deploy new certificate via Ansible (zero-downtime)     |
+| 7                      | Force renewal if not completed, escalate to management |
+| 0                      | **OUTAGE** (should never happen with this process)     |
 
 ### Zero-Downtime Renewal
 
@@ -445,12 +453,14 @@ ansible-vault encrypt <hostname>-fullchain.crt
 **Symptom**: Browsers show "certificate not trusted" or "incomplete chain" errors
 
 **Diagnosis**:
+
 ```bash
 openssl s_client -connect hostname:443 -servername hostname < /dev/null 2>/dev/null | openssl x509 -noout -issuer
 # Compare issuer with expected CA
 ```
 
 **Solution**: Ensure CA chain is properly concatenated:
+
 ```bash
 cat hostname.cer intermediates.cer root.cer > hostname-fullchain.crt
 ```
@@ -468,8 +478,9 @@ cat hostname.cer intermediates.cer root.cer > hostname-fullchain.crt
 **Symptom**: SSH or service refuses to start, logs show "Permissions 0644 are too open"
 
 **Solution**:
+
 ```yaml
-mode: "0600"  # Only root can read
+mode: "0600" # Only root can read
 owner: root
 group: root
 ```
@@ -479,6 +490,7 @@ group: root
 **Symptom**: Service fails to start, error "key values mismatch"
 
 **Diagnosis**:
+
 ```bash
 # Check if certificate and key match
 diff <(openssl x509 -noout -modulus -in cert.crt | openssl md5) \
@@ -495,6 +507,7 @@ diff <(openssl x509 -noout -modulus -in cert.crt | openssl md5) \
 **Root Cause**: Manual file selection error
 
 **Solution**: Automation uses `inventory_hostname` to select correct files:
+
 ```yaml
 src: "files/{{ inventory_hostname }}/tls_cert_{{ inventory_hostname }}.key"
 ```
@@ -568,23 +581,23 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
 
 ### Before Automation
 
-| Metric | Value |
-|--------|-------|
-| Certificate-related outages per year | 3-4 |
-| Manual effort per deployment | 2-3 hours |
-| Certificate configurations | Inconsistent across servers |
-| Expiration tracking | Reactive (spreadsheet-based) |
-| Compliance status | Failed audits (plaintext keys) |
+| Metric                               | Value                          |
+| ------------------------------------ | ------------------------------ |
+| Certificate-related outages per year | 3-4                            |
+| Manual effort per deployment         | 2-3 hours                      |
+| Certificate configurations           | Inconsistent across servers    |
+| Expiration tracking                  | Reactive (spreadsheet-based)   |
+| Compliance status                    | Failed audits (plaintext keys) |
 
 ### After Automation
 
-| Metric | Value | Improvement |
-|--------|-------|-------------|
-| Certificate-related outages | 0 | 100% elimination |
-| Deployment time | 5-10 minutes | 93% reduction |
-| Configurations | Standardized | Consistent SANs, key sizes |
-| Expiration tracking | Proactive (90-day alerts) | Zero surprise expirations |
-| Compliance status | Passed audits | Vault encryption, audit trail |
+| Metric                      | Value                     | Improvement                   |
+| --------------------------- | ------------------------- | ----------------------------- |
+| Certificate-related outages | 0                         | 100% elimination              |
+| Deployment time             | 5-10 minutes              | 93% reduction                 |
+| Configurations              | Standardized              | Consistent SANs, key sizes    |
+| Expiration tracking         | Proactive (90-day alerts) | Zero surprise expirations     |
+| Compliance status           | Passed audits             | Vault encryption, audit trail |
 
 ### Operational Metrics
 
@@ -602,12 +615,12 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
 <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
   <rect width="800" height="600" fill="#f8fafc"/>
-  
+
   <!-- Title -->
   <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="20" font-weight="bold" fill="#1e293b">
     Enterprise Certificate Lifecycle Management
   </text>
-  
+
   <!-- Phase 1: Generate -->
   <g transform="translate(50, 80)">
     <rect x="0" y="0" width="180" height="100" rx="8" fill="#3b82f6" opacity="0.1" stroke="#3b82f6" stroke-width="2"/>
@@ -616,10 +629,10 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
     <text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">2048-bit RSA key</text>
     <text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">SAN entries included</text>
   </g>
-  
+
   <!-- Arrow 1 -->
   <path d="M 240 130 L 280 130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-  
+
   <!-- Phase 2: Encrypt -->
   <g transform="translate(290, 80)">
     <rect x="0" y="0" width="180" height="100" rx="8" fill="#8b5cf6" opacity="0.1" stroke="#8b5cf6" stroke-width="2"/>
@@ -628,10 +641,10 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
     <text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">AES-256 encryption</text>
     <text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Git-safe storage</text>
   </g>
-  
+
   <!-- Arrow 2 -->
   <path d="M 480 130 L 520 130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-  
+
   <!-- Phase 3: Deploy -->
   <g transform="translate(530, 80)">
     <rect x="0" y="0" width="180" height="100" rx="8" fill="#10b981" opacity="0.1" stroke="#10b981" stroke-width="2"/>
@@ -640,10 +653,10 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
     <text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Apache/Nginx</text>
     <text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">0600 permissions</text>
   </g>
-  
+
   <!-- Arrow down -->
   <path d="M 620 190 L 620 250" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-  
+
   <!-- Phase 4: Monitor -->
   <g transform="translate(530, 260)">
     <rect x="0" y="0" width="180" height="100" rx="8" fill="#f59e0b" opacity="0.1" stroke="#f59e0b" stroke-width="2"/>
@@ -652,47 +665,47 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
     <text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Daily checks</text>
     <text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Expiration tracking</text>
   </g>
-  
+
   <!-- Arrow loop back -->
   <path d="M 520 310 L 100 310 L 100 190" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
   <text x="310" y="305" text-anchor="middle" font-family="Arial" font-size="11" fill="#64748b" font-style="italic">Renewal loop (60 days before expiry)</text>
-  
+
   <!-- Security Layer -->
   <g transform="translate(50, 400)">
     <rect x="0" y="0" width="700" height="140" rx="8" fill="#ef4444" opacity="0.05" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5"/>
     <text x="350" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#dc2626">Security & Compliance Layer</text>
-    
+
     <g transform="translate(30, 40)">
       <circle cx="10" cy="10" r="5" fill="#dc2626"/>
       <text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Vault encryption for all private keys</text>
     </g>
-    
+
     <g transform="translate(30, 65)">
       <circle cx="10" cy="10" r="5" fill="#dc2626"/>
       <text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">0600 file permissions enforced</text>
     </g>
-    
+
     <g transform="translate(30, 90)">
       <circle cx="10" cy="10" r="5" fill="#dc2626"/>
       <text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Separate vaults per environment</text>
     </g>
-    
+
     <g transform="translate(380, 40)">
       <circle cx="10" cy="10" r="5" fill="#dc2626"/>
       <text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Audit trail via Git commits</text>
     </g>
-    
+
     <g transform="translate(380, 65)">
       <circle cx="10" cy="10" r="5" fill="#dc2626"/>
       <text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Annual key rotation policy</text>
     </g>
-    
+
     <g transform="translate(380, 90)">
       <circle cx="10" cy="10" r="5" fill="#dc2626"/>
       <text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">PCI-DSS, SOC2 compliant</text>
     </g>
   </g>
-  
+
   <!-- Arrow marker definition -->
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -706,24 +719,24 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
 
 ## Validation Matrix
 
-| Validation Goal | What to Baseline | Success Criteria |
-|-----------------|------------------|------------------|
+| Validation Goal      | What to Baseline                                 | Success Criteria                                            |
+| -------------------- | ------------------------------------------------ | ----------------------------------------------------------- |
 | Certificate Validity | Expiration date, chain completeness, SAN entries | `openssl verify` returns OK, browser shows valid connection |
-| Service Availability | HTTPS endpoint responds, no SSL errors | `curl -vI https://hostname` returns 200 with valid cert |
-| Security Compliance | Key permissions, vault encryption, no plaintext | `ls -l` shows 0600, all keys encrypted with Vault |
-| Renewal Readiness | Monitoring alerts, renewal procedure tested | Alert received 90 days before expiration, renewal tested |
+| Service Availability | HTTPS endpoint responds, no SSL errors           | `curl -vI https://hostname` returns 200 with valid cert     |
+| Security Compliance  | Key permissions, vault encryption, no plaintext  | `ls -l` shows 0600, all keys encrypted with Vault           |
+| Renewal Readiness    | Monitoring alerts, renewal procedure tested      | Alert received 90 days before expiration, renewal tested    |
 
 ---
 
 ## Failure Modes and Mitigations
 
-| Failure Mode | Why It Appears | Mitigation |
-|--------------|----------------|------------|
-| Missing SAN entries | CSR generated without `-addext` flag | Template includes all required SANs by default |
-| Expired certificate | Renewal not started early enough | Monitoring alerts 90 days before expiration |
-| Wrong certificate deployed | Manual file selection error | Automation uses `inventory_hostname` to select files |
-| Private key exposed | Insecure permissions or unencrypted storage | Vault encryption, 0600 permissions enforced |
-| Chain incomplete | CA chain not concatenated properly | Automated deployment includes full chain |
+| Failure Mode               | Why It Appears                              | Mitigation                                           |
+| -------------------------- | ------------------------------------------- | ---------------------------------------------------- |
+| Missing SAN entries        | CSR generated without `-addext` flag        | Template includes all required SANs by default       |
+| Expired certificate        | Renewal not started early enough            | Monitoring alerts 90 days before expiration          |
+| Wrong certificate deployed | Manual file selection error                 | Automation uses `inventory_hostname` to select files |
+| Private key exposed        | Insecure permissions or unencrypted storage | Vault encryption, 0600 permissions enforced          |
+| Chain incomplete           | CA chain not concatenated properly          | Automated deployment includes full chain             |
 
 ---
 
@@ -734,4 +747,3 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
 - **Outcome signal**: Zero outages, standardized configurations, full audit trail
 - **Technical depth**: OpenSSL, PKI, Ansible Vault, Apache SSL, compliance requirements
 - **Business impact**: 93% time reduction, 100% compliance, zero preventable outages
-

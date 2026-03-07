@@ -1,8 +1,8 @@
 ---
-import { withBase } from '../utils/paths';
+import { withBase } from "../utils/paths";
 
-const cvEn = withBase('docs/cv-sergio-barrientos.html');
-const cvEs = withBase('docs/cv-sergio-barrientos-es.html');
+const cvEn = withBase("docs/cv-sergio-barrientos.html");
+const cvEs = withBase("docs/cv-sergio-barrientos-es.html");
 ---
 
 <!doctype html>
@@ -14,18 +14,20 @@ const cvEs = withBase('docs/cv-sergio-barrientos-es.html');
     <meta http-equiv="refresh" content={`0;url=${cvEn}`} />
     <script is:inline define:vars={{ cvEn, cvEs }}>
       (function () {
-        var lang = 'en';
+        let lang = "en";
         try {
-          lang = window.localStorage.getItem('portfolio.lang') === 'es' ? 'es' : 'en';
-        } catch (_) {}
-
-        if (lang !== 'es') {
-          var docLang = document.documentElement.lang || '';
-          var navLang = (navigator.language || '').toLowerCase();
-          if (docLang === 'es' || navLang.startsWith('es')) lang = 'es';
+          lang = window.localStorage.getItem("portfolio.lang") === "es" ? "es" : "en";
+        } catch (_) {
+          /* ignore localStorage errors */
         }
 
-        window.location.replace(lang === 'es' ? cvEs : cvEn);
+        if (lang !== "es") {
+          const docLang = document.documentElement.lang || "";
+          const navLang = (navigator.language || "").toLowerCase();
+          if (docLang === "es" || navLang.startsWith("es")) lang = "es";
+        }
+
+        window.location.replace(lang === "es" ? cvEs : cvEn);
       })();
     </script>
   </head>

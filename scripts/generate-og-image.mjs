@@ -1,5 +1,6 @@
-import fs from 'fs';
-import { chromium } from 'playwright';
+import fs from "fs";
+
+import { chromium } from "playwright";
 
 const html = `
 <!DOCTYPE html>
@@ -122,23 +123,23 @@ const html = `
 `;
 
 (async () => {
-  console.log('Launching browser...');
+  console.log("Launching browser...");
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  
+
   await page.setViewportSize({ width: 1200, height: 630 });
-  
-  console.log('Setting HTML content...');
-  await page.setContent(html, { waitUntil: 'load' });
-  
+
+  console.log("Setting HTML content...");
+  await page.setContent(html, { waitUntil: "load" });
+
   // ensure the directory exists just in case
-  if (!fs.existsSync('public/images')) {
-      fs.mkdirSync('public/images', { recursive: true });
+  if (!fs.existsSync("public/images")) {
+    fs.mkdirSync("public/images", { recursive: true });
   }
 
-  console.log('Taking screenshot...');
-  await page.screenshot({ path: 'public/images/og-preview.png' });
-  
+  console.log("Taking screenshot...");
+  await page.screenshot({ path: "public/images/og-preview.png" });
+
   await browser.close();
-  console.log('Successfully generated public/images/og-preview.png');
+  console.log("Successfully generated public/images/og-preview.png");
 })();

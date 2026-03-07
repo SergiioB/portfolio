@@ -1,18 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
-import PostCard from '../components/PostCard.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { CATEGORY_META, CATEGORY_ORDER } from '../content/categories';
-import { PUBLIC_CV, SITE } from '../config/site';
-import { withBase } from '../utils/paths';
-import { t } from '../config/i18n';
-import CategoryAnimation from '../components/CategoryAnimation.astro';
-import EngineerLab from '../components/EngineerLab.astro';
-import OpsDeck from '../components/OpsDeck.astro';
-import NetworkTopology from '../components/NetworkTopology.astro';
-import AudienceMode from '../components/AudienceMode.astro';
+import { getCollection } from "astro:content";
 
-const posts = await getCollection('posts');
+import AudienceMode from "../components/AudienceMode.astro";
+import CategoryAnimation from "../components/CategoryAnimation.astro";
+import EngineerLab from "../components/EngineerLab.astro";
+import NetworkTopology from "../components/NetworkTopology.astro";
+import OpsDeck from "../components/OpsDeck.astro";
+import PostCard from "../components/PostCard.astro";
+import { PUBLIC_CV, SITE } from "../config/site";
+import { CATEGORY_META, CATEGORY_ORDER } from "../content/categories";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../utils/paths";
+
+const posts = await getCollection("posts");
 const publishedPosts = posts
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -31,43 +31,71 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
 ---
 
-<BaseLayout title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`} description={SITE.description}>
+<BaseLayout
+  title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`}
+  description={SITE.description}
+>
   <section class="hero panel" aria-labelledby="home-hero-title">
     <CategoryAnimation category="ai" />
     <div class="hero-content" style="position: relative; z-index: 10;">
-      <div class="hero-kicker" style="color: var(--accent); font-weight: 600;" data-i18n="hero.kicker">sergio@portfolio:~$ whoami</div>
+      <div
+        class="hero-kicker"
+        style="color: var(--accent); font-weight: 600;"
+        data-i18n="hero.kicker"
+      >
+        sergio@portfolio:~$ whoami
+      </div>
       <h1 id="home-hero-title" class="hero-title glitch" data-text="" style="min-height: 2.3em;">
-        <span id="typewriter"></span><span class="cursor-blink" style="color: var(--accent);">_</span>
+        <span id="typewriter"></span><span class="cursor-blink" style="color: var(--accent);"
+          >_</span
+        >
       </h1>
       <p class="hero-description" data-i18n="hero.description">
-        Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.
+        Practical posts organized as case studies with clear situation, issue, solution, usage
+        context, and impact.
       </p>
 
       <div class="hero-actions">
-      <a href="#recruiter-view" class="action-link" data-i18n="hero.recruiterView">Recruiter View</a>
-      <a href={withBase('about/')} class="action-link action-link-secondary" data-i18n="hero.aboutCv">About + CV</a>
-      <a href={withBase('archive/')} class="action-link action-link-secondary" data-i18n="hero.archive">Archive</a>
-      {PUBLIC_CV.enabled && (
-        <a
-          href={publicCvHref}
-          data-href-en={publicCvHref}
-          data-href-es={publicCvHrefEs}
-          class="action-link"
-          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-          rel={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-          data-i18n="about.cvLabel"
+        <a href="#recruiter-view" class="action-link" data-i18n="hero.recruiterView"
+          >Recruiter View</a
         >
-          {PUBLIC_CV.label}
-        </a>
-      )}
-    </div>
+        <a
+          href={withBase("about/")}
+          class="action-link action-link-secondary"
+          data-i18n="hero.aboutCv">About + CV</a
+        >
+        <a
+          href={withBase("archive/")}
+          class="action-link action-link-secondary"
+          data-i18n="hero.archive">Archive</a
+        >
+        {
+          PUBLIC_CV.enabled && (
+            <a
+              href={publicCvHref}
+              data-href-en={publicCvHref}
+              data-href-es={publicCvHrefEs}
+              class="action-link"
+              target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
+              rel={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
+              data-i18n="about.cvLabel"
+            >
+              {PUBLIC_CV.label}
+            </a>
+          )
+        }
+      </div>
     </div>
 
     <div class="hero-grid">
       <div class="panel panel-soft stat-card">
         <div class="stat-label" data-i18n="hero.currentRole">Current role</div>
-        <div class="stat-value stat-value-sm" data-i18n="hero.roleTitle">Linux & Virtualization Engineer</div>
-        <div class="stat-meta" data-i18n="hero.roleCompany">Deutsche Pfandbriefbank AG · Madrid · Hybrid</div>
+        <div class="stat-value stat-value-sm" data-i18n="hero.roleTitle">
+          Linux & Virtualization Engineer
+        </div>
+        <div class="stat-meta" data-i18n="hero.roleCompany">
+          Deutsche Pfandbriefbank AG · Madrid · Hybrid
+        </div>
       </div>
       <div class="panel panel-soft stat-card">
         <div class="stat-label" data-i18n="hero.publishedPosts">Published posts</div>
@@ -77,9 +105,15 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
       <div class="panel panel-soft stat-card">
         <div class="stat-label" data-i18n="hero.lastUpdate">Last update</div>
         <div class="stat-value stat-value-sm">
-          {latestDate
-            ? latestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : 'No posts yet'}
+          {
+            latestDate
+              ? latestDate.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : "No posts yet"
+          }
         </div>
         <div class="stat-meta" data-i18n="hero.archiveFirst">Archive-first publishing flow</div>
       </div>
@@ -87,78 +121,115 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
   </section>
 
   <!-- Recruiter snapshot first — this is what recruiters care about -->
-  <section id="recruiter-view" class="section-block panel panel-soft section-surface recruiter-focus" aria-labelledby="recruiter-title">
+  <section
+    id="recruiter-view"
+    class="section-block panel panel-soft section-surface recruiter-focus"
+    aria-labelledby="recruiter-title"
+  >
     <div class="section-header-row">
       <h2 id="recruiter-title" data-i18n="recruiter.title">Recruiter Snapshot</h2>
-      <a href={withBase('about/')} class="subtle-link" data-i18n="recruiter.fullProfile">Full profile</a>
+      <a href={withBase("about/")} class="subtle-link" data-i18n="recruiter.fullProfile"
+        >Full profile</a
+      >
     </div>
     <div class="recruiter-badge" data-i18n="recruiter.badge">● Recruiter-ready overview</div>
     <p class="recruiter-summary" data-i18n="recruiter.summary">
-      Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability,
-      and practical enterprise AI implementation.
+      Linux and virtualization engineer with a delivery-first portfolio focused on automation,
+      platform reliability, and practical enterprise AI implementation.
     </p>
     <div class="recruiter-grid">
       <article class="panel panel-soft recruiter-card">
         <h3 data-i18n="recruiter.roleFit">Role fit</h3>
         <ul>
-          <li data-i18n="recruiter.roleFit1">Linux platform administration in enterprise environments</li>
-          <li data-i18n="recruiter.roleFit2">Infrastructure as code with Ansible + Git workflow discipline</li>
-          <li data-i18n="recruiter.roleFit3">Cross-team delivery from design through operational handoff</li>
+          <li data-i18n="recruiter.roleFit1">
+            Linux platform administration in enterprise environments
+          </li>
+          <li data-i18n="recruiter.roleFit2">
+            Infrastructure as code with Ansible + Git workflow discipline
+          </li>
+          <li data-i18n="recruiter.roleFit3">
+            Cross-team delivery from design through operational handoff
+          </li>
         </ul>
       </article>
       <article class="panel panel-soft recruiter-card">
         <h3 data-i18n="recruiter.topOutcomes">Top outcomes</h3>
         <ul>
-          <li data-i18n="recruiter.outcome1">Patch and lifecycle orchestration patterns for safer rollouts</li>
-          <li data-i18n="recruiter.outcome2">RHEL modernization playbooks for controlled migrations</li>
-          <li data-i18n="recruiter.outcome3">Applied AI pilots documented from prototype to operations</li>
+          <li data-i18n="recruiter.outcome1">
+            Patch and lifecycle orchestration patterns for safer rollouts
+          </li>
+          <li data-i18n="recruiter.outcome2">
+            RHEL modernization playbooks for controlled migrations
+          </li>
+          <li data-i18n="recruiter.outcome3">
+            Applied AI pilots documented from prototype to operations
+          </li>
         </ul>
       </article>
       <article class="panel panel-soft recruiter-card">
         <h3 data-i18n="recruiter.quickActions">Quick actions</h3>
         <ul>
-          <li><a href={withBase('about/')} data-i18n="recruiter.openProfile">Open profile and experience summary</a></li>
-          <li><a href={withBase('archive/')} data-i18n="recruiter.reviewStudies">Review all case studies</a></li>
-          {PUBLIC_CV.enabled && (
-            <li>
-              <a
-                href={publicCvHref}
-                data-href-en={publicCvHref}
-                data-href-es={publicCvHrefEs}
-                target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-                rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
-                data-i18n="about.cvLabel"
-              >
-                {PUBLIC_CV.label}
-              </a>
-            </li>
-          )}
+          <li>
+            <a href={withBase("about/")} data-i18n="recruiter.openProfile"
+              >Open profile and experience summary</a>
+          </li>
+          <li>
+            <a href={withBase("archive/")} data-i18n="recruiter.reviewStudies"
+              >Review all case studies</a>
+          </li>
+          {
+            PUBLIC_CV.enabled && (
+              <li>
+                <a
+                  href={publicCvHref}
+                  data-href-en={publicCvHref}
+                  data-href-es={publicCvHrefEs}
+                  target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
+                  rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
+                  data-i18n="about.cvLabel"
+                >
+                  {PUBLIC_CV.label}
+                </a>
+              </li>
+            )
+          }
         </ul>
       </article>
     </div>
     <div class="recruiter-cta-card">
       <p data-i18n="recruiter.ctaText">Ready to review full experience and delivery outcomes?</p>
-      <a href={withBase('about/')} class="action-link" data-i18n="recruiter.ctaButton">Open Profile &amp; CV</a>
+      <a href={withBase("about/")} class="action-link" data-i18n="recruiter.ctaButton"
+        >Open Profile &amp; CV</a
+      >
     </div>
   </section>
 
   <section class="section-block panel panel-soft section-surface" aria-labelledby="focus-title">
     <div class="section-header-row">
       <h2 id="focus-title" data-i18n="focus.title">Delivery Focus</h2>
-      <a href={withBase('about/')} class="subtle-link" data-i18n="focus.profile">Profile</a>
+      <a href={withBase("about/")} class="subtle-link" data-i18n="focus.profile">Profile</a>
     </div>
     <div class="signal-grid">
       <article class="panel panel-soft signal-card">
         <h3 data-i18n="focus.infraTitle">Infrastructure automation at scale</h3>
-        <p data-i18n="focus.infraDesc">Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.</p>
+        <p data-i18n="focus.infraDesc">
+          Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational
+          execution.
+        </p>
       </article>
       <article class="panel panel-soft signal-card">
         <h3 data-i18n="focus.rhelTitle">RHEL modernization</h3>
-        <p data-i18n="focus.rhelDesc">RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.</p>
+        <p data-i18n="focus.rhelDesc">
+          RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and
+          hardening.
+        </p>
       </article>
       <article class="panel panel-soft signal-card">
         <h3 data-i18n="focus.aiTitle">Applied enterprise AI</h3>
-        <p data-i18n="focus.aiDesc">Azure AI Foundry and document intelligence pilots translated into operationally viable workloads.</p>
+        <p data-i18n="focus.aiDesc">
+          Azure AI Foundry and document intelligence pilots translated into operationally viable
+          workloads.
+        </p>
       </article>
     </div>
   </section>
@@ -171,11 +242,16 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
       <h2 data-i18n="engineer.labsTitle">Engineer Labs</h2>
     </div>
     <p data-i18n="engineer.teaserText">
-      Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry,
-      command simulation, and network topology labs.
+      Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open
+      live Linux telemetry, command simulation, and network topology labs.
     </p>
     <div class="engineer-teaser-cta">
-      <button type="button" class="action-link engineer-switch-btn" data-set-audience="engineer" data-i18n="engineer.switchButton">Switch to Engineer Mode</button>
+      <button
+        type="button"
+        class="action-link engineer-switch-btn"
+        data-set-audience="engineer"
+        data-i18n="engineer.switchButton">Switch to Engineer Mode</button
+      >
     </div>
   </section>
 
@@ -190,34 +266,52 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
   <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
     <div class="section-header-row">
       <h2 id="domains-title" data-i18n="domains.title">Domains</h2>
-      <a href={withBase('archive/')} class="subtle-link" data-i18n="domains.browseAll">Browse all</a>
+      <a href={withBase("archive/")} class="subtle-link" data-i18n="domains.browseAll">Browse all</a
+      >
     </div>
     <div class="category-grid">
-      {categoryCounts.map((category) => (
-        <a href={withBase(`${category.slug}/`)} class={`category-tile panel panel-soft category-${category.slug}`}>
-          <div class="category-tile-top">
-            <span class={`category-badge ${category.slug}`} data-i18n={`cat.${category.slug}`}>{category.label}</span>
-            <span class="category-tile-count">{category.count}</span>
-          </div>
-          <p data-i18n={`cat.${category.slug}.desc`}>{category.description}</p>
-        </a>
-      ))}
+      {
+        categoryCounts.map((category) => (
+          <a
+            href={withBase(`${category.slug}/`)}
+            class={`category-tile panel panel-soft category-${category.slug}`}
+          >
+            <div class="category-tile-top">
+              <span class={`category-badge ${category.slug}`} data-i18n={`cat.${category.slug}`}>
+                {category.label}
+              </span>
+              <span class="category-tile-count">{category.count}</span>
+            </div>
+            <p data-i18n={`cat.${category.slug}.desc`}>{category.description}</p>
+          </a>
+        ))
+      }
     </div>
-    <p class="post-count"><span>{activeCategories.length}</span> <span data-i18n="domains.activeDomains">active domains with published case studies.</span></p>
+    <p class="post-count">
+      <span>{activeCategories.length}</span>
+      <span data-i18n="domains.activeDomains">active domains with published case studies.</span>
+    </p>
   </section>
 
-  <section class="section-block panel panel-soft section-surface" aria-labelledby="latest-posts-title">
+  <section
+    class="section-block panel panel-soft section-surface"
+    aria-labelledby="latest-posts-title"
+  >
     <div class="section-header-row">
       <h2 id="latest-posts-title" data-i18n="posts.recent">Recent Case Studies</h2>
-      <a href={withBase('archive/')} class="subtle-link" data-i18n="posts.allPosts">All posts</a>
+      <a href={withBase("archive/")} class="subtle-link" data-i18n="posts.allPosts">All posts</a>
     </div>
 
     <div class="post-feed" aria-label="Latest posts">
-      {latestPosts.map((post) => (
-        <PostCard post={post} />
-      ))}
+      {latestPosts.map((post) => <PostCard post={post} />)}
 
-      {publishedPosts.length === 0 && <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">No posts published yet.</p>}
+      {
+        publishedPosts.length === 0 && (
+          <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">
+            No posts published yet.
+          </p>
+        )
+      }
     </div>
   </section>
 </BaseLayout>

@@ -1,16 +1,22 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { PUBLIC_CV, PUBLIC_COVER_LETTER, SITE } from '../config/site';
-import { withBase } from '../utils/paths';
-import { t } from '../config/i18n';
+import { PUBLIC_CV, PUBLIC_COVER_LETTER, SITE } from "../config/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../utils/paths";
 
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
-const coverHref = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.href : withBase(PUBLIC_COVER_LETTER.href);
-const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : withBase(PUBLIC_COVER_LETTER.hrefEs);
+const _coverHref = PUBLIC_COVER_LETTER.external
+  ? PUBLIC_COVER_LETTER.href
+  : withBase(PUBLIC_COVER_LETTER.href);
+const _coverHrefEs = PUBLIC_COVER_LETTER.external
+  ? PUBLIC_COVER_LETTER.hrefEs
+  : withBase(PUBLIC_COVER_LETTER.hrefEs);
 ---
 
-<BaseLayout title={`About | ${SITE.author}`} description="Professional profile, impact statements, and CV summary.">
+<BaseLayout
+  title={`About | ${SITE.author}`}
+  description="Professional profile, impact statements, and CV summary."
+>
   <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
     <span>/</span>
@@ -19,10 +25,12 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
 
   <header class="page-header page-header-tight">
     <p class="eyebrow" data-i18n="about.eyebrow">Profile</p>
-    <h1 data-i18n="about.headline">Linux & Virtualization Engineer with automation-first execution.</h1>
+    <h1 data-i18n="about.headline">
+      Linux & Virtualization Engineer with automation-first execution.
+    </h1>
     <p class="page-description" data-i18n="about.intro">
-      I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge
-      infrastructure operations with practical Generative AI implementations.
+      I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git,
+      and bridge infrastructure operations with practical Generative AI implementations.
     </p>
   </header>
 
@@ -31,15 +39,24 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
     <div class="signal-grid">
       <article class="panel panel-soft signal-card">
         <h3 data-i18n="about.infraTitle">Infrastructure lifecycle ownership</h3>
-        <p data-i18n="about.infraDesc">RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.</p>
+        <p data-i18n="about.infraDesc">
+          RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR
+          readiness.
+        </p>
       </article>
       <article class="panel panel-soft signal-card">
         <h3 data-i18n="about.autoTitle">Automation discipline</h3>
-        <p data-i18n="about.autoDesc">Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.</p>
+        <p data-i18n="about.autoDesc">
+          Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and
+          auditable operations.
+        </p>
       </article>
       <article class="panel panel-soft signal-card">
         <h3 data-i18n="about.aiTitle">AI integration for business cases</h3>
-        <p data-i18n="about.aiDesc">Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.</p>
+        <p data-i18n="about.aiDesc">
+          Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model
+          fine-tuning workflows.
+        </p>
       </article>
     </div>
   </section>
@@ -50,53 +67,118 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3 data-i18n="exp.pbb.title">Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG</h3>
-            <p class="timeline-subtitle" data-i18n="exp.pbb.subtitle">Full-time · Hybrid · Madrid, Comunidad de Madrid, España</p>
+            <h3 data-i18n="exp.pbb.title">
+              Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG
+            </h3>
+            <p class="timeline-subtitle" data-i18n="exp.pbb.subtitle">
+              Full-time · Hybrid · Madrid, Comunidad de Madrid, España
+            </p>
           </div>
           <p class="timeline-period" data-i18n="exp.pbb.period">Jul 2025 - Present</p>
         </div>
         <ul>
-          <li data-i18n="exp.pbb.0">Part of the Linux infrastructure team responsible for 300+ RHEL production servers across multiple datacenters under BaFin/ECB regulatory oversight.</li>
-          <li data-i18n="exp.pbb.1">Designed Ansible + Git automation pipelines for server provisioning, configuration drift remediation, and lifecycle operations.</li>
-          <li data-i18n="exp.pbb.2">Leading phased RHEL 7/8 to RHEL 9 migration across 300+ servers with Satellite-based provisioning and compliance enforcement.</li>
-          <li data-i18n="exp.pbb.3">Deploying and maintaining application stacks across Nginx, Apache, Tomcat, JBoss/WildFly, and PostgreSQL — SSL/TLS hardening, reverse proxy tuning, and production optimization for banking-critical workloads.</li>
-          <li data-i18n="exp.pbb.4">Owning end-to-end patching and hardening cycles for 300+ servers aligned to financial-sector security requirements.</li>
-          <li data-i18n="exp.pbb.5">Operating Pacemaker-based HA clusters and executing disaster-recovery drills across distributed datacenters.</li>
-          <li data-i18n="exp.pbb.6">Administering VMware vSphere environments for VM provisioning, capacity planning, and platform lifecycle maintenance.</li>
-          <li data-i18n="exp.pbb.7">Delivering AI use cases with Azure AI Foundry — document intelligence pipelines and model fine-tuning for process automation.</li>
-          <li data-i18n="exp.pbb.8">Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.</li>
+          <li data-i18n="exp.pbb.0">
+            Part of the Linux infrastructure team responsible for 300+ RHEL production servers
+            across multiple datacenters under BaFin/ECB regulatory oversight.
+          </li>
+          <li data-i18n="exp.pbb.1">
+            Designed Ansible + Git automation pipelines for server provisioning, configuration drift
+            remediation, and lifecycle operations.
+          </li>
+          <li data-i18n="exp.pbb.2">
+            Leading phased RHEL 7/8 to RHEL 9 migration across 300+ servers with Satellite-based
+            provisioning and compliance enforcement.
+          </li>
+          <li data-i18n="exp.pbb.3">
+            Deploying and maintaining application stacks across Nginx, Apache, Tomcat,
+            JBoss/WildFly, and PostgreSQL — SSL/TLS hardening, reverse proxy tuning, and production
+            optimization for banking-critical workloads.
+          </li>
+          <li data-i18n="exp.pbb.4">
+            Owning end-to-end patching and hardening cycles for 300+ servers aligned to
+            financial-sector security requirements.
+          </li>
+          <li data-i18n="exp.pbb.5">
+            Operating Pacemaker-based HA clusters and executing disaster-recovery drills across
+            distributed datacenters.
+          </li>
+          <li data-i18n="exp.pbb.6">
+            Administering VMware vSphere environments for VM provisioning, capacity planning, and
+            platform lifecycle maintenance.
+          </li>
+          <li data-i18n="exp.pbb.7">
+            Delivering AI use cases with Azure AI Foundry — document intelligence pipelines and
+            model fine-tuning for process automation.
+          </li>
+          <li data-i18n="exp.pbb.8">
+            Acting as infrastructure consultant for application owners, translating business
+            requirements into delivery plans.
+          </li>
         </ul>
       </article>
 
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3 data-i18n="exp.sopra1.title">Information Technology Application Specialist - Linux System Administrator · Sopra Steria</h3>
-            <p class="timeline-subtitle" data-i18n="exp.sopra1.subtitle">Full-time · Hybrid · Madrid, Community of Madrid, Spain</p>
+            <h3 data-i18n="exp.sopra1.title">
+              Information Technology Application Specialist - Linux System Administrator · Sopra
+              Steria
+            </h3>
+            <p class="timeline-subtitle" data-i18n="exp.sopra1.subtitle">
+              Full-time · Hybrid · Madrid, Community of Madrid, Spain
+            </p>
           </div>
           <p class="timeline-period" data-i18n="exp.sopra1.period">Nov 2023 - Jul 2025</p>
         </div>
         <ul>
-          <li data-i18n="exp.sopra1.1">Led a team of 5 technicians managing 100+ Linux and Windows servers for a Norwegian financial client in a fully English-speaking environment.</li>
-          <li data-i18n="exp.sopra1.2">Maintained RHEL compliance across 100+ servers using Red Hat Satellite; built Ansible automation reducing deployment time from hours to minutes.</li>
-          <li data-i18n="exp.sopra1.3">Managed VMware vSphere and vCenter environments handling VM lifecycle, snapshot management, and capacity optimization.</li>
-          <li data-i18n="exp.sopra1.4">Resolved incidents and managed change operations in ServiceNow within SLA deadlines with structured escalation documentation.</li>
-          <li data-i18n="exp.sopra1.5">Administered Active Directory computer object lifecycle, group policies, and Kerberos integration for Linux servers.</li>
+          <li data-i18n="exp.sopra1.1">
+            Led a team of 5 technicians managing 100+ Linux and Windows servers for a Norwegian
+            financial client in a fully English-speaking environment.
+          </li>
+          <li data-i18n="exp.sopra1.2">
+            Maintained RHEL compliance across 100+ servers using Red Hat Satellite; built Ansible
+            automation reducing deployment time from hours to minutes.
+          </li>
+          <li data-i18n="exp.sopra1.3">
+            Managed VMware vSphere and vCenter environments handling VM lifecycle, snapshot
+            management, and capacity optimization.
+          </li>
+          <li data-i18n="exp.sopra1.4">
+            Resolved incidents and managed change operations in ServiceNow within SLA deadlines with
+            structured escalation documentation.
+          </li>
+          <li data-i18n="exp.sopra1.5">
+            Administered Active Directory computer object lifecycle, group policies, and Kerberos
+            integration for Linux servers.
+          </li>
         </ul>
       </article>
 
       <article class="timeline-item panel panel-soft">
         <div class="timeline-head">
           <div>
-            <h3 data-i18n="exp.sopra2.title">Information Technology Application Specialist · Sopra Steria</h3>
-            <p class="timeline-subtitle" data-i18n="exp.sopra2.subtitle">Full-time · Madrid, Community of Madrid, Spain</p>
+            <h3 data-i18n="exp.sopra2.title">
+              Information Technology Application Specialist · Sopra Steria
+            </h3>
+            <p class="timeline-subtitle" data-i18n="exp.sopra2.subtitle">
+              Full-time · Madrid, Community of Madrid, Spain
+            </p>
           </div>
           <p class="timeline-period" data-i18n="exp.sopra2.period">Apr 2023 - Jan 2025</p>
         </div>
         <ul>
-          <li data-i18n="exp.sopra2.1">Delivered advanced technical support across multiple technologies in enterprise production contexts.</li>
-          <li data-i18n="exp.sopra2.2">Contributed to cloud-transition support initiatives and workplace modernization programs.</li>
-          <li data-i18n="exp.sopra2.3">Worked across global collaboration environments with structured escalation and resolution flows.</li>
+          <li data-i18n="exp.sopra2.1">
+            Delivered advanced technical support across multiple technologies in enterprise
+            production contexts.
+          </li>
+          <li data-i18n="exp.sopra2.2">
+            Contributed to cloud-transition support initiatives and workplace modernization
+            programs.
+          </li>
+          <li data-i18n="exp.sopra2.3">
+            Worked across global collaboration environments with structured escalation and
+            resolution flows.
+          </li>
         </ul>
       </article>
 
@@ -104,12 +186,17 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
         <div class="timeline-head">
           <div>
             <h3 data-i18n="exp.intern.title">Internship Trainee · Sopra Steria</h3>
-            <p class="timeline-subtitle" data-i18n="exp.intern.subtitle">Internship · Madrid, Community of Madrid, Spain</p>
+            <p class="timeline-subtitle" data-i18n="exp.intern.subtitle">
+              Internship · Madrid, Community of Madrid, Spain
+            </p>
           </div>
           <p class="timeline-period" data-i18n="exp.intern.period">Apr 2023 - Jun 2023</p>
         </div>
         <ul>
-          <li data-i18n="exp.intern.1">Built foundations in incident handling, directory services, and enterprise support workflows.</li>
+          <li data-i18n="exp.intern.1">
+            Built foundations in incident handling, directory services, and enterprise support
+            workflows.
+          </li>
         </ul>
       </article>
     </div>
@@ -120,27 +207,45 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
     <div class="skills-grid">
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.linux">Linux Platform Engineering</h3>
-        <p data-i18n="skill.linux.desc">RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.</p>
+        <p data-i18n="skill.linux.desc">
+          RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational
+          reliability practices.
+        </p>
       </article>
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.auto">Automation & Governance</h3>
-        <p data-i18n="skill.auto.desc">Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.</p>
+        <p data-i18n="skill.auto.desc">
+          Ansible playbooks, reusable role design, Git workflows, and evidence-based operational
+          change controls.
+        </p>
       </article>
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.virt">Virtualization & Datacenter Ops</h3>
-        <p data-i18n="skill.virt.desc">VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.</p>
+        <p data-i18n="skill.virt.desc">
+          VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery
+          execution.
+        </p>
       </article>
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.mid">App Platforms & Databases</h3>
-        <p data-i18n="skill.mid.desc">Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS, reverse proxy, and production database operations.</p>
+        <p data-i18n="skill.mid.desc">
+          Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS,
+          reverse proxy, and production database operations.
+        </p>
       </article>
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.cloud">Cloud + AI Integration</h3>
-        <p data-i18n="skill.cloud.desc">Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.</p>
+        <p data-i18n="skill.cloud.desc">
+          Azure AI Foundry, document intelligence, and practical GenAI implementation patterns
+          aligned with operations.
+        </p>
       </article>
       <article class="skill-card panel panel-soft">
         <h3 data-i18n="skill.team">Cross-Team Delivery</h3>
-        <p data-i18n="skill.team.desc">Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.</p>
+        <p data-i18n="skill.team.desc">
+          Stakeholder management, technical consulting for app owners, and requirement-to-platform
+          translation.
+        </p>
       </article>
     </div>
   </section>
@@ -148,41 +253,55 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
   <section class="about-section" aria-labelledby="cv-title">
     <h2 id="cv-title" data-i18n="about.cvTitle">CV / Resume</h2>
     <article class="panel panel-soft cv-card">
-      <p data-i18n="about.cvDesc">Detailed CV is available as a PDF with role scope, delivery outcomes, and full technology coverage.</p>
-      {PUBLIC_CV.enabled ? (
-        <a
-          id="cv-action-link"
-          href={publicCvHref}
-          data-href-en={publicCvHref}
-          data-href-es={publicCvHrefEs}
-          class="action-link"
-          target={PUBLIC_CV.openInNewTab ? '_blank' : undefined}
-          rel={PUBLIC_CV.openInNewTab ? 'noopener noreferrer' : undefined}
-          data-i18n="about.cvLabel"
-        >
-          {PUBLIC_CV.label}
-        </a>
-      ) : (
-        <p class="cv-disabled-note" data-i18n="about.cvDisabled">CV link is temporarily unavailable.</p>
-      )}
+      <p data-i18n="about.cvDesc">
+        Detailed CV is available as a PDF with role scope, delivery outcomes, and full technology
+        coverage.
+      </p>
+      {
+        PUBLIC_CV.enabled ? (
+          <a
+            id="cv-action-link"
+            href={publicCvHref}
+            data-href-en={publicCvHref}
+            data-href-es={publicCvHrefEs}
+            class="action-link"
+            target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
+            rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
+            data-i18n="about.cvLabel"
+          >
+            {PUBLIC_CV.label}
+          </a>
+        ) : (
+          <p class="cv-disabled-note" data-i18n="about.cvDisabled">
+            CV link is temporarily unavailable.
+          </p>
+        )
+      }
     </article>
   </section>
 
   <section class="about-section" aria-labelledby="cover-letter-title">
     <h2 id="cover-letter-title" data-i18n="about.coverLetterTitle">Cover Letter</h2>
     <article class="panel panel-soft cv-card">
-      <p data-i18n="about.coverLetterDesc">Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.</p>
-      {PUBLIC_COVER_LETTER.enabled ? (
-        <a
-          href={withBase('cover-letter/')}
-          class="action-link"
-          data-i18n="about.coverLetterLabel"
-        >
-          {PUBLIC_COVER_LETTER.label}
-        </a>
-      ) : (
-        <p class="cv-disabled-note" data-i18n="about.coverLetterDisabled">Cover letter link is temporarily unavailable.</p>
-      )}
+      <p data-i18n="about.coverLetterDesc">
+        Professional introduction — who I am, what I work on, and how I approach infrastructure and
+        automation.
+      </p>
+      {
+        PUBLIC_COVER_LETTER.enabled ? (
+          <a
+            href={withBase("cover-letter/")}
+            class="action-link"
+            data-i18n="about.coverLetterLabel"
+          >
+            {PUBLIC_COVER_LETTER.label}
+          </a>
+        ) : (
+          <p class="cv-disabled-note" data-i18n="about.coverLetterDisabled">
+            Cover letter link is temporarily unavailable.
+          </p>
+        )
+      }
     </article>
   </section>
 
@@ -191,15 +310,23 @@ const coverHrefEs = PUBLIC_COVER_LETTER.external ? PUBLIC_COVER_LETTER.hrefEs : 
     <div class="principles-grid">
       <article class="panel panel-soft">
         <h3 data-i18n="about.principle1Title">Codify repeatable operations</h3>
-        <p data-i18n="about.principle1Desc">Every recurring action should move from ad-hoc command execution into tested automation.</p>
+        <p data-i18n="about.principle1Desc">
+          Every recurring action should move from ad-hoc command execution into tested automation.
+        </p>
       </article>
       <article class="panel panel-soft">
         <h3 data-i18n="about.principle2Title">State the problem before the tool</h3>
-        <p data-i18n="about.principle2Desc">Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.</p>
+        <p data-i18n="about.principle2Desc">
+          Technology choices are justified by incident patterns, constraints, and measurable
+          operational outcomes.
+        </p>
       </article>
       <article class="panel panel-soft">
         <h3 data-i18n="about.principle3Title">Keep portfolio content safe</h3>
-        <p data-i18n="about.principle3Desc">Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.</p>
+        <p data-i18n="about.principle3Desc">
+          Write with practical depth while avoiding confidential architecture, identities, or
+          customer-sensitive data.
+        </p>
       </article>
     </div>
   </section>

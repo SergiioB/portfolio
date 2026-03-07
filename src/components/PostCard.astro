@@ -1,7 +1,7 @@
 ---
-import { CATEGORY_META } from '../content/categories';
-import { withBase } from '../utils/paths';
-import { estimateReadingTime } from '../utils/readingTime';
+import { CATEGORY_META } from "../content/categories";
+import { withBase } from "../utils/paths";
+import { estimateReadingTime } from "../utils/readingTime";
 
 interface Props {
   post: {
@@ -30,33 +30,41 @@ const searchText = [
   title,
   description,
   ...category,
-  issue ?? '',
-  solution ?? '',
-  usedIn ?? '',
+  issue ?? "",
+  solution ?? "",
+  usedIn ?? "",
   ...(tags ?? []),
-].join(' ');
+].join(" ");
 ---
 
 <article
-  class:list={['post-card', 'panel', 'panel-soft', `category-${primaryCategory}`]}
+  class:list={["post-card", "panel", "panel-soft", `category-${primaryCategory}`]}
   data-search-item
   data-search={searchText}
 >
   <div class="post-meta">
     <time class="post-date" datetime={pubDate.toISOString()}>
-      {pubDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      })}
+      {
+        pubDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      }
     </time>
     <span aria-hidden="true">•</span>
     <div class="post-categories">
-      {category.map((cat, i) => (
-        <a href={withBase(`${cat}/`)} class:list={['post-category', `post-category-${cat}`]} data-i18n={`cat.${cat}`}>
-          {CATEGORY_META[cat]?.label ?? cat}
-        </a>
-      ))}
+      {
+        category.map((cat) => (
+          <a
+            href={withBase(`${cat}/`)}
+            class:list={["post-category", `post-category-${cat}`]}
+            data-i18n={`cat.${cat}`}
+          >
+            {CATEGORY_META[cat]?.label ?? cat}
+          </a>
+        ))
+      }
     </div>
     <span aria-hidden="true">•</span>
     <span>{readingTime} <span data-i18n="posts.minRead">min read</span></span>
@@ -68,19 +76,35 @@ const searchText = [
 
   <p class="post-excerpt">{description}</p>
 
-  {(issue || solution || usedIn) && (
-    <ul class="post-highlights" aria-label="Case study highlights">
-      {issue && <li><strong data-i18n="posts.issue">Issue:</strong> {issue}</li>}
-      {solution && <li><strong data-i18n="posts.solution">Solution:</strong> {solution}</li>}
-      {usedIn && <li><strong data-i18n="posts.usedIn">Used In:</strong> {usedIn}</li>}
-    </ul>
-  )}
+  {
+    (issue || solution || usedIn) && (
+      <ul class="post-highlights" aria-label="Case study highlights">
+        {issue && (
+          <li>
+            <strong data-i18n="posts.issue">Issue:</strong> {issue}
+          </li>
+        )}
+        {solution && (
+          <li>
+            <strong data-i18n="posts.solution">Solution:</strong> {solution}
+          </li>
+        )}
+        {usedIn && (
+          <li>
+            <strong data-i18n="posts.usedIn">Used In:</strong> {usedIn}
+          </li>
+        )}
+      </ul>
+    )
+  }
 
-  {tags && tags.length > 0 && (
-    <div class="post-tags" aria-label="Post tags">
-      {tags.map((tag) => (
-        <span class="tag">{tag}</span>
-      ))}
-    </div>
-  )}
+  {
+    tags && tags.length > 0 && (
+      <div class="post-tags" aria-label="Post tags">
+        {tags.map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )
+  }
 </article>

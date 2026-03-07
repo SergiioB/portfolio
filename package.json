@@ -10,7 +10,19 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "jscpd": "jscpd src/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "playwright test",
+    "test:integration:ui": "playwright test --ui",
+    "test:integration:debug": "playwright test --debug",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.10",
@@ -18,7 +30,35 @@
     "puppeteer": "^24.37.5"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.6.0",
+    "eslint-plugin-boundaries": "^5.4.0",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^17.4.0",
+    "husky": "^9.1.7",
+    "jscpd": "^4.0.8",
+    "jsdom": "^28.1.0",
+    "lint-staged": "^16.3.2",
     "playwright": "^1.58.2",
-    "typescript": "^5.4.0"
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,mts,cts,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css}": [
+      "prettier --write"
+    ]
   }
 }
