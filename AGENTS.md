@@ -210,6 +210,32 @@ To bypass (not recommended): `git commit --no-verify`
 - Use relative URLs for internal links
 - Validate user input in any interactive components
 
+## Issue Labeling System
+
+This project uses the following label conventions for issue tracking:
+
+### By Type
+
+- `type: bug` - Something isn't working
+- `type: feature` - New feature request
+- `type: chore` - Maintenance task
+- `type: docs` - Documentation improvements
+
+### By Priority
+
+- `priority: high` - High urgency, needs attention soon
+- `priority: medium` - Normal priority
+- `priority: low` - Can be addressed later
+
+### By Area
+
+- `area: content` - Blog posts or content
+- `area: infrastructure` - DevOps/infrastructure
+- `area: frontend` - UI/components
+- `area: testing` - Test-related
+
+When creating issues, use the appropriate labels to help prioritize work.
+
 ## Troubleshooting
 
 ### Build Errors
