@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%">
+  <!-- Definitions for gradients and shadows -->
+  <defs>
+    <linearGradient id="apacheGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#047857" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#064e3b" stop-opacity="0.9" />
+    </linearGradient>
+    <linearGradient id="tomcatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0.9" />
+    </linearGradient>
+    <linearGradient id="ajpGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="#0f172a" rx="12" />
+
+  <!-- Title -->
+  <text x="400" y="40" font-family="monospace" font-size="22" font-weight="bold" fill="#f8fafc" text-anchor="middle">AJP Connection Architecture (Apache to Tomcat)</text>
+  <text x="400" y="60" font-family="monospace" font-size="14" fill="#94a3b8" text-anchor="middle">Binary protocol routing bypassing standard HTTP</text>
+
+  <!-- Apache Proxy Box -->
+  <rect x="50" y="100" width="250" height="220" rx="8" fill="url(#apacheGrad)" stroke="#34d399" stroke-width="2" filter="url(#dropShadow)" />
+  <text x="175" y="130" font-family="monospace" font-size="18" font-weight="bold" fill="#ecfdf5" text-anchor="middle">Apache HTTPD</text>
+  <text x="175" y="150" font-family="monospace" font-size="12" fill="#a7f3d0" text-anchor="middle">(Reverse Proxy)</text>
+
+  <!-- Apache Modules / Config -->
+  <rect x="70" y="170" width="210" height="30" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1" />
+  <text x="175" y="190" font-family="monospace" font-size="12" fill="#d1fae5" text-anchor="middle">mod_proxy_ajp</text>
+
+  <rect x="70" y="210" width="210" height="40" rx="4" fill="#022c22" stroke="#047857" stroke-width="1" />
+  <text x="175" y="225" font-family="monospace" font-size="11" fill="#6ee7b7" text-anchor="middle">ProxyPass /</text>
+  <text x="175" y="240" font-family="monospace" font-size="11" fill="#34d399" text-anchor="middle">ajp://127.0.0.1:8009/</text>
+
+  <!-- AJP Protocol Arrow -->
+  <g filter="url(#dropShadow)">
+    <path d="M 310 180 L 480 180" stroke="url(#ajpGrad)" stroke-width="6" stroke-dasharray="8,4" />
+    <polygon points="480,170 500,180 480,190" fill="#f59e0b" />
+    
+    <path d="M 480 230 L 310 230" stroke="url(#ajpGrad)" stroke-width="6" stroke-dasharray="8,4" />
+    <polygon points="310,220 290,230 310,240" fill="#10b981" />
+  </g>
+
+  <!-- Arrow Labels -->
+  <rect x="345" y="145" width="100" height="20" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <text x="395" y="158" font-family="monospace" font-size="11" font-weight="bold" fill="#fcd34d" text-anchor="middle">AJP/1.3 Request</text>
+  
+  <rect x="345" y="245" width="100" height="20" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <text x="395" y="258" font-family="monospace" font-size="11" font-weight="bold" fill="#6ee7b7" text-anchor="middle">AJP/1.3 Response</text>
+
+  <text x="395" y="208" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="middle">Binary Protocol (Port 8009)</text>
+
+
+  <!-- Tomcat Box -->
+  <rect x="510" y="100" width="250" height="220" rx="8" fill="url(#tomcatGrad)" stroke="#fbbf24" stroke-width="2" filter="url(#dropShadow)" />
+  <text x="635" y="130" font-family="monospace" font-size="18" font-weight="bold" fill="#fffbeb" text-anchor="middle">Tomcat Application</text>
+  <text x="635" y="150" font-family="monospace" font-size="12" fill="#fde68a" text-anchor="middle">(Backend Server)</text>
+
+  <!-- Tomcat Config / Connector -->
+  <rect x="530" y="170" width="210" height="30" rx="4" fill="#78350f" stroke="#b45309" stroke-width="1" />
+  <text x="635" y="190" font-family="monospace" font-size="12" fill="#fef3c7" text-anchor="middle">AJP Connector (8009)</text>
+
+  <rect x="530" y="210" width="210" height="90" rx="4" fill="#451a03" stroke="#92400e" stroke-width="1" />
+  <text x="540" y="225" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="start">&lt;Connector</text>
+  <text x="550" y="240" font-family="monospace" font-size="10" fill="#fcd34d" text-anchor="start">protocol="AJP/1.3"</text>
+  <text x="550" y="255" font-family="monospace" font-size="10" fill="#fcd34d" text-anchor="start">address="127.0.0.1"</text>
+  <text x="550" y="270" font-family="monospace" font-size="10" fill="#fcd34d" text-anchor="start">port="8009"</text>
+  <text x="550" y="285" font-family="monospace" font-size="10" fill="#fcd34d" text-anchor="start">secretRequired="false"/&gt;</text>
+
+  <!-- Security Boundary Note -->
+  <rect x="150" y="340" width="500" height="30" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="400" y="360" font-family="monospace" font-size="12" fill="#94a3b8" text-anchor="middle">Server Boundary (Localhost only, isolated from external network)</text>
+
+</svg>

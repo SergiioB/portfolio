@@ -1,0 +1,155 @@
+---
+interface Props {
+  /** CSS selector for items to filter. Items must have data-search populated. */
+  itemSelector: string;
+  /** Optional selector for section wrappers to hide when all child items are hidden. */
+  sectionSelector?: string;
+  placeholder?: string;
+}
+
+const { itemSelector, sectionSelector, placeholder } = Astro.props;
+const inputId = `post-search-input-${Astro.url.pathname.replaceAll("/", "-") || "root"}`;
+const statusId = `post-search-status-${Astro.url.pathname.replaceAll("/", "-") || "root"}`;
+const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll("/", "-") || "root"}`;
+---
+
+<section class="post-search panel panel-soft" aria-label="Post search">
+  <label class="post-search-label" for={inputId} data-i18n="archive.searchPosts">Search posts</label
+  >
+  <div class="post-search-input-wrapper">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="search-icon"
+      ><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"
+      ></line></svg
+    >
+    <input
+      id={inputId}
+      class="post-search-input"
+      type="search"
+      name="q"
+      autocomplete="off"
+      placeholder={placeholder ?? "Search by title, issue, tags..."}
+    />
+  </div>
+  <p id={statusId} class="post-search-status" aria-live="polite"></p>
+  <p id={emptyId} class="post-search-empty" hidden data-i18n="archive.noMatches">
+    No matches found for your query. Try different keywords.
+  </p>
+</section>
+
+<script is:inline define:vars={{ inputId, statusId, emptyId, itemSelector, sectionSelector }}>
+  // Defer until the full DOM is parsed — the search items are rendered
+  // *below* this component in the page, so an inline synchronous query
+  // would return an empty NodeList if run at parse time.
+  // Use both DOMContentLoaded (initial load) AND astro:page-load (SPA navigations).
+  function initPostSearch() {
+    function normalize(value) {
+      return String(value ?? "")
+        .toLowerCase()
+        .trim();
+    }
+
+    const input = document.getElementById(inputId);
+    const status = document.getElementById(statusId);
+    const empty = document.getElementById(emptyId);
+    const items = Array.from(document.querySelectorAll(itemSelector));
+    const sections = sectionSelector ? Array.from(document.querySelectorAll(sectionSelector)) : [];
+
+    function applyQuery(rawQuery) {
+      const query = normalize(rawQuery);
+      const searchTerms = query.split(/\s+/).filter((t) => t.length > 0);
+      let visibleCount = 0;
+
+      for (const item of items) {
+        const haystack = normalize(item.dataset.search);
+
+        // Multi-word matching: EVERY term in the query must be found in the haystack (AND logic)
+        // This is much better than strict exact substring matching.
+        const matches =
+          searchTerms.length === 0 || searchTerms.every((term) => haystack.includes(term));
+
+        item.hidden = !matches;
+        if (matches) visibleCount++;
+      }
+
+      if (sections.length > 0) {
+        for (const section of sections) {
+          // Hide empty year blocks while searching.
+          const hasAnyVisible = section.querySelector(`${itemSelector}:not([hidden])`) !== null;
+          section.hidden = !hasAnyVisible;
+        }
+      }
+
+      if (status) {
+        status.textContent =
+          query.length === 0 ? "" : `${visibleCount} match${visibleCount === 1 ? "" : "es"} found`;
+      }
+      if (empty) {
+        empty.hidden = !(query.length > 0 && visibleCount === 0);
+      }
+    }
+
+    if (input) {
+      const params = new URLSearchParams(window.location.search);
+      const initial = params.get("q");
+      if (initial) {
+        input.value = initial;
+        applyQuery(initial);
+      }
+
+      input.addEventListener("input", (event) => {
+        applyQuery(event.target.value);
+
+        // Update URL to make searches shareable, without causing page reload
+        if (window.history.replaceState) {
+          const url = new URL(window.location);
+          if (event.target.value) {
+            url.searchParams.set("q", event.target.value);
+          } else {
+            url.searchParams.delete("q");
+          }
+          window.history.replaceState(null, "", url);
+        }
+      });
+    }
+  }
+  document.addEventListener("DOMContentLoaded", initPostSearch);
+  document.addEventListener("astro:page-load", initPostSearch);
+</script>
+
+<style>
+  .post-search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .post-search-input {
+    padding-left: 36px !important;
+  }
+  .post-search-empty {
+    padding: 1rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--border);
+    margin-top: 0.5rem;
+  }
+  .post-search-status {
+    margin-top: 0.25rem !important;
+  }
+</style>
