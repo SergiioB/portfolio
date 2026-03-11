@@ -1,0 +1,45 @@
+<section
+  class="audience-switch panel panel-soft section-surface"
+  aria-labelledby="audience-title"
+  data-audience-switch
+>
+  <div class="section-header-row audience-header">
+    <h2 id="audience-title" data-i18n="audience.title">Choose Your View</h2>
+    <span class="audience-status" data-audience-status data-i18n="audience.currentRecruiter"
+      >Current: Recruiter Mode</span
+    >
+  </div>
+
+  <div class="audience-toggle" role="tablist" aria-label="Audience mode selector">
+    <button
+      type="button"
+      class="audience-btn active"
+      data-audience-mode="recruiter"
+      aria-selected="true"
+      role="tab"
+      data-i18n="audience.recruiterMode"
+    >
+      Recruiter Mode
+    </button>
+    <button
+      type="button"
+      class="audience-btn"
+      data-audience-mode="engineer"
+      aria-selected="false"
+      role="tab"
+      data-i18n="audience.engineerMode"
+    >
+      Engineer Mode
+    </button>
+  </div>
+
+  <div class="audience-copy" data-audience-copy>
+    <p data-i18n="audience.copy">
+      Recruiter view prioritizes impact, role fit, and business outcomes first. Engineer view
+      enables full live labs, telemetry streams, and command simulations.
+    </p>
+  </div>
+</section>
+<!-- Button click handlers and state management are centralised in nav.js
+     (applyAudienceMode / initAudienceButtons) to avoid Astro module-timing
+     race conditions that previously caused the toggle to be unresponsive. -->

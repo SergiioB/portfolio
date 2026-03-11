@@ -1,0 +1,309 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3200 3800" width="3200" height="3800">
+<rect width="3200" height="3800" fill="#24273a" />
+<text x="1600.0" y="160" font-family="sans-serif" font-size="70" font-weight="bold" fill="#cad3f5" text-anchor="middle">The Comprehensive Linux Engineer Command List</text>
+<line x1="100" y1="220" x2="3100" y2="220" stroke="#5b6078" stroke-width="4" />
+<rect x="100.0" y="250" width="930" height="750" rx="15" fill="#363a4f" stroke="#8aadf4" stroke-width="3" />
+<text x="130.0" y="315" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8aadf4">File &amp; Directory Management</text>
+<line x1="100.0" y1="340" x2="1030.0" y2="340" stroke="#494d64" stroke-width="2" />
+<text x="130.0" y="390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ls -lah</text>
+<text x="580.0" y="390" font-family="sans-serif" font-size="22" fill="#a5adcb">List all files with details &amp; hidden files</text>
+<text x="130.0" y="460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">mkdir -p a/b/c</text>
+<text x="580.0" y="460" font-family="sans-serif" font-size="22" fill="#a5adcb">Create nested directories</text>
+<text x="130.0" y="530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">rm -rf dir/</text>
+<text x="580.0" y="530" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove directory recursively</text>
+<text x="130.0" y="600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">cp -r src/ dest/</text>
+<text x="580.0" y="600" font-family="sans-serif" font-size="22" fill="#a5adcb">Copy recursively</text>
+<text x="130.0" y="670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">mv old new</text>
+<text x="580.0" y="670" font-family="sans-serif" font-size="22" fill="#a5adcb">Move or rename file/directory</text>
+<text x="130.0" y="740" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">find . -name '*.txt'</text>
+<text x="580.0" y="740" font-family="sans-serif" font-size="22" fill="#a5adcb">Find files by name</text>
+<text x="130.0" y="810" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tree -L 2</text>
+<text x="580.0" y="810" font-family="sans-serif" font-size="22" fill="#a5adcb">List directory in tree format</text>
+<text x="130.0" y="880" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tar -czvf arc.tar.gz dir/</text>
+<text x="580.0" y="880" font-family="sans-serif" font-size="22" fill="#a5adcb">Compress directory</text>
+<text x="130.0" y="950" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tar -xzvf arc.tar.gz</text>
+<text x="580.0" y="950" font-family="sans-serif" font-size="22" fill="#a5adcb">Extract archive</text>
+<rect x="100.0" y="1040" width="930" height="820" rx="15" fill="#363a4f" stroke="#8bd5ca" stroke-width="3" />
+<text x="130.0" y="1105" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8bd5ca">Text Processing &amp; Search</text>
+<line x1="100.0" y1="1130" x2="1030.0" y2="1130" stroke="#494d64" stroke-width="2" />
+<text x="130.0" y="1180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">grep -rnw . -e 'pattern'</text>
+<text x="580.0" y="1180" font-family="sans-serif" font-size="22" fill="#a5adcb">Search recursively for a string</text>
+<text x="130.0" y="1250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">grep -i 'pattern' file</text>
+<text x="580.0" y="1250" font-family="sans-serif" font-size="22" fill="#a5adcb">Case-insensitive search</text>
+<text x="130.0" y="1320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sed -i 's/old/new/g' file</text>
+<text x="580.0" y="1320" font-family="sans-serif" font-size="22" fill="#a5adcb">Inline find and replace</text>
+<text x="130.0" y="1390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">awk '{print $1}' file</text>
+<text x="580.0" y="1390" font-family="sans-serif" font-size="22" fill="#a5adcb">Print first column of a file</text>
+<text x="130.0" y="1460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">cut -d':' -f1 /etc/passwd</text>
+<text x="580.0" y="1460" font-family="sans-serif" font-size="22" fill="#a5adcb">Extract specific fields</text>
+<text x="130.0" y="1530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sort -n -r file</text>
+<text x="580.0" y="1530" font-family="sans-serif" font-size="22" fill="#a5adcb">Sort numerically in reverse</text>
+<text x="130.0" y="1600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">uniq -c</text>
+<text x="580.0" y="1600" font-family="sans-serif" font-size="22" fill="#a5adcb">Count unique lines</text>
+<text x="130.0" y="1670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">wc -l file</text>
+<text x="580.0" y="1670" font-family="sans-serif" font-size="22" fill="#a5adcb">Count lines in a file</text>
+<text x="130.0" y="1740" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">head -n 20 file</text>
+<text x="580.0" y="1740" font-family="sans-serif" font-size="22" fill="#a5adcb">View first 20 lines</text>
+<text x="130.0" y="1810" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tail -f /var/log/syslog</text>
+<text x="580.0" y="1810" font-family="sans-serif" font-size="22" fill="#a5adcb">Follow log file in real-time</text>
+<rect x="100.0" y="1900" width="930" height="820" rx="15" fill="#363a4f" stroke="#a6da95" stroke-width="3" />
+<text x="130.0" y="1965" font-family="sans-serif" font-size="36" font-weight="bold" fill="#a6da95">System &amp; Process Monitoring</text>
+<line x1="100.0" y1="1990" x2="1030.0" y2="1990" stroke="#494d64" stroke-width="2" />
+<text x="130.0" y="2040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">top / htop</text>
+<text x="580.0" y="2040" font-family="sans-serif" font-size="22" fill="#a5adcb">Interactive process viewer</text>
+<text x="130.0" y="2110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ps aux | grep process</text>
+<text x="580.0" y="2110" font-family="sans-serif" font-size="22" fill="#a5adcb">Find a specific process</text>
+<text x="130.0" y="2180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">kill -9 &lt;PID&gt;</text>
+<text x="580.0" y="2180" font-family="sans-serif" font-size="22" fill="#a5adcb">Force kill a process</text>
+<text x="130.0" y="2250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">free -h</text>
+<text x="580.0" y="2250" font-family="sans-serif" font-size="22" fill="#a5adcb">Show available memory</text>
+<text x="130.0" y="2320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">df -h</text>
+<text x="580.0" y="2320" font-family="sans-serif" font-size="22" fill="#a5adcb">Show disk space usage</text>
+<text x="130.0" y="2390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">du -sh *</text>
+<text x="580.0" y="2390" font-family="sans-serif" font-size="22" fill="#a5adcb">Size of files/directories in current dir</text>
+<text x="130.0" y="2460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">uptime</text>
+<text x="580.0" y="2460" font-family="sans-serif" font-size="22" fill="#a5adcb">System uptime and load average</text>
+<text x="130.0" y="2530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dmesg -w</text>
+<text x="580.0" y="2530" font-family="sans-serif" font-size="22" fill="#a5adcb">Follow kernel messages</text>
+<text x="130.0" y="2600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">journalctl -u nginx</text>
+<text x="580.0" y="2600" font-family="sans-serif" font-size="22" fill="#a5adcb">View logs for a specific service</text>
+<text x="130.0" y="2670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">lsof -i :80</text>
+<text x="580.0" y="2670" font-family="sans-serif" font-size="22" fill="#a5adcb">List open files on port 80</text>
+<rect x="100.0" y="2760" width="930" height="890" rx="15" fill="#363a4f" stroke="#f5a97f" stroke-width="3" />
+<text x="130.0" y="2825" font-family="sans-serif" font-size="36" font-weight="bold" fill="#f5a97f">Network Troubleshooting</text>
+<line x1="100.0" y1="2850" x2="1030.0" y2="2850" stroke="#494d64" stroke-width="2" />
+<text x="130.0" y="2900" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ping -c 4 host</text>
+<text x="580.0" y="2900" font-family="sans-serif" font-size="22" fill="#a5adcb">Check connectivity to host</text>
+<text x="130.0" y="2970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">curl -I https://url</text>
+<text x="580.0" y="2970" font-family="sans-serif" font-size="22" fill="#a5adcb">Fetch HTTP headers</text>
+<text x="130.0" y="3040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">curl -sL https://url</text>
+<text x="580.0" y="3040" font-family="sans-serif" font-size="22" fill="#a5adcb">Fetch following redirects silently</text>
+<text x="130.0" y="3110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">wget -c https://url</text>
+<text x="580.0" y="3110" font-family="sans-serif" font-size="22" fill="#a5adcb">Continue broken download</text>
+<text x="130.0" y="3180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ip a</text>
+<text x="580.0" y="3180" font-family="sans-serif" font-size="22" fill="#a5adcb">Show IP addresses</text>
+<text x="130.0" y="3250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ip route show</text>
+<text x="580.0" y="3250" font-family="sans-serif" font-size="22" fill="#a5adcb">Show routing table</text>
+<text x="130.0" y="3320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">netstat -tulnp</text>
+<text x="580.0" y="3320" font-family="sans-serif" font-size="22" fill="#a5adcb">Show listening ports and PIDs</text>
+<text x="130.0" y="3390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ss -tulnp</text>
+<text x="580.0" y="3390" font-family="sans-serif" font-size="22" fill="#a5adcb">Modern alternative to netstat</text>
+<text x="130.0" y="3460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dig domain.com</text>
+<text x="580.0" y="3460" font-family="sans-serif" font-size="22" fill="#a5adcb">DNS lookup</text>
+<text x="130.0" y="3530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">nc -vz host 80</text>
+<text x="580.0" y="3530" font-family="sans-serif" font-size="22" fill="#a5adcb">Check if port is open (TCP)</text>
+<text x="130.0" y="3600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">traceroute host</text>
+<text x="580.0" y="3600" font-family="sans-serif" font-size="22" fill="#a5adcb">Trace path to host</text>
+<rect x="1135.0" y="250" width="930" height="750" rx="15" fill="#363a4f" stroke="#eed49f" stroke-width="3" />
+<text x="1165.0" y="315" font-family="sans-serif" font-size="36" font-weight="bold" fill="#eed49f">User &amp; Permission Management</text>
+<line x1="1135.0" y1="340" x2="2065.0" y2="340" stroke="#494d64" stroke-width="2" />
+<text x="1165.0" y="390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chmod 755 file</text>
+<text x="1615.0" y="390" font-family="sans-serif" font-size="22" fill="#a5adcb">Change file permissions (rwxr-xr-x)</text>
+<text x="1165.0" y="460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chmod -R 644 dir/</text>
+<text x="1615.0" y="460" font-family="sans-serif" font-size="22" fill="#a5adcb">Change recursively (files)</text>
+<text x="1165.0" y="530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chown user:group file</text>
+<text x="1615.0" y="530" font-family="sans-serif" font-size="22" fill="#a5adcb">Change file owner and group</text>
+<text x="1165.0" y="600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chown -R user:group dir</text>
+<text x="1615.0" y="600" font-family="sans-serif" font-size="22" fill="#a5adcb">Change owner recursively</text>
+<text x="1165.0" y="670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">usermod -aG group user</text>
+<text x="1615.0" y="670" font-family="sans-serif" font-size="22" fill="#a5adcb">Add user to a group</text>
+<text x="1165.0" y="740" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">passwd user</text>
+<text x="1615.0" y="740" font-family="sans-serif" font-size="22" fill="#a5adcb">Change user password</text>
+<text x="1165.0" y="810" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">id user</text>
+<text x="1615.0" y="810" font-family="sans-serif" font-size="22" fill="#a5adcb">Show user and group IDs</text>
+<text x="1165.0" y="880" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">whoami</text>
+<text x="1615.0" y="880" font-family="sans-serif" font-size="22" fill="#a5adcb">Print current effective user id</text>
+<text x="1165.0" y="950" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sudo visudo</text>
+<text x="1615.0" y="950" font-family="sans-serif" font-size="22" fill="#a5adcb">Safely edit sudoers file</text>
+<rect x="1135.0" y="1040" width="930" height="750" rx="15" fill="#363a4f" stroke="#c6a0f6" stroke-width="3" />
+<text x="1165.0" y="1105" font-family="sans-serif" font-size="36" font-weight="bold" fill="#c6a0f6">Systemd &amp; Services</text>
+<line x1="1135.0" y1="1130" x2="2065.0" y2="1130" stroke="#494d64" stroke-width="2" />
+<text x="1165.0" y="1180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl start service</text>
+<text x="1615.0" y="1180" font-family="sans-serif" font-size="22" fill="#a5adcb">Start a service</text>
+<text x="1165.0" y="1250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl stop service</text>
+<text x="1615.0" y="1250" font-family="sans-serif" font-size="22" fill="#a5adcb">Stop a service</text>
+<text x="1165.0" y="1320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl restart service</text>
+<text x="1615.0" y="1320" font-family="sans-serif" font-size="22" fill="#a5adcb">Restart a service</text>
+<text x="1165.0" y="1390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl reload service</text>
+<text x="1615.0" y="1390" font-family="sans-serif" font-size="22" fill="#a5adcb">Reload configuration without restart</text>
+<text x="1165.0" y="1460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl status service</text>
+<text x="1615.0" y="1460" font-family="sans-serif" font-size="22" fill="#a5adcb">Check service status</text>
+<text x="1165.0" y="1530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl enable service</text>
+<text x="1615.0" y="1530" font-family="sans-serif" font-size="22" fill="#a5adcb">Enable service on boot</text>
+<text x="1165.0" y="1600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl disable service</text>
+<text x="1615.0" y="1600" font-family="sans-serif" font-size="22" fill="#a5adcb">Disable service on boot</text>
+<text x="1165.0" y="1670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">systemctl daemon-reload</text>
+<text x="1615.0" y="1670" font-family="sans-serif" font-size="22" fill="#a5adcb">Reload systemd manager config</text>
+<text x="1165.0" y="1740" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">journalctl -xe</text>
+<text x="1615.0" y="1740" font-family="sans-serif" font-size="22" fill="#a5adcb">Examine detailed error logs</text>
+<rect x="1135.0" y="1830" width="930" height="890" rx="15" fill="#363a4f" stroke="#ed8796" stroke-width="3" />
+<text x="1165.0" y="1895" font-family="sans-serif" font-size="36" font-weight="bold" fill="#ed8796">Git Version Control</text>
+<line x1="1135.0" y1="1920" x2="2065.0" y2="1920" stroke="#494d64" stroke-width="2" />
+<text x="1165.0" y="1970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git clone &lt;url&gt;</text>
+<text x="1615.0" y="1970" font-family="sans-serif" font-size="22" fill="#a5adcb">Clone repository</text>
+<text x="1165.0" y="2040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git status</text>
+<text x="1615.0" y="2040" font-family="sans-serif" font-size="22" fill="#a5adcb">Show working tree status</text>
+<text x="1165.0" y="2110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git add .</text>
+<text x="1615.0" y="2110" font-family="sans-serif" font-size="22" fill="#a5adcb">Stage all changes</text>
+<text x="1165.0" y="2180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git commit -m 'Msg'</text>
+<text x="1615.0" y="2180" font-family="sans-serif" font-size="22" fill="#a5adcb">Commit staged changes</text>
+<text x="1165.0" y="2250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git push origin main</text>
+<text x="1615.0" y="2250" font-family="sans-serif" font-size="22" fill="#a5adcb">Push to remote branch</text>
+<text x="1165.0" y="2320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git pull --rebase</text>
+<text x="1615.0" y="2320" font-family="sans-serif" font-size="22" fill="#a5adcb">Fetch and rebase local branch</text>
+<text x="1165.0" y="2390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git branch -a</text>
+<text x="1615.0" y="2390" font-family="sans-serif" font-size="22" fill="#a5adcb">List all branches</text>
+<text x="1165.0" y="2460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git checkout -b branch</text>
+<text x="1615.0" y="2460" font-family="sans-serif" font-size="22" fill="#a5adcb">Create and switch to new branch</text>
+<text x="1165.0" y="2530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git log --oneline</text>
+<text x="1615.0" y="2530" font-family="sans-serif" font-size="22" fill="#a5adcb">View commit history concisely</text>
+<text x="1165.0" y="2600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git reset --hard HEAD</text>
+<text x="1615.0" y="2600" font-family="sans-serif" font-size="22" fill="#a5adcb">Discard all local changes</text>
+<text x="1165.0" y="2670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">git stash</text>
+<text x="1615.0" y="2670" font-family="sans-serif" font-size="22" fill="#a5adcb">Stash uncommitted changes</text>
+<rect x="1135.0" y="2760" width="930" height="610" rx="15" fill="#363a4f" stroke="#8aadf4" stroke-width="3" />
+<text x="1165.0" y="2825" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8aadf4">Python Virtual Environments</text>
+<line x1="1135.0" y1="2850" x2="2065.0" y2="2850" stroke="#494d64" stroke-width="2" />
+<text x="1165.0" y="2900" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">python3 -m venv .venv</text>
+<text x="1615.0" y="2900" font-family="sans-serif" font-size="22" fill="#a5adcb">Create a virtual environment</text>
+<text x="1165.0" y="2970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">source .venv/bin/activate</text>
+<text x="1615.0" y="2970" font-family="sans-serif" font-size="22" fill="#a5adcb">Activate venv (Linux/macOS)</text>
+<text x="1165.0" y="3040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">deactivate</text>
+<text x="1615.0" y="3040" font-family="sans-serif" font-size="22" fill="#a5adcb">Exit the virtual environment</text>
+<text x="1165.0" y="3110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pip install -r reqs.txt</text>
+<text x="1615.0" y="3110" font-family="sans-serif" font-size="22" fill="#a5adcb">Install requirements</text>
+<text x="1165.0" y="3180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pip freeze &gt; reqs.txt</text>
+<text x="1615.0" y="3180" font-family="sans-serif" font-size="22" fill="#a5adcb">Save dependencies to file</text>
+<text x="1165.0" y="3250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pip list</text>
+<text x="1615.0" y="3250" font-family="sans-serif" font-size="22" fill="#a5adcb">List installed packages</text>
+<text x="1165.0" y="3320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pip install --upgrade pip</text>
+<text x="1615.0" y="3320" font-family="sans-serif" font-size="22" fill="#a5adcb">Upgrade pip itself</text>
+<rect x="2170.0" y="250" width="930" height="750" rx="15" fill="#363a4f" stroke="#8bd5ca" stroke-width="3" />
+<text x="2200.0" y="315" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8bd5ca">Ansible Basics</text>
+<line x1="2170.0" y1="340" x2="3100.0" y2="340" stroke="#494d64" stroke-width="2" />
+<text x="2200.0" y="390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible all -m ping</text>
+<text x="2650.0" y="390" font-family="sans-serif" font-size="22" fill="#a5adcb">Ping all hosts in inventory</text>
+<text x="2200.0" y="460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook pb.yml</text>
+<text x="2650.0" y="460" font-family="sans-serif" font-size="22" fill="#a5adcb">Run a playbook</text>
+<text x="2200.0" y="530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook -i inv pb.yml</text>
+<text x="2650.0" y="530" font-family="sans-serif" font-size="22" fill="#a5adcb">Run with specific inventory</text>
+<text x="2200.0" y="600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --check pb.yml</text>
+<text x="2650.0" y="600" font-family="sans-serif" font-size="22" fill="#a5adcb">Dry-run playbook</text>
+<text x="2200.0" y="670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook -K pb.yml</text>
+<text x="2650.0" y="670" font-family="sans-serif" font-size="22" fill="#a5adcb">Ask for privilege escalation pass</text>
+<text x="2200.0" y="740" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-doc -l</text>
+<text x="2650.0" y="740" font-family="sans-serif" font-size="22" fill="#a5adcb">List all available modules</text>
+<text x="2200.0" y="810" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-doc module_name</text>
+<text x="2650.0" y="810" font-family="sans-serif" font-size="22" fill="#a5adcb">Show documentation for module</text>
+<text x="2200.0" y="880" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-galaxy install role</text>
+<text x="2650.0" y="880" font-family="sans-serif" font-size="22" fill="#a5adcb">Install role from Galaxy</text>
+<text x="2200.0" y="950" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-inventory --list</text>
+<text x="2650.0" y="950" font-family="sans-serif" font-size="22" fill="#a5adcb">View inventory as JSON</text>
+<rect x="2170.0" y="1040" width="930" height="750" rx="15" fill="#363a4f" stroke="#f5a97f" stroke-width="3" />
+<text x="2200.0" y="1105" font-family="sans-serif" font-size="36" font-weight="bold" fill="#f5a97f">Ansible Vault</text>
+<line x1="2170.0" y1="1130" x2="3100.0" y2="1130" stroke="#494d64" stroke-width="2" />
+<text x="2200.0" y="1180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault create file</text>
+<text x="2650.0" y="1180" font-family="sans-serif" font-size="22" fill="#a5adcb">Create encrypted file</text>
+<text x="2200.0" y="1250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault edit file</text>
+<text x="2650.0" y="1250" font-family="sans-serif" font-size="22" fill="#a5adcb">Edit encrypted file</text>
+<text x="2200.0" y="1320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault view file</text>
+<text x="2650.0" y="1320" font-family="sans-serif" font-size="22" fill="#a5adcb">View encrypted file without editing</text>
+<text x="2200.0" y="1390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault encrypt file</text>
+<text x="2650.0" y="1390" font-family="sans-serif" font-size="22" fill="#a5adcb">Encrypt an existing file</text>
+<text x="2200.0" y="1460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault decrypt file</text>
+<text x="2650.0" y="1460" font-family="sans-serif" font-size="22" fill="#a5adcb">Decrypt a file</text>
+<text x="2200.0" y="1530" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault rekey file</text>
+<text x="2650.0" y="1530" font-family="sans-serif" font-size="22" fill="#a5adcb">Change the vault password</text>
+<text x="2200.0" y="1600" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault encrypt_string</text>
+<text x="2650.0" y="1600" font-family="sans-serif" font-size="22" fill="#a5adcb">Encrypt a single string value</text>
+<text x="2200.0" y="1670" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --ask-vault-pass</text>
+<text x="2650.0" y="1670" font-family="sans-serif" font-size="22" fill="#a5adcb">Run playbook and ask vault pass</text>
+<text x="2200.0" y="1740" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --vault-id</text>
+<text x="2650.0" y="1740" font-family="sans-serif" font-size="22" fill="#a5adcb">Run playbook with vault ID file</text>
+<rect x="2170.0" y="1830" width="930" height="680" rx="15" fill="#363a4f" stroke="#a6da95" stroke-width="3" />
+<text x="2200.0" y="1895" font-family="sans-serif" font-size="36" font-weight="bold" fill="#a6da95">Ansible Molecule</text>
+<line x1="2170.0" y1="1920" x2="3100.0" y2="1920" stroke="#494d64" stroke-width="2" />
+<text x="2200.0" y="1970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule init role r_name</text>
+<text x="2650.0" y="1970" font-family="sans-serif" font-size="22" fill="#a5adcb">Initialize new role with molecule</text>
+<text x="2200.0" y="2040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule create</text>
+<text x="2650.0" y="2040" font-family="sans-serif" font-size="22" fill="#a5adcb">Create instances</text>
+<text x="2200.0" y="2110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule converge</text>
+<text x="2650.0" y="2110" font-family="sans-serif" font-size="22" fill="#a5adcb">Run the playbook against instances</text>
+<text x="2200.0" y="2180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule idempotence</text>
+<text x="2650.0" y="2180" font-family="sans-serif" font-size="22" fill="#a5adcb">Check playbook idempotence</text>
+<text x="2200.0" y="2250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule verify</text>
+<text x="2650.0" y="2250" font-family="sans-serif" font-size="22" fill="#a5adcb">Run tests (e.g., Ansible Lint, Testinfra)</text>
+<text x="2200.0" y="2320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule destroy</text>
+<text x="2650.0" y="2320" font-family="sans-serif" font-size="22" fill="#a5adcb">Destroy instances</text>
+<text x="2200.0" y="2390" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule test</text>
+<text x="2650.0" y="2390" font-family="sans-serif" font-size="22" fill="#a5adcb">Run full lifecycle</text>
+<text x="2200.0" y="2460" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule login</text>
+<text x="2650.0" y="2460" font-family="sans-serif" font-size="22" fill="#a5adcb">Log into a running instance</text>
+<rect x="2170.0" y="2550" width="930" height="820" rx="15" fill="#363a4f" stroke="#eed49f" stroke-width="3" />
+<text x="2200.0" y="2615" font-family="sans-serif" font-size="36" font-weight="bold" fill="#eed49f">Docker Basics</text>
+<line x1="2170.0" y1="2640" x2="3100.0" y2="2640" stroke="#494d64" stroke-width="2" />
+<text x="2200.0" y="2690" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker build -t img .</text>
+<text x="2650.0" y="2690" font-family="sans-serif" font-size="22" fill="#a5adcb">Build image from Dockerfile</text>
+<text x="2200.0" y="2760" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker run -d -p 80:80 img</text>
+<text x="2650.0" y="2760" font-family="sans-serif" font-size="22" fill="#a5adcb">Run container in background</text>
+<text x="2200.0" y="2830" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker ps</text>
+<text x="2650.0" y="2830" font-family="sans-serif" font-size="22" fill="#a5adcb">List running containers</text>
+<text x="2200.0" y="2900" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker ps -a</text>
+<text x="2650.0" y="2900" font-family="sans-serif" font-size="22" fill="#a5adcb">List all containers</text>
+<text x="2200.0" y="2970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker stop &lt;ID&gt;</text>
+<text x="2650.0" y="2970" font-family="sans-serif" font-size="22" fill="#a5adcb">Stop a container</text>
+<text x="2200.0" y="3040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker rm &lt;ID&gt;</text>
+<text x="2650.0" y="3040" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove a container</text>
+<text x="2200.0" y="3110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker rmi &lt;ID&gt;</text>
+<text x="2650.0" y="3110" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove an image</text>
+<text x="2200.0" y="3180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker logs -f &lt;ID&gt;</text>
+<text x="2650.0" y="3180" font-family="sans-serif" font-size="22" fill="#a5adcb">Follow container logs</text>
+<text x="2200.0" y="3250" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker exec -it &lt;ID&gt; sh</text>
+<text x="2650.0" y="3250" font-family="sans-serif" font-size="22" fill="#a5adcb">Open shell in container</text>
+<text x="2200.0" y="3320" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker system prune -a</text>
+<text x="2650.0" y="3320" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove unused data</text>
+<rect x="2170.0" y="3410" width="930" height="820" rx="15" fill="#363a4f" stroke="#c6a0f6" stroke-width="3" />
+<text x="2200.0" y="3475" font-family="sans-serif" font-size="36" font-weight="bold" fill="#c6a0f6">Package Management</text>
+<line x1="2170.0" y1="3500" x2="3100.0" y2="3500" stroke="#494d64" stroke-width="2" />
+<text x="2200.0" y="3550" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt update</text>
+<text x="2650.0" y="3550" font-family="sans-serif" font-size="22" fill="#a5adcb">Update package lists (Debian/Ubuntu)</text>
+<text x="2200.0" y="3620" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt upgrade</text>
+<text x="2650.0" y="3620" font-family="sans-serif" font-size="22" fill="#a5adcb">Upgrade packages</text>
+<text x="2200.0" y="3690" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt install pkg</text>
+<text x="2650.0" y="3690" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package</text>
+<text x="2200.0" y="3760" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt remove pkg</text>
+<text x="2650.0" y="3760" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove package</text>
+<text x="2200.0" y="3830" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum check-update</text>
+<text x="2650.0" y="3830" font-family="sans-serif" font-size="22" fill="#a5adcb">Check for updates (RHEL/CentOS)</text>
+<text x="2200.0" y="3900" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum update</text>
+<text x="2650.0" y="3900" font-family="sans-serif" font-size="22" fill="#a5adcb">Update packages</text>
+<text x="2200.0" y="3970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum install pkg</text>
+<text x="2650.0" y="3970" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package</text>
+<text x="2200.0" y="4040" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum remove pkg</text>
+<text x="2650.0" y="4040" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove package</text>
+<text x="2200.0" y="4110" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf install pkg</text>
+<text x="2650.0" y="4110" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package (Modern RHEL/Fedora)</text>
+<text x="2200.0" y="4180" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pacman -Syu</text>
+<text x="2650.0" y="4180" font-family="sans-serif" font-size="22" fill="#a5adcb">Full system upgrade (Arch Linux)</text>
+<rect x="2170.0" y="4270" width="930" height="750" rx="15" fill="#363a4f" stroke="#8aadf4" stroke-width="3" />
+<text x="2200.0" y="4335" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8aadf4">Archives &amp; Compression</text>
+<line x1="2170.0" y1="4360" x2="3100.0" y2="4360" stroke="#494d64" stroke-width="2" />
+<text x="2200.0" y="4410" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tar -cvf arc.tar dir/</text>
+<text x="2650.0" y="4410" font-family="sans-serif" font-size="22" fill="#a5adcb">Create uncompressed tar archive</text>
+<text x="2200.0" y="4480" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tar -xvf arc.tar</text>
+<text x="2650.0" y="4480" font-family="sans-serif" font-size="22" fill="#a5adcb">Extract tar archive</text>
+<text x="2200.0" y="4550" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">tar -cjvf arc.tar.bz2 dir/</text>
+<text x="2650.0" y="4550" font-family="sans-serif" font-size="22" fill="#a5adcb">Create bzip2 compressed archive</text>
+<text x="2200.0" y="4620" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">gzip file</text>
+<text x="2650.0" y="4620" font-family="sans-serif" font-size="22" fill="#a5adcb">Compress file (adds .gz)</text>
+<text x="2200.0" y="4690" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">gunzip file.gz</text>
+<text x="2650.0" y="4690" font-family="sans-serif" font-size="22" fill="#a5adcb">Decompress file</text>
+<text x="2200.0" y="4760" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">zip -r arc.zip dir/</text>
+<text x="2650.0" y="4760" font-family="sans-serif" font-size="22" fill="#a5adcb">Create zip archive</text>
+<text x="2200.0" y="4830" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">unzip arc.zip</text>
+<text x="2650.0" y="4830" font-family="sans-serif" font-size="22" fill="#a5adcb">Extract zip archive</text>
+<text x="2200.0" y="4900" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">xz -z file</text>
+<text x="2650.0" y="4900" font-family="sans-serif" font-size="22" fill="#a5adcb">Compress file with xz</text>
+<text x="2200.0" y="4970" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">xz -d file.xz</text>
+<text x="2650.0" y="4970" font-family="sans-serif" font-size="22" fill="#a5adcb">Decompress xz file</text>
+</svg>

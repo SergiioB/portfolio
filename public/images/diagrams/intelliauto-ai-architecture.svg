@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="900" height="650">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <linearGradient id="androidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3DDC84;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2CA86E;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="firebaseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFCA28;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="commerceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="650" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">IntelliAuto AutoMind AI Architecture</text>
+  
+  <!-- Android App Box -->
+  <rect x="20" y="70" width="220" height="320" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="130" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#166534">Android App</text>
+  <text x="130" y="120" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#15803d">IntelliAuto</text>
+  
+  <!-- Chat UI -->
+  <rect x="40" y="140" width="160" height="50" rx="8" fill="url(#androidGrad)"/>
+  <text x="120" y="165" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">💬 Chat UI</text>
+  <text x="120" y="180" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#f0fdf4">Jetpack Compose</text>
+  
+  <!-- Vehicle Context -->
+  <rect x="40" y="205" width="160" height="60" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="120" y="230" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#1e40af">🚗 Vehicle Data</text>
+  <text x="120" y="247" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Make, Model, Year</text>
+  <text x="120" y="260" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Maintenance History</text>
+  
+  <!-- Input Preprocessing -->
+  <rect x="40" y="280" width="160" height="55" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="120" y="305" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#92400e">🔧 Preprocessing</text>
+  <text x="120" y="322" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">Strip Control Chars</text>
+  <text x="120" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">Length Validation</text>
+  
+  <!-- Arrow: App to Cloud Functions -->
+  <line x1="240" y1="250" x2="320" y2="250" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="280" y="240" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">User Question</text>
+  <text x="280" y="270" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">+ Vehicle Context</text>
+  
+  <!-- Cloud Functions Box -->
+  <rect x="330" y="70" width="280" height="450" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="470" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#92400e">Firebase Cloud Functions</text>
+  <text x="470" y="120" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#b45309">(AI Security Gateway)</text>
+  
+  <!-- Auth Check -->
+  <rect x="350" y="145" width="240" height="50" rx="8" fill="url(#shieldGrad)"/>
+  <text x="470" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">🔐 Authentication</text>
+  <text x="470" y="187" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#fecaca">Verify Firebase Auth Token</text>
+  
+  <!-- Rate Limiting -->
+  <rect x="350" y="205" width="240" height="55" rx="8" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="470" y="230" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#5b21b6">⏱️ Rate Limiter</text>
+  <text x="470" y="247" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#a78bfa">Free: 5-10/day | Premium: Unlimited</text>
+  <text x="470" y="260" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#a78bfa">Firestore Atomic Counters</text>
+  
+  <!-- Injection Detection -->
+  <rect x="350" y="270" width="240" height="70" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+  <text x="470" y="295" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#dc2626">🛡️ Injection Detection</text>
+  <text x="470" y="315" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#dc2626">Regex: "ignore instructions"</text>
+  <text x="470" y="330" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#dc2626">Blocklist: jailbreak, DAN mode</text>
+  <text x="470" y="345" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#dc2626">Unicode Normalization</text>
+  
+  <!-- System Prompt Builder -->
+  <rect x="350" y="350" width="240" height="65" rx="8" fill="url(#aiGrad)"/>
+  <text x="470" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">📜 System Prompt</text>
+  <text x="470" y="392" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#e9d5ff">XML-Tagged Instructions</text>
+  <text x="470" y="405" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#e9d5ff">Role: "Automotive Assistant Only"</text>
+  <text x="470" y="418" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#e9d5ff">Safety Disclaimers Required</text>
+  
+  <!-- PII Stripper -->
+  <rect x="350" y="425" width="240" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="470" y="450" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#1e40af">🔒 PII Remover</text>
+  <text x="470" y="467" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Keep: Vehicle specs, mileage, symptoms</text>
+  
+  <!-- Arrow: Cloud Functions to LLM -->
+  <line x1="610" y1="350" x2="700" y2="350" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="655" y="340" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Sanitized</text>
+  <text x="655" y="370" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Context Only</text>
+  
+  <!-- LLM Provider Box -->
+  <rect x="710" y="250" width="170" height="200" rx="10" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="795" y="280" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#5b21b6">LLM Provider</text>
+  <text x="795" y="300" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#7c3aed">DeepSeek V3.2 / KIMI / Gemini</text>
+  
+  <!-- JSON Schema -->
+  <rect x="730" y="320" width="130" height="110" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="795" y="345" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#92400e">JSON Schema</text>
+  <text x="795" y="365" text-anchor="middle" font-family="monospace" font-size="8" fill="#92400e">is_car_related</text>
+  <text x="795" y="378" text-anchor="middle" font-family="monospace" font-size="8" fill="#92400e">severity</text>
+  <text x="795" y="391" text-anchor="middle" font-family="monospace" font-size="8" fill="#92400e">diagnosis</text>
+  <text x="795" y="404" text-anchor="middle" font-family="monospace" font-size="8" fill="#92400e">product_query</text>
+  <text x="795" y="417" text-anchor="middle" font-family="monospace" font-size="8" fill="#92400e">safety_disclaimer</text>
+  
+  <!-- Arrow: LLM back to Cloud Functions -->
+  <line x1="710" y1="420" x2="610" y2="420" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="655" y="410" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Validated</text>
+  <text x="655" y="430" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">JSON Response</text>
+  
+  <!-- Output Validator -->
+  <rect x="350" y="485" width="240" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="470" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#92400e">✅ Output Validator</text>
+  <text x="470" y="527" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">Schema Validation + Safety Check</text>
+  
+  <!-- Arrow: Cloud Functions to App -->
+  <line x1="330" y1="350" x2="240" y2="350" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="280" y="340" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">AI Response</text>
+  <text x="280" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">+ Product Query</text>
+  
+  <!-- Dynamic Affiliate Link Builder -->
+  <rect x="40" y="350" width="160" height="65" rx="8" fill="url(#commerceGrad)"/>
+  <text x="120" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">🛒 Link Builder</text>
+  <text x="120" y="392" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#f0fdf4">Query → Affiliate URL</text>
+  <text x="120" y="405" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#f0fdf4">Amazon/Oscaro/Norauto</text>
+  
+  <!-- Affiliate Networks -->
+  <rect x="40" y="430" width="160" height="50" rx="8" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+  <text x="120" y="455" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#047857">Affiliate Networks</text>
+  <text x="120" y="472" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#059669">24h-30d Cookie Window</text>
+  
+  <!-- Product Card UI -->
+  <rect x="40" y="495" width="160" height="75" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="120" y="520" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#475569">📦 Product Card</text>
+  <text x="120" y="540" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Dynamic Search Results</text>
+  <text x="120" y="555" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">"Ver Precios en Amazon"</text>
+  
+  <!-- Security Layers Legend -->
+  <rect x="710" y="480" width="170" height="140" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="795" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#334155">AI Security Layers</text>
+  
+  <circle cx="730" cy="530" r="8" fill="#ef4444"/>
+  <text x="745" y="535" font-family="system-ui, sans-serif" font-size="10" fill="#334155">Auth + Rate Limit</text>
+  
+  <circle cx="730" cy="555" r="8" fill="#f59e0b"/>
+  <text x="745" y="560" font-family="system-ui, sans-serif" font-size="10" fill="#334155">Injection Detection</text>
+  
+  <circle cx="730" cy="580" r="8" fill="#8b5cf6"/>
+  <text x="745" y="585" font-family="system-ui, sans-serif" font-size="10" fill="#334155">System Prompt Hardening</text>
+  
+  <circle cx="730" cy="605" r="8" fill="#3b82f6"/>
+  <text x="745" y="610" font-family="system-ui, sans-serif" font-size="10" fill="#334155">PII Anonymization</text>
+  
+  <!-- Model Selection Note -->
+  <rect x="710" y="630" width="170" height="15" fill="none"/>
+  <text x="795" y="642" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Primary: DeepSeek V3.2 (balanced)</text>
+</svg>

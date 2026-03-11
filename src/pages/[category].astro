@@ -1,0 +1,80 @@
+---
+import { getCollection } from "astro:content";
+
+import CategoryAnimation from "../components/CategoryAnimation.astro";
+import PostCard from "../components/PostCard.astro";
+import PostSearch from "../components/PostSearch.astro";
+import { SITE } from "../config/site";
+import {
+  CATEGORY_META,
+  CATEGORY_ORDER,
+  getCategoryLabel,
+  type CategorySlug,
+} from "../content/categories";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../utils/paths";
+
+export async function getStaticPaths() {
+  return CATEGORY_ORDER.map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.params;
+const posts = await getCollection("posts");
+const filteredPosts = posts
+  .filter((post) => post.data.category.includes(category as string) && !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const catName = getCategoryLabel(category as string);
+const catDescription =
+  category && category in CATEGORY_META
+    ? CATEGORY_META[category as CategorySlug].description
+    : `Articles about ${category}`;
+---
+
+<BaseLayout title={`${catName} | ${SITE.author}`} description={catDescription}>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
+    <span>/</span>
+    <span data-i18n={`cat.${category}`}>{catName}</span>
+  </nav>
+
+  <header class="page-header page-header-tight" style="position: relative; overflow: hidden;">
+    <CategoryAnimation category={category as string} />
+    <div style="position: relative; z-index: 10;">
+      <span class={`category-badge ${category}`} data-i18n={`cat.${category}`}>{catName}</span>
+      <h1 data-i18n={`cat.${category}`}>{catName}</h1>
+      <p class="page-description" data-i18n={`cat.${category}.desc`}>{catDescription}</p>
+      <p class="post-count">
+        <span>{filteredPosts.length}</span>
+        <span data-i18n={filteredPosts.length === 1 ? "catPage.article" : "catPage.articles"}
+          >{filteredPosts.length === 1 ? "article" : "articles"}</span
+        >
+        <span data-i18n="catPage.published">published</span>
+      </p>
+    </div>
+  </header>
+
+  <section class="category-summary panel panel-soft" aria-label={`${catName} category summary`}>
+    <p data-i18n="catPage.caseSummary">
+      Each post in this domain is written in case-study format: situation, issue, solution, usage
+      context, and delivery impact.
+    </p>
+  </section>
+
+  <PostSearch itemSelector="[data-search-item]" placeholder={`Search ${catName} posts...`} />
+
+  <section class="post-feed" aria-label={`Posts in ${catName}`}>
+    {filteredPosts.map((post) => <PostCard post={post} />)}
+
+    {
+      filteredPosts.length === 0 && (
+        <p class="empty-state panel panel-soft" data-i18n="catPage.noPosts">
+          No posts in this category yet.
+        </p>
+      )
+    }
+  </section>
+</BaseLayout>

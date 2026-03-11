@@ -1,0 +1,4 @@
+Contact: https://github.com/SergiioB/portfolio/issues
+Expires: 2027-02-26T00:00:00Z
+Preferred-Languages: en
+Canonical: https://SergiioB.github.io/portfolio/.well-known/security.txt

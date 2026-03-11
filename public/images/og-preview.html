@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600;700;800&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      background-color: #0d1117;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      background-position: center center;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Subtle radial gradient to highlight center */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(88, 166, 255, 0.1) 0%, transparent 60%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* Top right imports / code snippet */
+    .top-code {
+      position: absolute;
+      top: 40px;
+      right: 50px;
+      font-family: 'Fira Code', monospace;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.3);
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    .top-code .keyword { color: #8b949e; }
+    .top-code .string { color: #a5d6ff; }
+
+    /* Center Badge */
+    .badge-container {
+      margin-bottom: 24px;
+      z-index: 10;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(48, 54, 61, 0.5);
+      border: 1px solid rgba(88, 166, 255, 0.2);
+      backdrop-filter: blur(8px);
+    }
+    .badge-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 15px;
+      font-weight: 500;
+      color: #8b949e;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .badge-text span {
+      color: #e6edf3;
+    }
+
+    /* Name */
+    .name {
+      font-size: 80px;
+      font-weight: 800;
+      color: #e6edf3;
+      letter-spacing: -0.04em;
+      margin-bottom: 15px;
+      z-index: 10;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    /* Subtitle */
+    .subtitle {
+      font-size: 38px;
+      font-weight: 600;
+      color: #58a6ff;
+      letter-spacing: -0.02em;
+      z-index: 10;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    /* Bottom section */
+    .bottom-bar {
+      position: absolute;
+      bottom: 40px;
+      left: 50px;
+      right: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .role {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #3fb950;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .domain {
+      font-family: 'Fira Code', monospace;
+      font-size: 20px;
+      color: #8b949e;
+      letter-spacing: 0.05em;
+    }
+
+    /* Accents / Glows */
+    .accent-blur-top {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(35, 134, 54, 0.15); /* Greenish glow */
+      filter: blur(100px);
+      top: -100px;
+      left: -100px;
+    }
+    .accent-blur-bottom {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: rgba(88, 166, 255, 0.1); /* Bluish glow */
+      filter: blur(120px);
+      bottom: -150px;
+      right: -100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="accent-blur-top"></div>
+  <div class="accent-blur-bottom"></div>
+
+  <div class="top-code">
+    <div><span class="keyword">import</span> { Architect } <span class="keyword">from</span> <span class="string">'@enterprise/infra'</span>;</div>
+    <div><span class="keyword">const</span> mode = <span class="string">"Engineer"</span>;</div>
+  </div>
+
+  <div class="badge-container">
+    <div class="badge">
+      <div class="badge-text">ENGINEER MODE : <span>ACTIVE</span></div>
+    </div>
+  </div>
+
+  <h1 class="name">Sergio B.</h1>
+  <div class="subtitle">Field Notes & Architecture Hub</div>
+
+  <div class="bottom-bar">
+    <div class="role">Linux & Virtualization Engineer</div>
+    <div class="domain">sergiiob.dev</div>
+  </div>
+</body>
+</html>

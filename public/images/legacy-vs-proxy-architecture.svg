@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <!-- Definitions for gradients and shadows -->
+  <defs>
+    <linearGradient id="serverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0.2" />
+    </linearGradient>
+    <linearGradient id="tomcatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.3" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0f172a" rx="12" />
+
+  <!-- Titles -->
+  <text x="200" y="50" font-family="monospace" font-size="20" font-weight="bold" fill="#f8fafc" text-anchor="middle">Legacy IP Binding</text>
+  <text x="600" y="50" font-family="monospace" font-size="20" font-weight="bold" fill="#f8fafc" text-anchor="middle">Layer 7 Reverse Proxy</text>
+
+  <!-- Divider Line -->
+  <line x1="400" y1="20" x2="400" y2="480" stroke="#334155" stroke-width="2" stroke-dasharray="8,8" />
+
+  <!-- ================= LEGACY ARCHITECTURE (LEFT) ================= -->
+  
+  <!-- Network Cloud / External -->
+  <path d="M 120 100 C 120 80, 280 80, 280 100 C 310 100, 310 130, 280 130 C 280 150, 120 150, 120 130 C 90 130, 90 100, 120 100 Z" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#dropShadow)" />
+  <text x="200" y="120" font-family="monospace" font-size="14" fill="#cbd5e1" text-anchor="middle">External Network</text>
+
+  <!-- Server Box -->
+  <rect x="50" y="180" width="300" height="280" rx="8" fill="url(#serverGrad)" stroke="#3b82f6" stroke-width="2" filter="url(#dropShadow)" />
+  <text x="200" y="210" font-family="monospace" font-size="16" font-weight="bold" fill="#93c5fd" text-anchor="middle">Single RHEL 9 Host</text>
+
+  <!-- Network Interface (eth0) -->
+  <rect x="70" y="240" width="260" height="30" rx="4" fill="#334155" stroke="#475569" stroke-width="1" />
+  <text x="200" y="260" font-family="monospace" font-size="12" fill="#e2e8f0" text-anchor="middle">eth0 (Multiple IPs)</text>
+
+  <!-- Tomcat Instances and IPs -->
+  <!-- App 1 -->
+  <rect x="70" y="290" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="130" y="315" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 1</text>
+  <text x="130" y="335" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.11:8443</text>
+
+  <!-- App 2 -->
+  <rect x="210" y="290" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="270" y="315" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 2</text>
+  <text x="270" y="335" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.12:8443</text>
+
+  <!-- App 3 -->
+  <rect x="70" y="370" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="130" y="395" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 3</text>
+  <text x="130" y="415" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.13:8443</text>
+
+  <!-- App 4 -->
+  <rect x="210" y="370" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="270" y="395" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 4</text>
+  <text x="270" y="415" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.14:8443</text>
+
+  <!-- Connection Lines (Legacy) -->
+  <!-- From Cloud to Interface -->
+  <path d="M 170 140 L 170 230" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" />
+  <path d="M 190 140 L 190 230" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" />
+  <path d="M 210 140 L 210 230" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" />
+  <path d="M 230 140 L 230 230" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" />
+  
+  <!-- ARP Flux Warning Icon -->
+  <circle cx="200" cy="180" r="15" fill="#ef4444" />
+  <text x="200" y="185" font-family="sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">!</text>
+  <text x="280" y="185" font-family="monospace" font-size="10" fill="#fca5a5">ARP Flux Risk</text>
+
+  <!-- ================= REVERSE PROXY ARCHITECTURE (RIGHT) ================= -->
+
+  <!-- Network Cloud / External -->
+  <path d="M 520 100 C 520 80, 680 80, 680 100 C 710 100, 710 130, 680 130 C 680 150, 520 150, 520 130 C 490 130, 490 100, 520 100 Z" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#dropShadow)" />
+  <text x="600" y="120" font-family="monospace" font-size="14" fill="#cbd5e1" text-anchor="middle">External Network</text>
+
+  <!-- Server Box -->
+  <rect x="450" y="180" width="300" height="280" rx="8" fill="url(#serverGrad)" stroke="#10b981" stroke-width="2" filter="url(#dropShadow)" />
+  <text x="600" y="210" font-family="monospace" font-size="16" font-weight="bold" fill="#6ee7b7" text-anchor="middle">Single RHEL 9 Host</text>
+
+  <!-- Reverse Proxy -->
+  <rect x="470" y="230" width="260" height="40" rx="4" fill="#047857" stroke="#34d399" stroke-width="1" filter="url(#dropShadow)"/>
+  <text x="600" y="250" font-family="monospace" font-size="14" font-weight="bold" fill="#ecfdf5" text-anchor="middle">Apache Reverse Proxy</text>
+  <text x="600" y="265" font-family="monospace" font-size="10" fill="#a7f3d0" text-anchor="middle">IP: 10.0.0.10:443 (Single IP)</text>
+
+  <!-- Tomcat Instances (Localhost) -->
+  <!-- App 1 -->
+  <rect x="470" y="310" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="530" y="335" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 1</text>
+  <text x="530" y="355" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">AJP: 127.0.0.1:8009</text>
+
+  <!-- App 2 -->
+  <rect x="610" y="310" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="670" y="335" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 2</text>
+  <text x="670" y="355" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">AJP: 127.0.0.1:8010</text>
+
+  <!-- App 3 -->
+  <rect x="470" y="390" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="530" y="415" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 3</text>
+  <text x="530" y="435" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">AJP: 127.0.0.1:8011</text>
+
+  <!-- App 4 -->
+  <rect x="610" y="390" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
+  <text x="670" y="415" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 4</text>
+  <text x="670" y="435" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">AJP: 127.0.0.1:8012</text>
+
+  <!-- Connection Lines (Proxy) -->
+  <!-- Cloud to Proxy -->
+  <path d="M 600 140 L 600 220" stroke="#10b981" stroke-width="3" stroke-dasharray="0" />
+  
+  <!-- Proxy to Tomcats -->
+  <!-- To App 1 -->
+  <path d="M 530 270 L 530 300" stroke="#a7f3d0" stroke-width="2" stroke-dasharray="4,4" />
+  <!-- To App 2 -->
+  <path d="M 670 270 L 670 300" stroke="#a7f3d0" stroke-width="2" stroke-dasharray="4,4" />
+  <!-- To App 3 -->
+  <path d="M 500 270 L 500 285 L 455 285 L 455 420 L 460 420" stroke="#a7f3d0" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+  <!-- To App 4 -->
+  <path d="M 700 270 L 700 285 L 745 285 L 745 420 L 740 420" stroke="#a7f3d0" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+
+  <!-- Safe Check Icon -->
+  <circle cx="600" cy="180" r="15" fill="#10b981" />
+  <path d="M 593 180 L 598 185 L 607 175" stroke="#ffffff" stroke-width="3" fill="none" />
+  <text x="680" y="185" font-family="monospace" font-size="10" fill="#6ee7b7">Clean Single Route</text>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "threshold": 5,
+  "reporters": ["console", "html"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.astro/**",
+    "**/public/**",
+    "**/*.min.js",
+    "**/*.min.css",
+    "**/package-lock.json"
+  ],
+  "format": ["javascript", "typescript", "astro", "css", "markdown"],
+  "minLines": 5,
+  "minTokens": 50,
+  "output": "./reports/jscpd"
+}

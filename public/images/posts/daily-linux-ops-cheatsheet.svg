@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="2050" viewBox="0 0 2200 2050" role="img" aria-label="Daily Linux ops command cheatsheet poster with structured command blocks for storage, permissions, Git, cron, and editor tasks">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07111d" />
+      <stop offset="55%" stop-color="#0c1828" />
+      <stop offset="100%" stop-color="#050b14" />
+    </linearGradient>
+    <linearGradient id="stroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2d5b87" />
+      <stop offset="50%" stop-color="#2f7f8a" />
+      <stop offset="100%" stop-color="#4d8d51" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#02060d" flood-opacity="0.42" />
+    </filter>
+    <style>
+      .title { font: 700 54px "Segoe UI", Arial, sans-serif; fill: #f4f8ff; }
+      .subtitle { font: 400 22px "Segoe UI", Arial, sans-serif; fill: #a4b6c8; }
+      .badge { font: 700 20px "Consolas", "Courier New", monospace; fill: #8edcff; letter-spacing: 2px; }
+      .panel { fill: rgba(10, 20, 33, 0.94); stroke: url(#stroke); stroke-width: 2; }
+      .panel-title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
+      .panel-copy { font: 400 18px "Segoe UI", Arial, sans-serif; fill: #99aec0; }
+      .label { font: 700 15px "Segoe UI", Arial, sans-serif; fill: #7bc7ff; letter-spacing: 1px; }
+      .cmd { font: 400 18px "Consolas", "Courier New", monospace; fill: #9ef2bf; }
+      .cmd-alt { font: 400 18px "Consolas", "Courier New", monospace; fill: #8dd9ff; }
+      .note { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #b1c1d0; }
+      .small { font: 400 15px "Consolas", "Courier New", monospace; fill: #90a5b6; }
+      .chip { fill: #0b1f31; stroke: #275676; stroke-width: 1.2; }
+      .grid { stroke: rgba(120, 162, 190, 0.08); stroke-width: 1; }
+      .rule { stroke: rgba(120, 170, 201, 0.18); stroke-width: 1; }
+      .cmd-box { fill: #091524; stroke: rgba(85, 141, 182, 0.25); stroke-width: 1; rx: 14px; }
+    </style>
+  </defs>
+
+  <rect width="2200" height="2050" fill="url(#bg)" />
+
+  <g opacity="0.22">
+    <path d="M0 180h2200M0 380h2200M0 580h2200M0 780h2200M0 980h2200M0 1180h2200M0 1380h2200M0 1580h2200M0 1780h2200M0 1980h2200" class="grid" />
+    <path d="M150 0v2050M410 0v2050M670 0v2050M930 0v2050M1190 0v2050M1450 0v2050M1710 0v2050M1970 0v2050M2230 0v2050" class="grid" />
+  </g>
+
+  <circle cx="1930" cy="180" r="180" fill="#123257" opacity="0.16" />
+  <circle cx="260" cy="1960" r="220" fill="#193b24" opacity="0.14" />
+
+  
+
+  <g filter="url(#shadow)">
+    <g transform="translate(90 370)">
+      <rect width="970" height="470" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">1. Capacity and filesystem triage</text>
+      <text x="34" y="90" class="panel-copy">Start with visibility before touching partitions or services.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">QUICK CHECKS</text>
+      <rect x="34" y="160" width="902" height="54" class="cmd-box" />
+      <text x="52" y="194" class="cmd">du -sh /srv/app/* | sort -h</text>
+      <rect x="34" y="226" width="902" height="54" class="cmd-box" />
+      <text x="52" y="260" class="cmd">(df -h | head -n1 &amp;&amp; df -h | tail -n +2 | sort -hr -k5)</text>
+      <rect x="34" y="292" width="902" height="54" class="cmd-box" />
+      <text x="52" y="326" class="cmd">lsblk -o NAME,SIZE,FSTYPE,TYPE,MOUNTPOINTS</text>
+      <text x="34" y="380" class="label">PACKAGE LOOKUPS</text>
+      <rect x="34" y="394" width="902" height="54" class="cmd-box" />
+      <text x="52" y="428" class="cmd-alt">rpm -qa | grep package-pattern</text>
+    </g>
+
+    <g transform="translate(1140 370)">
+      <rect width="970" height="470" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">2. Grow a disk and extend LVM</text>
+      <text x="34" y="90" class="panel-copy">For cases where the virtual disk is already larger but Linux has not consumed the space yet.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">RESCAN AND EXTEND</text>
+      <rect x="34" y="160" width="902" height="54" class="cmd-box" />
+      <text x="52" y="194" class="cmd">echo 1 &gt; /sys/class/block/sdb/device/rescan</text>
+      <rect x="34" y="226" width="902" height="54" class="cmd-box" />
+      <text x="52" y="260" class="cmd">fdisk /dev/sda</text>
+      <rect x="34" y="292" width="902" height="54" class="cmd-box" />
+      <text x="52" y="326" class="cmd">partprobe /dev/sda</text>
+      <rect x="34" y="358" width="902" height="54" class="cmd-box" />
+      <text x="52" y="392" class="cmd">pvresize /dev/sda3 &amp;&amp; vgs vg_main</text>
+      <rect x="34" y="424" width="902" height="54" class="cmd-box" />
+      <text x="52" y="458" class="cmd">lvextend -r -l +100%FREE /dev/vg_main/lv_root</text>
+    </g>
+
+    <g transform="translate(90 900)">
+      <rect width="970" height="520" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">3. Shrink an ext4 LV carefully</text>
+      <text x="34" y="90" class="panel-copy">Only the minimal safe order: filesystem first, logical volume second.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">SAFE ORDER</text>
+      <rect x="34" y="160" width="902" height="50" class="cmd-box" />
+      <text x="52" y="192" class="cmd">umount /apps</text>
+      <rect x="34" y="220" width="902" height="50" class="cmd-box" />
+      <text x="52" y="252" class="cmd">e2fsck -f /dev/vg_app/lv_apps</text>
+      <rect x="34" y="280" width="902" height="50" class="cmd-box" />
+      <text x="52" y="312" class="cmd">resize2fs /dev/vg_app/lv_apps 9.5G</text>
+      <rect x="34" y="340" width="902" height="50" class="cmd-box" />
+      <text x="52" y="372" class="cmd">lvreduce -L 10G /dev/vg_app/lv_apps</text>
+      <rect x="34" y="400" width="902" height="50" class="cmd-box" />
+      <text x="52" y="432" class="cmd">mount /dev/vg_app/lv_apps /apps</text>
+      <rect x="34" y="460" width="902" height="50" class="cmd-box" />
+      <text x="52" y="492" class="cmd">resize2fs /dev/vg_app/lv_apps &amp;&amp; df -h /apps</text>
+    </g>
+
+    <g transform="translate(1140 900)">
+      <rect width="970" height="520" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">4. Accounts, ownership, and access</text>
+      <text x="34" y="90" class="panel-copy">Common checks for service users, password policy, SSH access, and file ownership.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">USER CHECKS</text>
+      <rect x="34" y="160" width="902" height="50" class="cmd-box" />
+      <text x="52" y="192" class="cmd">id svc_user &amp;&amp; chage -l svc_user</text>
+      <rect x="34" y="220" width="902" height="50" class="cmd-box" />
+      <text x="52" y="252" class="cmd">chage -d "$(date +%F)" svc_user</text>
+      <rect x="34" y="280" width="902" height="50" class="cmd-box" />
+      <text x="52" y="312" class="cmd">ssh-copy-id ops_user@target-host</text>
+      <rect x="34" y="340" width="902" height="50" class="cmd-box" />
+      <text x="52" y="372" class="cmd">sudo chown root:root /srv/postgres/archive/</text>
+      <rect x="34" y="400" width="902" height="50" class="cmd-box" />
+      <text x="52" y="432" class="cmd">sudo -l -U svc_user | grep -v "not allowed"</text>
+    </g>
+
+    <g transform="translate(90 1480)">
+      <rect width="970" height="520" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">5. Git recovery sequence</text>
+      <text x="34" y="90" class="panel-copy">A compact sequence to refresh from main without losing local in-flight work.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">CONTROLLED MERGE FLOW</text>
+      <rect x="34" y="160" width="902" height="50" class="cmd-box" />
+      <text x="52" y="192" class="cmd">git stash</text>
+      <rect x="34" y="220" width="902" height="50" class="cmd-box" />
+      <text x="52" y="252" class="cmd">git checkout main &amp;&amp; git pull</text>
+      <rect x="34" y="280" width="902" height="50" class="cmd-box" />
+      <text x="52" y="312" class="cmd">git checkout feature-branch</text>
+      <rect x="34" y="340" width="902" height="50" class="cmd-box" />
+      <text x="52" y="372" class="cmd">git merge main</text>
+      <rect x="34" y="400" width="902" height="50" class="cmd-box" />
+      <text x="52" y="432" class="cmd">git stash pop</text>
+    </g>
+
+    <g transform="translate(1140 1480)">
+      <rect width="970" height="520" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">6. Vim, symlinks, and cron</text>
+      <text x="34" y="90" class="panel-copy">Tiny commands that prevent surprisingly large cleanup or scheduling mistakes.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">EDITOR AND OPS FRAGMENTS</text>
+      <rect x="34" y="160" width="902" height="50" class="cmd-box" />
+      <text x="52" y="192" class="cmd">:%s/\s\+$//e</text>
+      <rect x="34" y="220" width="902" height="50" class="cmd-box" />
+      <text x="52" y="252" class="cmd">:%s/old-token/new-token/g</text>
+      <rect x="34" y="280" width="902" height="50" class="cmd-box" />
+      <text x="52" y="312" class="cmd">ln -s /etc/opt/vendor/app /apps/app</text>
+      <rect x="34" y="340" width="902" height="50" class="cmd-box" />
+      <text x="52" y="372" class="cmd">unlink /apps/app</text>
+      <rect x="34" y="400" width="902" height="50" class="cmd-box" />
+      <text x="52" y="432" class="cmd">6 14 * * * /usr/bin/systemctl restart example-service</text>
+    </g>
+  </g>
+
+</svg>
