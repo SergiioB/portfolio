@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1840" viewBox="0 0 2200 1840" role="img" aria-label="Linux Engineer Command List — Testing, Git, and Utilities poster">
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1840" viewBox="0 0 2200 1840" role="img" aria-label="Linux Engineer Command List — Advanced Administration poster">
 
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -40,90 +40,103 @@
 <circle cx="1930" cy="180" r="180" fill="#123257" opacity="0.16" />
 <circle cx="260" cy="1720" r="220" fill="#193b24" opacity="0.14" />
 <g transform="translate(90 84)">
-<rect x="0" y="0" width="470" height="44" rx="22" class="chip" />
-<text x="24" y="29" class="badge">DELIVERY / GIT / UTILITIES</text>
-<text x="0" y="104" class="title">Linux Engineer Command List — Testing, Git, and Utilities</text>
-<text x="0" y="142" class="subtitle">Molecule scenario loops, safe Git refresh flow, silent installer execution, certificates, Vim cleanup, symlinks, and cron reminders.</text>
+<rect x="0" y="0" width="580" height="44" rx="22" class="chip" />
+<text x="24" y="29" class="badge">LINUX ENGINEERING / ADMINISTRATION</text>
+<text x="0" y="104" class="title">Linux Engineer Command List — Advanced Administration</text>
+<text x="0" y="142" class="subtitle">Deep dive into networking, storage operations, secure user management, and automated certificate generation.</text>
 </g>
 <g filter="url(#shadow)">
 <g transform="translate(90 310)">
-<rect width="970" height="620" rx="28" class="panel" />
-<text x="34" y="54" class="panel-title">1. Molecule scenario loop</text>
-<text x="34" y="86" class="panel-copy">Reset, create, converge, and then log in to inspect the created instance.</text>
+<rect width="970" height="740" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">1. Advanced Network Troubleshooting & Automation</text>
+<text x="34" y="86" class="panel-copy">Tools for deep packet inspection, service listening state, port mapping, and triggering Ansible network tags.</text>
 <line x1="34" y1="108" x2="936" y2="108" class="rule" />
-<text x="34" y="138" class="label">ROLE TEST CYCLE</text>
+<text x="34" y="138" class="label">NETWORK OPERATIONS</text>
 <rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="176" class="cmd">molecule list</text>
-<rect x="34" y="208" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="232" class="cmd-alt">molecule destroy -s default</text>
-<rect x="34" y="264" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="288" class="cmd">molecule create -s default</text>
-<rect x="34" y="320" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="344" class="cmd-alt">molecule converge -s default</text>
-<rect x="34" y="376" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="400" class="cmd">molecule login -s default</text>
+<text x="50" y="176" class="cmd">ip -br a</text>
+<rect x="34" y="204" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="228" class="cmd-alt">ss -tulpn | grep LISTEN</text>
+<rect x="34" y="256" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="280" class="cmd">tcpdump -i eth0 -n port 80 or port 443</text>
+<rect x="34" y="308" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="332" class="cmd-alt">nmap -p 1-65535 -T4 -A -v target-host</text>
+<rect x="34" y="360" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="384" class="cmd">ansible-playbook -i inventory/prod deploy.yml --tags &quot;network&quot;</text>
+<rect x="34" y="412" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="436" class="cmd-alt">iperf3 -c server.local -t 30 -P 4</text>
+<rect x="34" y="464" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="488" class="cmd">traceroute -T -p 443 app.example.com</text>
+<rect x="34" y="516" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="540" class="cmd-alt">netstat -natp | awk '{print $6}' | sort | uniq -c</text>
 </g>
 <g transform="translate(1140 310)">
-<rect width="970" height="620" rx="28" class="panel" />
-<text x="34" y="54" class="panel-title">2. Git recovery sequence</text>
-<text x="34" y="86" class="panel-copy">The smallest safe sequence for refreshing a feature branch from main.</text>
+<rect width="970" height="740" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">2. Sudoers, Users & Jobs Management</text>
+<text x="34" y="86" class="panel-copy">Commands for robust user administration, safely editing sudoers with syntax checking, and verifying scheduled jobs/timers.</text>
 <line x1="34" y1="108" x2="936" y2="108" class="rule" />
-<text x="34" y="138" class="label">CONTROLLED MERGE FLOW</text>
+<text x="34" y="138" class="label">USER & SYSTEM JOBS</text>
 <rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="176" class="cmd">git stash</text>
-<rect x="34" y="208" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="232" class="cmd-alt">git checkout main</text>
-<rect x="34" y="264" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="288" class="cmd">git pull</text>
-<rect x="34" y="320" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="344" class="cmd-alt">git checkout feature-branch</text>
-<rect x="34" y="376" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="400" class="cmd">git merge main</text>
-<rect x="34" y="432" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="456" class="cmd-alt">git stash pop</text>
-<rect x="34" y="488" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="512" class="cmd">git add</text>
+<text x="50" y="176" class="cmd">usermod -aG wheel,docker,adm svc_user</text>
+<rect x="34" y="204" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="228" class="cmd-alt">visudo -c -f /etc/sudoers.d/custom_rules</text>
+<rect x="34" y="256" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="280" class="cmd">echo &quot;svc_user ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart sas-viya&quot; &gt; /etc/sudoers.d/sas</text>
+<rect x="34" y="308" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="332" class="cmd-alt">usermod -e $(date -d &quot;1 year&quot; +%Y-%m-%d) temp_user</text>
+<rect x="34" y="360" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="384" class="cmd">systemctl list-timers --all</text>
+<rect x="34" y="412" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="436" class="cmd-alt">crontab -u b_t_sasrp_scheduler -e</text>
+<rect x="34" y="464" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="488" class="cmd">chage -l svc_user</text>
+<rect x="34" y="516" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="540" class="cmd-alt">sudo -l -U svc_user</text>
 </g>
-<g transform="translate(90 980)">
-<rect width="970" height="760" rx="28" class="panel" />
-<text x="34" y="54" class="panel-title">3. Silent installers and certificates</text>
-<text x="34" y="86" class="panel-copy">Run silent installers when the software stack needs non-interactive deployment, then generate CSRs when cert work lands on the same day.</text>
+<g transform="translate(90 1020)">
+<rect width="970" height="740" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">3. Silent Installers & Certificates</text>
+<text x="34" y="86" class="panel-copy">Running silent deployment wizards (like SAS) and generating SSL/TLS CSRs with SANs cleanly separated.</text>
 <line x1="34" y1="108" x2="936" y2="108" class="rule" />
-<text x="34" y="138" class="label">INSTALLERS AND CERTS</text>
-<rect x="34" y="152" width="902" height="64" rx="12" class="cmd-box" />
-<text x="50" y="176" class="cmd">/opt/software-depot/setup.sh -silent -responsefile</text>
-<text x="50" y="196" class="cmd">/opt/software-depot/response.properties -skiposlevelcheck</text>
-<rect x="34" y="228" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="252" class="cmd-alt">openssl req -new -newkey rsa:2048 -nodes</text>
-<rect x="34" y="284" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="308" class="cmd">-keyout files/target-host/tls.key -out files/target-host/tls.csr</text>
-<rect x="34" y="340" width="902" height="64" rx="12" class="cmd-box" />
-<text x="50" y="364" class="cmd-alt">-subj &quot;/C=DE/ST=State/L=City/O=Example</text>
-<text x="50" y="384" class="cmd-alt">Corp/OU=Platform/CN=app.example.internal&quot;</text>
-<rect x="34" y="416" width="902" height="64" rx="12" class="cmd-box" />
-<text x="50" y="440" class="cmd">-addext &quot;subjectAltName = DNS:app.example.internal,DNS:target-host.example.i</text>
-<text x="50" y="460" class="cmd">nternal,DNS:target-host&quot;</text>
-</g>
-<g transform="translate(1140 980)">
-<rect width="970" height="760" rx="28" class="panel" />
-<text x="34" y="54" class="panel-title">4. Quick editor, symlink, and cron fixes</text>
-<text x="34" y="86" class="panel-copy">Tiny commands that prevent surprisingly large mistakes in file layout, text cleanup, or scheduled jobs.</text>
-<line x1="34" y1="108" x2="936" y2="108" class="rule" />
-<text x="34" y="138" class="label">SMALL BUT IMPORTANT</text>
+<text x="34" y="138" class="label">INSTALLATION & SSL</text>
 <rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="176" class="cmd">:%s/\s\+$//e</text>
-<rect x="34" y="208" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="232" class="cmd-alt">:%s/old-token/new-token/g</text>
-<rect x="34" y="264" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="288" class="cmd">ln -s /etc/opt/vendor/app /apps/app</text>
-<rect x="34" y="320" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="344" class="cmd-alt">unlink /apps/app</text>
-<rect x="34" y="376" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="400" class="cmd">crontab -u svc_user -e</text>
-<rect x="34" y="432" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="456" class="cmd-alt">crontab -u svc_user -l</text>
-<rect x="34" y="488" width="902" height="44" rx="12" class="cmd-box" />
-<text x="50" y="512" class="cmd">6 14 * * * /usr/bin/systemctl restart example-service</text>
+<text x="50" y="176" class="cmd">/opt/software/setup.sh -silent -responsefile response.properties -skiposlevelcheck</text>
+<rect x="34" y="204" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="228" class="cmd-alt">openssl req -new -newkey rsa:2048 -nodes \</text>
+<rect x="34" y="256" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="280" class="cmd">  -keyout host_vars/server/.files/tls_cert.key \</text>
+<rect x="34" y="308" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="332" class="cmd-alt">  -out server.csr \</text>
+<rect x="34" y="360" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="384" class="cmd">  -subj &quot;/C=DE/ST=State/L=City/O=Company/OU=Dept/CN=server.local&quot; \</text>
+<rect x="34" y="412" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="436" class="cmd-alt">  -addext &quot;subjectAltName = DNS:server.local, DNS:server&quot;</text>
+<rect x="34" y="464" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="488" class="cmd">openssl x509 -req -in server.csr -signkey tls_cert.key -out server.crt -days 365</text>
+<rect x="34" y="516" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="540" class="cmd-alt">openssl x509 -in server.crt -text -noout | grep -A 1 &quot;Subject Alternative Name&quot;</text>
+</g>
+<g transform="translate(1140 1020)">
+<rect width="970" height="740" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">4. System Performance & Storage Operations</text>
+<text x="34" y="86" class="panel-copy">Full LVM expansion sequence (rescan to resize), block device listing, and advanced process monitoring.</text>
+<line x1="34" y1="108" x2="936" y2="108" class="rule" />
+<text x="34" y="138" class="label">STORAGE EXPANSION & LVM</text>
+<rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="176" class="cmd">lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL</text>
+<rect x="34" y="204" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="228" class="cmd-alt">echo 1 &gt; /sys/class/scsi_device/0:0:0:0/device/rescan</text>
+<rect x="34" y="256" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="280" class="cmd">pvresize /dev/sdb</text>
+<rect x="34" y="308" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="332" class="cmd-alt">lvextend -r -L +50G /dev/mapper/vg0-lv_app</text>
+<rect x="34" y="360" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="384" class="cmd">htop -d 10 -s PERCENT_CPU</text>
+<rect x="34" y="412" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="436" class="cmd-alt">strace -c -p $(pgrep -n apache2)</text>
+<rect x="34" y="464" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="488" class="cmd">iostat -xz 1</text>
+<rect x="34" y="516" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="540" class="cmd-alt">df -hT</text>
 </g>
 </g>
 </svg>
