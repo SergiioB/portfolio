@@ -41,6 +41,7 @@ const postsCollection = defineCollection({
     usedIn: z.string().optional(),
     impact: z.string().optional(),
     draft: z.boolean().default(false),
+    slug: z.string().optional(),
   }),
 });
 

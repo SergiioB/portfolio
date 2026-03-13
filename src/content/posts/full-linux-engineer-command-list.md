@@ -11,6 +11,7 @@ updatedDate: 2026-03-13
 category: ["snippets", "infrastructure", "automation"]
 tags: ["linux", "ansible", "python", "git", "vim", "networking", "cheatsheet", "devops"]
 draft: false
+slug: "linux-engineer-command-reference"
 ---
 
 ## Situation
