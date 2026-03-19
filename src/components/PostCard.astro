@@ -90,24 +90,40 @@ const searchText = [
   <p class="post-excerpt">{description}</p>
 
   {
-    (issue || solution || usedIn) && (
-      <ul class="post-highlights" aria-label="Case study highlights">
+    (issue || solution) && (
+      <div class="post-cs-grid" aria-label="Case study details">
         {issue && (
-          <li>
-            <strong data-i18n="posts.issue">Issue:</strong> {issue}
-          </li>
+          <div class="cs-block cs-issue">
+            <h4 class="cs-label" style="color: var(--text-soft);">
+              <span aria-hidden="true" style="color: var(--accent-danger); margin-right: 0.3rem; font-weight: bold;">!</span>
+              <span data-i18n="posts.issueLabel">ISSUE</span>
+            </h4>
+            <p>{issue}</p>
+          </div>
         )}
         {solution && (
-          <li>
-            <strong data-i18n="posts.solution">Solution:</strong> {solution}
-          </li>
+          <div class="cs-block cs-solution">
+            <h4 class="cs-label" style="color: var(--text-soft);">
+              <span aria-hidden="true" style="color: var(--accent); margin-right: 0.3rem; font-weight: bold;">✔</span>
+              <span data-i18n="posts.solutionLabel">SOLUTION</span>
+            </h4>
+            <p>{solution}</p>
+          </div>
         )}
-        {usedIn && (
-          <li>
-            <strong data-i18n="posts.usedIn">Used In:</strong> {usedIn}
-          </li>
-        )}
-      </ul>
+      </div>
+    )
+  }
+
+  {
+    usedIn && (
+      <div class="post-used-in">
+        <strong data-i18n="posts.usedIn">Used In:</strong>
+        <div class="post-tags-inline">
+          {usedIn.split(",").map((item) => (
+            <span class="tag">{item.trim()}</span>
+          ))}
+        </div>
+      </div>
     )
   }
 
