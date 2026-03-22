@@ -8,7 +8,21 @@ usedIn: "Researching modern high-throughput IoT edge-to-cloud architectures for 
 impact: "Explains how F1 processes 1.1 million data points per second via AWS, and how FE leverages Google Cloud AlloyDB for 100x faster HTAP analytics on live telemetry, enabling real-time GenAI driver agents."
 pubDate: 2026-03-22
 category: "cloud"
-tags: ["System Architecture", "Data Engineering", "AWS", "Google Cloud", "Generative AI", "IoT"]
+tags:
+  [
+    "system-architecture",
+    "data-engineering",
+    "aws",
+    "google-cloud",
+    "generative-ai",
+    "iot",
+    "infrastructure",
+    "streaming",
+    "kinesis",
+    "pubsub",
+    "alloydb",
+    "dynamodb",
+  ]
 draft: false
 ---
 
