@@ -1,151 +1,177 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" width="900" height="700">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 850" width="900" height="850">
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
     </marker>
-    <linearGradient id="npuGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="cpuGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="routerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="keepaliveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="prewarmGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#db2777;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="prewarmBg" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#fdf2f8;stop-opacity:0.9" />
-      <stop offset="100%" style="stop-color:#fce7f3;stop-opacity:0.9" />
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#02070c" flood-opacity="0.15" />
-    </filter>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c2410c"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#166534"/>
+    </marker>
   </defs>
   
   <!-- Background -->
-  <rect width="900" height="700" fill="#f8fafc"/>
+  <rect width="900" height="850" fill="#f8fafc"/>
   
   <!-- Title -->
-  <text x="450" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">RK3588 NPU Router Architecture</text>
-  <text x="450" y="58" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#64748b">Tiered Inference with Ultra-Fast NPU Routing and Background Pre-Warming</text>
+  <text x="450" y="30" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" fill="#1e293b">RK3588 NPU Router Architecture</text>
+  <text x="450" y="50" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#64748b">Tiered Inference with NPU Routing, Keepalive, and Background Pre-Warming</text>
   
-  <!-- NPU Router Section (Top) -->
-  <rect x="300" y="80" width="300" height="120" rx="12" fill="url(#routerGrad)" filter="url(#shadow)"/>
-  <text x="450" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="white">NPU Router Layer</text>
-  <text x="450" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#d1fae5">Intent Classification</text>
+  <!-- ===== INFERENCE TIER SECTION ===== -->
+  <rect x="20" y="65" width="860" height="180" rx="12" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="450" y="85" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#334155">INFERENCE TIER</text>
+  <text x="450" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Models sorted by priority (higher = faster router selection)</text>
   
-  <!-- TinyLlama Box -->
-  <rect x="50" y="230" width="180" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
-  <text x="140" y="260" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#065f46">TinyLlama 1.1B</text>
-  <text x="140" y="278" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#059669">W8A8 NPU</text>
-  <rect x="70" y="295" width="140" height="28" rx="6" fill="#10b981"/>
-  <text x="140" y="314" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">15 tok/s</text>
-  <text x="140" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Priority: 110</text>
-  <text x="140" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Memory: 1.5GB</text>
+  <!-- NPU Router Banner -->
+  <rect x="350" y="115" width="200" height="28" rx="6" fill="#166534"/>
+  <text x="450" y="133" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">NPU ROUTER LAYER</text>
+  
+  <!-- TinyLlama Box - Best -->
+  <rect x="40" y="155" width="180" height="75" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <rect x="40" y="155" width="180" height="28" rx="8" fill="#16a34a"/>
+  <text x="130" y="173" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">TinyLlama 1.1B ★</text>
+  <text x="130" y="195" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#166534">W8A8 NPU • 15 tok/s</text>
+  <rect x="60" y="202" width="140" height="20" rx="4" fill="#16a34a"/>
+  <text x="130" y="216" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">Priority: 110</text>
   
   <!-- Qwen3-1.7B Box -->
-  <rect x="260" y="230" width="180" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
-  <text x="350" y="260" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#065f46">Qwen3-1.7B</text>
-  <text x="350" y="278" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#059669">W8A8 NPU</text>
-  <rect x="280" y="295" width="140" height="28" rx="6" fill="#10b981" opacity="0.7"/>
-  <text x="350" y="314" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">6.7 tok/s</text>
-  <text x="350" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Priority: 100</text>
-  <text x="350" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Memory: 2.5GB</text>
+  <rect x="240" y="155" width="180" height="75" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="330" y="173" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#166534">Qwen3-1.7B NPU</text>
+  <text x="330" y="195" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#15803d">W8A8 • 6.7 tok/s</text>
+  <text x="330" y="215" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Priority: 100</text>
   
   <!-- Qwen2.5-3B Box -->
-  <rect x="470" y="230" width="180" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
-  <text x="560" y="260" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#065f46">Qwen2.5-3B</text>
-  <text x="560" y="278" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#059669">W8A8 NPU</text>
-  <rect x="490" y="295" width="140" height="28" rx="6" fill="#10b981" opacity="0.5"/>
-  <text x="560" y="314" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">5.7 tok/s</text>
-  <text x="560" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Priority: 80</text>
-  <text x="560" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Memory: 3.6GB</text>
+  <rect x="440" y="155" width="180" height="75" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="530" y="173" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#166534">Qwen2.5-3B NPU</text>
+  <text x="530" y="195" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#15803d">W8A8 • 5.7 tok/s</text>
+  <text x="530" y="215" text-anchor="middle" font-family="system-ui" font-size="10" fill="#64748b">Priority: 80</text>
   
-  <!-- CPU Model Box -->
-  <rect x="670" y="230" width="180" height="140" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
-  <text x="760" y="260" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#1e40af">Qwen3.5-4B</text>
-  <text x="760" y="278" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#3b82f6">Q4_K_M CPU</text>
-  <rect x="690" y="295" width="140" height="28" rx="6" fill="#3b82f6"/>
-  <text x="760" y="314" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">2.4 tok/s</text>
-  <text x="760" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Priority: 104</text>
-  <text x="760" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Memory: 2.8GB</text>
+  <!-- CPU Box - Different color to distinguish -->
+  <rect x="640" y="155" width="220" height="75" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="750" y="173" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#1e40af">Qwen3.5-4B CPU</text>
+  <text x="750" y="195" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#1e40af">Q4_K_M • 2.4 tok/s</text>
+  <text x="750" y="215" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Priority: 104 (selected for complex tasks)</text>
   
-  <!-- Arrows from NPU boxes to router -->
-  <line x1="140" y1="210" x2="380" y2="150" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <line x1="350" y1="210" x2="420" y2="170" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <line x1="560" y1="210" x2="480" y2="170" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <line x1="760" y1="210" x2="540" y2="160" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Arrows from models to router -->
+  <line x1="130" y1="155" x2="400" y2="130" stroke="#16a34a" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <line x1="330" y1="155" x2="430" y2="125" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <line x1="530" y1="155" x2="480" y2="125" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <line x1="750" y1="155" x2="520" y2="120" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowOrange)"/>
   
-  <!-- Keepalive Section (Middle) -->
-  <rect x="50" y="410" width="380" height="130" rx="10" fill="url(#keepaliveGrad)" filter="url(#shadow)"/>
-  <text x="240" y="440" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">NPU Keepalive</text>
-  <text x="240" y="462" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#e9d5ff">Prevents CMA Memory Eviction</text>
-  <rect x="70" y="480" width="160" height="45" rx="8" fill="#7c3aed" opacity="0.3"/>
-  <text x="150" y="500" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#7c3aed">Interval: 30s</text>
-  <text x="150" y="518" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6d28d9">Ping: "." → 1 token</text>
-  <rect x="250" y="480" width="160" height="45" rx="8" fill="#7c3aed" opacity="0.3"/>
-  <text x="330" y="500" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#7c3aed">Timeout: 5s</text>
-  <text x="330" y="518" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6d28d9">Non-blocking</text>
+  <!-- ===== NPU CMA MEMORY SECTION ===== -->
+  <rect x="20" y="260" width="420" height="200" rx="12" fill="#fff7ed" stroke="#fed7aa" stroke-width="2"/>
+  <text x="230" y="282" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#9a3412">NPU CMA Memory Constraints</text>
+  <text x="230" y="300" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#7c2d12">Rockchip NPU uses Contiguous Memory Allocator</text>
   
-  <!-- Pre-warm Section (Right Middle) -->
-  <rect x="470" y="410" width="380" height="130" rx="10" fill="url(#prewarmGrad)" filter="url(#shadow)"/>
-  <text x="660" y="440" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">Background Pre-Warm</text>
-  <text x="660" y="462" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#fce7f3">Hides CPU Model Cold-Start</text>
-  <rect x="490" y="480" width="160" height="45" rx="8" fill="#db2777" opacity="0.3"/>
-  <text x="570" y="500" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#db2777">Pre-warm CPU</text>
-  <text x="570" y="518" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#be185d">After routing decision</text>
-  <rect x="670" y="480" width="160" height="45" rx="8" fill="#db2777" opacity="0.3"/>
-  <text x="750" y="500" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#db2777">Cold: 45s → 0s</text>
-  <text x="750" y="518" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#be185d">Hidden by routing</text>
+  <!-- CMA Box -->
+  <rect x="40" y="310" width="380" height="135" rx="8" fill="#1c1917" stroke="#78716c" stroke-width="1"/>
+  <text x="230" y="332" text-anchor="middle" font-family="monospace" font-size="12" font-weight="bold" fill="#fef3c7">CMA Pool: ~2.2GB max</text>
   
-  <!-- Flow Diagram (Bottom) -->
-  <rect x="50" y="570" width="800" height="110" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="450" y="595" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#334155">Request Flow</text>
+  <!-- Memory constraints text - WHITE on dark bg -->
+  <text x="60" y="358" font-family="system-ui, sans-serif" font-size="10" fill="#fef3c7">• Model weights must fit ENTIRELY in CMA</text>
+  <text x="60" y="375" font-family="system-ui, sans-serif" font-size="10" fill="#fef3c7">• No layer offloading like GPU VRAM</text>
+  <text x="60" y="392" font-family="system-ui, sans-serif" font-size="10" fill="#fef3c7">• W8A8 quantization REQUIRED</text>
+  <text x="60" y="409" font-family="system-ui, sans-serif" font-size="10" fill="#fbbf24">• No 4B+ models on NPU</text>
+  <text x="60" y="426" font-family="system-ui, sans-serif" font-size="10" fill="#fbbf24">• MoE 35B+ NOT feasible</text>
+  <text x="60" y="443" font-family="system-ui, sans-serif" font-size="10" fill="#f87171">• Keepalive pings prevent eviction</text>
   
-  <!-- Flow boxes -->
-  <rect x="70" y="610" width="100" height="50" rx="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
-  <text x="120" y="635" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#475569">Query</text>
-  <text x="120" y="652" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">User Input</text>
+  <!-- ===== KEEPALIVE SECTION ===== -->
+  <rect x="460" y="260" width="420" height="90" rx="12" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+  <rect x="460" y="260" width="420" height="30" rx="12" fill="#7c3aed"/>
+  <text x="670" y="280" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">NPU Keepalive</text>
   
-  <line x1="170" y1="635" x2="230" y2="635" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="670" y="310" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#5b21b6">Prevents CMA memory eviction during idle periods</text>
+  <rect x="480" y="320" width="180" height="22" rx="4" fill="#ddd6fe"/>
+  <text x="570" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#5b21b6">Interval: 30s</text>
+  <rect x="680" y="320" width="180" height="22" rx="4" fill="#ddd6fe"/>
+  <text x="770" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#5b21b6">Timeout: 5s non-blocking</text>
   
-  <rect x="230" y="610" width="120" height="50" rx="8" fill="url(#routerGrad)"/>
-  <text x="290" y="635" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">NPU Router</text>
-  <text x="290" y="652" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#d1fae5">&lt;50ms TinyLlama</text>
+  <!-- ===== PREWARM SECTION ===== -->
+  <rect x="460" y="360" width="420" height="100" rx="12" fill="#fdf2f8" stroke="#f9a8d4" stroke-width="2"/>
+  <rect x="460" y="360" width="420" height="28" rx="12" fill="#db2777"/>
+  <text x="670" y="380" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">Background CPU Pre-Warm</text>
   
-  <line x1="350" y1="635" x2="410" y2="635" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="670" y="408" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#831843">Hides 45s cold-start behind routing decision</text>
+  <rect x="480" y="420" width="180" height="30" rx="6" fill="#fbcfe8"/>
+  <text x="570" y="440" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#9d174d">Fire after routing</text>
+  <rect x="680" y="420" width="180" height="30" rx="6" fill="#fbcfe8"/>
+  <text x="770" y="440" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#9d174d">45s → imperceptible</text>
   
-  <rect x="410" y="610" width="120" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
-  <text x="470" y="635" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#92400e">Intent Classify</text>
-  <text x="470" y="652" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#b45309">CHAT/TOOL/CODE</text>
+  <!-- ===== REQUEST FLOW SECTION ===== -->
+  <rect x="20" y="480" width="860" height="100" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="450" y="502" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#334155">Request Flow</text>
   
-  <line x1="530" y1="635" x2="590" y2="635" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Flow boxes - clean arrows -->
+  <rect x="50" y="520" width="80" height="45" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="90" y="540" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#475569">Query</text>
+  <text x="90" y="555" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">User input</text>
   
-  <rect x="590" y="610" width="120" height="50" rx="8" fill="url(#prewarmGrad)"/>
-  <text x="650" y="635" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">Pre-Warm CPU</text>
-  <text x="650" y="652" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#fce7f3">Background</text>
+  <line x1="130" y1="542" x2="160" y2="542" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
   
-  <line x1="710" y1="635" x2="770" y2="635" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="160" y="515" width="120" height="55" rx="6" fill="#16a34a"/>
+  <text x="220" y="535" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="white">NPU Router</text>
+  <text x="220" y="550" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#bbf7d0">&lt;50ms TinyLlama</text>
+  <text x="220" y="563" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#bbf7d0">or qwen3-1.7B</text>
   
-  <rect x="770" y="610" width="60" height="50" rx="8" fill="#10b981"/>
-  <text x="800" y="640" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">Done</text>
+  <line x1="280" y1="542" x2="310" y2="542" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <rect x="310" y="515" width="100" height="55" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="360" y="535" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#92400e">Intent Classify</text>
+  <text x="360" y="550" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#b45309">CHAT/TOOL</text>
+  <text x="360" y="563" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#b45309">CODE/REASONING</text>
+  
+  <line x1="410" y="542" x2="440" y2="542" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <rect x="440" y="515" width="130" height="55" rx="6" fill="#db2777"/>
+  <text x="505" y="535" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="white">Pre-Warm CPU</text>
+  <text x="505" y="550" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#fce7f3">Background</text>
+  <text x="505" y="563" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#fce7f3">45s → 0s visible</text>
+  
+  <line x1="570" y="542" x2="600" y2="542" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <rect x="600" y="520" width="100" height="50" rx="6" fill="#2563eb"/>
+  <text x="650" y="542" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="white">Generate</text>
+  <text x="650" y="558" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#bfdbfe">Parallel tool calls</text>
+  
+  <line x1="700" y="542" x2="730" y2="542" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <rect x="730" y="520" width="80" height="50" rx="6" fill="#10b981"/>
+  <text x="770" y="542" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="white">Response</text>
+  <text x="770" y="558" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#d1fae5">streamed</text>
+  
+  <line x1="810" y="542" x2="840" y2="542" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- ===== TOOL CALLING SECTION ===== -->
+  <rect x="20" y="600" width="420" height="100" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <rect x="20" y="600" width="420" height="28" rx="12" fill="#16a34a"/>
+  <text x="230" y="618" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">Tool Calling Support</text>
+  
+  <text x="40" y="648" font-family="system-ui, sans-serif" font-size="10" fill="#166534">Hermes 2 Pro formatter</text>
+  <text x="40" y="665" font-family="system-ui, sans-serif" font-size="10" fill="#166534">Qwen XML format</text>
+  <text x="40" y="682" font-family="system-ui, sans-serif" font-size="10" fill="#166534">JSON legacy fallback</text>
+  
+  <rect x="250" y="638" width="170" height="50" rx="6" fill="#dcfce7"/>
+  <text x="335" y="658" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#166534">parallel_tool_calls</text>
+  <text x="335" y="676" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#15803d">Disabled on RK3588 (memory)</text>
+  
+  <!-- ===== FLASH ATTENTION FIX ===== -->
+  <rect x="460" y="480" width="420" height="120" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+  <rect x="460" y="480" width="420" height="28" rx="12" fill="#dc2626"/>
+  <text x="670" y="498" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">Flash Attention Flag Fix</text>
+  
+  <text x="480" y="530" font-family="monospace" font-size="10" fill="#7f1d1d">Before: --flash-attn --jinja</text>
+  <text x="480" y="548" font-family="monospace" font-size="10" fill="#7f1d1d">  ERROR: --jinja consumed as value</text>
+  
+  <text x="480" y="576" font-family="monospace" font-size="10" fill="#166534">After: --flash-attn on --jinja</text>
+  <text x="480" y="594" font-family="system-ui" font-size="10" fill="#166534">Restart bot to apply: sudo systemctl restart engram</text>
   
   <!-- Legend -->
-  <rect x="50" y="85" width="180" height="20" rx="4" fill="#f1f5f9"/>
-  <text x="60" y="99" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">▲ Priority: higher = preferred router</text>
+  <rect x="20" y="720" width="860" height="115" rx="12" fill="#1e293b"/>
+  <text x="450" y="745" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">Configuration Reference</text>
   
-  <!-- Performance callout -->
-  <rect x="670" y="85" width="180" height="35" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
-  <text x="760" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#92400e">2.2x faster routing</text>
-  <text x="760" y="112" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#b45309">TinyLlama vs Qwen3-1.7B</text>
+  <text x="40" y="770" font-family="monospace" font-size="10" fill="#94a3b8">NPU_TINY_ROUTER_MODEL=./TinyLlama-1.1B.rkllm    # 15 tok/s ultra-fast router</text>
+  <text x="40" y="788" font-family="monospace" font-size="10" fill="#94a3b8">NPU_KEEPALIVE_ENABLED=true                       # Prevents CMA eviction</text>
+  <text x="40" y="806" font-family="monospace" font-size="10" fill="#94a3b8">NPU_KEEPALIVE_INTERVAL_MS=30000                   # Ping every 30s</text>
+  <text x="40" y="824" font-family="monospace" font-size="10" fill="#94a3b8">ENGRAM_PREWARM_CPU_MODEL=true                   # Background pre-warm CPU models</text>
 </svg>
