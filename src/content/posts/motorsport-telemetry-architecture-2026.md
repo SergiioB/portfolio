@@ -50,6 +50,28 @@ At speeds exceeding 220+ mph, latency is the ultimate enemy. Teams, race control
 - **Formula 1 (2026 Regs):** The 2026 power unit regulations introduced a 50/50 split between internal combustion and a massive 350kW electrical MGU-K system. Coupled with the introduction of Active Aerodynamics (where cars shift mid-corner between a low-drag X-Mode and a high-downforce Z-Mode), the sensor density has exploded. A single car now generates **over 1.1 million data points per second** across 300+ sensors. During a Grand Prix with 20 cars, that is 22 million data points hitting the ingest layer every single second.
 - **Formula E (GEN3 Evo):** Formula E introduced sudden bursts of all-wheel drive (AWD) capabilities and intense regenerative braking zones. Because the series races on temporary street circuits with highly variable 5G/RF connectivity, the telemetry pipeline focuses heavily on fault tolerance. Each car generates **100,000+ data points per second**, with an acute focus on high-voltage battery thermal dynamics and cell-level energy depletion rates.
 
+### What is actually inside the telemetry stream?
+
+The phrase _data points per second_ hides a complex mix of very different signal families:
+
+- **Power unit telemetry:** internal combustion engine state, MGU-K deployment, inverter temperatures, torque demand, and energy recovery rates.
+- **Vehicle dynamics:** steering angle, yaw rate, lateral/longitudinal G, suspension travel, brake pressure, and wheel-speed deltas.
+- **Aero and control surfaces:** active aero state transitions, drag-reduction posture, and hydraulic/electronic actuator confirmations.
+- **Tire and thermal channels:** carcass temperature, brake disc heat, battery pack temperatures, coolant loops, and thermal derate thresholds.
+- **Positional timing signals:** sector timing, GPS-derived speed traces, track map correlation, and relative intervals to surrounding cars.
+
+Not every signal is equally important. Some channels are sampled at extremely high frequency and feed live control and safety logic, while others are aggregated into slower analytical views used for broadcast graphics or pit wall strategy.
+
+### Why motorsport telemetry is harder than normal IoT
+
+Most industrial telemetry systems care about seconds or minutes. Motorsport cares about **corners**. That changes the architecture dramatically:
+
+- A queue spike at race start is not a minor slowdown; it can make overtake models irrelevant before Turn 1 is complete.
+- Packet loss is not just missing observability; it can erase the exact state transition that explains a thermal event or battery anomaly.
+- Historical context must be queryable immediately because engineers compare each lap against expected baselines in real time, not hours later.
+
+That is why both Formula 1 and Formula E treat telemetry as a first-class production system rather than as a logging sidecar.
+
 ---
 
 ## 2. Formula 1 & AWS: Massively Sharded Streaming
@@ -79,6 +101,34 @@ This is a classic split between:
 
 That separation is what prevents broadcast augmentation or strategy experimentation from interfering with primary race operations.
 
+### Deep technical breakdown: each Formula 1 AWS component
+
+![Detailed Formula 1 AWS shard and serving flow](/images/diagrams/motorsport-telemetry-f1-shard-flow.svg)
+
+[Open the detailed Formula 1 AWS shard-flow SVG](/images/diagrams/motorsport-telemetry-f1-shard-flow.svg)
+
+The diagram above expands the earlier high-level picture into the actual responsibilities of each block:
+
+- **Car Sensor Bus:** This is the on-car acquisition layer, where ECU, battery, braking, GPS, and aerodynamic control signals are collected, normalized into packet structures, and tagged for uplink.
+- **Trackside ETC (Event Technical Center):** This is the first reliable aggregation layer. It validates packet integrity, aligns timestamps, reconstructs ordering, and forwards the race stream over redundant backhaul.
+- **Amazon Kinesis Data Streams:** The animated bars represent individual shards. Each shard is a bounded unit of throughput, so scaling throughput means increasing shard count and distributing producers/consumers accordingly.
+- **Amazon SQS:** The moving dots inside the queue visualize asynchronous shock absorption. SQS protects downstream calculators from ingest spikes caused by race starts, incidents, or bad sensors.
+- **AWS Lambda Metrics services:** These are small, highly parallel functions used for fast transforms, anomaly checks, and compact derived metrics.
+- **Amazon ECS on Fargate:** This block represents longer-lived services that maintain strategy logic, heavier joins, and outward-facing data products for engineering and broadcast consumers.
+- **Amazon DynamoDB:** The cache layer stores race state in a form optimized for very fast key-based retrieval, such as `car_id + lap + sector` lookups.
+- **Amazon SageMaker:** This is where more computationally expensive predictive models belong, such as tire degradation curves, stint projections, or what-if strategy simulations.
+- **Amazon Bedrock:** The GenAI layer sits downstream, combining numeric telemetry with contextual data such as radio transcripts and retrieved race history to create human-readable insight.
+
+### What the animation is meant to communicate in the F1 SVG
+
+The motion is not decorative; it encodes system behavior:
+
+- The animated sensor bar on the left shows telemetry density changing over time.
+- The moving dots in the Kinesis and SQS sections show the difference between direct streaming throughput and queued buffering.
+- The highlighted Bedrock box indicates that inference is a downstream consumer, not part of the hard real-time ingest loop.
+
+In other words, the animation is showing where pressure builds, where it is absorbed, and where enriched outputs emerge.
+
 ---
 
 ## 3. Formula E & Google Cloud: Event-Driven HTAP
@@ -106,6 +156,32 @@ The result is an architecture that favors:
 - **Managed event transport** for intermittent links.
 - **HTAP-style querying** when strategists and AI agents need immediate answers without waiting for ETL.
 
+### Deep technical breakdown: each Formula E Google Cloud component
+
+![Detailed Formula E HTAP and burst-recovery flow](/images/diagrams/motorsport-telemetry-fe-htap-flow.svg)
+
+[Open the detailed Formula E HTAP-flow SVG](/images/diagrams/motorsport-telemetry-fe-htap-flow.svg)
+
+This expanded diagram focuses on what makes Formula E architecturally different:
+
+- **GEN3 Evo Edge Stack:** The local ring buffer on the car temporarily stores telemetry when radio quality drops due to buildings, urban multipath effects, or temporary interference.
+- **City Gateway:** This is the first stable aggregation point after the reconnect. It authenticates the burst upload and re-establishes continuity for cloud ingestion.
+- **Google Cloud Pub/Sub:** Pub/Sub acts as a durable event bus that can safely absorb catch-up bursts without requiring every downstream consumer to be online or equally fast.
+- **Cloud Dataflow:** Built on Apache Beam, Dataflow handles event-time processing, sliding or tumbling windows, watermark logic, normalization, and noise suppression.
+- **AlloyDB for PostgreSQL:** This is the central HTAP idea in the diagram. The same platform can support live transactional race-state updates while also accelerating analytical queries using its columnar engine.
+- **BigQuery:** Long-horizon history, perfect-lap references, and season-level comparison datasets belong here, not in the hot path.
+- **Vertex AI with Gemini:** The AI layer combines live state from AlloyDB, historical baselines from BigQuery, and track/topography context to issue coaching or prediction.
+
+### What the animation is meant to communicate in the FE SVG
+
+Again, the motion reflects system semantics:
+
+- The filling ring buffer on the left shows local accumulation before retransmission.
+- The moving dots inside Pub/Sub show asynchronous fan-out and delayed catch-up behavior.
+- The pulsing AlloyDB and Vertex AI blocks highlight the important FE design choice: analytical and AI reads are placed close to live state rather than after a slow warehouse sync.
+
+The diagram is effectively saying: _connectivity is unstable, but the analytical experience must still feel immediate once data lands_.
+
 ---
 
 ## 4. The Generative AI Setup: Multi-Modal Insight Generation
@@ -127,6 +203,43 @@ Formula E takes a more direct, operational approach by leveraging **Vertex AI** 
 - **The Driver Agent:** A highly specialized GenAI agent queries AlloyDB for a driver's live metrics (such as the exact braking point and acceleration curve out of a hairpin) and compares it against historical "perfect lap" vectors stored in **BigQuery**.
 - **Real-Time Coaching & Spatial Awareness:** Because Gemini handles multi-modal input efficiently, it can correlate 3D track topography data with live State of Charge (SoC) percentages. It processes this data in milliseconds to push actionable text to the race engineer's dashboard, or even synthesized audio directly to the driver: _"Tell Vergne he is over-consuming by 2% in Turn 4; advise lifting 10 meters earlier on the next lap."_
 
+### How the GenAI layer actually works
+
+The key point is that GenAI in motorsport is not a magic box. It is a final orchestration layer built on top of existing telemetry engineering. The workflow usually looks like this:
+
+1. **Acquire live state:** pull the current telemetry context from the serving layer, such as DynamoDB or AlloyDB.
+2. **Add secondary modalities:** merge radio transcript text, track metadata, weather context, and timing deltas.
+3. **Retrieve historical analogs:** fetch prior laps, prior races, or known degradation profiles from long-term storage such as S3 or BigQuery-backed retrieval systems.
+4. **Assemble prompt context:** flatten this information into a structured prompt or tool call sequence.
+5. **Run model inference:** Bedrock or Vertex AI routes the request to a capable foundation model.
+6. **Apply guardrails:** attach confidence scores, domain constraints, or output templates so the result is interpretable and safe for operators.
+
+### Detailed GenAI reasoning diagram
+
+![Detailed multimodal GenAI reasoning stack for motorsport](/images/diagrams/motorsport-telemetry-genai-stack.svg)
+
+[Open the detailed motorsport GenAI stack SVG](/images/diagrams/motorsport-telemetry-genai-stack.svg)
+
+This SVG breaks the AI path into concrete technical stages:
+
+- **Input Modalities:** raw live telemetry, transcribed driver radio, and track geometry or corner metadata.
+- **Context Preparation Layer:** schema normalization, feature flattening, transcript entity extraction, and prompt assembly.
+- **Vector / RAG Store:** a retrieval layer containing historical race fragments, incident summaries, setup priors, or lap archetypes.
+- **LLM Orchestrator:** the service layer that decides which model to call, which tools to attach, and which prompt template or policy to enforce.
+- **LLM Core:** the actual reasoning engine, whether exposed through Amazon Bedrock or Vertex AI.
+- **Guardrails + Post-processing:** confidence scoring, output shaping, domain filtering, and structured handoff to humans.
+
+### What the GenAI animation is meant to communicate
+
+The animated bars and glowing inference blocks show a one-way semantic progression:
+
+- from **raw machine signals**,
+- to **prepared context**,
+- to **retrieval-backed reasoning**,
+- to **operator-ready language**.
+
+That is the core technical story: the model becomes useful only after multiple upstream systems have already transformed telemetry into structured context.
+
 ## 5. What These Platforms Teach About Real-Time Systems
 
 The most useful takeaway is not which cloud wins. It is that both architectures converge on the same distributed-systems principles:
@@ -135,6 +248,18 @@ The most useful takeaway is not which cloud wins. It is that both architectures 
 2. **Operational state should be cheap to read.** Engineers, strategists, and automation layers need fast access to current truth, not expensive joins across cold stores.
 3. **Analytics cannot block control loops.** Long-running simulations, reporting, and GenAI synthesis must be isolated from timing-sensitive race operations.
 4. **Historical context multiplies model value.** GenAI becomes useful only when joined with prior races, known setup baselines, and expected degradation patterns.
+
+### Naming the architectural patterns directly
+
+If you strip away the motorsport branding, the post is really describing a combination of well-known distributed systems patterns:
+
+- **Event-driven architecture:** producers emit telemetry independently of downstream consumers.
+- **Queue-based load leveling:** SQS and Pub/Sub absorb uneven workloads and protect consumers.
+- **CQRS-like separation of responsibilities:** hot operational state is served differently from historical analytical data.
+- **HTAP (Hybrid Transactional/Analytical Processing):** AlloyDB reduces the split between live writes and analytical reads.
+- **RAG (Retrieval-Augmented Generation):** GenAI outputs are grounded using historical race context instead of relying only on model weights.
+- **Store-and-forward edge resilience:** Formula E specifically relies on local buffering to survive intermittent connectivity.
+- **Microservice fan-out:** Lambda and ECS consumers independently derive specialized products from the same base stream.
 
 For engineers building adjacent systems such as fleet platforms, robotics telemetry, industrial IoT, or connected vehicle backends, the blueprint is clear: start with a resilient streaming core, then layer feature stores, analytical engines, and inference services around it rather than through it.
 
