@@ -245,7 +245,13 @@ On edge devices, the inference stack isn't one-size-fits-all. A tiered approach�
 
 ![RK3588 NPU Router Architecture](/images/diagrams/rk3588-npu-router-architecture.svg)
 
-This diagram illustrates the **tiered inference architecture** on RK3588, showing how TinyLlama 1.1B (15 tok/s) handles ultra-fast routing decisions, the NPU keepalive ping mechanism prevents CMA eviction during idle, and background CPU model pre-warming hides cold-start latency behind the routing decision.
+This diagram illustrates the **tiered inference architecture** on RK3588, showing:
+
+- NPU model tiers (TinyLlama 1.1B at 15 tok/s, Qwen3-1.7B at 6.7 tok/s, Qwen3.5-4B CPU at 2.4 tok/s)
+- NPU CMA memory constraints (2.2GB max, W8A8 required, no layer offloading)
+- Keepalive ping mechanism preventing CMA eviction
+- Background pre-warm hiding 45s cold-start behind routing decision
+- Request flow from query → NPU router → intent classification → pre-warm → generate → response
 
 ## Post-Specific Engineering Lens
 
