@@ -129,6 +129,18 @@ The motion is not decorative; it encodes system behavior:
 
 In other words, the animation is showing where pressure builds, where it is absorbed, and where enriched outputs emerge.
 
+### Reading guide for the simplified F1 diagram
+
+To keep the SVG readable, the legend was moved out of the image and into the post. Read the diagram from left to right:
+
+- **Car Sensor Bus:** raw on-car telemetry creation.
+- **Trackside ETC:** packet validation, ordering, and uplink preparation.
+- **Kinesis + SQS:** high-throughput ingest plus buffering for shock absorption.
+- **Lambda / ECS / DynamoDB / SageMaker:** specialized consumers for transforms, strategy, state serving, and prediction.
+- **Bedrock and Human Consumption:** language-generation output for race engineers and broadcasters.
+
+The larger layout now gives each service room to breathe, which makes the throughput path and consumer fan-out easier to understand at a glance.
+
 ---
 
 ## 3. Formula E & Google Cloud: Event-Driven HTAP
@@ -181,6 +193,18 @@ Again, the motion reflects system semantics:
 - The pulsing AlloyDB and Vertex AI blocks highlight the important FE design choice: analytical and AI reads are placed close to live state rather than after a slow warehouse sync.
 
 The diagram is effectively saying: _connectivity is unstable, but the analytical experience must still feel immediate once data lands_.
+
+### Reading guide for the simplified FE diagram
+
+The cleaned-up FE SVG is also intended to be read left to right:
+
+- **GEN3 Evo Edge:** temporary local retention while connectivity is degraded.
+- **City Gateway:** reconnect point where delayed telemetry is authenticated and forwarded.
+- **Pub/Sub + Dataflow:** resilient event transport plus streaming cleanup and windowing.
+- **AlloyDB + BigQuery:** live HTAP state and long-horizon history.
+- **Vertex AI and Coaching Output:** model reasoning that turns telemetry into engineer-facing advice.
+
+Removing the in-diagram legend made it possible to expand the core blocks and eliminate crowding, collisions, and clipped content near the border.
 
 ---
 
@@ -239,6 +263,17 @@ The animated bars and glowing inference blocks show a one-way semantic progressi
 - to **operator-ready language**.
 
 That is the core technical story: the model becomes useful only after multiple upstream systems have already transformed telemetry into structured context.
+
+### Reading guide for the simplified GenAI diagram
+
+This SVG is intentionally more minimal than the previous revision. The visual priority is the sequence of reasoning stages:
+
+- **Input Modalities** on the left.
+- **Context Preparation** in the center-left.
+- **Retrieval, orchestration, and inference** inside the highlighted reasoning plane.
+- **Operator-ready output** at the bottom-right.
+
+By removing the explanatory footer and extra callout blocks from inside the SVG, the diagram now emphasizes the actual inference flow instead of competing with it.
 
 ## 5. What These Platforms Teach About Real-Time Systems
 

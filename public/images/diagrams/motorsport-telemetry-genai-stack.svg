@@ -1,4 +1,4 @@
-<svg viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 1200 620" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0f0b18"/>
@@ -16,94 +16,84 @@
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#bca8ff"/>
     </marker>
   </defs>
-  <rect width="1200" height="760" rx="24" fill="url(#bg3)"/>
-  <text x="600" y="50" fill="#ffffff" font-family="Arial" font-size="28" font-weight="bold" text-anchor="middle">Motorsport GenAI Stack: From Numeric Telemetry to Human Narrative</text>
-  <text x="600" y="78" fill="#d2c8ee" font-family="Arial" font-size="14" text-anchor="middle">A detailed map of multimodal ingestion, retrieval-augmented generation, model orchestration, and the final operational prompts seen by engineers and broadcasters.</text>
+  <rect width="1200" height="620" rx="24" fill="url(#bg3)"/>
+  <text x="600" y="44" fill="#ffffff" font-family="Arial" font-size="28" font-weight="bold" text-anchor="middle">Motorsport GenAI Reasoning Stack</text>
+  <text x="600" y="72" fill="#d2c8ee" font-family="Arial" font-size="14" text-anchor="middle">Clean view of multimodal inputs, context preparation, retrieval, orchestration, inference, and operator-ready outputs.</text>
 
-  <g transform="translate(40,126)">
-    <rect width="246" height="236" rx="18" fill="#1f1830" stroke="#7c4dff" stroke-width="2"/>
-    <text x="123" y="34" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Input Modalities</text>
-    <rect x="24" y="66" width="198" height="34" rx="10" fill="#130f1f" stroke="#9f7cff"/>
-    <text x="123" y="88" fill="#d8cbff" font-family="Courier New" font-size="11" text-anchor="middle">Live telemetry vectors</text>
-    <rect x="24" y="112" width="198" height="34" rx="10" fill="#130f1f" stroke="#9f7cff"/>
-    <text x="123" y="134" fill="#d8cbff" font-family="Courier New" font-size="11" text-anchor="middle">Driver radio transcripts</text>
-    <rect x="24" y="158" width="198" height="34" rx="10" fill="#130f1f" stroke="#9f7cff"/>
-    <text x="123" y="180" fill="#d8cbff" font-family="Courier New" font-size="11" text-anchor="middle">Track map / corner metadata</text>
-    <rect x="24" y="204" width="198" height="12" rx="6" fill="#130f1f"/>
-    <rect x="24" y="204" width="82" height="12" rx="6" fill="#ff4fd8">
-      <animate attributeName="width" values="40;180;82;150;82" dur="2.7s" repeatCount="indefinite"/>
+  <g transform="translate(36,126)">
+    <rect width="236" height="240" rx="18" fill="#1f1830" stroke="#7c4dff" stroke-width="2"/>
+    <text x="118" y="34" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Input Modalities</text>
+    <rect x="24" y="72" width="188" height="34" rx="10" fill="#130f1f" stroke="#9f7cff"/>
+    <text x="118" y="94" fill="#d8cbff" font-family="Courier New" font-size="11" text-anchor="middle">Live telemetry vectors</text>
+    <rect x="24" y="120" width="188" height="34" rx="10" fill="#130f1f" stroke="#9f7cff"/>
+    <text x="118" y="142" fill="#d8cbff" font-family="Courier New" font-size="11" text-anchor="middle">Driver radio transcripts</text>
+    <rect x="24" y="168" width="188" height="34" rx="10" fill="#130f1f" stroke="#9f7cff"/>
+    <text x="118" y="190" fill="#d8cbff" font-family="Courier New" font-size="11" text-anchor="middle">Track map and corner metadata</text>
+    <rect x="24" y="220" width="188" height="14" rx="7" fill="#130f1f"/>
+    <rect x="24" y="220" width="76" height="14" rx="7" fill="#ff4fd8">
+      <animate attributeName="width" values="32;178;84;140;76" dur="2.7s" repeatCount="indefinite"/>
     </rect>
   </g>
 
-  <g transform="translate(330,126)">
-    <rect width="260" height="236" rx="18" fill="#1f1830" stroke="#7c4dff" stroke-width="2"/>
-    <text x="130" y="34" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Context Preparation Layer</text>
-    <text x="130" y="60" fill="#d2c8ee" font-family="Arial" font-size="12" text-anchor="middle">Embeddings, chunking, feature flattening, prompts</text>
-    <rect x="28" y="82" width="204" height="28" rx="10" fill="#130f1f" stroke="#b188ff"/>
-    <text x="130" y="100" fill="#eadfff" font-family="Courier New" font-size="10" text-anchor="middle">normalize telemetry schema -> prompt fields</text>
-    <rect x="28" y="122" width="204" height="28" rx="10" fill="#130f1f" stroke="#b188ff"/>
-    <text x="130" y="140" fill="#eadfff" font-family="Courier New" font-size="10" text-anchor="middle">speech-to-text + entity extraction</text>
-    <rect x="28" y="162" width="204" height="28" rx="10" fill="#130f1f" stroke="#b188ff"/>
-    <text x="130" y="180" fill="#eadfff" font-family="Courier New" font-size="10" text-anchor="middle">corner / lap / delta metadata join</text>
-    <text x="130" y="214" fill="#d2c8ee" font-family="Arial" font-size="12" text-anchor="middle">Creates compact machine-readable context packets</text>
+  <g transform="translate(314,126)">
+    <rect width="260" height="240" rx="18" fill="#1f1830" stroke="#7c4dff" stroke-width="2"/>
+    <text x="130" y="34" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Context Preparation</text>
+    <text x="130" y="58" fill="#d2c8ee" font-family="Arial" font-size="12" text-anchor="middle">Normalize, extract, join, and structure</text>
+    <rect x="28" y="84" width="204" height="28" rx="10" fill="#130f1f" stroke="#b188ff"/>
+    <text x="130" y="102" fill="#eadfff" font-family="Courier New" font-size="10" text-anchor="middle">normalize telemetry schema</text>
+    <rect x="28" y="124" width="204" height="28" rx="10" fill="#130f1f" stroke="#b188ff"/>
+    <text x="130" y="142" fill="#eadfff" font-family="Courier New" font-size="10" text-anchor="middle">speech-to-text and entity extraction</text>
+    <rect x="28" y="164" width="204" height="28" rx="10" fill="#130f1f" stroke="#b188ff"/>
+    <text x="130" y="182" fill="#eadfff" font-family="Courier New" font-size="10" text-anchor="middle">lap, delta, weather, corner joins</text>
+    <rect x="28" y="212" width="204" height="8" rx="4" fill="#b188ff" opacity="0.25"/>
+    <rect x="52" y="212" width="72" height="8" rx="4" fill="#b188ff">
+      <animate attributeName="x" values="28;160;28" dur="1.8s" repeatCount="indefinite"/>
+    </rect>
   </g>
 
-  <g transform="translate(636,94)">
-    <rect width="524" height="306" rx="20" fill="none" stroke="url(#violet)" stroke-width="3" stroke-dasharray="10 8"/>
-    <text x="262" y="34" fill="#ffffff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">Reasoning and Retrieval Plane</text>
+  <g transform="translate(622,102)">
+    <rect width="542" height="278" rx="22" fill="none" stroke="url(#violet)" stroke-width="3" stroke-dasharray="10 8"/>
+    <text x="271" y="30" fill="#ffffff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">Reasoning and Retrieval Plane</text>
 
-    <g transform="translate(26,70)">
-      <rect width="150" height="100" rx="16" fill="#1f1830" stroke="#ff4fd8" stroke-width="2"/>
-      <text x="75" y="30" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Vector / RAG Store</text>
-      <text x="75" y="54" fill="#ffcaef" font-family="Arial" font-size="11" text-anchor="middle">Historical laps, incidents, setup priors</text>
-      <text x="75" y="76" fill="#d2c8ee" font-family="Courier New" font-size="10" text-anchor="middle">retrieve(top_k = relevant races)</text>
+    <g transform="translate(24,68)">
+      <rect width="156" height="100" rx="16" fill="#1f1830" stroke="#ff4fd8" stroke-width="2"/>
+      <text x="78" y="30" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Vector / RAG</text>
+      <text x="78" y="54" fill="#ffcaef" font-family="Arial" font-size="11" text-anchor="middle">Historical laps and incidents</text>
+      <text x="78" y="76" fill="#d2c8ee" font-family="Courier New" font-size="10" text-anchor="middle">retrieve(top_k)</text>
     </g>
 
-    <g transform="translate(196,70)">
-      <rect width="150" height="100" rx="16" fill="#1f1830" stroke="#ff4fd8" stroke-width="2"/>
-      <text x="75" y="30" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">LLM Orchestrator</text>
-      <text x="75" y="54" fill="#ffcaef" font-family="Arial" font-size="11" text-anchor="middle">Bedrock or Vertex AI routing</text>
-      <text x="75" y="76" fill="#d2c8ee" font-family="Courier New" font-size="10" text-anchor="middle">policy + prompt templates + tools</text>
+    <g transform="translate(198,68)">
+      <rect width="156" height="100" rx="16" fill="#1f1830" stroke="#ff4fd8" stroke-width="2"/>
+      <text x="78" y="30" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Orchestrator</text>
+      <text x="78" y="54" fill="#ffcaef" font-family="Arial" font-size="11" text-anchor="middle">Prompt policy and tool routing</text>
+      <text x="78" y="76" fill="#d2c8ee" font-family="Courier New" font-size="10" text-anchor="middle">Bedrock / Vertex AI</text>
     </g>
 
-    <g transform="translate(366,70)">
-      <rect width="132" height="100" rx="16" fill="#1f1830" stroke="#ff4fd8" stroke-width="2" filter="url(#glow3)">
+    <g transform="translate(372,68)">
+      <rect width="146" height="100" rx="16" fill="#1f1830" stroke="#ff4fd8" stroke-width="2" filter="url(#glow3)">
         <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="2.3s" repeatCount="indefinite"/>
       </rect>
-      <text x="66" y="30" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">LLM Core</text>
-      <text x="66" y="54" fill="#ffcaef" font-family="Arial" font-size="11" text-anchor="middle">Gemini / FM model</text>
-      <text x="66" y="76" fill="#d2c8ee" font-family="Courier New" font-size="10" text-anchor="middle">reason() synthesize()</text>
+      <text x="73" y="30" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">LLM Core</text>
+      <text x="73" y="54" fill="#ffcaef" font-family="Arial" font-size="11" text-anchor="middle">Reasoning and synthesis</text>
+      <text x="73" y="76" fill="#d2c8ee" font-family="Courier New" font-size="10" text-anchor="middle">reason() -> explain()</text>
     </g>
 
-    <g transform="translate(104,196)">
-      <rect width="318" height="76" rx="16" fill="#1f1830" stroke="#7c4dff" stroke-width="2"/>
-      <text x="159" y="28" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Guardrails + Post-processing</text>
-      <text x="159" y="52" fill="#d2c8ee" font-family="Arial" font-size="11" text-anchor="middle">temperature limits, domain filters, explainability tags, confidence scoring</text>
+    <g transform="translate(106,192)">
+      <rect width="328" height="70" rx="16" fill="#1f1830" stroke="#7c4dff" stroke-width="2"/>
+      <text x="164" y="28" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Guardrails and Output Shaping</text>
+      <text x="164" y="50" fill="#d2c8ee" font-family="Arial" font-size="11" text-anchor="middle">Confidence, templates, domain filters, explainability tags</text>
     </g>
   </g>
 
-  <path d="M 286 246 L 330 246" stroke="#bca8ff" stroke-width="4" marker-end="url(#arrow3)" fill="none"/>
-  <path d="M 590 246 L 662 246" stroke="#bca8ff" stroke-width="4" marker-end="url(#arrow3)" fill="none"/>
-  <path d="M 812 194 L 832 194" stroke="#ff4fd8" stroke-width="3" marker-end="url(#arrow3)" fill="none"/>
-  <path d="M 982 194 L 1002 194" stroke="#ff4fd8" stroke-width="3" marker-end="url(#arrow3)" fill="none"/>
+  <path d="M 272 246 L 314 246" stroke="#bca8ff" stroke-width="4" marker-end="url(#arrow3)" fill="none"/>
+  <path d="M 574 246 L 622 246" stroke="#bca8ff" stroke-width="4" marker-end="url(#arrow3)" fill="none"/>
+  <path d="M 1088 246 C 1128 246 1128 246 1128 418" stroke="#ff4fd8" stroke-width="4" marker-end="url(#arrow3)" fill="none"/>
 
-  <g transform="translate(112,436)">
-    <rect width="976" height="148" rx="18" fill="#171124" stroke="#7c4dff" stroke-width="2"/>
-    <text x="488" y="32" fill="#ffffff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">Typical outputs the system produces</text>
-    <g fill="#eadfff" font-family="Arial" font-size="14">
-      <text x="24" y="68">• Broadcast narrative: natural-language insight for directors, on-screen graphics teams, and commentators.</text>
-      <text x="24" y="100">• Race-engineer guidance: terse, low-latency prompts tied to lap, corner, battery state, or tire model projections.</text>
-      <text x="24" y="132">• Incident explanation: a cross-modal summary linking telemetry anomalies, radio intent, and historical precedents.</text>
-    </g>
-    <rect x="580" y="56" width="360" height="58" rx="14" fill="#241735" stroke="#ff4fd8"/>
-    <text x="760" y="82" fill="#ffd7f7" font-family="Courier New" font-size="11" text-anchor="middle">"ERS deployment is down 15%; engineer call confirms thermal management mode."</text>
-    <text x="760" y="100" fill="#ffd7f7" font-family="Courier New" font-size="11" text-anchor="middle">"Recommend conservative overtake probability for next 3 laps."</text>
-  </g>
-
-  <g transform="translate(36,620)">
-    <rect width="1128" height="104" rx="18" fill="#120f1d" stroke="#3f3062" stroke-width="2"/>
-    <text x="564" y="32" fill="#ffffff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">What the diagram is showing</text>
-    <text x="22" y="62" fill="#d2c8ee" font-family="Arial" font-size="14">The left side is raw input. The center transforms those inputs into context-rich prompt packets. The right side is the reasoning plane: retrieval, orchestration, large-model inference, and guarded output shaping.</text>
-    <text x="22" y="86" fill="#d2c8ee" font-family="Arial" font-size="14">This is why GenAI is downstream of the telemetry platform: the model is only useful after the system has already solved ingestion, time alignment, state access, and historical retrieval.</text>
+  <g transform="translate(786,418)">
+    <rect width="342" height="126" rx="18" fill="#171124" stroke="#7c4dff" stroke-width="2"/>
+    <text x="171" y="32" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Operator-Ready Output</text>
+    <text x="171" y="58" fill="#eadfff" font-family="Arial" font-size="12" text-anchor="middle">Broadcast summaries, pit-wall guidance, incident explanations</text>
+    <rect x="34" y="76" width="274" height="30" rx="10" fill="#241735" stroke="#ff4fd8"/>
+    <text x="171" y="95" fill="#ffd7f7" font-family="Courier New" font-size="10" text-anchor="middle">"ERS deployment down 15%; thermal management mode confirmed"</text>
   </g>
 </svg>
