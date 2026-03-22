@@ -103,16 +103,20 @@ That separation is what prevents broadcast augmentation or strategy experimentat
 
 ### Deep technical breakdown: each Formula 1 AWS component
 
-![Detailed Formula 1 AWS shard and serving flow](/images/diagrams/motorsport-telemetry-f1-shard-flow.svg)
+![Formula 1 AWS telemetry ingest path](/images/diagrams/motorsport-telemetry-f1-ingest.svg)
 
-[Open the detailed Formula 1 AWS shard-flow SVG](/images/diagrams/motorsport-telemetry-f1-shard-flow.svg)
+[Open the Formula 1 AWS telemetry ingest SVG](/images/diagrams/motorsport-telemetry-f1-ingest.svg)
 
-The diagram above expands the earlier high-level picture into the actual responsibilities of each block:
+![Formula 1 AWS serving and insight path](/images/diagrams/motorsport-telemetry-f1-serving.svg)
+
+[Open the Formula 1 AWS serving SVG](/images/diagrams/motorsport-telemetry-f1-serving.svg)
+
+These two diagrams split the architecture into a clean ingest view and a clean serving view:
 
 - **Car Sensor Bus:** This is the on-car acquisition layer, where ECU, battery, braking, GPS, and aerodynamic control signals are collected, normalized into packet structures, and tagged for uplink.
 - **Trackside ETC (Event Technical Center):** This is the first reliable aggregation layer. It validates packet integrity, aligns timestamps, reconstructs ordering, and forwards the race stream over redundant backhaul.
-- **Amazon Kinesis Data Streams:** The animated bars represent individual shards. Each shard is a bounded unit of throughput, so scaling throughput means increasing shard count and distributing producers/consumers accordingly.
-- **Amazon SQS:** The moving dots inside the queue visualize asynchronous shock absorption. SQS protects downstream calculators from ingest spikes caused by race starts, incidents, or bad sensors.
+- **Amazon Kinesis Data Streams:** The animated bars in the ingest SVG represent individual shards. Each shard is a bounded unit of throughput, so scaling throughput means increasing shard count and distributing producers/consumers accordingly.
+- **Amazon SQS:** The moving dots in the ingest SVG visualize asynchronous shock absorption. SQS protects downstream calculators from ingest spikes caused by race starts, incidents, or bad sensors.
 - **AWS Lambda Metrics services:** These are small, highly parallel functions used for fast transforms, anomaly checks, and compact derived metrics.
 - **Amazon ECS on Fargate:** This block represents longer-lived services that maintain strategy logic, heavier joins, and outward-facing data products for engineering and broadcast consumers.
 - **Amazon DynamoDB:** The cache layer stores race state in a form optimized for very fast key-based retrieval, such as `car_id + lap + sector` lookups.
@@ -129,17 +133,14 @@ The motion is not decorative; it encodes system behavior:
 
 In other words, the animation is showing where pressure builds, where it is absorbed, and where enriched outputs emerge.
 
-### Reading guide for the simplified F1 diagram
+### Reading guide for the new F1 diagrams
 
-To keep the SVG readable, the legend was moved out of the image and into the post. Read the diagram from left to right:
+The Formula 1 visuals are now intentionally split to avoid clipped boxes, tiny text, and overcrowding:
 
-- **Car Sensor Bus:** raw on-car telemetry creation.
-- **Trackside ETC:** packet validation, ordering, and uplink preparation.
-- **Kinesis + SQS:** high-throughput ingest plus buffering for shock absorption.
-- **Lambda / ECS / DynamoDB / SageMaker:** specialized consumers for transforms, strategy, state serving, and prediction.
-- **Bedrock and Human Consumption:** language-generation output for race engineers and broadcasters.
+- **Ingest SVG:** Car Sensor Bus -> Trackside ETC -> Kinesis -> SQS.
+- **Serving SVG:** Lambda / ECS -> DynamoDB / SageMaker -> Bedrock -> Human output.
 
-The larger layout now gives each service room to breathe, which makes the throughput path and consumer fan-out easier to understand at a glance.
+That split gives each service enough space to remain readable in the inline website preview without forcing the user to open the full SVG.
 
 ---
 
@@ -170,11 +171,15 @@ The result is an architecture that favors:
 
 ### Deep technical breakdown: each Formula E Google Cloud component
 
-![Detailed Formula E HTAP and burst-recovery flow](/images/diagrams/motorsport-telemetry-fe-htap-flow.svg)
+![Formula E Google Cloud ingest path](/images/diagrams/motorsport-telemetry-fe-ingest.svg)
 
-[Open the detailed Formula E HTAP-flow SVG](/images/diagrams/motorsport-telemetry-fe-htap-flow.svg)
+[Open the Formula E Google Cloud ingest SVG](/images/diagrams/motorsport-telemetry-fe-ingest.svg)
 
-This expanded diagram focuses on what makes Formula E architecturally different:
+![Formula E HTAP and coaching path](/images/diagrams/motorsport-telemetry-fe-serving.svg)
+
+[Open the Formula E HTAP and coaching SVG](/images/diagrams/motorsport-telemetry-fe-serving.svg)
+
+These two diagrams separate recovery/transport from HTAP/coaching so the inline preview stays readable:
 
 - **GEN3 Evo Edge Stack:** The local ring buffer on the car temporarily stores telemetry when radio quality drops due to buildings, urban multipath effects, or temporary interference.
 - **City Gateway:** This is the first stable aggregation point after the reconnect. It authenticates the burst upload and re-establishes continuity for cloud ingestion.
@@ -194,17 +199,14 @@ Again, the motion reflects system semantics:
 
 The diagram is effectively saying: _connectivity is unstable, but the analytical experience must still feel immediate once data lands_.
 
-### Reading guide for the simplified FE diagram
+### Reading guide for the new FE diagrams
 
-The cleaned-up FE SVG is also intended to be read left to right:
+The Formula E visuals are now split the same way:
 
-- **GEN3 Evo Edge:** temporary local retention while connectivity is degraded.
-- **City Gateway:** reconnect point where delayed telemetry is authenticated and forwarded.
-- **Pub/Sub + Dataflow:** resilient event transport plus streaming cleanup and windowing.
-- **AlloyDB + BigQuery:** live HTAP state and long-horizon history.
-- **Vertex AI and Coaching Output:** model reasoning that turns telemetry into engineer-facing advice.
+- **Ingest SVG:** GEN3 Evo Edge -> City Gateway -> Pub/Sub -> Dataflow.
+- **Serving SVG:** AlloyDB / BigQuery -> Vertex AI -> Coaching output.
 
-Removing the in-diagram legend made it possible to expand the core blocks and eliminate crowding, collisions, and clipped content near the border.
+This removes the preview cut-off problem on the right side and avoids forcing dense service descriptions into a single frame.
 
 ---
 
