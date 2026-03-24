@@ -1,57 +1,79 @@
-<div
-  class="audience-floating-island"
-  data-audience-switch
->
+<div class="audience-island-shell" data-audience-switch>
   <div class="audience-toggle-island" role="tablist" aria-label="Audience mode selector">
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-      <span class="audience-label" style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-soft); white-space: nowrap;">
-        Viewing As:
-      </span>
-      <div style="display: flex; background: rgba(0,0,0,0.5); border-radius: 9999px; padding: 0.2rem; border: 1px solid rgba(255,255,255,0.1);">
-        <button
-          type="button"
-          class="island-btn active"
-          data-audience-mode="recruiter"
-          aria-selected="true"
-          role="tab"
-          data-i18n="audience.recruiterMode"
-        >
-          Recruiter
-        </button>
-        <button
-          type="button"
-          class="island-btn"
-          data-audience-mode="engineer"
-          aria-selected="false"
-          role="tab"
-          data-i18n="audience.engineerMode"
-        >
-          Engineer
-        </button>
-      </div>
+    <span class="audience-label">Viewing As:</span>
+    <div class="audience-pill-group">
+      <button
+        type="button"
+        class="island-btn active"
+        data-audience-mode="recruiter"
+        aria-selected="true"
+        role="tab"
+        data-i18n="audience.recruiterMode"
+      >
+        Recruiter
+      </button>
+      <button
+        type="button"
+        class="island-btn"
+        data-audience-mode="engineer"
+        aria-selected="false"
+        role="tab"
+        data-i18n="audience.engineerMode"
+      >
+        Engineer
+      </button>
     </div>
   </div>
 </div>
 
 <style>
-  .audience-floating-island {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    pointer-events: auto;
-    animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  .audience-island-shell {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 1.25rem auto 0;
+    animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
   }
 
   .audience-toggle-island {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    width: min(100%, 36rem);
+    padding: 0.65rem 0.85rem 0.65rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
     background: rgba(22, 27, 34, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
+
+  .audience-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    white-space: nowrap;
+  }
+
+  .audience-pill-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 9999px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    background: rgba(0, 0, 0, 0.5);
   }
 
   .island-btn {
@@ -60,7 +82,7 @@
     color: var(--text-muted);
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    font-weight: bold;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     padding: 0.4rem 1rem;
@@ -70,27 +92,60 @@
   }
 
   .island-btn.active {
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background: var(--surface-soft);
     color: var(--text-strong);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .island-btn:hover:not(.active) {
     color: var(--text-soft);
   }
 
+  @media (max-width: 640px) {
+    .audience-island-shell {
+      margin-top: 1rem;
+    }
+
+    .audience-toggle-island {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 1.25rem;
+    }
+
+    .audience-label {
+      width: 100%;
+      text-align: center;
+    }
+
+    .audience-pill-group {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .island-btn {
+      width: 100%;
+      min-width: 0;
+      padding-inline: 0.6rem;
+      font-size: 0.7rem;
+    }
+  }
+
   @keyframes slideUpFade {
     0% {
       opacity: 0;
-      transform: translate(-50%, 20px) scale(0.95);
+      transform: translateY(20px) scale(0.96);
     }
     100% {
       opacity: 1;
-      transform: translate(-50%, 0) scale(1);
+      transform: translateY(0) scale(1);
     }
   }
 </style>
+
 <!-- Button click handlers and state management are centralised in nav.js
      (applyAudienceMode / initAudienceButtons) to avoid Astro module-timing
      race conditions that previously caused the toggle to be unresponsive. -->
