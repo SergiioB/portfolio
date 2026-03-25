@@ -132,7 +132,6 @@ The practical takeaway from TurboQuant's research: **not all layers are equal**.
 
 - [TurboQuant Paper (arXiv:2504.19874)](https://arxiv.org/abs/2504.19874)
 - [Google Research Blog](https://research.google/blog/turboquant-redefining-ai-efficiency-with-extreme-compression/)
-- [Engram AI Project](https://github.com/autoag2/intelliauto-discord-bot)
 
 ---
 
