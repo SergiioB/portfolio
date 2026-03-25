@@ -290,10 +290,226 @@ Practical reading:
 
 ## A practical VRAM budgeting formula
 
-Do not budget only the GGUF file size. A usable estimate should include:
+Do not budget only the GGUF file size. Play with the calculator below to see how context length and offloading affect the memory footprint.
+
+<div class="interactive-calculator-container" id="vram-calc">
+  <div class="calculator-header">
+    <h4 style="margin:0;">Interactive VRAM Simulator</h4>
+    <span style="font-size:0.8rem; color:var(--text-muted);">Estimates are approximate</span>
+  </div>
+  
+  <div class="calc-row">
+    <div class="calc-col">
+      <label for="calc-params">Parameters (Billion)</label>
+      <input type="range" id="calc-params" min="1" max="70" step="1" value="8" oninput="updateVramCalc()">
+      <div class="val-display"><span id="val-params">8</span>B</div>
+    </div>
+    <div class="calc-col">
+      <label for="calc-quant">Quantization</label>
+      <select id="calc-quant" onchange="updateVramCalc()">
+        <option value="4.5">Q4_K_M (~4.5 bits/weight)</option>
+        <option value="5.5">Q5_K_M (~5.5 bits/weight)</option>
+        <option value="8.0">Q8_0 (~8.0 bits/weight)</option>
+        <option value="16.0">FP16 (16.0 bits/weight)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="calc-row">
+    <div class="calc-col">
+      <label for="calc-ctx">Context length (tokens)</label>
+      <input type="range" id="calc-ctx" min="512" max="32768" step="512" value="4096" oninput="updateVramCalc()">
+      <div class="val-display"><span id="val-ctx">4096</span></div>
+    </div>
+    <div class="calc-col">
+      <label for="calc-kv">KV Cache Quant</label>
+      <select id="calc-kv" onchange="updateVramCalc()">
+        <option value="16">f16 (standard)</option>
+        <option value="8">q8_0 (half size)</option>
+        <option value="4">q4_0 (quarter size)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="calc-row">
+    <div class="calc-col">
+      <label for="calc-offload">Offload Percentage (%)</label>
+      <input type="range" id="calc-offload" min="0" max="100" step="5" value="100" oninput="updateVramCalc()">
+      <div class="val-display"><span id="val-offload">100</span>% (mapped via -ngl)</div>
+    </div>
+  </div>
+
+  <div class="calc-result">
+    <div class="result-box">
+      <span class="result-label">Weights (VRAM)</span>
+      <span class="result-value" id="res-weights">4.5 GB</span>
+    </div>
+    <div class="result-box">
+      <span class="result-label">KV Cache (VRAM)</span>
+      <span class="result-value" id="res-kv">0.5 GB</span>
+    </div>
+    <div class="result-box">
+      <span class="result-label">Overhead</span>
+      <span class="result-value">0.6 GB</span>
+    </div>
+    <div class="result-box highlight">
+      <span class="result-label">Est. VRAM Needed</span>
+      <span class="result-value" id="res-total">5.6 GB</span>
+    </div>
+  </div>
+  
+  <div class="calc-assessment" id="calc-assessment">
+    Will fit easily on an 8GB GPU.
+  </div>
+</div>
+
+<script>
+function updateVramCalc() {
+  const p = parseFloat(document.getElementById('calc-params').value);
+  const qBits = parseFloat(document.getElementById('calc-quant').value);
+  const ctx = parseInt(document.getElementById('calc-ctx').value);
+  const kvBits = parseInt(document.getElementById('calc-kv').value);
+  const offloadPct = parseInt(document.getElementById('calc-offload').value) / 100;
+
+  document.getElementById('val-params').innerText = p;
+  document.getElementById('val-ctx').innerText = ctx;
+  document.getElementById('val-offload').innerText = document.getElementById('calc-offload').value;
+
+  const totalWeightGb = (p * 1e9 * qBits) / 8 / (1024 ** 3);
+  const vramWeightGb = totalWeightGb * offloadPct;
+
+  const kvBaseHeuristicGb = (1.2 * (p/8) * (ctx/1000)) / 1024;
+  const vramKvGb = kvBaseHeuristicGb * (kvBits / 16);
+
+  const overheadGb = 0.6;
+  const totalVramGb = vramWeightGb + vramKvGb + overheadGb;
+
+  document.getElementById('res-weights').innerText = vramWeightGb.toFixed(1) + ' GB';
+  document.getElementById('res-kv').innerText = vramKvGb.toFixed(1) + ' GB';
+  document.getElementById('res-total').innerText = totalVramGb.toFixed(1) + ' GB';
+
+  let msg = '';
+  if (totalVramGb > 24) msg = '<span style="color:#ef4444">Requires a massive 24GB+ GPU (like RTX 3090/4090) or multi-GPU.</span>';
+  else if (totalVramGb > 16) msg = '<span style="color:#f59e0b">Requires a 20GB+ GPU or 24GB card (e.g. RTX 4090).</span>';
+  else if (totalVramGb > 12) msg = '<span style="color:#f59e0b">Requires a 16GB GPU (e.g. RTX 4080).</span>';
+  else if (totalVramGb > 8) msg = '<span style="color:#10b981">Fits on a 12GB GPU (e.g. RTX 3060).</span>';
+  else if (totalVramGb > 6) msg = '<span style="color:#10b981">Fits on an 8GB GPU.</span>';
+  else msg = '<span style="color:#10b981">Fits comfortably on almost any modern 6GB+ card.</span>';
+  
+  if (offloadPct < 1.0) {
+    msg += ' <br/><span style="font-size:0.85em; opacity:0.8;">Note: Partial offload triggers the system RAM bandwidth cliff.</span>';
+  }
+
+  document.getElementById('calc-assessment').innerHTML = msg;
+}
+if (typeof document !== 'undefined') {
+  setTimeout(updateVramCalc, 100);
+}
+</script>
+
+<style>
+.interactive-calculator-container {
+  background: var(--bg-surface, #1e293b);
+  border: 1px solid var(--border-color, #334155);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+.calculator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color, #334155);
+  padding-bottom: 0.5rem;
+}
+.calc-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+.calc-col {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.calc-col label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  margin-bottom: 0.4rem;
+}
+.calc-col input[type=range], .calc-col select {
+  width: 100%;
+  margin-bottom: 0.3rem;
+  background-color: var(--bg-body, #0f172a);
+  color: var(--text-main, #f8fafc);
+  border: 1px solid var(--border-color, #334155);
+  padding: 0.4rem;
+  border-radius: 4px;
+}
+.val-display {
+  font-size: 0.8rem;
+  color: var(--text-main, #f8fafc);
+  text-align: right;
+  font-family: var(--font-mono, monospace);
+}
+.calc-result {
+  display: flex;
+  gap: 1rem;
+  background: var(--bg-body, #0f172a);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.result-box {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+.result-box.highlight {
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.result-label {
+  font-size: 0.7rem;
+  color: var(--text-muted, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.result-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+  font-family: var(--font-mono, monospace);
+  margin-top: 0.3rem;
+}
+.result-box.highlight .result-value {
+  color: #10b981;
+}
+.calc-assessment {
+  margin-top: 1.2rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-main, #f8fafc);
+}
+</style>
+
+The raw formula under the hood of the calculator is roughly:
 
 ```text
-total_vram_needed ≈ offloaded_weight_bytes + kv_cache_bytes + runtime_overhead
+total_vram_needed ≈ (weights_gb * offload_pct) + kv_cache_gb + runtime_overhead
 ```
 
 Where:

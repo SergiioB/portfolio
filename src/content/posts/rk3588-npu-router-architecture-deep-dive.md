@@ -213,6 +213,18 @@ Measured peak RSS on this host:
 | Qwen3.5-9B-Q4_K_M       |     10222.3 | Usable but deliberate      |
 | Qwen_Qwen3.5-27B-Q4_K_M |     20808.7 | Barely fits, not practical |
 
+### A practical math check
+
+To understand why `4B Q4_K_M` takes ~5.3 GB on this device:
+
+```text
+Weights: (4B params * 4.5 bits) / 8 ≈ 2.25 GB
+KV Cache: ~1-2 GB (varies by precision and context size)
+Runtime overhead: ~1 GB (llama.cpp buffers, allocator margins)
+```
+
+By the time you add all components up, a model that theoretically takes "2.25 GB" actually reserves over 5 GB of system RAM under load.
+
 On a `24 GB` RK3588 system:
 
 - `4B Q4_K_M` is comfortable

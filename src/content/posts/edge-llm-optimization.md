@@ -37,6 +37,23 @@ When model layers spill from VRAM to system RAM, throughput drops by 20-50x. The
 
 On pure CPU inference (no GPU), the same principle applies: keep everything in the fastest available memory tier. When I wrote `HardwareOracle` to enforce this rule—reject any model that can't fit entirely in high-bandwidth memory—throughput jumped from ~4 t/s to ~55 t/s.
 
+### The Basic Math
+
+Before loading a model, the baseline memory check is simple arithmetic:
+
+```text
+required_ram ≈ (parameters_in_billions * bits_per_weight) / 8 + kv_cache_budget + overhead
+```
+
+For example, a **4B parameter model at Q4_K_M (~4.5 bits/weight)**:
+
+- Weights: `(4 * 10^9 * 4.5) / 8 ≈ 2.25 GB`
+- KV Cache: `~0.5 GB` (varies by context length)
+- Overhead: `~0.5 GB`
+- Total estimated: `~3.25 GB`
+
+If your edge device has 4 GB of usable RAM left, it fits comfortably. If it only has 2 GB left, it will swap to disk or crash, destroying throughput.
+
 ### The Lesson
 
 > Don't celebrate when a model "loads." Celebrate when it loads entirely in your fastest memory tier.
