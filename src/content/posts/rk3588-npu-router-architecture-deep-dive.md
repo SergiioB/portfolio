@@ -1,196 +1,297 @@
 ---
-title: "RK3588 NPU Router Architecture: Ultra-Fast Local AI Inference"
-description: "Implementing a multi-tier inference architecture on RK3588 with NPU-accelerated routing, CPU model pre-warming, and Hermes Agent tool calling for autonomous agent workflows."
-situation: "A local-first Discord AI bot required responsive, streaming replies for autonomous agent workflows while respecting strict edge device memory budgets and power constraints."
-issue: "CPU-only inference was too slow for interactive chat, NPU CMA memory eviction occurred during idle periods, model cold-start times exceeded 60 seconds, and Hermes Agent-style tool calling required specialized formatters."
-solution: "Implemented a tiered inference architecture using TinyLlama 1.1B as ultra-fast NPU router (15 tok/s), NPU keepalive pings to prevent CMA eviction, background CPU model pre-warming after routing decisions, Hermes 2 Pro tool formatter, and parallel tool call support."
-usedIn: "Engram AI (local-first Discord bot) running on RK3588 with autonomous agentic workflows."
-impact: "Routing decisions reduced from 270ms to sub-50ms with TinyLlama, NPU CMA eviction eliminated via keepalive, CPU model cold-start hidden via background pre-warming, Hermes Agent tool calling enabled."
+title: "RK3588 NPU Router Architecture: What Actually Runs, What Wins, and Why"
+description: "A benchmark-backed deep dive into the real RK3588 inference stack: llama.cpp CPU winners, NPU roles, KV cache choices, quantization tradeoffs, and how to think about 27B with GPU+CPU offload."
+situation: "A local-first Discord AI runtime needed verified, practical inference on RK3588 rather than aspirational model support. The job was to identify what really works interactively, what should be reserved for batch use, and how to explain the system honestly."
+issue: "Several paths technically loaded but were not practically usable. Large models timed out or delivered poor latency, CPU tuning mattered more than expected, and the product narrative needed to shift from 'many runtimes' to a benchmark-backed llama.cpp-first architecture."
+solution: "Benchmarked llama.cpp and RKLLM on RK3588, identified the winning CPU configs for Qwen 3.5 4B and 9B, clarified where the NPU helps, documented KV cache and quantization choices, and reframed the architecture as llama.cpp-first with NPU used selectively."
+usedIn: "Engram AI, a local collaborative engineering runtime designed for private on-device development workflows."
+impact: "Established Qwen3.5-4B-Q4_K_M as the practical interactive default, Qwen3.5-9B-Q4_K_M as the quality step-up, proved 27B is not practical on RK3588 CPU, and documented exact commands and deployment tradeoffs for real operators."
 pubDate: 2026-03-22
 category: "local-ai"
-tags: ["rk3588", "npu", "llama.cpp", "hermes-agent", "tool-calling", "agentic-ai", "benchmarks"]
+tags: ["rk3588", "npu", "llama.cpp", "rkllm", "gguf", "benchmarks", "local-ai"]
 draft: false
 ---
 
 ## Situation
 
-Running autonomous agentic AI workflows on edge hardware requires balancing multiple competing constraints: inference speed, memory footprint, power consumption, and cold-start latency. On the RK3588 (Radxa ROCK 5B), these constraints become acute.
+The original question was not "can RK3588 run LLMs?" It was:
 
-This research session covered the implementation of:
+> What is the fastest, most honest, operationally useful inference stack on RK3588 for a local engineering assistant?
 
-1. **Ultra-fast NPU router** using TinyLlama 1.1B (15 tok/s vs qwen3-1.7b's 6.7 tok/s)
-2. **NPU keepalive** to prevent CMA memory eviction during idle periods
-3. **Background CPU model pre-warming** to hide cold-start latency
-4. **Hermes 2 Pro tool formatter** for NousResearch Hermes-compatible tool calling
-5. **Parallel tool calls** support for multi-tool agentic workflows
-6. **Flash attention fix** (llama-server flag format correction)
+That forced a stricter standard than hobby demos. I only kept results that were measurable and repeatable.
+
+The main conclusion changed the product direction:
+
+- `llama.cpp` is the real primary path for text inference
+- RKLLM/NPU is valuable, but mostly for smaller fast models
+- Ollama was installed, but the tested 27B path was not practical on this board
+
+So this is no longer a "many runtimes are equal" story. It is a benchmark-backed architecture decision.
 
 ## Architecture Overview
 
-### The Inference Tiering Problem
+### The Actual Inference Tiering Problem
 
-On RK3588, different model sizes serve different purposes with different latency profiles:
+On RK3588, model size and runtime role diverge quickly:
+
+- small NPU models are good for routing and low-latency background work
+- mid-size CPU GGUF models are the best practical path for useful chat/coding
+- very large models may technically run but stop being operationally sensible
+
+The architecture that survived benchmarking is:
+
+1. **Route and background work:** RKLLM / NPU when model size fits the validated path
+2. **Interactive main inference:** `llama.cpp`
+3. **Quality step-up:** larger CPU GGUF only when the latency budget allows it
+4. **Batch / overnight only:** very large models like 27B
 
 ![RK3588 Inference Stack](/images/diagrams/rk3588-inference-stack.svg)
 
 ### NPU CMA Memory Constraints
 
-The Rockchip NPU uses a Contiguous Memory Allocator (CMA) for model weights:
+The Rockchip NPU uses CMA-backed memory and is useful, but it is not a magic replacement for the CPU path. In practice:
+
+- `qwen3-1.7b-w8a8` was the best speed-oriented NPU result
+- `qwen2.5-3b-w8a8-g256` was the best quality/speed NPU result
+- there was no validated local NPU path here that displaced the winning Qwen 3.5 `4B` / `9B` llama.cpp CPU setups
 
 ![RK3588 NPU Memory Map](/images/diagrams/rk3588-npu-memory-map.svg)
 
-## Key Optimizations
+## How We Actually Run Inference
 
-### 1. TinyLlama 1.1B Ultra-Fast Router
+### Winning RK3588 CPU command
 
-The standard qwen3-1.7B router achieves 6.7 tok/s. TinyLlama 1.1B delivers 15 tok/s—**2.2x faster**—while using less memory (1.5GB vs 2.5GB).
-
-```typescript
-// Model registration in EngramOrchestrator
-{
-  id: 'router-npu-tiny',
-  name: 'TinyLlama 1.1B Router',
-  path: process.env.NPU_TINY_ROUTER_MODEL || '',
-  backend: 'npu',
-  size: '1.1b',
-  vramCostGB: 1.5,
-  priority: 110,  // Higher = preferred
-  description: '15 tok/s ultra-fast NPU router'
-}
-```
-
-The router model is selected automatically when `NPU_TINY_ROUTER_MODEL` is set in the environment.
-
-### 2. NPU Keepalive
-
-When the NPU is idle, CMA can evict the model weights. A keepalive ping every 30 seconds prevents this:
-
-```typescript
-private startKeepalive(): void {
-  if (this.forceHeuristicMode || !this.KEEPALIVE_ENABLED) return;
-
-  this.keepaliveTimer = setInterval(async () => {
-    try {
-      await this.npuBridge.generate({
-        userPrompt: '.',  // Minimal token
-        maxTokens: 1,
-        temperature: 0,
-        timeoutMs: 5000
-      });
-    } catch { /* ignore */ }
-  }, this.KEEPALIVE_INTERVAL_MS);
-}
-```
-
-Configuration:
+This was the most useful real-world CPU server setup:
 
 ```bash
-NPU_KEEPALIVE_ENABLED=true
-NPU_KEEPALIVE_INTERVAL_MS=30000
+taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cpp/build-rk-opt/bin/llama-server \
+  -m /home/radxa/projects/intelliauto-discord-bot/models/cpu_gguf/Qwen3.5-4B-Q4_K_M.gguf \
+  --host 127.0.0.1 --port 8081 \
+  -c 2048 -t 6 --parallel 1 --jinja \
+  --reasoning-budget 0 \
+  -ctk f16 -ctv f16 -fa on --no-webui
 ```
 
-### 3. Background CPU Model Pre-Warm
-
-After routing decides a CPU model is needed, pre-warm it in the background:
-
-```typescript
-private prewarmModelInBackground(model: ModelConfig): void {
-  if (this.loadedCpuModels.has(model.id)) return;
-  if (this.isCpuModelLoading) return;
-
-  const prewarmCtx = Math.min(model.maxContext, 512);
-
-  this.ensureCpuModelLoaded(model, prewarmCtx)
-    .catch(() => { /* silently ignore */ });
-}
-```
-
-This hides the 30-60s cold-start of CPU models behind the NPU routing decision.
-
-### 4. Hermes 2 Pro Tool Formatter
-
-Added for NousResearch Hermes compatibility:
-
-```typescript
-export class Hermes2ProFormatter extends BaseToolFormatter {
-  usesNativeToolCalling = true;
-
-  supports(model: ModelConfig): boolean {
-    return model.id.includes("hermes-2") || model.id.includes("nousresearch");
-  }
-
-  parseAction(rawText: string): AgenticAction | null {
-    const hermesMatch = rawText.match(
-      /<tool_call>\s*<tool_name>([^<]+)<\/tool_name>\s*<tool_parameters>([^<]+)<\/tool_parameters>\s*<\/tool_call>/i
-    );
-    // ... parse and return action
-  }
-}
-```
-
-### 5. Flash Attention Fix
-
-The `--flash-attn` flag **requires a value** (`on|off|auto`):
-
-```typescript
-// Before (broken): --flash-attn eats --jinja as its value
-args.push("--flash-attn");
-
-// After (fixed): explicit value
-args.push("--flash-attn", "on");
-```
-
-Resulting command:
+For the 9B path, the same winning configuration applied:
 
 ```bash
-llama-server --flash-attn on --jinja -c 2048 -t 6 ...
+taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cpp/build-rk-opt/bin/llama-server \
+  -m /home/radxa/projects/intelliauto-discord-bot/models/cpu_gguf/Qwen3.5-9B-Q4_K_M.gguf \
+  --host 127.0.0.1 --port 8081 \
+  -c 2048 -t 6 --parallel 1 --jinja \
+  --reasoning-budget 0 \
+  -ctk f16 -ctv f16 -fa on --no-webui
 ```
 
-## Benchmark Results
-
-### NPU Router Performance
-
-| Model          | Throughput | Memory | Use Case           |
-| -------------- | ---------- | ------ | ------------------ |
-| TinyLlama 1.1B | 15 tok/s   | 1.5GB  | Ultra-fast routing |
-| Qwen3-1.7B     | 6.7 tok/s  | 2.5GB  | Standard routing   |
-| Qwen2.5-3B     | 5.7 tok/s  | 3.6GB  | NPU quality        |
-
-### CPU Model Cold-Start
-
-With background pre-warming:
-
-| Model               | Cold Load | Pre-Warmed | Hidden By   |
-| ------------------- | --------- | ---------- | ----------- |
-| Qwen3.5-4B Q4_K_M   | 45s       | 0s         | NPU routing |
-| Qwen3.5-9B Q4_K_M   | 90s       | 0s         | NPU routing |
-| Qwen3.5-0.8B Q4_K_M | 12s       | 0s         | NPU routing |
-
-## Configuration Reference
+### Winning raw benchmark command
 
 ```bash
-# NPU Router
-NPU_TINY_ROUTER_MODEL=./models/TinyLlama-1.1B-W8A8-RK3588.rkllm
-NPU_ROUTER_MODEL=./models/qwen3-1.7b-w8a8/Qwen3-1.7B-rk3588-w8a8.rkllm
-
-# NPU Keepalive
-NPU_KEEPALIVE_ENABLED=true
-NPU_KEEPALIVE_INTERVAL_MS=30000
-
-# CPU Model Pre-Warm
-ENGRAM_PREWARM_CPU_MODEL=true
-
-# Flash Attention
-LLAMA_FLASH_ATTN=on
-LLAMA_USE_JINJA=true
-
-# Agentic Tool Calling
-AGENTIC_PARALLEL_TOOL_CALLS=false  # Disabled on RK3588 due to memory
+taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cpp/build-rk-opt/bin/llama-bench \
+  -m /home/radxa/projects/intelliauto-discord-bot/models/cpu_gguf/Qwen3.5-9B-Q4_K_M.gguf \
+  -ngl 0 -t 6 -p 256 -n 16 -r 1 \
+  -b 2048 -ub 512 -ctk f16 -ctv f16 -fa 1 -mmp 1 --no-warmup -o json
 ```
+
+### Actual runtime launcher
+
+The project runtime itself is launched through `scripts/run_engram.sh`, which:
+
+- starts the hardware daemon if needed
+- sets node memory flags
+- runs either `src` or `dist` mode
+- avoids duplicate runtime start via a lock file
+
+That means the actual application runtime is not just "start llama.cpp." It is:
+
+1. boot supporting hardware/runtime services
+2. start the Engram node runtime
+3. let Engram route requests to the preferred local inference path
+
+## Benchmark Results That Actually Matter
+
+### Whole-library CPU pass
+
+| Model                   | Prompt t/s | Decode t/s | Peak RSS MB | Practicality         |
+| ----------------------- | ---------: | ---------: | ----------: | -------------------- |
+| Qwen3.5-0.8B-Q4_K_M     |      25.11 |       8.07 |      1120.6 | Excellent raw speed  |
+| Qwen3.5-2B-Q4_K_M       |      16.18 |       5.54 |      2548.6 | Strong fast fallback |
+| Qwen3.5-4B-Q4_K_M       |       9.73 |       2.48 |      5382.2 | Best balance         |
+| Qwen3.5-9B-Q4_K_M       |       6.48 |       1.62 |     10222.3 | Slow but practical   |
+| Qwen_Qwen3.5-27B-Q4_K_M |       1.91 |       0.54 |     20808.7 | Not practical        |
+
+### CPU tuning sweep winners
+
+For both `4B` and `9B`, the best configuration was:
+
+- `6` threads
+- CPU affinity `0-7`
+- flash attention enabled
+
+For 4B (`256 prompt / 16 gen`):
+
+| Threads | Affinity | Flash Attn | Prompt t/s | Decode t/s | Wall s |
+| ------: | -------- | ---------- | ---------: | ---------: | -----: |
+|       6 | 0-7      | on         |       6.83 |       2.12 |   54.9 |
+
+For 9B (`256 prompt / 16 gen`):
+
+| Threads | Affinity | Flash Attn | Prompt t/s | Decode t/s | Wall s |
+| ------: | -------- | ---------- | ---------: | ---------: | -----: |
+|       6 | 0-7      | on         |       4.20 |       1.42 |   92.3 |
+
+### NPU results
+
+| Model                 |  Ctx | TTFT ms | Stream t/s | Notes                          |
+| --------------------- | ---: | ------: | ---------: | ------------------------------ |
+| qwen3-1.7b-w8a8       |  512 |  294.43 |       8.95 | Best NPU speed                 |
+| qwen3-1.7b-w8a8       | 2048 |  363.07 |       8.32 | Stable                         |
+| qwen3-1.7b-w8a8       | 4096 | 1146.40 |       7.65 | Stable to 4K                   |
+| qwen2.5-3b-w8a8-g256  | 2048 |  900.40 |       5.91 | Best quality/speed NPU balance |
+| qwen2.5-coder-3b-w8a8 | 2048 | 1181.98 |       4.42 | Slower coding specialist       |
+
+### Practical conclusion
+
+- `Qwen3.5-4B-Q4_K_M` is the best interactive default
+- `Qwen3.5-9B-Q4_K_M` is the quality step-up when latency is acceptable
+- `27B` on RK3588 CPU is technically possible but operationally poor
+- NPU is best used for smaller fast models, not as the replacement for the winning 4B/9B llama.cpp path
+- `Q4`-class weights are the practical middle ground here: they cut memory sharply while usually preserving enough quality to stay useful, which matters more than chasing a heavier quant that pushes the system into a slower memory tier
+
+In this benchmark set, `Q4_K_M` was the right middle ground: memory use stayed practical while quality remained good enough that moving to heavier variants did not justify the cost for this hardware class.
+
+## KV Cache, Context, and Quantization
+
+### Why KV cache matters
+
+Model quantization is only half the memory story. Long-context inference also pays for KV cache growth. On constrained hardware, KV cache decisions directly affect:
+
+- memory headroom
+- concurrency
+- maximum practical context
+- whether a larger model remains usable
+
+### The practical knobs in llama.cpp
+
+These are the relevant server flags:
+
+```bash
+-ctk f16
+-ctv f16
+```
+
+or more aggressively:
+
+```bash
+-ctk q8_0
+-ctv q8_0
+```
+
+or:
+
+```bash
+-ctk q4_0
+-ctv q4_0
+```
+
+### Practical guidance
+
+- `f16` KV cache is the safest baseline for response quality and predictability
+- `q8_0` KV cache is a reasonable middle ground
+- `q4_0` KV cache is the aggressive option when context length or memory pressure matters more than preserving every bit of headroom for quality
+
+TurboQuant-style research reinforces this direction conceptually, but the actual usable implementation path in this stack remains standard llama.cpp KV cache controls.
+
+## RAM and model sizing on RK3588
+
+Measured peak RSS on this host:
+
+| Model                   | Peak RSS MB | Recommendation             |
+| ----------------------- | ----------: | -------------------------- |
+| Qwen3.5-0.8B-Q4_K_M     |      1120.6 | Easy fit                   |
+| Qwen3.5-2B-Q4_K_M       |      2548.6 | Comfortable                |
+| Qwen3.5-4B-Q4_K_M       |      5382.2 | Best default               |
+| Qwen3.5-9B-Q4_K_M       |     10222.3 | Usable but deliberate      |
+| Qwen_Qwen3.5-27B-Q4_K_M |     20808.7 | Barely fits, not practical |
+
+On a `24 GB` RK3588 system:
+
+- `4B Q4_K_M` is comfortable
+- `9B Q4_K_M` is viable but meaningfully slower
+- `27B Q4_K_M` is not a sane interactive default even if it technically runs
+
+## What about 27B on an RTX 3060 with CPU offload?
+
+This is where many local-AI setups get misleading.
+
+An RTX 3060 with `12 GB` VRAM can run a quantized `27B` model only by spilling a meaningful portion of the model into system RAM. That means:
+
+- it can be made to load
+- it can be useful for batch or low-concurrency work
+- it will take a major throughput hit versus fitting fully in VRAM
+
+### Example shape
+
+For a `Q4_K_M` 27B-class model, a reasonable hybrid setup is:
+
+- GPU offload as many layers as fit in `12 GB`
+- remaining layers stay in system RAM
+- keep concurrency low
+- keep expectations realistic
+
+Representative llama.cpp style command:
+
+```bash
+./llama-server \
+  -m /models/Qwen3.5-27B-Q4_K_M.gguf \
+  --host 127.0.0.1 --port 8080 \
+  -c 4096 -t 8 --parallel 1 --jinja \
+  -ngl 28 \
+  -ctk q8_0 -ctv q8_0 \
+  -fa on
+```
+
+The exact `-ngl` depends on the quant, build, KV cache choice, and what else occupies VRAM.
+
+For a full workstation-focused explanation of compiled CUDA builds, Windows/WSL setup, and hybrid offload tradeoffs, see the companion post:
+
+- `/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive/`
+
+### The tradeoff
+
+When a 27B model is only partially on GPU and the rest lives in RAM:
+
+- prompt processing slows down sharply
+- decode speed drops materially
+- TTFT rises
+- throughput can fall by several times compared with a model that fits mostly or fully in VRAM
+
+So the honest advice is:
+
+- if you want strong interactive performance on a 3060, prefer a smaller model that fits better
+- use 27B hybrid offload only when quality matters more than speed
+- expect a noticeable tokens/s penalty once RAM traffic becomes part of the hot path
+
+## The product direction this supports
+
+After testing, the architecture story is clearer:
+
+- the product should be `llama.cpp`-first
+- hardware-specific control is valuable, but optional
+- NPU remains a useful accelerator for small fast models
+- remote runtimes should not be the default story when the verified local path is stronger
 
 ## Takeaway
 
-On edge devices, the inference stack isn't one-size-fits-all. A tiered approach—fast NPU routing, keepalive to prevent eviction, background CPU pre-warming—enables responsive autonomous agents without cold-start frustration. The Hermes 2 Pro formatter opens the door to NousResearch's agent ecosystem while maintaining local inference.
+The RK3588 lesson is not "edge hardware can run huge models." The real lesson is more useful:
+
+> benchmarked `4B` and `9B` llama.cpp CPU paths beat aspirational multi-runtime complexity.
+
+For this hardware and this product:
+
+- `4B Q4_K_M` is the practical interactive default
+- `9B Q4_K_M` is the step-up
+- NPU helps most for smaller fast models
+- `27B` belongs to batch workflows or stronger GPU systems, not to the default RK3588 chat path
 
 <!-- portfolio:expanded-v2 -->
 
@@ -198,62 +299,33 @@ On edge devices, the inference stack isn't one-size-fits-all. A tiered approach�
 
 ![RK3588 NPU Router Architecture](/images/diagrams/rk3588-npu-router-architecture.svg)
 
-This diagram illustrates the **tiered inference architecture** on RK3588, showing:
+This diagram is still useful as a topology view, but the benchmark-backed interpretation is now sharper:
 
-- NPU model tiers (TinyLlama 1.1B at 15 tok/s, Qwen3-1.7B at 6.7 tok/s, Qwen3.5-4B CPU at 2.4 tok/s)
-- NPU CMA memory constraints (2.2GB max, W8A8 required, no layer offloading)
-- Keepalive ping mechanism preventing CMA eviction
-- Background pre-warm hiding 45s cold-start behind routing decision
-- Request flow from query → NPU router → intent classification → pre-warm → generate → response
-
-## Post-Specific Engineering Lens
-
-For this post, the primary objective is: **Balance inference speed with memory constraints on edge hardware.**
-
-### Implementation decisions for this case
-
-- Chose **TinyLlama 1.1B** over qwen3-1.7B for router to achieve 2.2x speedup
-- Implemented **keepalive pings** as cheap insurance against CMA eviction
-- Used **background pre-warming** to hide CPU model cold-start entirely
-- Added **Hermes 2 Pro formatter** for NousResearch tool compatibility
-
-### Practical command path
-
-These are representative execution checkpoints relevant to this post:
-
-```bash
-# Start NPU router with keepalive
-NPU_KEEPALIVE_ENABLED=true \
-NPU_TINY_ROUTER_MODEL=./TinyLlama-1.1B-W8A8-RK3588.rkllm \
-npm run start
-
-# Warm CPU model in background
-ENGRAM_PREWARM_CPU_MODEL=true
-
-# Enable Hermes tool calling
-AGENTIC_PARALLEL_TOOL_CALLS=false
-```
+- NPU is best for smaller low-latency work
+- llama.cpp CPU is the main path for useful 4B/9B text inference
+- the winning outcome is not "all runtimes at once"
+- the winning outcome is a simpler, benchmark-driven local routing model
 
 ## Validation Matrix
 
-| Validation goal       | What to baseline                        | What confirms success                            |
-| --------------------- | --------------------------------------- | ------------------------------------------------ |
-| Routing latency       | Time to first token from NPU router     | Sub-50ms for TinyLlama, sub-300ms for qwen3-1.7B |
-| CMA stability         | NPU model stays loaded after 10min idle | Keepalive prevents eviction                      |
-| Cold-start hidden     | Time from routing to first CPU token    | Pre-warming makes this imperceptible             |
-| Tool calling accuracy | Hermes format parsing success rate      | >95% parse success on well-formed tool calls     |
+| Validation goal      | What to baseline                       | What confirms success                                     |
+| -------------------- | -------------------------------------- | --------------------------------------------------------- |
+| Interactive quality  | short coding or chat task              | `4B` stays responsive enough to use                       |
+| Quality step-up path | same task on `9B`                      | quality improves enough to justify latency                |
+| Practicality ceiling | larger `27B` run                       | confirms "possible" is not equal to "usable"              |
+| NPU usefulness       | low-latency routing/background prompts | TTFT and stream t/s beat comparable CPU-small-model paths |
 
 ## Failure Modes and Mitigations
 
-| Failure mode               | Why it appears in this type of work     | Mitigation used in this post pattern        |
-| -------------------------- | --------------------------------------- | ------------------------------------------- |
-| NPU CMA eviction           | Model unloaded after idle timeout       | Keepalive pings every 30s                   |
-| CPU model cold-start       | Large model load time on first use      | Background pre-warm after routing decision  |
-| Flash attention flag error | --flash-attn consumes next arg as value | Pass explicit 'on' value: --flash-attn on   |
-| Memory pressure            | Multiple models competing for CMA       | Pre-warm only when needed, evict LRU models |
+| Failure mode                   | Why it appears here                | Mitigation                                   |
+| ------------------------------ | ---------------------------------- | -------------------------------------------- |
+| Choosing by model size only    | larger model looks better on paper | route by measured latency and practicality   |
+| Overcommitting context         | KV cache pressure grows silently   | reduce ctx or quantize KV cache              |
+| Treating Ollama as equivalent  | installed runtime seems convenient | prefer the verified llama.cpp path           |
+| Assuming NPU replaces CPU path | small NPU models look fast         | use NPU selectively, not as a blanket answer |
 
 ## Recruiter-Readable Impact Summary
 
-- **Scope:** optimize local inference under strict edge device memory budgets.
-- **Execution quality:** tiered inference architecture with NPU routing, CPU pre-warming, and keepalive.
-- **Outcome signal:** sub-second response times for autonomous agent workflows on RK3588.
+- **Scope:** turned a multi-runtime local AI prototype into a benchmark-backed inference strategy.
+- **Execution quality:** grounded product decisions in measured throughput, TTFT, and memory use.
+- **Outcome signal:** identified the exact practical default (`4B`), quality step-up (`9B`), and non-default large-model path (`27B`).

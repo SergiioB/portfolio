@@ -8,7 +8,7 @@ usedIn: "Engram AI (Discord bot) and RADXA AI Suite running on RK3588 ARM64 hard
 impact: "Achieved 55 t/s throughput (vs 4 t/s before), stable memory usage during long sessions, and predictable context behavior without hard crashes."
 pubDate: 2026-03-03
 category: "local-ai"
-tags: ["edge-ai", "llama.cpp", "kv-cache", "context-folding", "rk3588", "optimization"]
+tags: ["local-ai", "edge-ai", "llama.cpp", "kv-cache", "context-folding", "rk3588", "optimization"]
 draft: false
 ---
 
@@ -144,6 +144,10 @@ The 26-53x speedup makes the difference between unusable latency and real-time c
 - [ ] **Context folding**: Hierarchical compression with fatigue thresholds
 - [ ] **Hardware-aware**: Use NPU/GPU acceleration where available
 - [ ] **Token estimation**: Fast heuristics avoid tokenizer overhead
+
+If you want the workstation / consumer GPU version of the same problem, see the companion post on VRAM, CPU offload, Windows/WSL, and llama.cpp hybrid inference:
+
+- `/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive/`
 
 <!-- portfolio:expanded-v2 -->
 
