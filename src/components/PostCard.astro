@@ -15,122 +15,68 @@ interface Props {
       issue?: string;
       solution?: string;
       usedIn?: string;
-      impact?: string;
     };
     body: string;
   };
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, category, tags, issue, solution, usedIn } = post.data;
+const { title, description, pubDate, category, tags, issue, solution } = post.data;
 const readingTime = estimateReadingTime(post.body);
 const postUrl = withBase(`posts/${post.id}/`);
 const primaryCategory = category[0];
-const searchText = [
-  title,
-  description,
-  ...category,
-  issue ?? "",
-  solution ?? "",
-  usedIn ?? "",
-  ...(tags ?? []),
-].join(" ");
 ---
 
-<article
-  class:list={["post-card", "panel", "panel-soft", `category-${primaryCategory}`]}
-  data-search-item
-  data-search={searchText}
->
-  <div class="post-meta">
+<article class={`post-card category-${primaryCategory}`}>
+  <div class="post-card-header">
     <time class="post-date" datetime={pubDate.toISOString()}>
-      {
-        pubDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
-      }
+      {pubDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
     </time>
-    <span aria-hidden="true">•</span>
-    <div class="post-categories">
-      {
-        category.map((cat) => (
-          <a href={withBase(`${cat}/`)} class:list={["post-category", `post-category-${cat}`]}>
-            <span
-              class="category-icon"
-              aria-hidden="true"
-              style="margin-right: 0.35rem; font-size: 1.1em; line-height: 1;"
-            >
-              {cat === "ai"
-                ? "🤖"
-                : cat === "infrastructure"
-                  ? "⚙️"
-                  : cat === "automation"
-                    ? "⚡"
-                    : cat === "cloud"
-                      ? "☁️"
-                      : cat === "local-ai"
-                        ? "💻"
-                        : "📁"}
-            </span>
-            <span data-i18n={`cat.${cat}`}>{CATEGORY_META[cat]?.label ?? cat}</span>
-          </a>
-        ))
-      }
-    </div>
-    <span aria-hidden="true">•</span>
-    <span>{readingTime} <span data-i18n="posts.minRead">min read</span></span>
+    <span class="post-meta-sep">•</span>
+    <span class="post-reading-time">{readingTime} min read</span>
   </div>
 
-  <h2 class="post-title">
+  <h3 class="post-card-title">
     <a href={postUrl}>{title}</a>
-  </h2>
+  </h3>
 
-  <p class="post-excerpt">{description}</p>
+  <p class="post-card-excerpt">{description}</p>
 
   {
-    (issue || solution) && (
-      <div class="post-cs-grid" aria-label="Case study details">
-        {issue && (
-          <div class="cs-block cs-issue">
-            <h4 class="cs-label" style="color: var(--text-soft);">
-              <span aria-hidden="true" style="color: var(--accent-danger); margin-right: 0.3rem; font-weight: bold;">!</span>
-              <span data-i18n="posts.issueLabel">ISSUE</span>
-            </h4>
-            <p>{issue}</p>
-          </div>
-        )}
-        {solution && (
-          <div class="cs-block cs-solution">
-            <h4 class="cs-label" style="color: var(--text-soft);">
-              <span aria-hidden="true" style="color: var(--accent); margin-right: 0.3rem; font-weight: bold;">✔</span>
-              <span data-i18n="posts.solutionLabel">SOLUTION</span>
-            </h4>
-            <p>{solution}</p>
-          </div>
-        )}
+    category.length > 0 && (
+      <div class="post-card-categories">
+        {category.map((cat) => (
+          <a href={withBase(`${cat}/`)} class={`badge category-${cat}`}>
+            {CATEGORY_META[cat]?.label ?? cat}
+          </a>
+        ))}
       </div>
     )
   }
 
   {
-    usedIn && (
-      <div class="post-used-in">
-        <strong data-i18n="posts.usedIn">Used In:</strong>
-        <div class="post-tags-inline">
-          {usedIn.split(",").map((item) => (
-            <span class="tag">{item.trim()}</span>
-          ))}
-        </div>
+    (issue || solution) && (
+      <div class="post-card-details">
+        {issue && (
+          <div class="detail-row">
+            <span class="detail-label detail-label-issue">Issue</span>
+            <span class="detail-value">{issue}</span>
+          </div>
+        )}
+        {solution && (
+          <div class="detail-row">
+            <span class="detail-label detail-label-solution">Solution</span>
+            <span class="detail-value">{solution}</span>
+          </div>
+        )}
       </div>
     )
   }
 
   {
     tags && tags.length > 0 && (
-      <div class="post-tags" aria-label="Post tags">
-        {tags.map((tag) => (
+      <div class="post-card-tags">
+        {tags.slice(0, 4).map((tag) => (
           <span class="tag">{tag}</span>
         ))}
       </div>
