@@ -98,6 +98,8 @@ That build matters because RK3588 is not a device where you want to leave ARM tu
 
 ### Best measured configuration per model
 
+This is the condensed decision table that came out of the corrected sweep and task-pass run.
+
 | Model                 | Threads | Stable context | Prefill t/s | Decode t/s | Intelligence | Tool calling | Avg latency |
 | --------------------- | ------: | -------------: | ----------: | ---------: | -----------: | ------------ | ----------: |
 | Qwen3.5-0.8B Q4_K_M   |       4 |          16384 |     54.5799 |    12.0653 |          0.5 | yes          |     4851 ms |
@@ -107,6 +109,25 @@ That build matters because RK3588 is not a device where you want to leave ARM tu
 | Qwen3.5-9B Q4_K_M     |       4 |           8192 |      7.6092 |     2.4810 |          1.0 | yes          |  18219.6 ms |
 | Qwen3.5-9B-UD Q4_K_XL |       4 |           8192 |      7.4280 |     2.0694 |          1.0 | yes          |  19708.4 ms |
 | Qwen3.5-27B Q4_K_M    |       2 |    4096 tested |      1.3652 |     0.6198 |            0 | no           | impractical |
+
+### Full runtime / memory detail at the chosen contexts
+
+The next table is the one I actually wanted while tuning the system. It combines the sweep output with the `llama.cpp` memory breakdown for the target context used by each model.
+
+| Model         | GGUF quant |             File size | Context | Threads | Prefill t/s | Decode t/s |                      Startup | Host total | Model buffer |  KV buffer | Compute buffer |
+| ------------- | ---------- | --------------------: | ------: | ------: | ----------: | ---------: | ---------------------------: | ---------: | -----------: | ---------: | -------------: |
+| Qwen3.5-0.8B  | Q4_K_M     | 497.39 MiB (5.55 BPW) |   16384 |       4 |     54.5799 |    12.0653 |                        8.0 s |   1075 MiB |   497.39 MiB |  70.00 MiB |     489.00 MiB |
+| Qwen3.5-2B    | Q4_K_M     |   1.18 GiB (5.40 BPW) |   32768 |       4 |     32.4422 |     8.6784 | sweep-log context probe only |   1863 MiB |  1211.05 MiB | 140.00 MiB |     493.00 MiB |
+| Qwen3.5-4B    | Q4_K_M     |   2.54 GiB (5.19 BPW) |   16384 |       4 |     13.0137 |     3.6214 | sweep-log context probe only |   3324 MiB |  2603.50 MiB | 176.00 MiB |     495.00 MiB |
+| Qwen3.5-4B-UD | Q4_K_XL    |   2.70 GiB (5.52 BPW) |   16384 |       4 |     12.8833 |     3.5868 |                       17.0 s |   3487 MiB |  2766.74 MiB | 176.00 MiB |     495.00 MiB |
+| Qwen3.5-9B    | Q4_K_M     |   5.28 GiB (5.07 BPW) |    8192 |       4 |      7.6092 |     2.4810 |                       22.0 s |   5250 MiB |  4611.21 MiB |  88.00 MiB |     501.00 MiB |
+| Qwen3.5-9B-UD | Q4_K_XL    |   5.55 GiB (5.32 BPW) |    8192 |       4 |      7.4280 |     2.0694 |                       26.1 s |   5522 MiB |  4883.55 MiB |  88.00 MiB |     501.00 MiB |
+| Qwen3.5-27B   | Q4_K_M     |  15.39 GiB (4.92 BPW) |    4096 |       2 |      1.3652 |     0.6198 |                       78.1 s |  15503 MiB | 14768.92 MiB |  80.00 MiB |     505.00 MiB |
+
+Two things stand out immediately:
+
+- the **2B model at 32K context** stays small enough to be comfortable on RK3588 while keeping the best overall interactive profile
+- the **27B model** does fit in quantized form, but the memory fit does not save its latency profile
 
 ## The Most Important Result: 2B Beat 4B
 
@@ -196,6 +217,32 @@ Successful context windows in the saved sweep:
 
 This is another reason `2B` won. On RK3588, the bigger value was not just raw speed. It was **speed plus a materially better stable context budget**.
 
+### Per-context probe timings
+
+The sweep also recorded a simple “load + answer” probe at each tested context window. That is useful because it shows where models stay stable but begin to move into a clearly slower operating band.
+
+| Model                 | Context | Load ms | End-to-end ms | Result |
+| --------------------- | ------: | ------: | ------------: | ------ |
+| Qwen3.5-0.8B Q4_K_M   |    4096 |   15611 |         17277 | OK     |
+| Qwen3.5-0.8B Q4_K_M   |    8192 |   15578 |         16922 | OK     |
+| Qwen3.5-0.8B Q4_K_M   |   16384 |    7550 |          9100 | OK     |
+| Qwen3.5-2B Q4_K_M     |    4096 |   15549 |         17566 | OK     |
+| Qwen3.5-2B Q4_K_M     |    8192 |   15546 |         17240 | OK     |
+| Qwen3.5-2B Q4_K_M     |   16384 |   15538 |         17746 | OK     |
+| Qwen3.5-2B Q4_K_M     |   32768 |   15548 |         17223 | OK     |
+| Qwen3.5-4B Q4_K_M     |    4096 |   15534 |         19796 | OK     |
+| Qwen3.5-4B Q4_K_M     |    8192 |   23569 |         27397 | OK     |
+| Qwen3.5-4B Q4_K_M     |   16384 |   15547 |         19452 | OK     |
+| Qwen3.5-4B-UD Q4_K_XL |    4096 |   23561 |         27404 | OK     |
+| Qwen3.5-4B-UD Q4_K_XL |    8192 |   23545 |         27351 | OK     |
+| Qwen3.5-4B-UD Q4_K_XL |   16384 |   23554 |         27521 | OK     |
+| Qwen3.5-9B Q4_K_M     |    4096 |   23607 |         28940 | OK     |
+| Qwen3.5-9B Q4_K_M     |    8192 |   23581 |         28761 | OK     |
+| Qwen3.5-9B-UD Q4_K_XL |    4096 |   23592 |         28831 | OK     |
+| Qwen3.5-9B-UD Q4_K_XL |    8192 |   31579 |         36806 | OK     |
+| Qwen3.5-27B Q4_K_M    |    2048 |   95785 |        126043 | OK     |
+| Qwen3.5-27B Q4_K_M    |    4096 |  111755 |        142102 | OK     |
+
 ## Why Raw llama.cpp Matters On Boards Like This
 
 I specifically did not want this hidden under another local serving layer.
@@ -236,6 +283,8 @@ The Qwen3.5 model sweep in this article was run with:
 
 - `q4_0 / q4_0` KV cache
 
+That is also the practical runtime path I would recommend if you want the same class of results. The sweep numbers above are **not** hybrid-KV numbers.
+
 ### What belongs to the separate TurboQuant experiment
 
 The TurboQuant-inspired work is a different experiment and should be described separately:
@@ -246,11 +295,50 @@ The TurboQuant-inspired work is a different experiment and should be described s
 
 That distinction matters because it keeps the benchmark story honest.
 
-The interesting practical result from the TurboQuant side was not “I replaced llama.cpp overnight with magic 3-bit KV cache.” It was more nuanced:
+The implementation status is important here:
+
+- I **did implement** a TurboQuant-inspired hybrid KV path in the project
+- the hybrid path was **per-layer**
+- layers `0-10` used `Q8_0`
+- layers `11-31` used `Q4_0`
+
+That was the hybrid layout:
+
+| Layers | KV quantization | Rationale                               |
+| ------ | --------------- | --------------------------------------- |
+| 0-10   | Q8_0            | preserve early-layer attention quality  |
+| 11-31  | Q4_0            | compress later layers more aggressively |
+
+But the interesting practical result from the TurboQuant side was not “I replaced llama.cpp overnight with magic 3-bit KV cache.” It was more nuanced:
 
 - standard `Q4_0` is already very strong in practice
 - prototype `TurboQuant 4-bit` matched `Q4_0` MSE with better compression on synthetic KV data
 - the production recommendation remained conservative: **keep standard `Q4_0` for now**
+
+### TurboQuant / hybrid numbers that are real
+
+From the separate TurboQuant benchmark work:
+
+| Method    |     MSE | Compression |
+| --------- | ------: | ----------: |
+| Q8_0      | 2.2e-07 |        3.6x |
+| Q4_0      | 7.3e-05 |        6.4x |
+| TQ_MSE_4b | 7.3e-05 |        7.5x |
+| TQ_MSE_3b | 2.7e-04 |        9.8x |
+
+For the Qwen3.5-4B 4K-context KV example used in that analysis:
+
+| KV mode      | KV size |
+| ------------ | ------: |
+| FP16         | 67.1 MB |
+| Q4_0         | 10.5 MB |
+| Hybrid Q8+Q4 |  ~12 MB |
+
+That is why the current truthful summary is:
+
+- the **Qwen3.5 sweep** used standard `q4_0 / q4_0`
+- the **hybrid/TurboQuant-inspired implementation exists**
+- the **current practical recommendation** remains standard `q4_0`
 
 That is a more credible engineering story than forcing a hype narrative.
 

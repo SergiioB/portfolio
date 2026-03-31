@@ -1,12 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 
-import AudienceMode from "../components/AudienceMode.astro";
-import EngineerLab from "../components/EngineerLab.astro";
-import NetworkTopology from "../components/NetworkTopology.astro";
-import OpsDeck from "../components/OpsDeck.astro";
 import PostCard from "../components/PostCard.astro";
-import { PUBLIC_CV, SITE } from "../config/site";
+import { SITE } from "../config/site";
 import { CATEGORY_META, CATEGORY_ORDER } from "../content/categories";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
@@ -16,58 +12,40 @@ const publishedPosts = posts
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const latestPosts = publishedPosts.slice(0, 10);
+const latestPosts = publishedPosts.slice(0, 6);
 const categoryCounts = CATEGORY_ORDER.map((category) => ({
   slug: category,
   label: CATEGORY_META[category].label,
   description: CATEGORY_META[category].description,
   count: publishedPosts.filter((post) => post.data.category.includes(category)).length,
-}));
+})).filter((c) => c.count > 0);
 
-const activeCategories = categoryCounts.filter((category) => category.count > 0);
 const latestDate = publishedPosts[0]?.data.pubDate;
-const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
-const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
 ---
 
 <BaseLayout
   title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`}
   description={SITE.description}
 >
-  <section class="hero panel" aria-labelledby="home-hero-title" style="border: 1px solid var(--border); box-shadow: none; border-radius: var(--radius-lg); overflow: visible;">
-    <div class="hero-content" style="position: relative; z-index: 10;">
-      <h1
-        id="home-hero-title"
-        class="hero-title"
-        style="font-size: clamp(2rem, 3.5vw, 2.5rem); margin-bottom: 0.2rem; letter-spacing: -0.02em;"
-      >
-        Structured Engineering Case Studies
-      </h1>
-      <p class="hero-description" style="font-size: 1.15rem; color: var(--text-soft); font-family: var(--font-body); margin: 0 0 1.5rem 0;" data-i18n="hero.description">
-        Linux & Virtualization Engineering Portfolio
-      </p>
-      
-      <AudienceMode />
-    </div>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1 class="hero-title">Structured Engineering Case Studies</h1>
+    <p class="hero-description">Linux & Virtualization Engineering Portfolio</p>
 
-    <div class="hero-grid">
-      <div class="stat-card">
-        <div class="stat-label" data-i18n="hero.currentRole" style="color: var(--accent-warm);">CURRENT ROLE</div>
-        <div class="stat-value stat-value-sm" data-i18n="hero.roleTitle" style="font-size: 0.95rem; font-family: var(--font-body); font-weight: bold; margin-top: 0.4rem;">
-          Linux & Virtualization Engineer
-        </div>
-        <div class="stat-meta" data-i18n="hero.roleCompany">
-          Deutsche Pfandbriefbank AG · Madrid · Hybrid
-        </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-label">CURRENT ROLE</span>
+        <span class="stat-value">{SITE.role}</span>
+        <span class="stat-meta">Deutsche Pfandbriefbank AG · Madrid</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label" data-i18n="hero.publishedPosts" style="color: var(--accent-warm);">PUBLISHED POSTS</div>
-        <div class="stat-value stat-value-sm" data-count-to={String(publishedPosts.length)} style="font-size: 0.95rem; font-family: var(--font-body); font-weight: bold; margin-top: 0.4rem;">0</div>
-        <div class="stat-meta" data-i18n="hero.postsMeta">Case-study driven technical notes</div>
+      <div class="stat-item">
+        <span class="stat-label">PUBLISHED CASES</span>
+        <span class="stat-value">{publishedPosts.length}</span>
+        <span class="stat-meta">Technical deep dives</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label" data-i18n="hero.lastUpdate" style="color: var(--accent-warm);">LAST UPDATE</div>
-        <div class="stat-value stat-value-sm" style="font-size: 0.95rem; font-family: var(--font-body); font-weight: bold; margin-top: 0.4rem;">
+      <div class="stat-item">
+        <span class="stat-label">LAST UPDATE</span>
+        <span class="stat-value">
           {
             latestDate
               ? latestDate.toLocaleDateString("en-US", {
@@ -75,289 +53,127 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
                   day: "numeric",
                   year: "numeric",
                 })
-              : "No posts yet"
+              : "—"
           }
-        </div>
-        <div class="stat-meta" data-i18n="hero.archiveFirst">Archive-first publishing flow</div>
+        </span>
+        <span class="stat-meta">Archive-first publishing</span>
       </div>
     </div>
   </section>
 
-  <section
-    id="recruiter-view"
-    class="section-block panel panel-soft section-surface recruiter-focus"
-    aria-labelledby="recruiter-title"
-    style="border: 1px solid var(--border); box-shadow: none; border-radius: var(--radius-lg); padding: 1.5rem;"
-  >
-    <div class="section-header-row" style="margin-bottom: 1.5rem;">
-      <h2 id="recruiter-title" data-i18n="recruiter.title" style="color: var(--text-strong); font-weight: 500;">Recruiter Snapshot</h2>
-      <a href={withBase("about/")} class="subtle-link" data-i18n="recruiter.fullProfile" style="text-transform: uppercase; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.05em; font-weight: bold; color: var(--text-soft);"
-        >FULL PROFILE</a
-      >
-    </div>
-    
-    <div style="margin-bottom: 2rem;">
-      <div class="recruiter-badge" data-i18n="recruiter.badge" style="background: rgba(86, 173, 255, 0.08); color: var(--accent); border: 1px solid rgba(86, 173, 255, 0.2); padding: 0.25rem 0.6rem; border-radius: 9999px; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.4rem; text-transform: uppercase; margin-bottom: 0.8rem;">
-        <span style="font-size: 0.5rem;">●</span> <span data-i18n="recruiter.badge">RECRUITER-READY OVERVIEW</span>
-      </div>
-      <p class="recruiter-summary" data-i18n="recruiter.summary" style="font-size: 1rem; color: var(--text-soft); line-height: 1.6; max-width: 65ch; margin: 0;">
-        Linux and virtualization engineer with a delivery-first portfolio focused on automation,
-        platform reliability, and practical enterprise AI implementation.
-      </p>
+  <!-- Quick Overview -->
+  <section class="section overview">
+    <div class="section-header">
+      <h2 class="section-title">At a Glance</h2>
+      <a href={withBase("about/")} class="section-link">Full Profile →</a>
     </div>
 
-    <div class="recruiter-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; align-items: stretch;">
-      <article class="panel panel-soft recruiter-card" style="border: 1px solid var(--border); padding: 1.5rem; border-radius: var(--radius-md);">
-        <h3 data-i18n="recruiter.roleFit" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 1rem;">Role fit</h3>
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
-          <li style="display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">
-            <span style="color: var(--accent-warm);">●</span>
-            <span data-i18n="recruiter.roleFit1">Linux platform administration in enterprise environments</span>
-          </li>
-          <li style="display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">
-            <span style="color: var(--accent-warm);">●</span>
-            <span data-i18n="recruiter.roleFit2">Infrastructure as code with Ansible + Git workflow discipline</span>
-          </li>
-          <li style="display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">
-            <span style="color: var(--accent-warm);">●</span>
-            <span data-i18n="recruiter.roleFit3">Cross-team delivery from design through operational handoff</span>
-          </li>
-        </ul>
-      </article>
+    <div class="overview-content">
+      <p class="overview-summary">{SITE.profileSummary}</p>
 
-      <article class="panel panel-soft recruiter-card" style="border: 1px solid var(--border); padding: 1.5rem; border-radius: var(--radius-md);">
-        <h3 data-i18n="recruiter.topOutcomes" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 1rem;">Top outcomes</h3>
-        <ul class="outcomes-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
-          <li style="display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">
-            <span style="color: var(--accent-warm);">●</span>
-            <span data-i18n="recruiter.outcome1"><strong style="color: var(--heading-2); font-weight: 500;">30% reduction in downtime</strong> via automated patch and lifecycle orchestration</span>
-          </li>
-          <li style="display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">
-            <span style="color: var(--accent-warm);">●</span>
-            <span data-i18n="recruiter.outcome2"><strong style="color: var(--heading-2); font-weight: 500;">500+ containers migrated</strong> to modernized RHEL environments</span>
-          </li>
-          <li style="display: flex; gap: 0.5rem; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">
-            <span style="color: var(--accent-warm);">●</span>
-            <span data-i18n="recruiter.outcome3"><strong style="color: var(--heading-2); font-weight: 500;">15h+/week saved</strong> piloting enterprise AI tools for infrastructure workflows</span>
-          </li>
-        </ul>
-      </article>
-
-      <article class="panel panel-soft recruiter-card" style="border: 1px solid var(--border); padding: 1.5rem; border-radius: var(--radius-md); display: flex; flex-direction: column;">
-        <h3 data-i18n="recruiter.quickActions" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 1rem;">Quick actions</h3>
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 0.6rem;">
-          {
-            PUBLIC_CV.enabled && (
-              <a
-                href={publicCvHref}
-                data-href-en={publicCvHref}
-                data-href-es={publicCvHrefEs}
-                target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
-                rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
-                class="action-link"
-                style="justify-content: center; width: 100%; border-color: var(--border); background: var(--surface-soft); color: var(--text-strong);"
-                data-i18n="about.cvLabel"
-              >
-                {PUBLIC_CV.label}
-              </a>
-            )
-          }
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-            <a href="https://www.linkedin.com/in/sergio-barrientose/" target="_blank" rel="noopener noreferrer" class="action-link action-link-secondary" style="justify-content: center; padding: 0.4rem; font-size: 0.85rem;">LINKEDIN</a>
-            <a href="https://github.com/SergiioB" target="_blank" rel="noopener noreferrer" class="action-link action-link-secondary" style="justify-content: center; padding: 0.4rem; font-size: 0.85rem;">GITHUB</a>
-          </div>
-          <div style="margin-top: auto; padding-top: 1rem; text-align: center;">
-            <a href={withBase("archive/")} class="subtle-link" style="font-size: 0.85rem;" data-i18n="recruiter.reviewStudies"
-              >Review case studies</a
-            >
-          </div>
+      <div class="overview-grid grid-auto">
+        <div class="card">
+          <h3 class="card-title">Linux Platform Engineering</h3>
+          <p class="card-meta">RHEL lifecycle, troubleshooting, kernel tuning</p>
         </div>
-      </article>
+        <div class="card">
+          <h3 class="card-title">Automation & Governance</h3>
+          <p class="card-meta">Ansible, Git workflows, IaC discipline</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Virtualization & Ops</h3>
+          <p class="card-meta">VMware vSphere, server lifecycle, HA/DR</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Enterprise AI Integration</h3>
+          <p class="card-meta">Azure AI Foundry, document intelligence</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Production Spotlight — High signal for recruiters -->
-  <section
-    class="section-block panel panel-soft section-surface"
-    aria-labelledby="production-title"
-    style="margin-top: 2rem; border-left: 3px solid var(--accent); position: relative; overflow: hidden; padding: 1.5rem 1.8rem;"
-  >
-    <!-- Background subtle gradient to make it pop slightly more -->
-    <div
-      style="position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(90deg, rgba(76, 175, 80, 0.05) 0%, transparent 40%); pointer-events: none;"
-    >
-    </div>
-
-    <div class="section-header-row" style="position: relative; z-index: 2;">
-      <h2 id="production-title" data-i18n="production.title" style="color: var(--accent);">
-        Production Spotlight
-      </h2>
+  <!-- Production Spotlight -->
+  <section class="section spotlight" style="border-left: 4px solid var(--accent);">
+    <div class="section-header">
+      <h2 class="section-title" style="color: var(--accent);">Production Spotlight</h2>
       <a
         href="https://play.google.com/store/apps/details?id=com.intelliflow.finances&hl=en"
+        class="section-link"
         target="_blank"
-        rel="noopener noreferrer"
-        class="subtle-link">App Store</a
+        rel="noopener noreferrer">App Store →</a
       >
-    </div>
-    <div
-      class="recruiter-badge"
-      data-i18n="production.badge"
-      style="color: var(--heading-2); border-color: rgba(121, 192, 255, 0.3); margin-bottom: 1.2rem;"
-    >
-      ● Live on Google Play & Web
     </div>
 
-    <div style="position: relative; z-index: 2;">
-      <h3
-        data-i18n="production.appTitle"
-        style="font-size: 1.4rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"
-      >
-        📱 IntelliFlow: AI Budget Tracker
-      </h3>
-      <p data-i18n="production.appDesc" style="font-size: 0.95rem; color: var(--text);">
+    <div class="spotlight-content">
+      <span class="badge badge-accent">● Live on Google Play & Web</span>
+      <h3 class="spotlight-title">📱 IntelliFlow: AI Budget Tracker</h3>
+      <p class="spotlight-description">
         A production-grade personal finance application serving real users. Features an AI-powered
         financial coach, offline-first architecture, and cross-platform syncing.
       </p>
-
-      <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+      <div class="spotlight-actions">
         <a
           href="https://play.google.com/store/apps/details?id=com.intelliflow.finances&hl=en"
+          class="btn btn-primary"
           target="_blank"
           rel="noopener noreferrer"
-          class="action-link"
-          style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(35, 134, 54, 0.15); border-color: var(--accent);"
         >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-            <path
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"
+            ><path
               d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,16.05L15.39,12L17.89,7.95L20.16,10.81M16.81,8.88L14.54,11.15L6.05,2.66L16.81,8.88Z"
-            ></path>
-          </svg>
-          <span data-i18n="production.playStore">Get it on Google Play</span>
+            ></path></svg
+          >
+          Get it on Google Play
         </a>
         <a
           href="https://intelliflow-finance.web.app/"
+          class="btn btn-outline"
           target="_blank"
           rel="noopener noreferrer"
-          class="action-link action-link-secondary"
-          style="display: inline-flex; align-items: center; gap: 0.5rem;"
         >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-            <path
-              d="M16.36,14C16.44,13.34 16.5,12.68 16.5,12C16.5,11.32 16.44,10.66 16.36,10H19.74C19.9,10.64 20,11.31 20,12C20,12.69 19.9,13.36 19.74,14M14.59,19.56C15.19,18.45 15.65,17.25 15.97,16H18.92C17.96,17.65 16.43,18.93 14.59,19.56M14.34,14H9.66C9.56,13.34 9.5,12.68 9.5,12C9.5,11.32 9.56,10.66 9.66,10H14.34C14.43,10.66 14.5,11.32 14.5,12C14.5,12.68 14.43,13.34 14.34,14M12,19.96C11.17,18.76 10.5,17.43 10.09,16H13.91C13.5,17.43 12.83,18.76 12,19.96M8.03,16H5.08C6.04,17.65 7.57,18.93 9.41,19.56C8.81,18.45 8.35,17.25 8.03,16M7.64,14C7.56,13.34 7.5,12.68 7.5,12C7.5,11.32 7.56,10.66 7.64,10H4.26C4.1,10.64 4,11.31 4,12C4,12.69 4.1,13.36 4.26,14M9.41,4.44C7.57,5.07 6.04,6.35 5.08,8H8.03C8.35,6.75 8.81,5.55 9.41,4.44M12,4.04C12.83,5.24 13.5,6.57 13.91,8H10.09C10.5,6.57 11.17,5.24 12,4.04M14.59,4.44C15.19,5.55 15.65,6.75 15.97,8H18.92C17.96,6.35 16.43,5.07 14.59,4.44M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-            ></path>
-          </svg>
-          <span data-i18n="production.webApp">Open Web App</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"
+            ><path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+            ></path></svg
+          >
+          Open Web App
         </a>
       </div>
     </div>
   </section>
 
-  <section class="section-block panel panel-soft section-surface" aria-labelledby="focus-title">
-    <div class="section-header-row">
-      <h2 id="focus-title" data-i18n="focus.title">Delivery Focus</h2>
-      <a href={withBase("about/")} class="subtle-link" data-i18n="focus.profile">Profile</a>
+  <!-- Domains -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Domains</h2>
+      <a href={withBase("archive/")} class="section-link">Browse All →</a>
     </div>
-    <div class="signal-grid">
-      <article class="panel panel-soft signal-card">
-        <h3 data-i18n="focus.infraTitle">Infrastructure automation at scale</h3>
-        <p data-i18n="focus.infraDesc">
-          Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational
-          execution.
-        </p>
-      </article>
-      <article class="panel panel-soft signal-card">
-        <h3 data-i18n="focus.rhelTitle">RHEL modernization</h3>
-        <p data-i18n="focus.rhelDesc">
-          RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and
-          hardening.
-        </p>
-      </article>
-      <article class="panel panel-soft signal-card">
-        <h3 data-i18n="focus.aiTitle">Applied enterprise AI</h3>
-        <p data-i18n="focus.aiDesc">
-          Azure AI Foundry and document intelligence pilots translated into operationally viable
-          workloads.
-        </p>
-      </article>
-    </div>
-  </section>
 
-  <section class="engineer-zone-teaser panel panel-soft section-surface" data-engineer-zone-teaser>
-    <div class="section-header-row">
-      <h2 data-i18n="engineer.labsTitle">Engineer Labs</h2>
-    </div>
-    <p data-i18n="engineer.teaserText">
-      Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open
-      live Linux telemetry, command simulation, and network topology labs.
-    </p>
-    <div class="engineer-teaser-cta">
-      <button
-        type="button"
-        class="action-link engineer-switch-btn"
-        data-set-audience="engineer"
-        data-i18n="engineer.switchButton">Switch to Engineer Mode</button
-      >
-    </div>
-  </section>
-
-  <div class="engineer-zone" data-engineer-zone>
-    <EngineerLab />
-
-    <OpsDeck />
-
-    <NetworkTopology />
-  </div>
-
-  <section class="section-block panel panel-soft section-surface" aria-labelledby="domains-title">
-    <div class="section-header-row">
-      <h2 id="domains-title" data-i18n="domains.title">Domains</h2>
-      <a href={withBase("archive/")} class="subtle-link" data-i18n="domains.browseAll">Browse all</a
-      >
-    </div>
-    <div class="category-grid">
+    <div class="domains-grid grid-auto">
       {
         categoryCounts.map((category) => (
-          <a
-            href={withBase(`${category.slug}/`)}
-            class={`category-tile panel panel-soft category-${category.slug}`}
-          >
-            <div class="category-tile-top">
-              <span class={`category-badge ${category.slug}`} data-i18n={`cat.${category.slug}`}>
-                {category.label}
-              </span>
-              <span class="category-tile-count">{category.count}</span>
+          <a href={withBase(`${category.slug}/`)} class="card domain-card">
+            <div class="domain-header">
+              <span class={`badge category-${category.slug}`}>{category.label}</span>
+              <span class="domain-count">{category.count}</span>
             </div>
-            <p data-i18n={`cat.${category.slug}.desc`}>{category.description}</p>
+            <p class="domain-description">{category.description}</p>
           </a>
         ))
       }
     </div>
-    <p class="post-count">
-      <span>{activeCategories.length}</span>
-      <span data-i18n="domains.activeDomains">active domains with published case studies.</span>
-    </p>
   </section>
 
-  <section
-    class="section-block section-surface"
-    aria-labelledby="latest-posts-title"
-    style="background: transparent; border: none; box-shadow: none; padding: 0;"
-  >
-    <div class="section-header-row" style="margin-bottom: 1.5rem;">
-      <h2 id="latest-posts-title" data-i18n="posts.recent" style="color: var(--heading-2); font-weight: 500;">Recent Case Studies</h2>
-      <a href={withBase("archive/")} class="subtle-link" data-i18n="posts.allPosts" style="text-transform: uppercase; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.05em; font-weight: bold; color: var(--text-soft);">ALL POSTS</a>
+  <!-- Recent Posts -->
+  <section class="section" style="background: transparent; border: none; padding: 0;">
+    <div class="section-header">
+      <h2 class="section-title">Recent Case Studies</h2>
+      <a href={withBase("archive/")} class="section-link">All Posts →</a>
     </div>
 
-    <div class="post-feed" aria-label="Latest posts">
+    <div class="posts-feed">
       {latestPosts.map((post) => <PostCard post={post} />)}
-
-      {
-        publishedPosts.length === 0 && (
-          <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">
-            No posts published yet.
-          </p>
-        )
-      }
+      {publishedPosts.length === 0 && <p class="empty-state">No posts published yet.</p>}
     </div>
   </section>
 </BaseLayout>
