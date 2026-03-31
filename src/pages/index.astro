@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 
 import PostCard from "../components/PostCard.astro";
+import Search from "../components/Search.astro";
 import { PUBLIC_CV, SITE } from "../config/site";
 import { CATEGORY_META, CATEGORY_ORDER } from "../content/categories";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -28,6 +29,11 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`}
   description={SITE.description}
 >
+  <!-- Search Section -->
+  <section class="section search-section">
+    <Search />
+  </section>
+
   <!-- Hero Section -->
   <section class="hero">
     <h1 class="hero-title">Structured Engineering Case Studies</h1>
