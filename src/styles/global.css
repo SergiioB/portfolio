@@ -5225,3 +5225,211 @@ border: 1px solid var(--border);
     grid-template-columns: 1fr;
   }
 }
+
+/* Social links in hero */
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: all var(--transition-fast);
+}
+
+.social-icon:hover {
+  background: var(--surface-strong);
+  border-color: var(--heading-2);
+  color: var(--heading-2);
+  transform: translateY(-2px);
+}
+
+.social-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Hero actions layout */
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Fix ALL card collisions - comprehensive */
+.section {
+  margin-top: var(--section-gap-lg);
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: visible;
+}
+
+/* Overview grid spacing */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.overview-grid .card {
+  min-height: 120px;
+}
+
+/* Spotlight content spacing */
+.spotlight {
+  position: relative;
+  overflow: visible;
+}
+
+.spotlight-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.spotlight-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0.5rem 0;
+}
+
+.spotlight-description {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+  max-width: 70ch;
+}
+
+.spotlight-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Domains grid - prevent collision */
+.domains-section .domains-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.domain-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  min-height: 130px;
+  padding: 1.25rem;
+}
+
+.domain-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.domain-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Projects grid - prevent collision */
+.github-section .projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 160px;
+  padding: 1.5rem;
+}
+
+.project-card .card-title {
+  margin: 0;
+}
+
+.project-card .card-meta {
+  margin: 0;
+  flex-grow: 1;
+  line-height: 1.5;
+}
+
+/* Posts feed spacing */
+.posts-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Section spacing between sections */
+.section + .section {
+  margin-top: 2rem;
+}
+
+/* Ensure proper z-index stacking */
+.card,
+.project-card,
+.domain-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .social-links {
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .spotlight-actions {
+    flex-direction: column;
+  }
+
+  .spotlight-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .domains-section .domains-grid,
+  .github-section .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
