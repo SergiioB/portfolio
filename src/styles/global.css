@@ -5479,3 +5479,74 @@ border: 1px solid var(--border);
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
 }
+
+/* 3-card At a Glance layout */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.glance-card-large {
+  min-height: 200px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.glance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.glance-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.glance-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--surface-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+}
+
+.glance-card-large .card-title {
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.glance-card-large .card-meta {
+  flex-grow: 1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.glance-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+/* Responsive: stack on smaller screens */
+@media (max-width: 900px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .glance-card-large {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 901px) {
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
