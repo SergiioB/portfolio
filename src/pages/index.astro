@@ -115,23 +115,31 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     <div class="overview-content">
       <p class="overview-summary">{SITE.profileSummary}</p>
 
-      <div class="overview-grid grid-auto">
-        <div class="card">
-          <h3 class="card-title">Linux Platform Engineering</h3>
-          <p class="card-meta">RHEL lifecycle, troubleshooting, kernel tuning</p>
-        </div>
-        <div class="card">
-          <h3 class="card-title">Automation & Governance</h3>
-          <p class="card-meta">Ansible, Git workflows, IaC discipline</p>
-        </div>
-        <div class="card">
-          <h3 class="card-title">Virtualization & Ops</h3>
-          <p class="card-meta">VMware vSphere, server lifecycle, HA/DR</p>
-        </div>
-        <div class="card">
-          <h3 class="card-title">Enterprise AI Integration</h3>
-          <p class="card-meta">Azure AI Foundry, document intelligence</p>
-        </div>
+      <div class="overview-grid">
+        <a href={withBase("infrastructure/")} class="card glance-card">
+          <div class="glance-icon">🐧</div>
+          <h3 class="card-title">Linux Platform</h3>
+          <p class="card-meta">RHEL lifecycle, kernel tuning, enterprise operations</p>
+          <span class="badge category-infrastructure">Infrastructure</span>
+        </a>
+        <a href={withBase("automation/")} class="card glance-card">
+          <div class="glance-icon">⚡</div>
+          <h3 class="card-title">Automation</h3>
+          <p class="card-meta">Ansible playbooks, Git workflows, IaC discipline</p>
+          <span class="badge category-automation">Automation</span>
+        </a>
+        <a href={withBase("ai/")} class="card glance-card">
+          <div class="glance-icon">🤖</div>
+          <h3 class="card-title">Enterprise AI</h3>
+          <p class="card-meta">Azure AI Foundry, document intelligence, LLM integration</p>
+          <span class="badge category-ai">AI</span>
+        </a>
+        <a href={withBase("local-ai/")} class="card glance-card">
+          <div class="glance-icon">💻</div>
+          <h3 class="card-title">Edge AI</h3>
+          <p class="card-meta">RK3588, local LLM inference, edge devices</p>
+          <span class="badge category-local-ai">Local AI</span>
+        </a>
       </div>
     </div>
   </section>
