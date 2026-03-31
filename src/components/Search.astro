@@ -2,134 +2,168 @@
 // Search component for technical portfolio
 ---
 
-<div class="search-container" data-search-container>
-  <div class="search-box">
-    <span class="search-prompt">~$</span>
-    <input
-      type="text"
-      class="search-input"
-      placeholder="grep posts... [type to search]"
-      data-search-input
-      autocomplete="off"
-    />
-    <span class="search-cursor">█</span>
-    <kbd class="search-shortcut">Ctrl+K</kbd>
-  </div>
-
-  <div class="search-results" data-search-results hidden>
-    <div class="results-header">
-      <span class="results-count" data-results-count></span>
-      <button class="results-close" data-search-close>×</button>
+<div class="search-wrapper">
+  <div class="search-container" id="search-container">
+    <div class="search-box" id="search-box">
+      <span class="search-prompt">~$</span>
+      <input
+        type="text"
+        class="search-input"
+        id="search-input"
+        placeholder="grep posts..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span class="search-cursor" id="search-cursor">█</span>
+      <kbd class="search-shortcut">Ctrl+F</kbd>
     </div>
-    <div class="results-list" data-results-list></div>
+
+    <div class="search-dropdown" id="search-dropdown" hidden>
+      <div class="search-dropdown-header">
+        <span id="search-results-count"></span>
+        <button class="search-close-btn" id="search-close-btn" aria-label="Close search">×</button>
+      </div>
+      <div class="search-results-list" id="search-results-list"></div>
+    </div>
   </div>
 </div>
 
-<script>
-  (function () {
-    const container = document.querySelector("[data-search-container]");
-    const input = document.querySelector("[data-search-input]");
-    const resultsContainer = document.querySelector("[data-search-results]");
-    const resultsList = document.querySelector("[data-results-list]");
-    const resultsCount = document.querySelector("[data-results-count]");
-    const closeBtn = document.querySelector("[data-search-close]");
+<script is:inline>
+  // Search functionality
+  (function() {
+    const container = document.getElementById('search-container');
+    const input = document.getElementById('search-input');
+    const dropdown = document.getElementById('search-dropdown');
+    const resultsList = document.getElementById('search-results-list');
+    const resultsCount = document.getElementById('search-results-count');
+    const closeBtn = document.getElementById('search-close-btn');
+    const cursor = document.getElementById('search-cursor');
 
-    // Fetch all posts data
     let postsData = [];
+    let isLoaded = false;
 
-    async function loadPosts() {
-      try {
-        const response = await fetch("/search.json");
-        postsData = await response.json();
-      } catch (e) {
-        console.error("Failed to load search data:", e);
-      }
+    // Load search data
+    function loadSearchData() {
+      if (isLoaded) return Promise.resolve();
+      
+      return fetch('/search.json')
+        .then(res => res.json())
+        .then(data => {
+          postsData = data;
+          isLoaded = true;
+        })
+        .catch(err => console.error('Search load error:', err));
     }
 
-    // Initialize
-    loadPosts();
-
-    // Keyboard shortcut
-    document.addEventListener("keydown", (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+    // Keyboard shortcut - Ctrl+F or Cmd+F for search
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
-        input.focus();
+        e.stopPropagation();
+        loadSearchData().then(() => {
+          input.focus();
+          container.classList.add('active');
+        });
       }
-      if (e.key === "Escape") {
+      
+      if (e.key === 'Escape') {
         closeSearch();
       }
-    });
+    }, true);
 
-    // Input handling
-    input.addEventListener("input", (e) => {
-      const query = e.target.value.trim().toLowerCase();
-      if (query.length < 2) {
-        closeSearch();
-        return;
-      }
-      performSearch(query);
-    });
-
-    input.addEventListener("focus", () => {
-      container.classList.add("active");
+    // Focus handling
+    input.addEventListener('focus', function() {
+      container.classList.add('active');
+      cursor.style.animationPlayState = 'running';
+      loadSearchData();
+      
       if (input.value.trim().length >= 2) {
         performSearch(input.value.trim().toLowerCase());
       }
     });
 
-    closeBtn.addEventListener("click", closeSearch);
+    input.addEventListener('blur', function() {
+      cursor.style.animationPlayState = 'paused';
+    });
+
+    // Input handling
+    input.addEventListener('input', function(e) {
+      const query = e.target.value.trim().toLowerCase();
+      
+      if (query.length < 2) {
+        hideDropdown();
+        return;
+      }
+      
+      performSearch(query);
+    });
+
+    // Close button
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeSearch();
+    });
 
     function closeSearch() {
-      resultsContainer.hidden = true;
-      container.classList.remove("active");
+      dropdown.hidden = true;
+      container.classList.remove('active');
+      input.blur();
+    }
+
+    function hideDropdown() {
+      dropdown.hidden = true;
     }
 
     function performSearch(query) {
-      const results = postsData.filter((post) => {
-        const searchText =
-          `${post.title} ${post.description} ${post.category.join(" ")} ${post.tags?.join(" ") || ""}`.toLowerCase();
+      if (!postsData.length) return;
+
+      const results = postsData.filter(function(post) {
+        const searchText = (post.title + ' ' + post.description + ' ' + post.category.join(' ') + ' ' + (post.tags || []).join(' ')).toLowerCase();
         return searchText.includes(query);
       });
 
-      displayResults(results, query);
+      showResults(results, query);
     }
 
-    function displayResults(results, query) {
+    function showResults(results, query) {
+      resultsCount.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '');
+      
       if (results.length === 0) {
-        resultsList.innerHTML = '<div class="no-results">No matches found</div>';
-        resultsCount.textContent = "0 results";
+        resultsList.innerHTML = '<div class="search-no-results">No matches found for "' + escapeHtml(query) + '"</div>';
       } else {
-        resultsCount.textContent = `${results.length} result${results.length !== 1 ? "s" : ""}`;
-        resultsList.innerHTML = results
-          .map(
-            (post) => `
-          <a href="${post.url}" class="result-item">
-            <div class="result-meta">
-              <span class="result-category">${post.category[0]}</span>
-              <span class="result-date">${post.date}</span>
-            </div>
-            <h4 class="result-title">${highlightMatch(post.title, query)}</h4>
-            <p class="result-excerpt">${highlightMatch(post.description, query)}</p>
-            ${post.tags ? `<div class="result-tags">${post.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>` : ""}
-          </a>
-        `
-          )
-          .join("");
+        resultsList.innerHTML = results.map(function(post) {
+          return '<a href="' + post.url + '" class="search-result-item" onclick="closeSearch()">' +
+            '<div class="search-result-meta">' +
+              '<span class="search-result-category">' + post.category[0] + '</span>' +
+              '<span class="search-result-date">' + post.date + '</span>' +
+            '</div>' +
+            '<h4 class="search-result-title">' + highlightText(post.title, query) + '</h4>' +
+            '<p class="search-result-desc">' + highlightText(post.description, query) + '</p>' +
+            (post.tags && post.tags.length ? '<div class="search-result-tags">' + post.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' : '') +
+          '</a>';
+        }).join('');
       }
-      resultsContainer.hidden = false;
+      
+      dropdown.hidden = false;
     }
 
-    function highlightMatch(text, query) {
-      const regex = new RegExp(`(${escapeRegex(query)})`, "gi");
-      return text.replace(regex, "<mark>$1</mark>");
+    function highlightText(text, query) {
+      const regex = new RegExp('(' + escapeRegex(query) + ')', 'gi');
+      return escapeHtml(text).replace(regex, '<mark>$1</mark>');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
 
     function escapeRegex(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     // Close on click outside
-    document.addEventListener("click", (e) => {
+    document.addEventListener('click', function(e) {
       if (!container.contains(e.target)) {
         closeSearch();
       }

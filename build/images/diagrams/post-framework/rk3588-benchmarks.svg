@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-label="RK3588 NPU vs CPU Inference Benchmark">
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#0b1020" rx="20"/>
+
+  <!-- Subtle Data Visualization Grid -->
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+    </pattern>
+    <linearGradient id="barRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7f1d1d" />
+      <stop offset="100%" stop-color="#ef4444" />
+    </linearGradient>
+    <linearGradient id="barGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="barTeal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#14b8a6" />
+    </linearGradient>
+  </defs>
+
+  <!-- Grid overlay -->
+  <rect x="50" y="150" width="1100" height="500" fill="url(#grid)" />
+  
+  <!-- Title -->
+  <text x="60" y="80" fill="#f8fafc" font-size="32" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold">RK3588 Edge Inference: NPU vs CPU</text>
+  <text x="60" y="115" fill="#94a3b8" font-size="18" font-family="Segoe UI, Inter, Arial, sans-serif">Why RKLLM hardware acceleration is the absolute enabling constraint for interactive agents.</text>
+
+  <!-- Y-Axis (Models/Execution target) -->
+  <path d="M 320 200 L 320 600" fill="none" stroke="#334155" stroke-width="4"/>
+  
+  <!-- X-Axis (Tokens / Sec) -->
+  <path d="M 320 600 L 1100 600" fill="none" stroke="#334155" stroke-width="4"/>
+  <text x="710" y="640" fill="#cbd5e1" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="600" text-anchor="middle" letter-spacing="1">THROUGHPUT (Tokens / second)</text>
+
+  <!-- X-Axis Labels -->
+  <text x="320" y="620" fill="#64748b" font-size="14" font-family="Consolas, monospace" text-anchor="middle">0</text>
+  <text x="470" y="620" fill="#64748b" font-size="14" font-family="Consolas, monospace" text-anchor="middle">2.5</text>
+  <text x="620" y="620" fill="#64748b" font-size="14" font-family="Consolas, monospace" text-anchor="middle">5.0</text>
+  <text x="770" y="620" fill="#64748b" font-size="14" font-family="Consolas, monospace" text-anchor="middle">7.5</text>
+  <text x="920" y="620" fill="#64748b" font-size="14" font-family="Consolas, monospace" text-anchor="middle">10.0</text>
+  <text x="1070" y="620" fill="#64748b" font-size="14" font-family="Consolas, monospace" text-anchor="middle">12.5</text>
+
+  <!-- Grid lines Vertical -->
+  <path d="M 470 200 L 470 600 M 620 200 L 620 600 M 770 200 L 770 600 M 920 200 L 920 600 M 1070 200 L 1070 600" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Row 1: CPU -->
+  <text x="300" y="270" fill="#f8fafc" font-size="18" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="600" text-anchor="end">Ollama (CPU)</text>
+  <text x="300" y="295" fill="#94a3b8" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif" text-anchor="end">Qwen2.5 1.5B</text>
+  <!-- Bar for 0.21 t/s -> scale: 1 t/s = 60px -> 0.21 * 60 = ~13px -->
+  <rect x="320" y="250" width="13" height="50" rx="4" fill="url(#barRed)"/>
+  <text x="345" y="280" fill="#fca5a5" font-size="18" font-family="Consolas, monospace" font-weight="bold">0.21</text>
+  
+  <!-- Highlight annotation -->
+  <path d="M 395 275 L 430 275" fill="none" stroke="#ef4444" stroke-width="2"/>
+  <text x="440" y="280" fill="#ef4444" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Unusable latency (~37s reply)</text>
+
+  <!-- Row 2: NPU (Qwen3) -->
+  <text x="300" y="390" fill="#f8fafc" font-size="18" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="600" text-anchor="end">RKLLM (NPU)</text>
+  <text x="300" y="415" fill="#94a3b8" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif" text-anchor="end">Qwen3 4B</text>
+  <!-- Bar for 5.5 t/s -> scale: 1 t/s = 60px -> 5.5 * 60 = 330px -->
+  <rect x="320" y="370" width="330" height="50" rx="4" fill="url(#barTeal)"/>
+  <text x="665" y="400" fill="#5eead4" font-size="18" font-family="Consolas, monospace" font-weight="bold">5.50</text>
+  
+  <rect x="730" y="380" width="80" height="30" rx="15" fill="#134e4a" stroke="#14b8a6"/>
+  <text x="770" y="400" fill="#5eead4" font-size="14" font-family="Consolas, monospace" font-weight="bold" text-anchor="middle">26x</text>
+
+  <!-- Row 3: NPU (DeepSeek) -->
+  <text x="300" y="510" fill="#f8fafc" font-size="18" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="600" text-anchor="end">RKLLM (NPU)</text>
+  <text x="300" y="535" fill="#94a3b8" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif" text-anchor="end">DeepSeek-R1 1.5B W8A8</text>
+  <!-- Bar for 11.2 t/s -> scale: 1 t/s = 60px -> 11.2 * 60 = 672px -->
+  <rect x="320" y="490" width="672" height="50" rx="4" fill="url(#barGreen)"/>
+  <text x="1005" y="520" fill="#6ee7b7" font-size="18" font-family="Consolas, monospace" font-weight="bold">11.20</text>
+  
+  <rect x="1070" y="500" width="80" height="30" rx="15" fill="#064e3b" stroke="#10b981"/>
+  <text x="1110" y="520" fill="#6ee7b7" font-size="14" font-family="Consolas, monospace" font-weight="bold" text-anchor="middle">53x</text>
+
+</svg>

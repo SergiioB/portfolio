@@ -1,0 +1,727 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Complete guide to automating SSL/TLS certificate generation, deployment, rotation, and monitoring across enterprise Linux infrastructure using Ansible Vault and OpenSSL."><meta name="author" content="Sergio B."><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="color-scheme" content="light"><meta name="theme-color" content="#0d1117"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; frame-src 'none'; manifest-src 'self'; upgrade-insecure-requests"><link rel="canonical" href="https://sergiiob.dev/posts/enterprise-certificate-lifecycle-ansible.md/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><meta property="og:site_name" content="Sergio B. / Field Notes"><meta property="og:title" content="Enterprise Certificate Lifecycle Management with Ansible | Sergio B."><meta property="og:description" content="Complete guide to automating SSL/TLS certificate generation, deployment, rotation, and monitoring across enterprise Linux infrastructure using Ansible Vault and OpenSSL."><meta property="og:type" content="website"><meta property="og:url" content="https://sergiiob.dev/posts/enterprise-certificate-lifecycle-ansible.md/"><meta property="og:image" content="https://sergiiob.dev/images/og-preview.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Enterprise Certificate Lifecycle Management with Ansible | Sergio B."><meta name="twitter:description" content="Complete guide to automating SSL/TLS certificate generation, deployment, rotation, and monitoring across enterprise Linux infrastructure using Ansible Vault and OpenSSL."><meta name="twitter:image" content="https://sergiiob.dev/images/og-preview.png"><!-- AI-friendly meta --><meta name="ai-content-type" content="developer-portfolio"><meta name="ai-author" content="Sergio B."><meta name="ai-summary" content="Portfolio of Sergio B., Linux & Virtualization Engineer. Case-study driven technical notes on RHEL lifecycle, Ansible automation, enterprise AI, and infrastructure delivery. Bilingual: English and Spanish."><meta name="ai-topics" content="Linux, RHEL, Ansible, VMware, Azure AI, Infrastructure, Automation, DevOps, Platform Engineering"><!-- JSON-LD Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://sergiiob.dev/posts/enterprise-certificate-lifecycle-ansible.md/#person","name":"Sergio B.","jobTitle":"Linux & Virtualization Engineer","worksFor":{"@type":"Organization","name":"Deutsche Pfandbriefbank AG"},"url":"https://sergiiob.dev/","knowsAbout":["Linux","RHEL","Ansible","VMware vSphere","Azure AI","Infrastructure Automation","Enterprise AI","Platform Engineering"],"sameAs":["https://github.com/SergiioB","https://linkedin.com/in/sergio-barrientos-dev"]},{"@type":"WebSite","@id":"https://sergiiob.dev/posts/enterprise-certificate-lifecycle-ansible.md/#website","name":"Sergio B. / Field Notes","url":"https://sergiiob.dev/","description":"Complete guide to automating SSL/TLS certificate generation, deployment, rotation, and monitoring across enterprise Linux infrastructure using Ansible Vault and OpenSSL.","inLanguage":["en","es"],"author":{"@id":"https://sergiiob.dev/posts/enterprise-certificate-lifecycle-ansible.md/#person"}}]}</script><title>Enterprise Certificate Lifecycle Management with Ansible | Sergio B.</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><link rel="stylesheet" href="/_astro/_category_.DVDm2n6L.css"></head> <body> <div class="boot-sequence done" data-boot-sequence aria-hidden="true"> <div class="boot-shell" role="presentation"> <div class="boot-head"> <span class="boot-title" data-i18n="boot.title">Booting Engineer Runtime</span> <span class="boot-host">ssh://sergiio@rhel-core-01</span> </div> <div class="boot-meta"> <span class="boot-percent" data-boot-percent>0%</span> <span class="boot-hint" data-i18n="boot.hint">Click to skip · Esc to continue instantly</span> </div> <div class="boot-output" data-boot-output></div> <div class="boot-gate" data-boot-gate hidden> <label for="boot-gate-input" class="boot-gate-label" data-i18n="boot.gateLabel">Type unlock to continue</label> <div class="boot-gate-row"> <span class="boot-gate-prompt">root@runtime:~#</span> <input id="boot-gate-input" class="boot-gate-input" data-boot-gate-input type="text" autocomplete="off" spellcheck="false"> </div> </div> <div class="boot-progress" aria-hidden="true"> <span data-boot-progress></span> </div> </div> </div> <div class="command-palette" data-command-palette> <div class="command-palette-backdrop" data-command-palette-close></div> <div class="command-palette-shell" role="dialog" aria-modal="true" aria-labelledby="command-palette-title"> <div class="command-palette-head"> <h2 id="command-palette-title" data-i18n="palette.title">Engineer Command Palette</h2> <div class="command-palette-head-actions"> <span class="command-palette-hint">Ctrl+K</span> <button class="command-palette-close" type="button" data-command-palette-close aria-label="Close command palette" data-i18n="palette.close">Close</button> </div> </div> <input class="command-palette-input" data-command-palette-input type="text" data-i18n-placeholder="palette.searchPlaceholder" placeholder="Search commands... (mode, nav, boot)" autocomplete="off"> <div class="command-palette-list" data-command-palette-list></div> </div> </div> <a class="skip-link" href="#main-content" data-i18n="nav.skipToContent">Skip to content</a> <div class="site-shell"> <aside class="sidebar" id="site-sidebar" data-sidebar> <div class="sidebar-header"> <a href="/" class="site-brand"> <span class="brand-name">Sergio B. / Field Notes</span> <span class="brand-role">Linux &amp; Virtualization Engineer</span> </a> <p class="sidebar-summary">Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.</p> </div> <nav class="sidebar-nav" aria-label="Primary navigation"> <div class="nav-section"> <div class="nav-section-title">Navigation</div> <ul class="nav-list"> <li class="nav-item"> <a href="/" class="nav-link">Home</a> </li> <li class="nav-item"> <a href="/archive/" class="nav-link">Archive</a> </li> <li class="nav-item"> <a href="/about/" class="nav-link">About</a> </li> </ul> </div> <div class="nav-section"> <div class="nav-section-title">Domains</div> <ul class="nav-list"> <li class="nav-item"> <a href="/infrastructure/" class="nav-link"> <span class="nav-link-label">Infrastructure</span> <span class="nav-link-count">22</span> </a> </li><li class="nav-item"> <a href="/automation/" class="nav-link"> <span class="nav-link-label">Automation</span> <span class="nav-link-count">12</span> </a> </li><li class="nav-item"> <a href="/ai/" class="nav-link"> <span class="nav-link-label">AI</span> <span class="nav-link-count">7</span> </a> </li><li class="nav-item"> <a href="/cloud/" class="nav-link"> <span class="nav-link-label">Cloud</span> <span class="nav-link-count">2</span> </a> </li><li class="nav-item"> <a href="/local-ai/" class="nav-link"> <span class="nav-link-label">Local AI</span> <span class="nav-link-count">7</span> </a> </li><li class="nav-item"> <a href="/kotlin/" class="nav-link"> <span class="nav-link-label">Kotlin</span> <span class="nav-link-count">6</span> </a> </li><li class="nav-item"> <a href="/snippets/" class="nav-link"> <span class="nav-link-label">Snippets</span> <span class="nav-link-count">4</span> </a> </li> </ul> </div> </nav> <div class="sidebar-footer"> <a href="/cv/" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> View CV </a> <div class="sidebar-links"> <a href="https://www.linkedin.com/in/sergio-barrientose/" class="sidebar-link" target="_blank" rel="noopener noreferrer"> LinkedIn </a> </div> </div> </aside> <header class="mobile-header"> <button class="menu-toggle" type="button" data-menu-toggle aria-label="Toggle navigation"> <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg> </button> <a href="/" class="mobile-brand">Sergio B. / Field Notes</a> </header> <main class="main-content" id="main-content"> <div class="content-wrapper">  <a href="/" class="back-link" data-i18n="nav.backToPosts">← Back to posts</a> <article class="article-shell"> <header class="article-header"> <nav class="breadcrumbs" aria-label="Breadcrumb"> <a href="/" data-i18n="nav.breadcrumbHome">Home</a> <span>/</span> <a href="/automation/">Automation</a>  </nav> <div class="article-meta"> <time datetime="2026-03-03T00:00:00.000Z"> March 3, 2026 </time> <span aria-hidden="true">•</span> <span>13 <span data-i18n="posts.minRead">min read</span></span>  </div> <h1 class="article-title">Enterprise Certificate Lifecycle Management with Ansible</h1> <p class="page-description">Complete guide to automating SSL/TLS certificate generation, deployment, rotation, and monitoring across enterprise Linux infrastructure using Ansible Vault and OpenSSL.</p> <div class="post-tags post-tags-spaced" aria-label="Post tags"> <span class="tag">certificates</span><span class="tag">ansible</span><span class="tag">openssl</span><span class="tag">tls</span><span class="tag">automation</span><span class="tag">security</span><span class="tag">vault</span> </div> </header> <section class="case-snapshot panel panel-soft" aria-label="Case snapshot"> <h2 data-i18n="post.caseSnapshot">Case Snapshot</h2> <div class="case-grid"> <article class="case-card"> <h3>Situation</h3> <p>Managing SSL/TLS certificates across 200+ servers was manual and error-prone. Certificates were tracked in spreadsheets, private keys were stored unencrypted, and expired certificates caused preventable outages. Compliance audits flagged security violations from plaintext secrets in shared storage.</p> </article><article class="case-card"> <h3>Issue</h3> <p>No certificate lifecycle management, manual deployment prone to human error, security risks from unencrypted private keys, and reactive rather than proactive expiration monitoring causing service disruptions.</p> </article><article class="case-card"> <h3>Solution</h3> <p>Implemented comprehensive certificate automation using OpenSSL for CSR generation, Ansible Vault for encryption, automated deployment roles, expiration monitoring with 90-day alerts, and standardized multi-SAN certificate templates.</p> </article><article class="case-card"> <h3>Used In</h3> <p>Enterprise Linux platform supporting Apache reverse proxies, load balancers, PostgreSQL, SAP systems, and secure application endpoints across dev, test, and production environments.</p> </article><article class="case-card"> <h3>Impact</h3> <p>Eliminated certificate-related outages, reduced deployment time from 2-3 hours to 5-10 minutes, achieved compliance for private key encryption, and established proactive monitoring preventing expiration incidents.</p> </article> </div> </section> <div class="article-content prose-shell"> <h2 id="situation">Situation</h2>
+<p>Certificate management in enterprise environments is notoriously difficult. You have:</p>
+<ul>
+<li>Multiple environments (dev, test, prod) with different CAs</li>
+<li>Different certificate types (single domain, wildcard, multi-SAN)</li>
+<li>Various deployment targets (Apache, Nginx, load balancers, databases)</li>
+<li>Strict compliance requirements for private key handling</li>
+<li>Complex renewal workflows across teams</li>
+</ul>
+<p>When I took over certificate management, the situation was critical:</p>
+<ul>
+<li><strong>No tracking system</strong>: Certificates tracked in shared spreadsheets</li>
+<li><strong>Manual deployment</strong>: SCP transfers, manual service restarts</li>
+<li><strong>Security violations</strong>: Private keys stored unencrypted on shared drives</li>
+<li><strong>Reactive monitoring</strong>: Outages occurred before renewals were initiated</li>
+<li><strong>Inconsistent configurations</strong>: Missing SAN entries, wrong key sizes, inconsistent paths</li>
+</ul>
+<p>The result: 3-4 certificate-related outages per year, compliance audit failures, and 2-3 hours manual effort per certificate deployment.</p>
+<p>I designed and implemented a comprehensive certificate lifecycle management system using Ansible that handles the entire workflow from CSR generation to automated renewal.</p>
+<hr>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│                    Certificate Lifecycle                         │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│                                                                  │</span></span>
+<span class="line"><span>│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐  │</span></span>
+<span class="line"><span>│  │  Generate │───▶│  Encrypt │───▶│  Deploy  │───▶│  Monitor │  │</span></span>
+<span class="line"><span>│  │   CSR     │    │  w/Vault │    │   TLS    │    │Expiration│  │</span></span>
+<span class="line"><span>│  └──────────┘    └──────────┘    └──────────┘    └──────────┘  │</span></span>
+<span class="line"><span>│       │               │               │               │          │</span></span>
+<span class="line"><span>│       ▼               ▼               ▼               ▼          │</span></span>
+<span class="line"><span>│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐  │</span></span>
+<span class="line"><span>│  │ OpenSSL  │    │ Ansible  │    │  Apache  │    │ 90-Day   │  │</span></span>
+<span class="line"><span>│  │   CLI    │    │  Vault   │    │  Role    │    │  Alerts  │  │</span></span>
+<span class="line"><span>│  └──────────┘    └──────────┘    └──────────┘    └──────────┘  │</span></span>
+<span class="line"><span>│                                                                  │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<hr>
+<h2 id="phase-1-csr-generation-with-proper-san-entries">Phase 1: CSR Generation with Proper SAN Entries</h2>
+<h3 id="understanding-modern-certificate-requirements">Understanding Modern Certificate Requirements</h3>
+<p>Modern browsers and clients <strong>require</strong> Subject Alternative Name (SAN) entries. A certificate with only a Common Name (CN) and no SANs will be rejected. This is a common mistake that causes deployment failures.</p>
+<p><strong>Generate key and CSR from the automation control server</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Navigate to certificate files directory</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /path/to/ansible/files/</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Generate 2048-bit RSA key and CSR with SANs</span></span>
+<span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> req</span><span style="color:#79B8FF"> -new</span><span style="color:#79B8FF"> -newkey</span><span style="color:#9ECBFF"> rsa:2048</span><span style="color:#79B8FF"> -nodes</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -keyout</span><span style="color:#9ECBFF"> tls_cert_</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.key</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -out</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.csr</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -subj</span><span style="color:#9ECBFF"> "/C=DE/ST=Bavaria/L=Munich/O=Organization/OU=Unit/CN=&#x3C;hostname>.domain.local"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -addext</span><span style="color:#9ECBFF"> "subjectAltName = DNS:&#x3C;hostname>.domain.local,DNS:&#x3C;hostname>,DNS:&#x3C;alias>.domain.local"</span></span></code></pre>
+<p><strong>Critical components</strong>:</p>
+<ul>
+<li><strong>2048-bit RSA key</strong>: Industry standard (3072-bit for high-security)</li>
+<li><strong>Nodes flag</strong>: Creates unencrypted private key (protected by file permissions and Vault)</li>
+<li><strong>Proper subject structure</strong>: Country, State, Organization, OU, CN</li>
+<li><strong>SAN entries</strong>: Must include ALL DNS names the certificate will serve</li>
+</ul>
+<h3 id="multi-san-certificates-for-load-balancers">Multi-SAN Certificates for Load Balancers</h3>
+<p>For load balancers or multi-service hosts, include all DNS names:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> req</span><span style="color:#79B8FF"> -new</span><span style="color:#79B8FF"> -newkey</span><span style="color:#9ECBFF"> rsa:2048</span><span style="color:#79B8FF"> -nodes</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -keyout</span><span style="color:#9ECBFF"> tls_cert_loadbalancer.key</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -out</span><span style="color:#9ECBFF"> loadbalancer.csr</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -subj</span><span style="color:#9ECBFF"> "/CN=lb-prod.domain.local"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -addext</span><span style="color:#9ECBFF"> "subjectAltName = </span><span style="color:#79B8FF">\</span></span>
+<span class="line"><span style="color:#9ECBFF">DNS:lb-prod.domain.local,</span><span style="color:#79B8FF">\</span></span>
+<span class="line"><span style="color:#9ECBFF">DNS:lb-prod-01.domain.local,</span><span style="color:#79B8FF">\</span></span>
+<span class="line"><span style="color:#9ECBFF">DNS:lb-prod-02.domain.local,</span><span style="color:#79B8FF">\</span></span>
+<span class="line"><span style="color:#9ECBFF">DNS:service-app.domain.local,</span><span style="color:#79B8FF">\</span></span>
+<span class="line"><span style="color:#9ECBFF">DNS:api.domain.local"</span></span></code></pre>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Single certificate for multiple services</li>
+<li>Reduced management overhead</li>
+<li>Consistent expiration dates across services</li>
+</ul>
+<h3 id="submit-csr-to-certificate-authority">Submit CSR to Certificate Authority</h3>
+<p>Send the <code>.csr</code> file to your CA team (or submit via PKI portal). They will return:</p>
+<ol>
+<li><code>&#x3C;hostname>.cer</code> or <code>&#x3C;hostname>.crt</code> - The signed server certificate</li>
+<li><code>ca-chain.crt</code> or <code>certificatetrustchain.crt</code> - The CA intermediate/root chain</li>
+</ol>
+<hr>
+<h2 id="phase-2-secure-storage-with-ansible-vault">Phase 2: Secure Storage with Ansible Vault</h2>
+<h3 id="why-vault-encryption-is-mandatory">Why Vault Encryption is Mandatory</h3>
+<p><strong>Never commit unencrypted private keys to Git</strong>, even in private repositories:</p>
+<ul>
+<li>Compliance violations (PCI-DSS, SOC2, ISO 27001)</li>
+<li>Insider threat exposure</li>
+<li>Accidental repository exposure</li>
+<li>Audit failures</li>
+</ul>
+<p><strong>Encrypt the private key immediately</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Encrypt private key with Ansible Vault</span></span>
+<span class="line"><span style="color:#B392F0">ansible-vault</span><span style="color:#9ECBFF"> encrypt</span><span style="color:#9ECBFF"> files/</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">/tls_cert_</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.key</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --vault-password-file</span><span style="color:#9ECBFF"> ~/.secrets/ansible-vault/infrastructure-password</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Optional: Also encrypt certificate files (recommended for prod)</span></span>
+<span class="line"><span style="color:#B392F0">ansible-vault</span><span style="color:#9ECBFF"> encrypt</span><span style="color:#9ECBFF"> files/</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">/tls_cert_</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.crt</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --vault-password-file</span><span style="color:#9ECBFF"> ~/.secrets/ansible-vault/infrastructure-password</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify encryption</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> files/</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">/tls_cert_</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.key</span></span>
+<span class="line"><span style="color:#6A737D"># Output should start with: $ANSIBLE_VAULT;1.1;AES256</span></span></code></pre>
+<h3 id="vault-password-management">Vault Password Management</h3>
+<p><strong>Best practices</strong>:</p>
+<ul>
+<li>Store vault password in secure location (not in Git)</li>
+<li>Use different vault passwords per environment (dev/test/prod)</li>
+<li>Rotate vault passwords annually</li>
+<li>Limit access to vault password file (chmod 600)</li>
+</ul>
+<p><strong>Directory structure</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.secrets/ansible-vault/</span></span>
+<span class="line"><span>├── dev-password</span></span>
+<span class="line"><span>├── tst-password</span></span>
+<span class="line"><span>└── prod-password</span></span></code></pre>
+<hr>
+<h2 id="phase-3-certificate-deployment-role">Phase 3: Certificate Deployment Role</h2>
+<h3 id="ansible-role-structure">Ansible Role Structure</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>roles/</span></span>
+<span class="line"><span>└── app_certificates/</span></span>
+<span class="line"><span>    ├── defaults/</span></span>
+<span class="line"><span>    │   └── main.yml</span></span>
+<span class="line"><span>    ├── tasks/</span></span>
+<span class="line"><span>    │   └── main.yml</span></span>
+<span class="line"><span>    ├── handlers/</span></span>
+<span class="line"><span>    │   └── main.yml</span></span>
+<span class="line"><span>    └── templates/</span></span>
+<span class="line"><span>        └── certificate-check.sh.j2</span></span></code></pre>
+<h3 id="role-tasks">Role Tasks</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#6A737D"># roles/app_certificates/tasks/main.yml</span></span>
+<span class="line"><span style="color:#B392F0">---</span></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Ensure certificate directories exist</span></span>
+<span class="line"><span style="color:#85E89D">  file</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    path</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"{{ item }}"</span></span>
+<span class="line"><span style="color:#85E89D">    state</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">directory</span></span>
+<span class="line"><span style="color:#85E89D">    owner</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    group</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    mode</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0755"</span></span>
+<span class="line"><span style="color:#85E89D">  loop</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    - </span><span style="color:#9ECBFF">/etc/pki/tls/private</span></span>
+<span class="line"><span style="color:#E1E4E8">    - </span><span style="color:#9ECBFF">/etc/pki/tls/certs</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Deploy private key</span></span>
+<span class="line"><span style="color:#85E89D">  copy</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    src</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/tls_cert_{{ inventory_hostname }}.key"</span></span>
+<span class="line"><span style="color:#85E89D">    dest</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/etc/pki/tls/private/{{ inventory_hostname }}.key"</span></span>
+<span class="line"><span style="color:#85E89D">    owner</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    group</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    mode</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0600"</span><span style="color:#6A737D"> # CRITICAL: Restrictive permissions</span></span>
+<span class="line"><span style="color:#85E89D">  notify</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Restart affected services</span></span>
+<span class="line"><span style="color:#85E89D">  when</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">certificate_deploy | default(true)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Deploy certificate</span></span>
+<span class="line"><span style="color:#85E89D">  copy</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    src</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/tls_cert_{{ inventory_hostname }}.crt"</span></span>
+<span class="line"><span style="color:#85E89D">    dest</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/etc/pki/tls/certs/{{ inventory_hostname }}.crt"</span></span>
+<span class="line"><span style="color:#85E89D">    owner</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    group</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    mode</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0644"</span></span>
+<span class="line"><span style="color:#85E89D">  notify</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Restart affected services</span></span>
+<span class="line"><span style="color:#85E89D">  when</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">certificate_deploy | default(true)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Deploy CA chain</span></span>
+<span class="line"><span style="color:#85E89D">  copy</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    src</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/ca-chain.crt"</span></span>
+<span class="line"><span style="color:#85E89D">    dest</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/etc/pki/tls/certs/ca-chain.crt"</span></span>
+<span class="line"><span style="color:#85E89D">    owner</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    group</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    mode</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0644"</span></span>
+<span class="line"><span style="color:#85E89D">  when</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">certificate_deploy | default(true)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Verify certificate and key match</span></span>
+<span class="line"><span style="color:#85E89D">  command</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">>-</span></span>
+<span class="line"><span style="color:#9ECBFF">    bash -c "</span></span>
+<span class="line"><span style="color:#9ECBFF">    diff &#x3C;(openssl x509 -noout -modulus -in /etc/pki/tls/certs/{{ inventory_hostname }}.crt | openssl md5)</span></span>
+<span class="line"><span style="color:#9ECBFF">          &#x3C;(openssl rsa -noout -modulus -in /etc/pki/tls/private/{{ inventory_hostname }}.key | openssl md5)"</span></span>
+<span class="line"><span style="color:#85E89D">  register</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">cert_key_match</span></span>
+<span class="line"><span style="color:#85E89D">  changed_when</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span></span>
+<span class="line"><span style="color:#85E89D">  failed_when</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">cert_key_match.rc != 0</span></span>
+<span class="line"><span style="color:#85E89D">  ignore_errors</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Install certificate expiration check script</span></span>
+<span class="line"><span style="color:#85E89D">  template</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    src</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">certificate-check.sh.j2</span></span>
+<span class="line"><span style="color:#85E89D">    dest</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">/usr/local/bin/certificate-check.sh</span></span>
+<span class="line"><span style="color:#85E89D">    owner</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    group</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">    mode</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0755"</span></span></code></pre>
+<h3 id="handlers">Handlers</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#6A737D"># roles/app_certificates/handlers/main.yml</span></span>
+<span class="line"><span style="color:#B392F0">---</span></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Restart Apache</span></span>
+<span class="line"><span style="color:#85E89D">  service</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">httpd</span></span>
+<span class="line"><span style="color:#85E89D">    state</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">restarted</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Restart Nginx</span></span>
+<span class="line"><span style="color:#85E89D">  service</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">nginx</span></span>
+<span class="line"><span style="color:#85E89D">    state</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">restarted</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">- </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Reload HAProxy</span></span>
+<span class="line"><span style="color:#85E89D">  service</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">haproxy</span></span>
+<span class="line"><span style="color:#85E89D">    state</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">reloaded</span></span></code></pre>
+<h3 id="host-variables-configuration">Host Variables Configuration</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#6A737D"># inventory/prod/host_vars/webserver01.yml</span></span>
+<span class="line"><span style="color:#B392F0">---</span></span>
+<span class="line"><span style="color:#85E89D">certificate_deploy</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#85E89D">certificate_key_path</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/tls_cert_{{ inventory_hostname }}.key"</span></span>
+<span class="line"><span style="color:#85E89D">certificate_crt_path</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/tls_cert_{{ inventory_hostname }}.crt"</span></span>
+<span class="line"><span style="color:#85E89D">certificate_ca_path</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/ca-chain.crt"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Services to restart on certificate update</span></span>
+<span class="line"><span style="color:#85E89D">certificate_services</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#9ECBFF">httpd</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#9ECBFF">haproxy</span></span></code></pre>
+<hr>
+<h2 id="phase-4-apache-integration">Phase 4: Apache Integration</h2>
+<h3 id="virtualhost-configuration">VirtualHost Configuration</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="apache"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">VirtualHost</span><span style="color:#9ECBFF"> *:443</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#F97583">    ServerName</span><span style="color:#E1E4E8"> webserver01.domain.local</span></span>
+<span class="line"><span style="color:#F97583">    ServerAlias</span><span style="color:#9ECBFF"> webserver01</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # SSL Configuration</span></span>
+<span class="line"><span style="color:#F97583">    SSLEngine</span><span style="color:#B392F0"> on</span></span>
+<span class="line"><span style="color:#F97583">    SSLProtocol</span><span style="color:#E1E4E8"> all -SSLv2 -SSLv3 -TLSv1 -TLSv1.</span><span style="color:#79B8FF">1</span></span>
+<span class="line"><span style="color:#F97583">    SSLCipherSuite</span><span style="color:#E1E4E8"> ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384</span></span>
+<span class="line"><span style="color:#F97583">    SSLHonorCipherOrder</span><span style="color:#B392F0"> on</span></span>
+<span class="line"><span style="color:#F97583">    SSLCompression</span><span style="color:#B392F0"> off</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Certificate files</span></span>
+<span class="line"><span style="color:#F97583">    SSLCertificateFile</span><span style="color:#E1E4E8"> /etc/pki/tls/certs/webserver01.crt</span></span>
+<span class="line"><span style="color:#F97583">    SSLCertificateKeyFile</span><span style="color:#E1E4E8"> /etc/pki/tls/private/webserver01.key</span></span>
+<span class="line"><span style="color:#F97583">    SSLCertificateChainFile</span><span style="color:#E1E4E8"> /etc/pki/tls/certs/ca-chain.crt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # HSTS (HTTP Strict Transport Security)</span></span>
+<span class="line"><span style="color:#F97583">    Header</span><span style="color:#E1E4E8"> always </span><span style="color:#B392F0">set</span><span style="color:#E1E4E8"> Strict-Transport-Security "max-age=</span><span style="color:#79B8FF">31536000</span><span style="color:#E1E4E8">; includeSubDomains"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Logging</span></span>
+<span class="line"><span style="color:#F97583">    ErrorLog</span><span style="color:#E1E4E8"> logs/webserver01-ssl_error_log</span></span>
+<span class="line"><span style="color:#F97583">    TransferLog</span><span style="color:#E1E4E8"> logs/webserver01-ssl_access_log</span></span>
+<span class="line"><span style="color:#F97583">    CustomLog</span><span style="color:#E1E4E8"> logs/webserver01-ssl_access_log combined</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Application-specific configuration</span></span>
+<span class="line"><span style="color:#F97583">    DocumentRoot</span><span style="color:#E1E4E8"> /var/www/html</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#B392F0">Directory</span><span style="color:#9ECBFF"> /var/www/html</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#F97583">        Options</span><span style="color:#E1E4E8"> -Indexes +IncludesNOEXEC -SymLinksIfOwnerMatch</span></span>
+<span class="line"><span style="color:#F97583">        AllowOverride</span><span style="color:#E1E4E8"> None</span></span>
+<span class="line"><span style="color:#F97583">        Require</span><span style="color:#E1E4E8"> all granted</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#B392F0">Directory</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#B392F0">VirtualHost</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h3 id="verification-after-deployment">Verification After Deployment</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check certificate expiration</span></span>
+<span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> x509</span><span style="color:#79B8FF"> -in</span><span style="color:#9ECBFF"> /etc/pki/tls/certs/webserver01.crt</span><span style="color:#79B8FF"> -noout</span><span style="color:#79B8FF"> -dates</span></span>
+<span class="line"><span style="color:#6A737D"># Output:</span></span>
+<span class="line"><span style="color:#6A737D"># notBefore=Jan  1 00:00:00 2026 GMT</span></span>
+<span class="line"><span style="color:#6A737D"># notAfter=Jan  1 00:00:00 2027 GMT</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify certificate chain</span></span>
+<span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> verify</span><span style="color:#79B8FF"> -CAfile</span><span style="color:#9ECBFF"> /etc/pki/tls/certs/ca-chain.crt</span><span style="color:#9ECBFF"> /etc/pki/tls/certs/webserver01.crt</span></span>
+<span class="line"><span style="color:#6A737D"># Output: /etc/pki/tls/certs/webserver01.crt: OK</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test SSL connection</span></span>
+<span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> s_client</span><span style="color:#79B8FF"> -connect</span><span style="color:#9ECBFF"> webserver01.domain.local:443</span><span style="color:#79B8FF"> -servername</span><span style="color:#9ECBFF"> webserver01.domain.local</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF"> /dev/null</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -E</span><span style="color:#9ECBFF"> "Verify|Certificate|subject|issuer"</span></span>
+<span class="line"><span style="color:#6A737D"># Output should show: Verify return code: 0 (ok)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check with curl</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -vI</span><span style="color:#9ECBFF"> https://webserver01.domain.local</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -E</span><span style="color:#9ECBFF"> "subject|issuer|expire"</span></span></code></pre>
+<hr>
+<h2 id="phase-5-certificate-renewal-workflow">Phase 5: Certificate Renewal Workflow</h2>
+<h3 id="proactive-monitoring">Proactive Monitoring</h3>
+<p><strong>Install monitoring script</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6A737D"># /usr/local/bin/certificate-check.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">CERT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/etc/pki/tls/certs"</span></span>
+<span class="line"><span style="color:#E1E4E8">DAYS_THRESHOLD</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">90</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> cert </span><span style="color:#F97583">in</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$CERT_DIR</span><span style="color:#9ECBFF">"/*.crt</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$cert</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#E1E4E8">        expiry_date</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> x509</span><span style="color:#79B8FF"> -enddate</span><span style="color:#79B8FF"> -noout</span><span style="color:#79B8FF"> -in</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$cert</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> cut</span><span style="color:#79B8FF"> -d=</span><span style="color:#79B8FF"> -f2</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        expiry_epoch</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#79B8FF"> -d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$expiry_date</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> +%s</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        current_epoch</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%s</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        days_left</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(( ($expiry_epoch - $current_epoch) </span><span style="color:#B392F0">/</span><span style="color:#79B8FF"> 86400</span><span style="color:#E1E4E8"> ))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> [ $days_left </span><span style="color:#F97583">-lt</span><span style="color:#E1E4E8"> $DAYS_THRESHOLD ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">            echo</span><span style="color:#9ECBFF"> "WARNING: Certificate </span><span style="color:#E1E4E8">$cert</span><span style="color:#9ECBFF"> expires in </span><span style="color:#E1E4E8">$days_left</span><span style="color:#9ECBFF"> days (</span><span style="color:#E1E4E8">$expiry_date</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#6A737D">            # Send to monitoring system (Nagios, Prometheus, etc.)</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">done</span></span></code></pre>
+<p><strong>Cron job for daily checks</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># /etc/cron.daily/certificate-check</span></span>
+<span class="line"><span style="color:#B392F0">0</span><span style="color:#79B8FF"> 6</span><span style="color:#79B8FF"> *</span><span style="color:#79B8FF"> *</span><span style="color:#79B8FF"> *</span><span style="color:#9ECBFF"> /usr/local/bin/certificate-check.sh</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> mail</span><span style="color:#79B8FF"> -s</span><span style="color:#9ECBFF"> "Certificate Expiration Check"</span><span style="color:#9ECBFF"> admin@domain.local</span></span></code></pre>
+<h3 id="renewal-timeline">Renewal Timeline</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Days Before Expiration</th><th>Action</th></tr></thead><tbody><tr><td>90</td><td>Monitoring alert sent to certificate owner</td></tr><tr><td>60</td><td>Generate new CSR (same process as initial)</td></tr><tr><td>45</td><td>Submit CSR to CA, receive new certificate</td></tr><tr><td>30</td><td>Deploy new certificate via Ansible (zero-downtime)</td></tr><tr><td>7</td><td>Force renewal if not completed, escalate to management</td></tr><tr><td>0</td><td><strong>OUTAGE</strong> (should never happen with this process)</td></tr></tbody></table>
+<h3 id="zero-downtime-renewal">Zero-Downtime Renewal</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Deploy new certificate files (alongside old ones)</span></span>
+<span class="line"><span style="color:#B392F0">ansible-playbook</span><span style="color:#9ECBFF"> deploy-certificates.yml</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --limit</span><span style="color:#9ECBFF"> webserver01</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -e</span><span style="color:#9ECBFF"> certificate_force_renewal=</span><span style="color:#79B8FF">true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Verify new certificate</span></span>
+<span class="line"><span style="color:#B392F0">ansible</span><span style="color:#9ECBFF"> webserver01</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> command</span><span style="color:#79B8FF"> -a</span><span style="color:#9ECBFF"> "openssl x509 -in /etc/pki/tls/certs/webserver01.crt -noout -dates"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Graceful service reload (no connection drops)</span></span>
+<span class="line"><span style="color:#B392F0">ansible</span><span style="color:#9ECBFF"> webserver01</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> service</span><span style="color:#79B8FF"> -a</span><span style="color:#9ECBFF"> "name=httpd state=reloaded"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Verify service health</span></span>
+<span class="line"><span style="color:#B392F0">ansible</span><span style="color:#9ECBFF"> webserver01</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> uri</span><span style="color:#79B8FF"> -a</span><span style="color:#9ECBFF"> "url=https://localhost/ status_code=200"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 5. Archive old certificate (keep for audit)</span></span>
+<span class="line"><span style="color:#B392F0">ansible</span><span style="color:#9ECBFF"> webserver01</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> command</span><span style="color:#79B8FF"> -a</span><span style="color:#9ECBFF"> "cp /etc/pki/tls/certs/webserver01.crt /var/log/certificates/webserver01-$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%Y%m%d).crt.old"</span></span></code></pre>
+<hr>
+<h2 id="phase-6-combining-certificate-files">Phase 6: Combining Certificate Files</h2>
+<h3 id="creating-pkcs7-bundle">Creating PKCS#7 Bundle</h3>
+<p>Some systems (Windows, certain load balancers) require PKCS#7 format:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Combine server certificate and CA chain into .p7b</span></span>
+<span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> crl2pkcs7</span><span style="color:#79B8FF"> -nocrl</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -certfile</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.cer</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -certfile</span><span style="color:#9ECBFF"> certificatetrustchain.cer</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -out</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.p7b</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Encrypt with Vault</span></span>
+<span class="line"><span style="color:#B392F0">ansible-vault</span><span style="color:#9ECBFF"> encrypt</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.p7b</span></span></code></pre>
+<h3 id="creating-full-chain-for-linux">Creating Full Chain for Linux</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Concatenate for full chain (Apache, Nginx)</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">.cer</span><span style="color:#9ECBFF"> certificatetrustchain.cer</span><span style="color:#F97583"> ></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">-fullchain.crt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Deploy fullchain</span></span>
+<span class="line"><span style="color:#B392F0">ansible-vault</span><span style="color:#9ECBFF"> encrypt</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">hostnam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF">-fullchain.crt</span></span></code></pre>
+<hr>
+<h2 id="troubleshooting-common-issues">Troubleshooting Common Issues</h2>
+<h3 id="issue-1-certificate-chain-incomplete">Issue 1: Certificate Chain Incomplete</h3>
+<p><strong>Symptom</strong>: Browsers show “certificate not trusted” or “incomplete chain” errors</p>
+<p><strong>Diagnosis</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> s_client</span><span style="color:#79B8FF"> -connect</span><span style="color:#9ECBFF"> hostname:443</span><span style="color:#79B8FF"> -servername</span><span style="color:#9ECBFF"> hostname</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF"> /dev/null</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> openssl</span><span style="color:#9ECBFF"> x509</span><span style="color:#79B8FF"> -noout</span><span style="color:#79B8FF"> -issuer</span></span>
+<span class="line"><span style="color:#6A737D"># Compare issuer with expected CA</span></span></code></pre>
+<p><strong>Solution</strong>: Ensure CA chain is properly concatenated:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> hostname.cer</span><span style="color:#9ECBFF"> intermediates.cer</span><span style="color:#9ECBFF"> root.cer</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF"> hostname-fullchain.crt</span></span></code></pre>
+<h3 id="issue-2-san-missing-causes-validation-failures">Issue 2: SAN Missing Causes Validation Failures</h3>
+<p><strong>Symptom</strong>: Chrome/Firefox show <code>ERR_CERT_COMMON_NAME_INVALID</code></p>
+<p><strong>Root Cause</strong>: Certificate has CN but no SAN entries (deprecated since 2017)</p>
+<p><strong>Solution</strong>: Always include <code>-addext "subjectAltName = ..."</code> in CSR generation</p>
+<h3 id="issue-3-private-key-permissions-too-open">Issue 3: Private Key Permissions Too Open</h3>
+<p><strong>Symptom</strong>: SSH or service refuses to start, logs show “Permissions 0644 are too open”</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">mode</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"0600"</span><span style="color:#6A737D"> # Only root can read</span></span>
+<span class="line"><span style="color:#85E89D">owner</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span>
+<span class="line"><span style="color:#85E89D">group</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">root</span></span></code></pre>
+<h3 id="issue-4-certificate-and-key-mismatch">Issue 4: Certificate and Key Mismatch</h3>
+<p><strong>Symptom</strong>: Service fails to start, error “key values mismatch”</p>
+<p><strong>Diagnosis</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check if certificate and key match</span></span>
+<span class="line"><span style="color:#B392F0">diff</span><span style="color:#9ECBFF"> &#x3C;(</span><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> x509 </span><span style="color:#79B8FF">-noout</span><span style="color:#79B8FF"> -modulus</span><span style="color:#79B8FF"> -in</span><span style="color:#9ECBFF"> cert.crt </span><span style="color:#F97583">|</span><span style="color:#B392F0"> openssl</span><span style="color:#9ECBFF"> md5)</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">     &#x3C;(</span><span style="color:#B392F0">openssl</span><span style="color:#9ECBFF"> rsa </span><span style="color:#79B8FF">-noout</span><span style="color:#79B8FF"> -modulus</span><span style="color:#79B8FF"> -in</span><span style="color:#9ECBFF"> key.key </span><span style="color:#F97583">|</span><span style="color:#B392F0"> openssl</span><span style="color:#9ECBFF"> md5)</span></span>
+<span class="line"><span style="color:#6A737D"># Should produce no output (files match)</span></span></code></pre>
+<p><strong>Solution</strong>: Deploy matching certificate/key pair</p>
+<h3 id="issue-5-wrong-certificate-deployed">Issue 5: Wrong Certificate Deployed</h3>
+<p><strong>Symptom</strong>: Certificate shows wrong hostname</p>
+<p><strong>Root Cause</strong>: Manual file selection error</p>
+<p><strong>Solution</strong>: Automation uses <code>inventory_hostname</code> to select correct files:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">src</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"files/{{ inventory_hostname }}/tls_cert_{{ inventory_hostname }}.key"</span></span></code></pre>
+<hr>
+<h2 id="security-best-practices">Security Best Practices</h2>
+<h3 id="1-key-management">1. Key Management</h3>
+<ul>
+<li><strong>Encryption</strong>: All private keys encrypted with Ansible Vault</li>
+<li><strong>Permissions</strong>: <code>0600</code> for keys, <code>0644</code> for certificates</li>
+<li><strong>Storage</strong>: Never store keys outside Vault-encrypted files</li>
+<li><strong>Rotation</strong>: Annual key rotation (new key pair, not just new cert)</li>
+</ul>
+<h3 id="2-certificate-standards">2. Certificate Standards</h3>
+<ul>
+<li><strong>Key Size</strong>: Minimum 2048-bit RSA (3072 for high-security)</li>
+<li><strong>Validity</strong>: Maximum 1 year (industry standard since 2020)</li>
+<li><strong>SANs</strong>: Always include all DNS names</li>
+<li><strong>Signature Algorithm</strong>: SHA-256 or better (SHA-1 deprecated)</li>
+</ul>
+<h3 id="3-environment-separation">3. Environment Separation</h3>
+<ul>
+<li><strong>Different CAs</strong>: Separate certificate authorities for dev/test/prod</li>
+<li><strong>Different Vaults</strong>: Separate Vault passwords per environment</li>
+<li><strong>No Wildcards in Automation</strong>: Each host gets individual certificate</li>
+<li><strong>Blast Radius</strong>: Limit impact of single certificate compromise</li>
+</ul>
+<h3 id="4-audit-and-compliance">4. Audit and Compliance</h3>
+<ul>
+<li><strong>Version Control</strong>: All certificate files in Git (encrypted)</li>
+<li><strong>Change Tracking</strong>: Git commits document all changes</li>
+<li><strong>Access Logs</strong>: Ansible logs track who deployed what</li>
+<li><strong>Expiration Audit</strong>: Monthly report on certificates expiring in 180 days</li>
+</ul>
+<hr>
+<h2 id="advanced-multi-environment-certificate-strategy">Advanced: Multi-Environment Certificate Strategy</h2>
+<h3 id="development-environment">Development Environment</h3>
+<ul>
+<li><strong>Self-signed or internal CA</strong>: Faster issuance, no cost</li>
+<li><strong>Longer validity</strong>: 2 years (reduced operational overhead)</li>
+<li><strong>Automated renewal</strong>: Less critical, but still recommended</li>
+</ul>
+<h3 id="production-environment">Production Environment</h3>
+<ul>
+<li><strong>Public or enterprise CA</strong>: Higher trust, compliance requirement</li>
+<li><strong>Short validity</strong>: 1 year maximum</li>
+<li><strong>Strict monitoring</strong>: 90-day alerts, escalation procedures</li>
+<li><strong>Change control</strong>: Formal approval for deployments</li>
+</ul>
+<h3 id="vault-configuration">Vault Configuration</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Different vaults per environment</span></span>
+<span class="line"><span style="color:#F97583">~</span><span style="color:#E1E4E8">/.secrets/ansible-vault/</span></span>
+<span class="line"><span style="color:#B392F0">├──</span><span style="color:#9ECBFF"> dev-password</span><span style="color:#6A737D">      # Development certificates</span></span>
+<span class="line"><span style="color:#B392F0">├──</span><span style="color:#9ECBFF"> tst-password</span><span style="color:#6A737D">      # Test/QA certificates</span></span>
+<span class="line"><span style="color:#B392F0">└──</span><span style="color:#9ECBFF"> prod-password</span><span style="color:#6A737D">     # Production certificates (most restricted)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Usage</span></span>
+<span class="line"><span style="color:#B392F0">ansible-playbook</span><span style="color:#9ECBFF"> deploy.yml</span><span style="color:#79B8FF"> --limit</span><span style="color:#9ECBFF"> dev</span><span style="color:#79B8FF"> -e</span><span style="color:#9ECBFF"> @vault-dev.yml</span><span style="color:#79B8FF"> --ask-vault-pass</span></span>
+<span class="line"><span style="color:#B392F0">ansible-playbook</span><span style="color:#9ECBFF"> deploy.yml</span><span style="color:#79B8FF"> --limit</span><span style="color:#9ECBFF"> prod</span><span style="color:#79B8FF"> -e</span><span style="color:#9ECBFF"> @vault-prod.yml</span><span style="color:#79B8FF"> --ask-vault-pass</span></span></code></pre>
+<hr>
+<h2 id="impact-and-metrics">Impact and Metrics</h2>
+<h3 id="before-automation">Before Automation</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Certificate-related outages per year</td><td>3-4</td></tr><tr><td>Manual effort per deployment</td><td>2-3 hours</td></tr><tr><td>Certificate configurations</td><td>Inconsistent across servers</td></tr><tr><td>Expiration tracking</td><td>Reactive (spreadsheet-based)</td></tr><tr><td>Compliance status</td><td>Failed audits (plaintext keys)</td></tr></tbody></table>
+<h3 id="after-automation">After Automation</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Value</th><th>Improvement</th></tr></thead><tbody><tr><td>Certificate-related outages</td><td>0</td><td>100% elimination</td></tr><tr><td>Deployment time</td><td>5-10 minutes</td><td>93% reduction</td></tr><tr><td>Configurations</td><td>Standardized</td><td>Consistent SANs, key sizes</td></tr><tr><td>Expiration tracking</td><td>Proactive (90-day alerts)</td><td>Zero surprise expirations</td></tr><tr><td>Compliance status</td><td>Passed audits</td><td>Vault encryption, audit trail</td></tr></tbody></table>
+<h3 id="operational-metrics">Operational Metrics</h3>
+<ul>
+<li><strong>200+ certificates</strong> managed across environments</li>
+<li><strong>Zero outages</strong> in 18 months</li>
+<li><strong>100% compliance</strong> in security audits</li>
+<li><strong>&#x3C;10 minutes</strong> average deployment time</li>
+<li><strong>Automated renewal</strong> for 95% of certificates</li>
+</ul>
+<hr>
+<h2 id="certificate-lifecycle-diagram">Certificate Lifecycle Diagram</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>&#x3C;svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg"></span></span>
+<span class="line"><span>  &#x3C;!-- Background --></span></span>
+<span class="line"><span>  &#x3C;rect width="800" height="600" fill="#f8fafc"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Title --></span></span>
+<span class="line"><span>  &#x3C;text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="20" font-weight="bold" fill="#1e293b"></span></span>
+<span class="line"><span>    Enterprise Certificate Lifecycle Management</span></span>
+<span class="line"><span>  &#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Phase 1: Generate --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(50, 80)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="100" rx="8" fill="#3b82f6" opacity="0.1" stroke="#3b82f6" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#1e40af">1. Generate CSR&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">OpenSSL CLI&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">2048-bit RSA key&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">SAN entries included&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow 1 --></span></span>
+<span class="line"><span>  &#x3C;path d="M 240 130 L 280 130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Phase 2: Encrypt --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(290, 80)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="100" rx="8" fill="#8b5cf6" opacity="0.1" stroke="#8b5cf6" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#6d28d9">2. Encrypt&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Ansible Vault&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">AES-256 encryption&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Git-safe storage&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow 2 --></span></span>
+<span class="line"><span>  &#x3C;path d="M 480 130 L 520 130" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Phase 3: Deploy --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(530, 80)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="100" rx="8" fill="#10b981" opacity="0.1" stroke="#10b981" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#059669">3. Deploy&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Ansible Role&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Apache/Nginx&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">0600 permissions&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow down --></span></span>
+<span class="line"><span>  &#x3C;path d="M 620 190 L 620 250" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Phase 4: Monitor --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(530, 260)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="100" rx="8" fill="#f59e0b" opacity="0.1" stroke="#f59e0b" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#d97706">4. Monitor&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">90-day alerts&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="75" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Daily checks&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Expiration tracking&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow loop back --></span></span>
+<span class="line"><span>  &#x3C;path d="M 520 310 L 100 310 L 100 190" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/></span></span>
+<span class="line"><span>  &#x3C;text x="310" y="305" text-anchor="middle" font-family="Arial" font-size="11" fill="#64748b" font-style="italic">Renewal loop (60 days before expiry)&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Security Layer --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(50, 400)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="700" height="140" rx="8" fill="#ef4444" opacity="0.05" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5"/></span></span>
+<span class="line"><span>    &#x3C;text x="350" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#dc2626">Security &#x26; Compliance Layer&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(30, 40)"></span></span>
+<span class="line"><span>      &#x3C;circle cx="10" cy="10" r="5" fill="#dc2626"/></span></span>
+<span class="line"><span>      &#x3C;text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Vault encryption for all private keys&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(30, 65)"></span></span>
+<span class="line"><span>      &#x3C;circle cx="10" cy="10" r="5" fill="#dc2626"/></span></span>
+<span class="line"><span>      &#x3C;text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">0600 file permissions enforced&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(30, 90)"></span></span>
+<span class="line"><span>      &#x3C;circle cx="10" cy="10" r="5" fill="#dc2626"/></span></span>
+<span class="line"><span>      &#x3C;text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Separate vaults per environment&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(380, 40)"></span></span>
+<span class="line"><span>      &#x3C;circle cx="10" cy="10" r="5" fill="#dc2626"/></span></span>
+<span class="line"><span>      &#x3C;text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Audit trail via Git commits&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(380, 65)"></span></span>
+<span class="line"><span>      &#x3C;circle cx="10" cy="10" r="5" fill="#dc2626"/></span></span>
+<span class="line"><span>      &#x3C;text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">Annual key rotation policy&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(380, 90)"></span></span>
+<span class="line"><span>      &#x3C;circle cx="10" cy="10" r="5" fill="#dc2626"/></span></span>
+<span class="line"><span>      &#x3C;text x="25" y="15" font-family="Arial" font-size="11" fill="#1e293b">PCI-DSS, SOC2 compliant&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow marker definition --></span></span>
+<span class="line"><span>  &#x3C;defs></span></span>
+<span class="line"><span>    &#x3C;marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"></span></span>
+<span class="line"><span>      &#x3C;polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></span></span>
+<span class="line"><span>    &#x3C;/marker></span></span>
+<span class="line"><span>  &#x3C;/defs></span></span>
+<span class="line"><span>&#x3C;/svg></span></span></code></pre>
+<hr>
+<h2 id="validation-matrix">Validation Matrix</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Validation Goal</th><th>What to Baseline</th><th>Success Criteria</th></tr></thead><tbody><tr><td>Certificate Validity</td><td>Expiration date, chain completeness, SAN entries</td><td><code>openssl verify</code> returns OK, browser shows valid connection</td></tr><tr><td>Service Availability</td><td>HTTPS endpoint responds, no SSL errors</td><td><code>curl -vI https://hostname</code> returns 200 with valid cert</td></tr><tr><td>Security Compliance</td><td>Key permissions, vault encryption, no plaintext</td><td><code>ls -l</code> shows 0600, all keys encrypted with Vault</td></tr><tr><td>Renewal Readiness</td><td>Monitoring alerts, renewal procedure tested</td><td>Alert received 90 days before expiration, renewal tested</td></tr></tbody></table>
+<hr>
+<h2 id="failure-modes-and-mitigations">Failure Modes and Mitigations</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Failure Mode</th><th>Why It Appears</th><th>Mitigation</th></tr></thead><tbody><tr><td>Missing SAN entries</td><td>CSR generated without <code>-addext</code> flag</td><td>Template includes all required SANs by default</td></tr><tr><td>Expired certificate</td><td>Renewal not started early enough</td><td>Monitoring alerts 90 days before expiration</td></tr><tr><td>Wrong certificate deployed</td><td>Manual file selection error</td><td>Automation uses <code>inventory_hostname</code> to select files</td></tr><tr><td>Private key exposed</td><td>Insecure permissions or unencrypted storage</td><td>Vault encryption, 0600 permissions enforced</td></tr><tr><td>Chain incomplete</td><td>CA chain not concatenated properly</td><td>Automated deployment includes full chain</td></tr></tbody></table>
+<hr>
+<h2 id="recruiter-readable-impact-summary">Recruiter-Readable Impact Summary</h2>
+<ul>
+<li><strong>Scope</strong>: Secure certificate lifecycle management across 200+ enterprise servers</li>
+<li><strong>Execution quality</strong>: Guarded by automated validation, proactive monitoring, encryption</li>
+<li><strong>Outcome signal</strong>: Zero outages, standardized configurations, full audit trail</li>
+<li><strong>Technical depth</strong>: OpenSSL, PKI, Ansible Vault, Apache SSL, compliance requirements</li>
+<li><strong>Business impact</strong>: 93% time reduction, 100% compliance, zero preventable outages</li>
+</ul> </div> <footer class="article-footer"> <a href="/archive/" class="back-link" data-i18n="nav.browseArchive">← Browse archive</a> </footer> </article>  </div> <footer class="site-footer" aria-label="Site footer"> <div class="footer-content"> <span data-i18n="site.brand">Sergio B. / Field Notes</span> <span aria-hidden="true">•</span> <span data-i18n="site.footer">Case-study driven engineering portfolio</span> </div> </footer> </main> </div> <script>(function(){const i18nDict = {"site.brand":{"en":"Sergio B. / Field Notes","es":"Sergio B. / Notas de Campo"},"site.role":{"en":"Linux & Virtualization Engineer","es":"Ingeniero Linux y Virtualización"},"site.tagline":{"en":"Infrastructure delivery, automation, and applied enterprise AI","es":"Infraestructura, automatización e IA empresarial aplicada"},"site.description":{"en":"Case-study driven portfolio focused on Linux platform engineering, virtualization, Ansible automation, RHEL lifecycle modernization, and practical AI integration in enterprise environments.","es":"Portfolio de ingeniería basado en casos reales: plataformas Linux, virtualización, automatización con Ansible, modernización RHEL e integración práctica de IA en entornos corporativos."},"site.profileSummary":{"en":"Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.","es":"Ingeniero Linux y virtualización que documenta patrones reales de entrega: problemas claros, decisiones de implementación y resultados en producción."},"site.footer":{"en":"Case-study driven engineering portfolio","es":"Portfolio de ingeniería con casos prácticos"},"nav.home":{"en":"Home","es":"Inicio"},"nav.archive":{"en":"Archive","es":"Archivo"},"nav.about":{"en":"About + CV","es":"Acerca de + CV"},"nav.domains":{"en":"Domains","es":"Dominios"},"nav.years":{"en":"Years","es":"Años"},"nav.portfolio":{"en":"Portfolio","es":"Portfolio"},"nav.search":{"en":"Search","es":"Buscar"},"nav.searchPlaceholder":{"en":"grep post...","es":"buscar post..."},"nav.go":{"en":"Go","es":"Ir"},"nav.links":{"en":"Links","es":"Enlaces"},"nav.session":{"en":"Session:","es":"Sesión:"},"nav.commandPalette":{"en":"Command palette:","es":"Paleta de comandos:"},"nav.skipToContent":{"en":"Skip to content","es":"Ir al contenido"},"nav.breadcrumbHome":{"en":"Home","es":"Inicio"},"nav.backToPosts":{"en":"← Back to posts","es":"← Volver a posts"},"nav.browseArchive":{"en":"← Browse archive","es":"← Explorar archivo"},"hero.kicker":{"en":"sergio@portfolio:~$ whoami","es":"sergio@portfolio:~$ whoami"},"hero.typewriter":{"en":"Production ops and platform modernization field notes","es":"Notas de campo: operaciones en producción y modernización de plataformas"},"hero.description":{"en":"Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.","es":"Posts prácticos en formato caso de estudio: situación, problema, solución, contexto de uso e impacto."},"hero.recruiterView":{"en":"Recruiter View","es":"Vista Recruiter"},"hero.aboutCv":{"en":"About + CV","es":"Acerca de + CV"},"hero.archive":{"en":"Archive","es":"Archivo"},"hero.currentRole":{"en":"Current role","es":"Puesto actual"},"hero.roleTitle":{"en":"Linux & Virtualization Engineer","es":"Ingeniero Linux y Virtualización"},"hero.roleCompany":{"en":"Deutsche Pfandbriefbank AG · Madrid · Hybrid","es":"Deutsche Pfandbriefbank AG · Madrid · Híbrido"},"hero.publishedPosts":{"en":"Published posts","es":"Posts publicados"},"hero.postsMeta":{"en":"Case-study driven technical notes","es":"Notas técnicas con formato caso práctico"},"hero.lastUpdate":{"en":"Last update","es":"Última actualización"},"hero.noPostsYet":{"en":"No posts yet","es":"Sin posts aún"},"hero.archiveFirst":{"en":"Archive-first publishing flow","es":"Publicación centrada en el archivo"},"focus.title":{"en":"Delivery Focus","es":"Áreas de Entrega"},"focus.profile":{"en":"Profile","es":"Perfil"},"focus.infraTitle":{"en":"Infrastructure automation at scale","es":"Automatización de infraestructura a escala"},"focus.infraDesc":{"en":"Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.","es":"Flujos Ansible + Git para despliegues auditables, gestión de ciclo de vida y ejecución operativa segura."},"focus.rhelTitle":{"en":"RHEL modernization","es":"Modernización RHEL"},"focus.rhelDesc":{"en":"RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.","es":"Migración RHEL 7/8 a 9, gestión Satellite, orquestación de parches y bastionado."},"focus.aiTitle":{"en":"Applied enterprise AI","es":"IA empresarial aplicada"},"focus.aiDesc":{"en":"Architected inference gateways with Azure AI Foundry, translating document intelligence pilots into operationally viable, production-ready enterprise workloads.","es":"Arquitectura de gateways de inferencia con Azure AI Foundry, llevando pilotos de inteligencia documental hacia cargas de trabajo empresariales en producción."},"audience.title":{"en":"Choose Your View","es":"Elige tu vista"},"audience.currentRecruiter":{"en":"Current: Recruiter Mode","es":"Actual: Modo Recruiter"},"audience.currentEngineer":{"en":"Current: Engineer Mode","es":"Actual: Modo Ingeniero"},"audience.recruiterMode":{"en":"Recruiter Mode","es":"Modo Recruiter"},"audience.engineerMode":{"en":"Engineer Mode","es":"Modo Ingeniero"},"audience.copy":{"en":"Recruiter view prioritizes impact, role fit, and business outcomes first. Engineer view enables full live labs, telemetry streams, and command simulations.","es":"La vista Recruiter destaca impacto, encaje profesional y resultados de negocio. La vista Ingeniero abre labs en vivo, telemetría y simulación de comandos."},"recruiter.title":{"en":"Recruiter Snapshot","es":"Resumen Profesional"},"recruiter.fullProfile":{"en":"Full profile","es":"Perfil completo"},"recruiter.badge":{"en":"● Recruiter-ready overview","es":"● Vista rápida para recruiters"},"recruiter.summary":{"en":"Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability, and practical enterprise AI implementation. Proven track record reducing operational toil and accelerating time-to-market.","es":"Ingeniero Linux y virtualización con portfolio orientado a resultados: automatización, fiabilidad de plataformas e implementación práctica de IA empresarial. Acelerando TTM y reduciendo carga operativa."},"recruiter.roleFit":{"en":"Role fit","es":"Encaje profesional"},"recruiter.roleFit1":{"en":"Linux platform administration in enterprise environments","es":"Administración de plataformas Linux en entornos corporativos"},"recruiter.roleFit2":{"en":"Infrastructure as code with Ansible + Git workflow discipline","es":"Infraestructura como código con Ansible y flujos Git"},"recruiter.roleFit3":{"en":"Cross-team delivery from design through operational handoff","es":"Entrega transversal desde diseño hasta puesta en producción"},"recruiter.topOutcomes":{"en":"Top outcomes","es":"Logros destacados"},"recruiter.outcome1":{"en":"Patch and lifecycle orchestration patterns for safer rollouts","es":"Orquestación de parches y ciclo de vida para despliegues seguros"},"recruiter.outcome2":{"en":"RHEL modernization playbooks for controlled migrations","es":"Playbooks de modernización RHEL para migraciones controladas"},"recruiter.outcome3":{"en":"Applied AI pilots documented from prototype to operations","es":"Pilotos de IA documentados de prototipo a producción"},"recruiter.quickActions":{"en":"Quick actions","es":"Acceso rápido"},"recruiter.openProfile":{"en":"Open profile and experience summary","es":"Ver perfil y experiencia"},"recruiter.reviewStudies":{"en":"Review all case studies","es":"Ver todos los casos prácticos"},"recruiter.ctaText":{"en":"Ready to review full experience and delivery outcomes?","es":"¿Quieres ver la experiencia completa y los resultados?"},"recruiter.ctaButton":{"en":"Open Profile & CV","es":"Ver Perfil y CV"},"production.title":{"en":"Production Spotlight","es":"En Producción"},"production.badge":{"en":"● Live on Google Play & Web","es":"● Disponible en Google Play y Web"},"production.appTitle":{"en":"IntelliFlow: AI Budget Tracker","es":"IntelliFlow: Gestor Financiero Inteligente"},"production.appDesc":{"en":"A production-grade personal finance application serving real users. Features an AI-powered financial coach, offline-first architecture, and cross-platform syncing.","es":"Aplicación de finanzas personales en producción con usuarios reales. Incluye un coach financiero impulsado por IA, arquitectura offline-first y sincronización multiplataforma."},"production.playStore":{"en":"Get it on Google Play","es":"Descargar en Google Play"},"production.webApp":{"en":"Open Web App","es":"Abrir Web App"},"engineer.labsTitle":{"en":"Engineer Labs","es":"Labs de Ingeniería"},"engineer.switchButton":{"en":"Switch to Engineer Mode","es":"Activar Modo Ingeniero"},"engineer.teaserText":{"en":"Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry, command simulation, and network topology labs.","es":"El Modo Recruiter mantiene el portfolio conciso y centrado en impacto. Activa el Modo Ingeniero para abrir labs de telemetría Linux, simulación de comandos y topología de red en vivo."},"engineerLab.title":{"en":"Engineer Lab · Live Linux + AI Simulation","es":"Lab de Ingeniería · Simulación Linux + IA en Vivo"},"engineerLab.status":{"en":"stream: ready","es":"stream: listo"},"engineerLab.tabOps":{"en":"ops stream","es":"stream ops"},"engineerLab.tabAnsible":{"en":"ansible rollout","es":"rollout ansible"},"engineerLab.tabAi":{"en":"ai inference","es":"inferencia ia"},"opsDeck.title":{"en":"Ops Cockpit · top + command sandbox","es":"Cockpit Ops · top + sandbox de comandos"},"opsDeck.modeNormal":{"en":"Mode: Normal","es":"Modo: Normal"},"opsDeck.modeHardcore":{"en":"Mode: Hardcore","es":"Modo: Hardcore"},"opsDeck.cpu":{"en":"CPU load","es":"Carga CPU"},"opsDeck.memory":{"en":"Memory pressure","es":"Presión de memoria"},"opsDeck.errors":{"en":"Error rate","es":"Tasa de errores"},"opsDeck.cache":{"en":"Prompt cache hit","es":"Acierto caché prompt"},"opsDeck.processTitle":{"en":"Process monitor","es":"Monitor de procesos"},"opsDeck.processMeta":{"en":"click headers to sort · values stream live","es":"clic en cabecera para ordenar · datos en tiempo real"},"opsDeck.sandboxTitle":{"en":"Command sandbox","es":"Sandbox de comandos"},"opsDeck.sandboxMeta":{"en":"try: top · journalctl -n 5 · ansible --version · ai.health","es":"prueba: top · journalctl -n 5 · ansible --version · ai.health"},"opsDeck.inputPlaceholder":{"en":"Type a command...","es":"Escribe un comando..."},"opsDeck.run":{"en":"Run","es":"Ejecutar"},"opsDeck.helpHint":{"en":"Try `help` for available commands.","es":"Prueba `help` para ver comandos disponibles."},"network.title":{"en":"Live Network Topology","es":"Topología de Red en Vivo"},"network.status":{"en":"mode: normal · mesh stable","es":"modo: normal · malla estable"},"domains.title":{"en":"Domains","es":"Dominios"},"domains.browseAll":{"en":"Browse all","es":"Ver todos"},"domains.activeDomains":{"en":"active domains with published case studies.","es":"dominios activos con casos de estudio publicados."},"cat.infrastructure":{"en":"Infrastructure","es":"Infraestructura"},"cat.infrastructure.desc":{"en":"RHEL lifecycle, automation, virtualization, and production operations.","es":"Ciclo de vida RHEL, automatización, virtualización y operaciones en producción."},"cat.automation":{"en":"Automation","es":"Automatización"},"cat.automation.desc":{"en":"Ansible playbooks, task automation, and configuration management.","es":"Playbooks Ansible, automatización de tareas y gestión de configuración."},"cat.ai":{"en":"AI","es":"IA"},"cat.ai.desc":{"en":"Generative AI use cases, integration patterns, and practical lessons.","es":"Casos de uso de IA generativa, patrones de integración y lecciones prácticas."},"cat.cloud":{"en":"Cloud","es":"Cloud"},"cat.cloud.desc":{"en":"Azure architecture, infrastructure design, and delivery practices.","es":"Arquitectura Azure, diseño de infraestructura y prácticas de entrega."},"cat.local-ai":{"en":"Local AI","es":"IA Local"},"cat.local-ai.desc":{"en":"Running models on local hardware with privacy-first workflows.","es":"Ejecución de modelos en hardware local con privacidad como prioridad."},"cat.kotlin":{"en":"Kotlin","es":"Kotlin"},"cat.kotlin.desc":{"en":"Kotlin projects, notes, and engineering experiments.","es":"Proyectos Kotlin, notas y experimentos de ingeniería."},"cat.snippets":{"en":"Snippets","es":"Snippets"},"cat.snippets.desc":{"en":"Quick commands and reusable building blocks for day-to-day work.","es":"Comandos rápidos y bloques reutilizables para el día a día."},"cat.career":{"en":"Career","es":"Carrera"},"cat.career.desc":{"en":"Professional updates, retrospectives, and growth notes.","es":"Actualizaciones profesionales, retrospectivas y notas de crecimiento."},"posts.recent":{"en":"Recent Case Studies","es":"Casos de Estudio Recientes"},"posts.allPosts":{"en":"All posts","es":"Todos los posts"},"posts.noPosts":{"en":"No posts published yet.","es":"Sin posts publicados aún."},"posts.minRead":{"en":"min read","es":"min de lectura"},"posts.issue":{"en":"Issue:","es":"Problema:"},"posts.solution":{"en":"Solution:","es":"Solución:"},"posts.usedIn":{"en":"Used In:","es":"Usado en:"},"posts.impact":{"en":"Impact:","es":"Impacto:"},"posts.situation":{"en":"Situation","es":"Situación"},"archive.title":{"en":"All Case Studies","es":"Todos los Casos de Estudio"},"archive.eyebrow":{"en":"Archive","es":"Archivo"},"archive.description":{"en":"posts grouped by year, each with clear issue and solution framing.","es":"posts agrupados por año, cada uno con problema y solución bien definidos."},"archive.searchPlaceholder":{"en":"Search all posts (title, issue, solution, tags)...","es":"Buscar posts (título, problema, solución, tags)..."},"archive.searchPosts":{"en":"Search posts","es":"Buscar posts"},"archive.noMatches":{"en":"No matches.","es":"Sin resultados."},"archive.matches":{"en":"matches","es":"coincidencias"},"archive.match":{"en":"match","es":"coincidencia"},"about.pageTitle":{"en":"About","es":"Acerca de"},"about.pageDesc":{"en":"Professional profile, impact statements, and CV summary.","es":"Perfil profesional, logros de impacto y resumen del CV."},"about.eyebrow":{"en":"Profile","es":"Perfil"},"about.headline":{"en":"Linux & Virtualization Engineer with automation-first execution.","es":"Ingeniero Linux y Virtualización con mentalidad automation-first."},"about.intro":{"en":"I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge infrastructure operations with practical Generative AI implementations.","es":"Diseño y opero plataformas Linux corporativas, estandarizo entregas con Ansible y Git, y conecto operaciones de infraestructura con implementaciones reales de IA Generativa."},"about.snapshot":{"en":"Professional Snapshot","es":"Resumen Profesional"},"about.infraTitle":{"en":"Infrastructure lifecycle ownership","es":"Gestión del ciclo de vida de infraestructura"},"about.infraDesc":{"en":"RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.","es":"Migraciones RHEL, gestión Satellite, parches, bastionado y preparación HA/DR."},"about.autoTitle":{"en":"Automation discipline","es":"Disciplina de automatización"},"about.autoDesc":{"en":"Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.","es":"Orquestación Ansible y control de cambios con Git para operaciones repetibles, revisadas y auditables."},"about.aiTitle":{"en":"AI integration for business cases","es":"Integración de IA en negocio"},"about.aiDesc":{"en":"Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.","es":"Iniciativas GenAI con Azure AI Foundry, inteligencia documental y flujos de fine-tuning."},"about.experience":{"en":"Experience","es":"Experiencia"},"about.coreAreas":{"en":"Core Areas","es":"Áreas Principales"},"about.cvTitle":{"en":"CV / Resume","es":"CV / Currículum"},"about.cvLabel":{"en":"View CV","es":"Ver CV"},"about.cvDesc":{"en":"Detailed CV with role scope, delivery outcomes, and full technology coverage.","es":"CV detallado con alcance del puesto, resultados de entrega y cobertura tecnológica completa."},"about.cvDisabled":{"en":"CV link is temporarily unavailable.","es":"El enlace al CV no está disponible temporalmente."},"about.coverLetterTitle":{"en":"Cover Letter","es":"Carta de Presentación"},"about.coverLetterLabel":{"en":"View Cover Letter","es":"Ver Carta de Presentación"},"about.coverLetterDesc":{"en":"Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.","es":"Presentación profesional — quién soy, en qué trabajo y cómo enfoco la infraestructura y la automatización."},"about.coverLetterDisabled":{"en":"Cover letter link is temporarily unavailable.","es":"El enlace a la carta de presentación no está disponible temporalmente."},"about.principles":{"en":"Operating Principles","es":"Principios Operativos"},"about.principle1Title":{"en":"Codify repeatable operations","es":"Codificar operaciones repetibles"},"about.principle1Desc":{"en":"Every recurring action should move from ad-hoc command execution into tested automation.","es":"Toda acción recurrente debe pasar de ejecución manual a automatización probada."},"about.principle2Title":{"en":"State the problem before the tool","es":"Plantear el problema antes que la herramienta"},"about.principle2Desc":{"en":"Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.","es":"Las decisiones tecnológicas se justifican con patrones de incidentes, restricciones y resultados medibles."},"about.principle3Title":{"en":"Keep portfolio content safe","es":"Mantener el contenido del portfolio seguro"},"about.principle3Desc":{"en":"Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.","es":"Documentar con profundidad práctica sin exponer arquitectura confidencial ni datos sensibles."},"exp.pbb.title":{"en":"Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG","es":"Ingeniero Linux y Virtualización · Deutsche Pfandbriefbank AG"},"exp.pbb.subtitle":{"en":"Full-time · Hybrid · Madrid, Comunidad de Madrid, España","es":"Tiempo completo · Híbrido · Madrid, Comunidad de Madrid, España"},"exp.pbb.period":{"en":"Jul 2025 - Present","es":"Jul 2025 - Presente"},"exp.pbb.0":{"en":"Part of the Linux infrastructure team responsible for 300+ RHEL production servers across multiple datacenters under BaFin/ECB regulatory oversight.","es":"Parte del equipo de infraestructura Linux responsable de más de 300 servidores RHEL en producción en múltiples datacenters bajo supervisión regulatoria BaFin/ECB."},"exp.pbb.1":{"en":"Designed Ansible + Git automation pipelines for server provisioning, configuration drift remediation, and lifecycle operations.","es":"Diseño de pipelines Ansible + Git para aprovisionamiento, corrección de desvíos de configuración y operaciones de ciclo de vida."},"exp.pbb.2":{"en":"Leading phased RHEL 7/8 to RHEL 9 migration across 300+ servers with Satellite-based provisioning and compliance enforcement.","es":"Liderazgo de migración RHEL 7/8 → 9 en más de 300 servidores con aprovisionamiento Satellite y cumplimiento normativo."},"exp.pbb.3":{"en":"Deploying and maintaining application stacks across Nginx, Apache, Tomcat, JBoss/WildFly, and PostgreSQL — SSL/TLS hardening, reverse proxy tuning, and production optimization for banking-critical workloads.","es":"Despliegue y mantenimiento de stacks de aplicaciones con Nginx, Apache, Tomcat, JBoss/WildFly y PostgreSQL — bastionado SSL/TLS, ajuste de proxy inverso y optimización en producción para cargas bancarias críticas."},"exp.pbb.4":{"en":"Owning end-to-end patching and hardening cycles for 300+ servers aligned to financial-sector security requirements.","es":"Gestión integral de parcheo y bastionado de más de 300 servidores alineada con requisitos de seguridad del sector financiero."},"exp.pbb.5":{"en":"Operating Pacemaker-based HA clusters and executing disaster-recovery drills across distributed datacenters.","es":"Operación de clústeres HA con Pacemaker y ejecución de simulacros DR en datacenters distribuidos."},"exp.pbb.6":{"en":"Administering VMware vSphere environments for VM provisioning, capacity planning, and platform lifecycle maintenance.","es":"Administración VMware vSphere: aprovisionamiento de VMs, planificación de capacidad y mantenimiento."},"exp.pbb.7":{"en":"Delivering enterprise AI use cases with Azure AI Foundry — optimizing document intelligence pipelines and model fine-tuning for scalable process automation.","es":"Entrega de casos de IA empresarial con Azure AI Foundry: optimización de pipelines de inteligencia documental y fine-tuning de modelos para automatización de procesos a escala."},"exp.pbb.8":{"en":"Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.","es":"Consultoría de infraestructura para equipos de aplicaciones, traduciendo requisitos de negocio en planes de entrega."},"exp.sopra1.title":{"en":"Information Technology Application Specialist - Linux System Administrator · Sopra Steria","es":"Especialista en Aplicaciones TI - Administrador de Sistemas Linux · Sopra Steria"},"exp.sopra1.subtitle":{"en":"Full-time · Hybrid · Madrid, Community of Madrid, Spain","es":"Tiempo completo · Híbrido · Madrid, Comunidad de Madrid, España"},"exp.sopra1.period":{"en":"Nov 2023 - Jul 2025","es":"Nov 2023 - Jul 2025"},"exp.sopra1.1":{"en":"Led a team of 5 technicians managing 100+ Linux and Windows servers for a Norwegian financial client in a fully English-speaking environment.","es":"Liderazgo de equipo de 5 técnicos gestionando más de 100 servidores Linux y Windows para un cliente financiero noruego en entorno anglófono."},"exp.sopra1.2":{"en":"Maintained RHEL compliance across 100+ servers using Red Hat Satellite; built Ansible automation reducing deployment time from hours to minutes.","es":"Cumplimiento RHEL en más de 100 servidores con Red Hat Satellite; automatización Ansible reduciendo el aprovisionamiento de horas a minutos."},"exp.sopra1.3":{"en":"Managed VMware vSphere and vCenter environments handling VM lifecycle, snapshot management, and capacity optimization.","es":"Gestión de entornos VMware vSphere y vCenter: ciclo de vida de VMs, snapshots y optimización de capacidad."},"exp.sopra1.4":{"en":"Resolved incidents and managed change operations in ServiceNow within SLA deadlines with structured escalation documentation.","es":"Resolución de incidencias y gestión de cambios en ServiceNow dentro de SLAs con documentación de escalado estructurada."},"exp.sopra1.5":{"en":"Administered Active Directory computer object lifecycle, group policies, and Kerberos integration for Linux servers.","es":"Administración del ciclo de vida de objetos AD, políticas de grupo e integración Kerberos para servidores Linux."},"exp.sopra2.title":{"en":"Information Technology Application Specialist · Sopra Steria","es":"Especialista en Aplicaciones TI · Sopra Steria"},"exp.sopra2.subtitle":{"en":"Full-time · Madrid, Community of Madrid, Spain","es":"Tiempo completo · Madrid, Comunidad de Madrid, España"},"exp.sopra2.period":{"en":"Apr 2023 - Jan 2025","es":"Abr 2023 - Ene 2025"},"exp.sopra2.1":{"en":"Delivered advanced technical support across multiple technologies in enterprise production contexts.","es":"Soporte técnico avanzado en producción con múltiples tecnologías."},"exp.sopra2.2":{"en":"Contributed to cloud-transition support initiatives and workplace modernization programs.","es":"Participación en iniciativas de migración a cloud y modernización del puesto de trabajo."},"exp.sopra2.3":{"en":"Worked across global collaboration environments with structured escalation and resolution flows.","es":"Colaboración en equipos globales con flujos de escalado y resolución estructurados."},"exp.intern.title":{"en":"Internship Trainee · Sopra Steria","es":"Becario en Prácticas · Sopra Steria"},"exp.intern.subtitle":{"en":"Internship · Madrid, Community of Madrid, Spain","es":"Prácticas · Madrid, Comunidad de Madrid, España"},"exp.intern.period":{"en":"Apr 2023 - Jun 2023","es":"Abr 2023 - Jun 2023"},"exp.intern.1":{"en":"Built foundations in incident handling, directory services, and enterprise support workflows.","es":"Formación en gestión de incidentes, servicios de directorio y flujos de soporte corporativo."},"skill.linux":{"en":"Linux Platform Engineering","es":"Ingeniería de Plataformas Linux"},"skill.linux.desc":{"en":"RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.","es":"Ciclo de vida RHEL, diagnóstico, ajuste de kernel/sistema y prácticas de fiabilidad operativa."},"skill.auto":{"en":"Automation & Governance","es":"Automatización y Gobernanza"},"skill.auto.desc":{"en":"Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.","es":"Playbooks Ansible, roles reutilizables, flujos Git y controles de cambio basados en evidencia."},"skill.virt":{"en":"Virtualization & Datacenter Ops","es":"Virtualización y Ops de Datacenter"},"skill.virt.desc":{"en":"VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.","es":"Administración VMware vSphere, ciclo de vida de servidores, alta disponibilidad y recuperación ante desastres."},"skill.mid":{"en":"App Platforms & Databases","es":"Plataformas y Bases de Datos"},"skill.mid.desc":{"en":"Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS, reverse proxy, and production database operations.","es":"Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — despliegue de aplicaciones, SSL/TLS, proxy inverso y operaciones de bases de datos en producción."},"skill.cloud":{"en":"Cloud + AI Integration","es":"Cloud + Integración IA"},"skill.cloud.desc":{"en":"Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.","es":"Azure AI Foundry, inteligencia documental y patrones de implementación GenAI alineados con operaciones."},"skill.team":{"en":"Cross-Team Delivery","es":"Entrega Cross-Team"},"skill.team.desc":{"en":"Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.","es":"Gestión de interlocutores, consultoría técnica para equipos de aplicaciones y traducción de requisitos a plataforma."},"catPage.published":{"en":"published","es":"publicados"},"catPage.article":{"en":"article","es":"artículo"},"catPage.articles":{"en":"articles","es":"artículos"},"catPage.caseSummary":{"en":"Each post in this domain is written in case-study format: situation, issue, solution, usage context, and delivery impact.","es":"Cada post en este dominio está escrito en formato de caso de estudio: situación, problema, solución, contexto de uso e impacto de entrega."},"catPage.noPosts":{"en":"No posts in this category yet.","es":"Sin posts en esta categoría aún."},"catPage.searchPlaceholder":{"en":"Search posts...","es":"Buscar posts..."},"post.caseSnapshot":{"en":"Case Snapshot","es":"Resumen del Caso"},"boot.title":{"en":"Booting Engineer Runtime","es":"Iniciando entorno de ingeniería"},"boot.hint":{"en":"Click to skip · Esc to continue instantly","es":"Clic para saltar · Esc para continuar"},"boot.gateLabel":{"en":"Type unlock to continue","es":"Escribe unlock para continuar"},"palette.title":{"en":"Engineer Command Palette","es":"Paleta de comandos"},"palette.searchPlaceholder":{"en":"Search commands... (mode, nav, boot)","es":"Buscar comandos… (modo, nav, boot)"},"palette.close":{"en":"Close","es":"Cerrar"},"palette.noMatch":{"en":"No command matched.","es":"Ningún comando coincide."},"cmd.goHome":{"en":"Go to Home","es":"Ir a Inicio"},"cmd.goArchive":{"en":"Go to Archive","es":"Ir a Archivo"},"cmd.goAbout":{"en":"Go to About","es":"Ir a Acerca de"},"cmd.goRecruiter":{"en":"Go to Recruiter Snapshot","es":"Ir a Resumen Recruiter"},"cmd.goTopology":{"en":"Go to Network Topology","es":"Ir a Topología de Red"},"cmd.hardcoreEnable":{"en":"Enable Hardcore Mode","es":"Activar Modo Hardcore"},"cmd.normalEnable":{"en":"Enable Normal Mode","es":"Activar Modo Normal"},"cmd.recruiterSwitch":{"en":"Switch to Recruiter Mode","es":"Cambiar a Modo Recruiter"},"cmd.engineerSwitch":{"en":"Switch to Engineer Mode","es":"Cambiar a Modo Ingeniero"},"cmd.bootReplay":{"en":"Replay Boot Sequence","es":"Repetir Secuencia de Arranque"},"cmd.bootGate":{"en":"Toggle Boot Unlock Gate","es":"Alternar Puerta de Desbloqueo"},"cmd.switchLang":{"en":"Switch to Español","es":"Switch to English"},"cmd.groupNav":{"en":"Navigation","es":"Navegación"},"cmd.groupMode":{"en":"Mode","es":"Modo"},"cmd.groupAudience":{"en":"Audience","es":"Audiencia"},"cmd.groupSystem":{"en":"System","es":"Sistema"},"cmd.groupLang":{"en":"Language","es":"Idioma"},"toast.hardcoreEnabled":{"en":"Hardcore mode enabled","es":"Modo hardcore activado"},"toast.normalEnabled":{"en":"Normal mode enabled","es":"Modo normal activado"},"toast.recruiterActive":{"en":"Recruiter mode active","es":"Modo recruiter activo"},"toast.engineerActive":{"en":"Engineer mode active","es":"Modo ingeniero activo"},"toast.bootGateEnabled":{"en":"Boot gate enabled","es":"Puerta de arranque activada"},"toast.bootGateDisabled":{"en":"Boot gate disabled","es":"Puerta de arranque desactivada"},"toast.langSwitched":{"en":"Switched to English","es":"Cambiado a Español"},"metric.host":{"en":"host","es":"host"},"metric.automation":{"en":"automation","es":"automatización"},"metric.aiMode":{"en":"ai mode","es":"modo ia"},"metric.hostValue":{"en":"rhel-prod-09","es":"rhel-prod-09"},"metric.automationValue":{"en":"ansible-playbook --check","es":"ansible-playbook --check"},"metric.aiModeValue":{"en":"low-latency edge validation","es":"validación edge de baja latencia"},"cv.openPublic":{"en":"Open Public CV","es":"Abrir CV Público"},"lang.switch":{"en":"ES","es":"EN"},"lang.switchLabel":{"en":"Cambiar a Español","es":"Switch to English"}};
+
+      window.__i18n = i18nDict;
+    })();</script> <script src="/scripts/nav.js" defer></script> <script>
+      // Interactive background grid mask
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.body.style.setProperty("--mouse-x", `${x}%`);
+        document.body.style.setProperty("--mouse-y", `${y}%`);
+      });
+    </script> </body> </html>

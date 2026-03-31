@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Applied AI pipeline">
+  <rect width="1200" height="650" fill="#0f172a"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Applied AI Delivery Pipeline</text>
+  <rect x="70" y="170" width="220" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="112" y="240" fill="#93c5fd" font-size="24" font-family="Segoe UI, Arial">Data Ingest</text>
+  <rect x="340" y="170" width="220" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="370" y="240" fill="#86efac" font-size="24" font-family="Segoe UI, Arial">Normalize</text>
+  <rect x="610" y="170" width="220" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="658" y="240" fill="#fde68a" font-size="24" font-family="Segoe UI, Arial">Infer</text>
+  <rect x="880" y="170" width="220" height="120" rx="14" fill="#1e293b" stroke="#334155"/>
+  <text x="926" y="240" fill="#fca5a5" font-size="24" font-family="Segoe UI, Arial">Validate</text>
+  <line x1="290" y1="230" x2="340" y2="230" stroke="#60a5fa" stroke-width="4"/>
+  <line x1="560" y1="230" x2="610" y2="230" stroke="#60a5fa" stroke-width="4"/>
+  <line x1="830" y1="230" x2="880" y2="230" stroke="#60a5fa" stroke-width="4"/>
+  <rect x="70" y="360" width="1030" height="190" rx="16" fill="#111827" stroke="#1e293b"/>
+  <text x="100" y="420" fill="#cbd5e1" font-size="24" font-family="Segoe UI, Arial">Controls: schema checks · confidence thresholds · fallback route · human review</text>
+  <text x="100" y="480" fill="#94a3b8" font-size="20" font-family="Segoe UI, Arial">Use this to document measurable quality, latency targets, and production safeguards.</text>
+</svg>

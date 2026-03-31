@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <linearGradient id="pdfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="azureGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="processGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">AI Document Extraction Pipeline</text>
+  
+  <!-- Source: PDF/Scan -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="0" width="100" height="80" rx="8" fill="url(#pdfGrad)"/>
+    <text x="50" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24">📄</text>
+    <text x="50" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="white">PDF/Scan</text>
+  </g>
+  
+  <!-- Arrow -->
+  <line x1="150" y1="140" x2="180" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Azure Document Intelligence -->
+  <g transform="translate(190, 80)">
+    <rect x="0" y="0" width="140" height="120" rx="8" fill="url(#azureGrad)"/>
+    <text x="70" y="30" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">Azure Document</text>
+    <text x="70" y="50" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">Intelligence</text>
+    <text x="70" y="80" text-anchor="middle" font-family="monospace" font-size="10" fill="#bfdbfe">OCR + AI Model</text>
+    <text x="70" y="100" text-anchor="middle" font-family="monospace" font-size="10" fill="#bfdbfe">Raw JSON Output</text>
+  </g>
+  
+  <!-- Arrow -->
+  <line x1="330" y1="140" x2="360" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Normalization Pipeline -->
+  <g transform="translate(370, 60)">
+    <rect x="0" y="0" width="180" height="160" rx="8" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="90" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#5b21b6">Normalization Pipeline</text>
+    
+    <!-- Step 1 -->
+    <rect x="15" y="45" width="150" height="25" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="90" y="62" text-anchor="middle" font-family="monospace" font-size="10" fill="#92400e">Dates → ISO Format</text>
+    
+    <!-- Step 2 -->
+    <rect x="15" y="75" width="150" height="25" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="90" y="92" text-anchor="middle" font-family="monospace" font-size="10" fill="#92400e">Currency → Numeric</text>
+    
+    <!-- Step 3 -->
+    <rect x="15" y="105" width="150" height="25" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="90" y="122" text-anchor="middle" font-family="monospace" font-size="10" fill="#92400e">Names → Canonical</text>
+    
+    <!-- Arrow down -->
+    <line x1="90" y1="160" x2="90" y2="190" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Processing Options -->
+  <g transform="translate(370, 260)">
+    <text x="90" y="0" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#5b21b6">Processing Methods</text>
+    
+    <rect x="0" y="15" width="55" height="50" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="27" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#1e40af">Regex</text>
+    <text x="27" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Fast</text>
+    
+    <rect x="62" y="15" width="55" height="50" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="89" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#1e40af">Lookup</text>
+    <text x="89" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Tables</text>
+    
+    <rect x="124" y="15" width="55" height="50" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="151" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#1e40af">LLM</text>
+    <text x="151" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Complex</text>
+  </g>
+  
+  <!-- Arrow to Output -->
+  <line x1="460" y1="340" x2="460" y2="360" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Output: Clean JSON -->
+  <g transform="translate(370, 380)">
+    <rect x="0" y="0" width="180" height="80" rx="8" fill="url(#dbGrad)"/>
+    <text x="90" y="30" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="white">Canonical JSON</text>
+    <text x="90" y="55" text-anchor="middle" font-family="monospace" font-size="11" fill="#dcfce7">{"date": "2024-08-12",</text>
+    <text x="90" y="70" text-anchor="middle" font-family="monospace" font-size="11" fill="#dcfce7"> "amount": 1200000.50}</text>
+  </g>
+  
+  <!-- Arrow -->
+  <line x1="550" y1="420" x2="580" y2="420" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Destination: Database -->
+  <g transform="translate(590, 380)">
+    <rect x="0" y="0" width="100" height="80" rx="8" fill="#475569"/>
+    <text x="50" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24">🗄️</text>
+    <text x="50" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#e2e8f0">Database</text>
+  </g>
+  
+  <!-- Data Types Section -->
+  <g transform="translate(50, 320)">
+    <rect x="0" y="0" width="300" height="140" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+    <text x="150" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#475569">Normalization Tasks</text>
+    
+    <text x="15" y="55" font-family="monospace" font-size="11" fill="#334155">Raw Input</text>
+    <text x="180" y="55" font-family="monospace" font-size="11" fill="#334155">→ Output</text>
+    
+    <rect x="15" y="65" width="270" height="20" rx="3" fill="white" stroke="#cbd5e1"/>
+    <text x="20" y="79" font-family="monospace" font-size="9" fill="#64748b">"12 de agosto de 2024" → "2024-08-12"</text>
+    
+    <rect x="15" y="90" width="270" height="20" rx="3" fill="white" stroke="#cbd5e1"/>
+    <text x="20" y="104" font-family="monospace" font-size="9" fill="#64748b">"1.200.000,50 EUR" → 1200000.50, "EUR"</text>
+    
+    <rect x="15" y="115" width="270" height="20" rx="3" fill="white" stroke="#cbd5e1"/>
+    <text x="20" y="129" font-family="monospace" font-size="9" fill="#64748b">"vierteljährlich" → "QUARTERLY"</text>
+  </g>
+</svg>

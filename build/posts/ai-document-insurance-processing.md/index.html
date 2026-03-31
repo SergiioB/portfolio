@@ -1,0 +1,718 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="How to build, train, and deploy custom document intelligence models for extracting structured data from multilingual insurance policies using Azure AI Foundry."><meta name="author" content="Sergio B."><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="color-scheme" content="light"><meta name="theme-color" content="#0d1117"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; frame-src 'none'; manifest-src 'self'; upgrade-insecure-requests"><link rel="canonical" href="https://sergiiob.dev/posts/ai-document-insurance-processing.md/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><meta property="og:site_name" content="Sergio B. / Field Notes"><meta property="og:title" content="Training Custom AI Models for Insurance Document Processing | Sergio B."><meta property="og:description" content="How to build, train, and deploy custom document intelligence models for extracting structured data from multilingual insurance policies using Azure AI Foundry."><meta property="og:type" content="website"><meta property="og:url" content="https://sergiiob.dev/posts/ai-document-insurance-processing.md/"><meta property="og:image" content="https://sergiiob.dev/images/og-preview.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Training Custom AI Models for Insurance Document Processing | Sergio B."><meta name="twitter:description" content="How to build, train, and deploy custom document intelligence models for extracting structured data from multilingual insurance policies using Azure AI Foundry."><meta name="twitter:image" content="https://sergiiob.dev/images/og-preview.png"><!-- AI-friendly meta --><meta name="ai-content-type" content="developer-portfolio"><meta name="ai-author" content="Sergio B."><meta name="ai-summary" content="Portfolio of Sergio B., Linux & Virtualization Engineer. Case-study driven technical notes on RHEL lifecycle, Ansible automation, enterprise AI, and infrastructure delivery. Bilingual: English and Spanish."><meta name="ai-topics" content="Linux, RHEL, Ansible, VMware, Azure AI, Infrastructure, Automation, DevOps, Platform Engineering"><!-- JSON-LD Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://sergiiob.dev/posts/ai-document-insurance-processing.md/#person","name":"Sergio B.","jobTitle":"Linux & Virtualization Engineer","worksFor":{"@type":"Organization","name":"Deutsche Pfandbriefbank AG"},"url":"https://sergiiob.dev/","knowsAbout":["Linux","RHEL","Ansible","VMware vSphere","Azure AI","Infrastructure Automation","Enterprise AI","Platform Engineering"],"sameAs":["https://github.com/SergiioB","https://linkedin.com/in/sergio-barrientos-dev"]},{"@type":"WebSite","@id":"https://sergiiob.dev/posts/ai-document-insurance-processing.md/#website","name":"Sergio B. / Field Notes","url":"https://sergiiob.dev/","description":"How to build, train, and deploy custom document intelligence models for extracting structured data from multilingual insurance policies using Azure AI Foundry.","inLanguage":["en","es"],"author":{"@id":"https://sergiiob.dev/posts/ai-document-insurance-processing.md/#person"}}]}</script><title>Training Custom AI Models for Insurance Document Processing | Sergio B.</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><link rel="stylesheet" href="/_astro/_category_.DVDm2n6L.css"></head> <body> <div class="boot-sequence done" data-boot-sequence aria-hidden="true"> <div class="boot-shell" role="presentation"> <div class="boot-head"> <span class="boot-title" data-i18n="boot.title">Booting Engineer Runtime</span> <span class="boot-host">ssh://sergiio@rhel-core-01</span> </div> <div class="boot-meta"> <span class="boot-percent" data-boot-percent>0%</span> <span class="boot-hint" data-i18n="boot.hint">Click to skip · Esc to continue instantly</span> </div> <div class="boot-output" data-boot-output></div> <div class="boot-gate" data-boot-gate hidden> <label for="boot-gate-input" class="boot-gate-label" data-i18n="boot.gateLabel">Type unlock to continue</label> <div class="boot-gate-row"> <span class="boot-gate-prompt">root@runtime:~#</span> <input id="boot-gate-input" class="boot-gate-input" data-boot-gate-input type="text" autocomplete="off" spellcheck="false"> </div> </div> <div class="boot-progress" aria-hidden="true"> <span data-boot-progress></span> </div> </div> </div> <div class="command-palette" data-command-palette> <div class="command-palette-backdrop" data-command-palette-close></div> <div class="command-palette-shell" role="dialog" aria-modal="true" aria-labelledby="command-palette-title"> <div class="command-palette-head"> <h2 id="command-palette-title" data-i18n="palette.title">Engineer Command Palette</h2> <div class="command-palette-head-actions"> <span class="command-palette-hint">Ctrl+K</span> <button class="command-palette-close" type="button" data-command-palette-close aria-label="Close command palette" data-i18n="palette.close">Close</button> </div> </div> <input class="command-palette-input" data-command-palette-input type="text" data-i18n-placeholder="palette.searchPlaceholder" placeholder="Search commands... (mode, nav, boot)" autocomplete="off"> <div class="command-palette-list" data-command-palette-list></div> </div> </div> <a class="skip-link" href="#main-content" data-i18n="nav.skipToContent">Skip to content</a> <div class="site-shell"> <aside class="sidebar" id="site-sidebar" data-sidebar> <div class="sidebar-header"> <a href="/" class="site-brand"> <span class="brand-name">Sergio B. / Field Notes</span> <span class="brand-role">Linux &amp; Virtualization Engineer</span> </a> <p class="sidebar-summary">Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.</p> </div> <nav class="sidebar-nav" aria-label="Primary navigation"> <div class="nav-section"> <div class="nav-section-title">Navigation</div> <ul class="nav-list"> <li class="nav-item"> <a href="/" class="nav-link">Home</a> </li> <li class="nav-item"> <a href="/archive/" class="nav-link">Archive</a> </li> <li class="nav-item"> <a href="/about/" class="nav-link">About</a> </li> </ul> </div> <div class="nav-section"> <div class="nav-section-title">Domains</div> <ul class="nav-list"> <li class="nav-item"> <a href="/infrastructure/" class="nav-link"> <span class="nav-link-label">Infrastructure</span> <span class="nav-link-count">22</span> </a> </li><li class="nav-item"> <a href="/automation/" class="nav-link"> <span class="nav-link-label">Automation</span> <span class="nav-link-count">12</span> </a> </li><li class="nav-item"> <a href="/ai/" class="nav-link"> <span class="nav-link-label">AI</span> <span class="nav-link-count">7</span> </a> </li><li class="nav-item"> <a href="/cloud/" class="nav-link"> <span class="nav-link-label">Cloud</span> <span class="nav-link-count">2</span> </a> </li><li class="nav-item"> <a href="/local-ai/" class="nav-link"> <span class="nav-link-label">Local AI</span> <span class="nav-link-count">7</span> </a> </li><li class="nav-item"> <a href="/kotlin/" class="nav-link"> <span class="nav-link-label">Kotlin</span> <span class="nav-link-count">6</span> </a> </li><li class="nav-item"> <a href="/snippets/" class="nav-link"> <span class="nav-link-label">Snippets</span> <span class="nav-link-count">4</span> </a> </li> </ul> </div> </nav> <div class="sidebar-footer"> <a href="/cv/" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> View CV </a> <div class="sidebar-links"> <a href="https://www.linkedin.com/in/sergio-barrientose/" class="sidebar-link" target="_blank" rel="noopener noreferrer"> LinkedIn </a> </div> </div> </aside> <header class="mobile-header"> <button class="menu-toggle" type="button" data-menu-toggle aria-label="Toggle navigation"> <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg> </button> <a href="/" class="mobile-brand">Sergio B. / Field Notes</a> </header> <main class="main-content" id="main-content"> <div class="content-wrapper">  <a href="/" class="back-link" data-i18n="nav.backToPosts">← Back to posts</a> <article class="article-shell"> <header class="article-header"> <nav class="breadcrumbs" aria-label="Breadcrumb"> <a href="/" data-i18n="nav.breadcrumbHome">Home</a> <span>/</span> <a href="/ai/">AI</a>  </nav> <div class="article-meta"> <time datetime="2026-03-03T00:00:00.000Z"> March 3, 2026 </time> <span aria-hidden="true">•</span> <span>14 <span data-i18n="posts.minRead">min read</span></span>  </div> <h1 class="article-title">Training Custom AI Models for Insurance Document Processing</h1> <p class="page-description">How to build, train, and deploy custom document intelligence models for extracting structured data from multilingual insurance policies using Azure AI Foundry.</p> <div class="post-tags post-tags-spaced" aria-label="Post tags"> <span class="tag">azure-ai</span><span class="tag">document-intelligence</span><span class="tag">machine-learning</span><span class="tag">automation</span><span class="tag">multilingual</span> </div> </header> <section class="case-snapshot panel panel-soft" aria-label="Case snapshot"> <h2 data-i18n="post.caseSnapshot">Case Snapshot</h2> <div class="case-grid"> <article class="case-card"> <h3>Situation</h3> <p>Insurance policy processing required manual data extraction from PDFs in multiple languages (Spanish, German, English). Each policy had different formats, fields varied by insurer, and manual processing was slow and error-prone.</p> </article><article class="case-card"> <h3>Issue</h3> <p>Off-the-shelf OCR solutions couldn&#39;t handle the complexity of insurance documents. Different insurers used different layouts, multilingual support was limited, and extracted data needed to conform to a strict canonical schema for downstream systems.</p> </article><article class="case-card"> <h3>Solution</h3> <p>Implemented a custom document intelligence solution using Azure AI Document Intelligence, training models on labeled examples to extract and normalize fields across multiple insurers and languages.</p> </article><article class="case-card"> <h3>Used In</h3> <p>Document processing pipeline for insurance policies, claims processing, and compliance verification in a regulated financial environment.</p> </article><article class="case-card"> <h3>Impact</h3> <p>Reduced manual processing time by 90%, achieved 95%+ field extraction accuracy, and enabled automated policy validation against business rules.</p> </article> </div> </section> <div class="article-content prose-shell"> <h2 id="document-intelligence-pipeline-architecture">Document Intelligence Pipeline Architecture</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>&#x3C;svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg"></span></span>
+<span class="line"><span>  &#x3C;!-- Background --></span></span>
+<span class="line"><span>  &#x3C;rect width="900" height="700" fill="#f8fafc"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Title --></span></span>
+<span class="line"><span>  &#x3C;text x="450" y="35" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#1e293b"></span></span>
+<span class="line"><span>    AI Document Intelligence Pipeline for Insurance Policies</span></span>
+<span class="line"><span>  &#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Input Documents --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(30, 60)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="120" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#991b1b">Input Documents&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;rect x="15" y="40" width="150" height="20" rx="3" fill="#ffffff" stroke="#94a3b8"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="54" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">Spanish Policies&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;rect x="15" y="65" width="150" height="20" rx="3" fill="#ffffff" stroke="#94a3b8"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="79" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">German Policies&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;rect x="15" y="90" width="150" height="20" rx="3" fill="#ffffff" stroke="#94a3b8"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="104" text-anchor="middle" font-family="Arial" font-size="9" fill="#334155">English Policies&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow --></span></span>
+<span class="line"><span>  &#x3C;path d="M 220 120 L 260 120" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Azure Document Intelligence --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(270, 60)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="200" height="120" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="100" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#1e40af">Azure AI&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="100" y="45" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#1e40af">Document Intelligence&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;text x="100" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="#647489">Custom Neural Model&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="100" y="85" text-anchor="middle" font-family="Arial" font-size="10" fill="#647489">OCR + Layout Analysis&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="100" y="100" text-anchor="middle" font-family="Arial" font-size="10" fill="#647489">Multi-language Support&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow --></span></span>
+<span class="line"><span>  &#x3C;path d="M 480 120 L 520 120" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Raw Extraction --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(530, 60)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="120" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#92400e">Raw Extraction&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="50" text-anchor="middle" font-family="Courier" font-size="9" fill="#334155">"74 004447-0016"&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="65" text-anchor="middle" font-family="Courier" font-size="9" fill="#334155">"12 de agosto de 2024"&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="80" text-anchor="middle" font-family="Courier" font-size="9" fill="#334155">"EUR 720,738.74"&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="95" text-anchor="middle" font-family="Courier" font-size="9" fill="#334155">"HDI Global SE"&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#dc2626" font-style="italic">Needs normalization&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow down --></span></span>
+<span class="line"><span>  &#x3C;path d="M 620 190 L 620 240" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Normalization Layer --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(270, 250)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="340" height="140" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="170" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#3730a3">Normalization Layer&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;!-- Normalization rules --></span></span>
+<span class="line"><span>    &#x3C;g transform="translate(15, 40)"></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="0" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_currency(): "720,738.74" → 720738.74&#x3C;/text></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="20" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_date(): "12 agosto 2024" → "2024-08-12"&#x3C;/text></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="40" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_insurer(): "HDI Global SE" → "HDI GLOBAL SE"&#x3C;/text></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="60" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_entity(): Uppercase canonical form&#x3C;/text></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="80" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_addresses(): "Street, ZIP City, Country"&#x3C;/text></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="100" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_arrays(): ["FIRE", "FLOOD", "THEFT"]&#x3C;/text></span></span>
+<span class="line"><span>      &#x3C;text x="0" y="120" font-family="Courier" font-size="9" fill="#1e1b4b">normalize_objects(): {subsidence: 1240, ...}&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;/g></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow down --></span></span>
+<span class="line"><span>  &#x3C;path d="M 440 400 L 440 450" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Canonical JSON Output --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(120, 460)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="420" height="140" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="210" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#065f46">Canonical JSON Schema&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;text x="20" y="50" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">{&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="65" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"policy_id": "74-004447-0016",&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="80" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"policy_holder": "PANDION REAL ESTATE GMBH",&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="95" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"period_start": "2024-08-12",&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="110" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"period_end": "2025-05-31",&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="125" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"buildings_sum_insured": 720738.74,&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="140" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"currency": "EUR",&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="155" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"insurer": "HDI GLOBAL SE",&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="30" y="170" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">"risks_insured": ["ALL_RISKS", "PROPERTY_OWNERS_LIABILITY"]&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="20" y="185" text-anchor="left" font-family="Courier" font-size="9" fill="#064e3b">}&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow right --></span></span>
+<span class="line"><span>  &#x3C;path d="M 550 530 L 590 530" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Business Rules Validation --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(600, 460)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="260" height="140" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="130" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#9d174d">Business Rules&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    &#x3C;text x="15" y="50" font-family="Arial" font-size="10" fill="#831843">✓ Policy ID format validation&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="15" y="70" font-family="Arial" font-size="10" fill="#831843">✓ Date logic (start &#x26;lt; end)&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="15" y="90" font-family="Arial" font-size="10" fill="#831843">✓ Sum insured &#x26;gt; 0&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="15" y="110" font-family="Arial" font-size="10" fill="#831843">✓ Premium calculation check&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="15" y="130" font-family="Arial" font-size="10" fill="#16a34a" font-weight="bold">→ Import to DB or Flag for Review&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Training Loop (dashed) --></span></span>
+<span class="line"><span>  &#x3C;path d="M 470 120 C 470 20, 750 20, 750 120" stroke="#64748b" stroke-width="2" fill="none" stroke-dasharray="5,5" marker-end="url(#arrow)"/></span></span>
+<span class="line"><span>  &#x3C;text x="610" y="35" text-anchor="middle" font-family="Arial" font-size="10" fill="#64748b" font-style="italic">Model Training&#x3C;/text></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(680, 60)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="180" height="60" rx="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="2"/></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#6b21a8">Labeling Studio&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="40" text-anchor="middle" font-family="Arial" font-size="9" fill="#6b21a8">15-20 labeled documents&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="90" y="55" text-anchor="middle" font-family="Arial" font-size="9" fill="#6b21a8">Multi-language support&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Arrow marker --></span></span>
+<span class="line"><span>  &#x3C;defs></span></span>
+<span class="line"><span>    &#x3C;marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"></span></span>
+<span class="line"><span>      &#x3C;polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></span></span>
+<span class="line"><span>    &#x3C;/marker></span></span>
+<span class="line"><span>  &#x3C;/defs></span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  &#x3C;!-- Key Metrics --></span></span>
+<span class="line"><span>  &#x3C;g transform="translate(30, 650)"></span></span>
+<span class="line"><span>    &#x3C;rect x="0" y="0" width="840" height="35" rx="4" fill="#1e293b"/></span></span>
+<span class="line"><span>    &#x3C;text x="120" y="22" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffffff">90% time reduction&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffffff">95%+ extraction accuracy&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="480" y="22" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffffff">6x capacity increase&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="660" y="22" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffffff">4-month payback&#x3C;/text></span></span>
+<span class="line"><span>    &#x3C;text x="800" y="22" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffffff">24/7 processing&#x3C;/text></span></span>
+<span class="line"><span>  &#x3C;/g></span></span>
+<span class="line"><span>&#x3C;/svg></span></span></code></pre>
+<hr>
+<h2 id="situation">Situation</h2>
+<p>Insurance companies process thousands of policies daily. Each policy is a PDF document containing critical information:</p>
+<ul>
+<li>Policy numbers and effective dates</li>
+<li>Insured parties and property details</li>
+<li>Coverage limits and deductibles</li>
+<li>Premium amounts and payment terms</li>
+<li>Exclusions and endorsements</li>
+</ul>
+<p>The challenge: These documents come from dozens of insurers, each with their own format. Some are in Spanish, others in German or English. Fields appear in different locations, use different terminology, and follow different conventions for dates, currencies, and numbers.</p>
+<p>Manual data entry was slow (15-20 minutes per policy), error-prone, and expensive. Off-the-shelf OCR could read text but couldn’t understand the semantic meaning or normalize it to a consistent schema.</p>
+<p>I led the implementation of a custom AI solution using Azure AI Document Intelligence that automatically extracts and normalizes policy data across multiple languages and formats.</p>
+<hr>
+<h2 id="the-document-intelligence-workflow">The Document Intelligence Workflow</h2>
+<h3 id="phase-1-project-setup-in-azure-ai-foundry">Phase 1: Project Setup in Azure AI Foundry</h3>
+<p><strong>Create a Document Intelligence Project</strong>:</p>
+<ol>
+<li>Navigate to Azure AI Document Intelligence Studio</li>
+<li>Create a new project: <code>proj_insurance_policies</code></li>
+<li>Select “Custom Neural Model” (for complex layouts)</li>
+<li>Choose API version: <code>2024-11-30</code> (latest stable)</li>
+</ol>
+<p><strong>Upload Training Documents</strong>:</p>
+<p>Gather a diverse set of insurance policies:</p>
+<ul>
+<li>Multiple insurers (HDI Global, Allianz, Aviva, etc.)</li>
+<li>Multiple languages (Spanish, German, English)</li>
+<li>Multiple formats (digital PDFs, scanned documents)</li>
+<li>Multiple policy types (property, liability, business interruption)</li>
+</ul>
+<p><strong>Target</strong>: At least 15-20 labeled documents for initial training.</p>
+<hr>
+<h3 id="phase-2-labeling-and-schema-definition">Phase 2: Labeling and Schema Definition</h3>
+<p><strong>Define the Canonical Schema</strong>:</p>
+<p>Before labeling, define the target schema—what fields should be extracted and how should they be normalized?</p>
+<p>Example schema fields:</p>
+<ul>
+<li><code>policy_id</code>: Standardized policy number format</li>
+<li><code>policy_holder</code>: Normalized company/person name</li>
+<li><code>insurer</code>: Short canonical insurer name</li>
+<li><code>period_start</code>, <code>period_end</code>: ISO 8601 dates</li>
+<li><code>buildings_sum_insured</code>: Numeric value in EUR</li>
+<li><code>premium_total</code>: Total premium as number</li>
+<li><code>currency</code>: ISO currency code (EUR, USD, etc.)</li>
+<li><code>risks_insured</code>: Array of normalized risk tags</li>
+</ul>
+<p><strong>Label Documents</strong>:</p>
+<p>In the Document Intelligence Studio labeling interface:</p>
+<ol>
+<li><strong>Select a document</strong> from the uploaded set</li>
+<li><strong>Highlight text</strong> for each field (e.g., highlight “74 004447-0016” and label as <code>policy_id</code>)</li>
+<li><strong>Define field types</strong>:
+<ul>
+<li>String (names, addresses)</li>
+<li>Number (amounts, percentages)</li>
+<li>Date (periods, effective dates)</li>
+<li>Array (lists of risks, endorsements)</li>
+<li>Object (nested structures like deductibles by risk type)</li>
+</ul>
+</li>
+</ol>
+<p><strong>Example Labeling Session</strong>:</p>
+<p>Document: HDI Global property insurance policy (German)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Extracted Text</th><th>Normalized Value</th></tr></thead><tbody><tr><td><code>policy_id</code></td><td>”74 004447-0016"</td><td>"74-004447-0016”</td></tr><tr><td><code>policy_holder</code></td><td>”Pandion Real Estate GmbH bzw. Projektgesellschaft der Pandion Gruppe"</td><td>"PANDION REAL ESTATE GMBH”</td></tr><tr><td><code>insurer</code></td><td>”HDI Global SE"</td><td>"HDI GLOBAL SE”</td></tr><tr><td><code>insurer_address</code></td><td>”Am Schönenkamp 45 40599 Düsseldorf"</td><td>"Am Schönenkamp 45, 40599 Düsseldorf, Germany”</td></tr><tr><td><code>period_start</code></td><td>”12 August 2024"</td><td>"2024-08-12”</td></tr><tr><td><code>period_end</code></td><td>”31 May 2025"</td><td>"2025-05-31”</td></tr><tr><td><code>buildings_sum_insured</code></td><td>”EUR 720,738.74”</td><td>720738.74</td></tr><tr><td><code>currency</code></td><td>”EUR"</td><td>"EUR”</td></tr></tbody></table>
+<p><strong>Labeling Best Practices</strong>:</p>
+<ol>
+<li><strong>Consistency is critical</strong>: Label the same field the same way across all documents</li>
+<li><strong>Handle variations</strong>: If “Policy Number”, “Policy No.”, and “Police” all mean the same thing, label all as <code>policy_id</code></li>
+<li><strong>Multilingual support</strong>: Label fields in all languages (Spanish “Póliza”, German “Versicherungsschein”, English “Policy”)</li>
+<li><strong>Complex fields</strong>: For nested structures (e.g., deductibles by risk), create object fields with sub-fields</li>
+</ol>
+<hr>
+<h3 id="phase-3-training-the-model">Phase 3: Training the Model</h3>
+<p><strong>Training Process</strong>:</p>
+<p>Once you have labeled at least 5 documents (Microsoft’s minimum), you can train the model.</p>
+<p><strong>Important</strong>: Training uses ALL labeled documents in the project. It’s not incremental—each training run creates a new model from scratch using the complete labeled dataset.</p>
+<p><strong>Training Workflow</strong>:</p>
+<ol>
+<li><strong>Review labeled documents</strong>: Ensure all required fields are labeled consistently</li>
+<li><strong>Click “Train”</strong>: Initiates training job (takes 5-20 minutes depending on document count)</li>
+<li><strong>Monitor training status</strong>: Watch for “Succeeded” status</li>
+<li><strong>Review model performance</strong>: Check precision/recall metrics</li>
+</ol>
+<p><strong>Model Versioning</strong>:</p>
+<p>Each training run creates a new model version:</p>
+<ul>
+<li><code>model_v1</code>: Trained on 15 documents (initial version)</li>
+<li><code>model_v2</code>: Trained on 25 documents (added more insurers)</li>
+<li><code>model_v3</code>: Trained on 35 documents (improved multilingual coverage)</li>
+</ul>
+<p><strong>Naming Convention</strong>:</p>
+<p>Use descriptive names:</p>
+<ul>
+<li><code>pash_insurances_di_20250120</code> (trained on Jan 20, 2025)</li>
+<li><code>pash_insurances_di_multilingual_v2</code> (version 2 with multilingual support)</li>
+</ul>
+<hr>
+<h3 id="phase-4-normalization-rules-and-jsonl-training-data">Phase 4: Normalization Rules and JSONL Training Data</h3>
+<p><strong>The Challenge</strong>:</p>
+<p>Extracted text is rarely in the format you need. “EUR 720,738.74” needs to become <code>720738.74</code>. “12 August 2024” needs to become <code>"2024-08-12"</code>.</p>
+<p><strong>Solution: Post-Processing with Normalization Rules</strong>:</p>
+<p>Azure Document Intelligence extracts raw text. You need a normalization layer to convert it to your canonical schema.</p>
+<p><strong>Example Normalization Rules</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># Normalize European number format to standard</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> normalize_currency</span><span style="color:#E1E4E8">(text):</span></span>
+<span class="line"><span style="color:#6A737D">    # "EUR 720,738.74" or "€5.000,00" → 720738.74</span></span>
+<span class="line"><span style="color:#E1E4E8">    text </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> text.replace(</span><span style="color:#9ECBFF">'EUR'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">''</span><span style="color:#E1E4E8">).replace(</span><span style="color:#9ECBFF">'€'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">''</span><span style="color:#E1E4E8">).strip()</span></span>
+<span class="line"><span style="color:#E1E4E8">    text </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> text.replace(</span><span style="color:#9ECBFF">'.'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">''</span><span style="color:#E1E4E8">).replace(</span><span style="color:#9ECBFF">','</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'.'</span><span style="color:#E1E4E8">)  </span><span style="color:#6A737D"># European to US format</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(text)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Normalize dates to ISO 8601</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> normalize_date</span><span style="color:#E1E4E8">(text):</span></span>
+<span class="line"><span style="color:#6A737D">    # "12 August 2024" or "12/08/2024" → "2024-08-12"</span></span>
+<span class="line"><span style="color:#F97583">    from</span><span style="color:#E1E4E8"> dateutil </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> parser</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> parser.parse(text).strftime(</span><span style="color:#9ECBFF">'%Y-%m-</span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF">'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Normalize insurer names to canonical form</span></span>
+<span class="line"><span style="color:#79B8FF">INSURER_MAPPING</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">    "HDI Global SE"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"HDI GLOBAL SE"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "Allianz Global Corporate &#x26; Specialty SE"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"ALLIANZ GCS SE"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "Aviva Insurance Ireland Designated Activity Company"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"AVIVA INSURANCE IRELAND"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> normalize_insurer</span><span style="color:#E1E4E8">(text):</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> INSURER_MAPPING</span><span style="color:#E1E4E8">.get(text, text.upper())</span></span></code></pre>
+<p><strong>Advanced: Fine-Tuning with JSONL</strong>:</p>
+<p>For more complex normalization, you can create fine-tuning datasets in JSONL format:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="jsonl"><code><span class="line"><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">"messages"</span><span style="color:#E1E4E8">:[{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"system"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Normalize monetary amounts to numbers with currency code."</span><span style="color:#E1E4E8">},{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"user"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Buildings Sum Insured: EUR 720,738.74"</span><span style="color:#E1E4E8">},{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"assistant"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"{</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">buildings_sum_insured</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:720738.74,</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">currency</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">EUR</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">}"</span><span style="color:#E1E4E8">}]}</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">"messages"</span><span style="color:#E1E4E8">:[{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"system"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Normalize dates to ISO format."</span><span style="color:#E1E4E8">},{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"user"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Coverage: 01/01/2025 to 31/12/2025"</span><span style="color:#E1E4E8">},{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"assistant"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"{</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">period_start</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">2025-01-01</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">,</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">period_end</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">2025-12-31</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">}"</span><span style="color:#E1E4E8">}]}</span></span>
+<span class="line"><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">"messages"</span><span style="color:#E1E4E8">:[{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"system"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Extract deductible amounts per risk type."</span><span style="color:#E1E4E8">},{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"user"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"Subsidence: EUR 1,240; Earthquake: EUR 1,000; Other Risks: EUR 1,000"</span><span style="color:#E1E4E8">},{</span><span style="color:#79B8FF">"role"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"assistant"</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">"content"</span><span style="color:#E1E4E8">:</span><span style="color:#9ECBFF">"{</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">deductibles</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:{</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">subsidence</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:1240.00,</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">earthquake</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:1000.00,</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">other</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">:1000.00}}"</span><span style="color:#E1E4E8">}]}</span></span></code></pre>
+<p>This JSONL data can be used to fine-tune a language model that handles normalization as a text-to-JSON task.</p>
+<hr>
+<h3 id="phase-5-validation-and-testing">Phase 5: Validation and Testing</h3>
+<p><strong>Create a Validation Set</strong>:</p>
+<p>Set aside 5-10 labeled documents that are NOT used in training. These are your validation set.</p>
+<p><strong>Validation Metrics</strong>:</p>
+<ol>
+<li><strong>Field-Level Precision</strong>: Of all extracted fields, what percentage are correct?</li>
+<li><strong>Field-Level Recall</strong>: Of all fields that should be extracted, what percentage were found?</li>
+<li><strong>Value Accuracy</strong>: Are extracted values correct (not just present)?</li>
+</ol>
+<p><strong>Example Validation Results</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Precision</th><th>Recall</th><th>Notes</th></tr></thead><tbody><tr><td><code>policy_id</code></td><td>98%</td><td>100%</td><td>Very reliable</td></tr><tr><td><code>policy_holder</code></td><td>95%</td><td>97%</td><td>Occasional truncation on long names</td></tr><tr><td><code>period_start</code></td><td>99%</td><td>99%</td><td>Date normalization highly accurate</td></tr><tr><td><code>buildings_sum_insured</code></td><td>92%</td><td>95%</td><td>Some issues with OCR on scanned docs</td></tr><tr><td><code>premium_total</code></td><td>90%</td><td>93%</td><td>Confusion between base premium and total with tax</td></tr></tbody></table>
+<p><strong>Handle Edge Cases</strong>:</p>
+<p>Document issues discovered during validation:</p>
+<ul>
+<li><strong>Scanned documents with poor quality</strong>: OCR errors on policy numbers</li>
+<li><strong>Handwritten annotations</strong>: Model tries to extract as fields (filter these out)</li>
+<li><strong>Multi-page tables</strong>: Some fields span multiple pages (need special handling)</li>
+<li><strong>Non-standard date formats</strong>: “1st January 2025” vs “01/01/2025” (normalization handles this)</li>
+</ul>
+<hr>
+<h3 id="phase-6-integration-with-downstream-systems">Phase 6: Integration with Downstream Systems</h3>
+<p><strong>API Integration</strong>:</p>
+<p>Once the model is trained and validated, integrate it into your document processing pipeline:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> requests</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> azure.ai.formrecognizer </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> DocumentAnalysisClient</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> azure.core.credentials </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> AzureKeyCredential</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">endpoint </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "https://your-resource.cognitiveservices.azure.com/"</span></span>
+<span class="line"><span style="color:#E1E4E8">key </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "your-api-key"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">client </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> DocumentAnalysisClient(</span><span style="color:#FFAB70">endpoint</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">endpoint, </span><span style="color:#FFAB70">credential</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">AzureKeyCredential(key))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Submit document for analysis</span></span>
+<span class="line"><span style="color:#F97583">with</span><span style="color:#79B8FF"> open</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"policy.pdf"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"rb"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> f:</span></span>
+<span class="line"><span style="color:#E1E4E8">    poller </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> client.begin_analyze_document(</span><span style="color:#9ECBFF">"model_v3"</span><span style="color:#E1E4E8">, f)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">result </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> poller.result()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Extract fields</span></span>
+<span class="line"><span style="color:#E1E4E8">extracted_data </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">    "policy_id"</span><span style="color:#E1E4E8">: result.documents[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].fields.get(</span><span style="color:#9ECBFF">"policy_id"</span><span style="color:#E1E4E8">).value,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "policy_holder"</span><span style="color:#E1E4E8">: normalize_insurer(result.documents[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].fields.get(</span><span style="color:#9ECBFF">"policy_holder"</span><span style="color:#E1E4E8">).value),</span></span>
+<span class="line"><span style="color:#9ECBFF">    "period_start"</span><span style="color:#E1E4E8">: normalize_date(result.documents[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].fields.get(</span><span style="color:#9ECBFF">"period_start"</span><span style="color:#E1E4E8">).value),</span></span>
+<span class="line"><span style="color:#9ECBFF">    "buildings_sum_insured"</span><span style="color:#E1E4E8">: normalize_currency(result.documents[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].fields.get(</span><span style="color:#9ECBFF">"buildings_sum_insured"</span><span style="color:#E1E4E8">).value),</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate against business rules</span></span>
+<span class="line"><span style="color:#E1E4E8">validate_policy(extracted_data)</span></span></code></pre>
+<p><strong>Business Rules Validation</strong>:</p>
+<p>After extraction, validate the data:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> validate_policy</span><span style="color:#E1E4E8">(data):</span></span>
+<span class="line"><span style="color:#E1E4E8">    errors </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> []</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Policy ID format check</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#F97583"> not</span><span style="color:#E1E4E8"> re.match(</span><span style="color:#F97583">r</span><span style="color:#9ECBFF">'</span><span style="color:#79B8FF">^\d</span><span style="color:#F97583">{2}</span><span style="color:#DBEDFF">-</span><span style="color:#79B8FF">\d</span><span style="color:#F97583">{6}</span><span style="color:#DBEDFF">-</span><span style="color:#79B8FF">\d</span><span style="color:#F97583">{4}</span><span style="color:#79B8FF">$</span><span style="color:#9ECBFF">'</span><span style="color:#E1E4E8">, data[</span><span style="color:#9ECBFF">'policy_id'</span><span style="color:#E1E4E8">]):</span></span>
+<span class="line"><span style="color:#E1E4E8">        errors.append(</span><span style="color:#9ECBFF">"Invalid policy ID format"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Coverage period logic</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> data[</span><span style="color:#9ECBFF">'period_start'</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">>=</span><span style="color:#E1E4E8"> data[</span><span style="color:#9ECBFF">'period_end'</span><span style="color:#E1E4E8">]:</span></span>
+<span class="line"><span style="color:#E1E4E8">        errors.append(</span><span style="color:#9ECBFF">"Period start must be before end"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Sum insured must be positive</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> data[</span><span style="color:#9ECBFF">'buildings_sum_insured'</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">&#x3C;=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        errors.append(</span><span style="color:#9ECBFF">"Sum insured must be positive"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Premium must match calculation (if formula known)</span></span>
+<span class="line"><span style="color:#E1E4E8">    expected_premium </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> calculate_premium(data)</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> abs</span><span style="color:#E1E4E8">(data[</span><span style="color:#9ECBFF">'premium_total'</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> expected_premium) </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 0.01</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        errors.append(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Premium mismatch: expected </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">expected_premium</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">, got </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">data[</span><span style="color:#9ECBFF">'premium_total'</span><span style="color:#E1E4E8">]</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> errors</span></span></code></pre>
+<p><strong>Flag for Manual Review</strong>:</p>
+<p>If validation fails or confidence is low, flag for manual review:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> errors </span><span style="color:#F97583">or</span><span style="color:#E1E4E8"> confidence </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0.90</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    send_to_manual_review(policy_pdf, extracted_data, errors)</span></span>
+<span class="line"><span style="color:#F97583">else</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    import_to_database(extracted_data)</span></span></code></pre>
+<hr>
+<h2 id="multilingual-support-strategy">Multilingual Support Strategy</h2>
+<p><strong>The Challenge</strong>:</p>
+<p>Insurance policies come in multiple languages:</p>
+<ul>
+<li><strong>Spanish</strong>: “Tomador del seguro”, “Suma asegurada”, “Prima total”</li>
+<li><strong>German</strong>: “Versicherungsnehmer”, “Versicherungssumme”, “Gesamtprämie”</li>
+<li><strong>English</strong>: “Policy holder”, “Sum insured”, “Total premium”</li>
+</ul>
+<p><strong>Solution: Unified Labeling</strong></p>
+<p>Label the SAME field across all languages:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Spanish</th><th>German</th><th>English</th><th>Canonical Field</th></tr></thead><tbody><tr><td>Tomador del seguro</td><td>Versicherungsnehmer</td><td>Policy holder</td><td><code>policy_holder</code></td></tr><tr><td>Suma asegurada</td><td>Versicherungssumme</td><td>Sum insured</td><td><code>buildings_sum_insured</code></td></tr><tr><td>Prima total</td><td>Gesamtprämie</td><td>Total premium</td><td><code>premium_total</code></td></tr><tr><td>Vigencia desde</td><td>Gültig ab</td><td>Coverage from</td><td><code>period_start</code></td></tr></tbody></table>
+<p>The model learns that these different terms all map to the same canonical field.</p>
+<p><strong>Normalization Handles Language Variations</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># Date formats vary by language</span></span>
+<span class="line"><span style="color:#79B8FF">DATE_FORMATS</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">    'es'</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'</span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF"> de %B de %Y'</span><span style="color:#E1E4E8">,  </span><span style="color:#6A737D"># "12 de agosto de 2024"</span></span>
+<span class="line"><span style="color:#9ECBFF">    'de'</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'</span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF">. %B %Y'</span><span style="color:#E1E4E8">,       </span><span style="color:#6A737D"># "12. August 2024"</span></span>
+<span class="line"><span style="color:#9ECBFF">    'en'</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'%B </span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF">, %Y'</span><span style="color:#6A737D">        # "August 12, 2024"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> normalize_date_multilingual</span><span style="color:#E1E4E8">(text, language</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'es'</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#F97583">    from</span><span style="color:#E1E4E8"> dateutil </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> parser</span></span>
+<span class="line"><span style="color:#6A737D">    # Try language-specific format first, fall back to auto-detect</span></span>
+<span class="line"><span style="color:#F97583">    try</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> datetime.strptime(text, </span><span style="color:#79B8FF">DATE_FORMATS</span><span style="color:#E1E4E8">[language]).strftime(</span><span style="color:#9ECBFF">'%Y-%m-</span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF">'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    except</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> parser.parse(text).strftime(</span><span style="color:#9ECBFF">'%Y-%m-</span><span style="color:#79B8FF">%d</span><span style="color:#9ECBFF">'</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<hr>
+<h2 id="real-world-results">Real-World Results</h2>
+<p><strong>Project</strong>: Insurance policy processing for real estate portfolio</p>
+<p><strong>Scope</strong>:</p>
+<ul>
+<li>500+ policies processed monthly</li>
+<li>12 different insurers</li>
+<li>3 languages (Spanish, German, English)</li>
+<li>40+ fields extracted per policy</li>
+</ul>
+<p><strong>Results After 6 Months</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Before</th><th>After</th><th>Improvement</th></tr></thead><tbody><tr><td>Processing time per policy</td><td>15-20 min</td><td>2-3 min</td><td>85% reduction</td></tr><tr><td>Manual data entry errors</td><td>8%</td><td>&#x3C;1%</td><td>87% reduction</td></tr><tr><td>Policies processed per FTE</td><td>25/day</td><td>150/day</td><td>6x increase</td></tr><tr><td>Cost per policy</td><td>€3.50</td><td>€0.60</td><td>83% reduction</td></tr></tbody></table>
+<p><strong>Quality Metrics</strong>:</p>
+<ul>
+<li><strong>Field extraction accuracy</strong>: 95%+ across all fields</li>
+<li><strong>Date normalization accuracy</strong>: 99%</li>
+<li><strong>Currency/amount accuracy</strong>: 97%</li>
+<li><strong>Manual review rate</strong>: 12% (down from 100%)</li>
+</ul>
+<hr>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<h3 id="lesson-1-invest-time-in-labeling-quality">Lesson 1: Invest Time in Labeling Quality</h3>
+<p>The model is only as good as your labeled data. Spend time ensuring:</p>
+<ul>
+<li>Consistent labeling across all documents</li>
+<li>Clear field definitions</li>
+<li>Multilingual coverage from the start</li>
+</ul>
+<h3 id="lesson-2-start-simple-iterate">Lesson 2: Start Simple, Iterate</h3>
+<p>Don’t try to extract 50 fields in the first model. Start with 10-15 critical fields:</p>
+<ul>
+<li>Policy ID</li>
+<li>Policy holder</li>
+<li>Insurer</li>
+<li>Coverage period</li>
+<li>Sum insured</li>
+<li>Premium</li>
+</ul>
+<p>Once the model works well for these, add more fields in subsequent versions.</p>
+<h3 id="lesson-3-human-in-the-loop-is-essential">Lesson 3: Human-in-the-Loop is Essential</h3>
+<p>Even with 95% accuracy, some policies will need manual review:</p>
+<ul>
+<li>Poor quality scans</li>
+<li>Unusual formats</li>
+<li>Edge cases not in training data</li>
+</ul>
+<p>Build a workflow for flagging and reviewing these cases.</p>
+<h3 id="lesson-4-monitor-model-drift">Lesson 4: Monitor Model Drift</h3>
+<p>Over time, new insurers, new formats, or new languages may appear. Monitor:</p>
+<ul>
+<li>Extraction accuracy by insurer</li>
+<li>Fields with high error rates</li>
+<li>New document formats not in training set</li>
+</ul>
+<p>Retrain the model periodically with new examples.</p>
+<hr>
+<h2 id="impact-and-metrics">Impact and Metrics</h2>
+<p><strong>Before AI</strong>:</p>
+<ul>
+<li>15-20 minutes manual processing per policy</li>
+<li>8% data entry error rate</li>
+<li>Limited to business hours processing</li>
+<li>Backlog of 200+ policies during peak periods</li>
+</ul>
+<p><strong>After AI</strong>:</p>
+<ul>
+<li>2-3 minutes (mostly validation) per policy</li>
+<li>&#x3C;1% error rate</li>
+<li>24/7 automated processing</li>
+<li>No backlog, even during peak periods</li>
+</ul>
+<p><strong>ROI</strong>:</p>
+<ul>
+<li>Payback period: 4 months</li>
+<li>Annual savings: €180,000 (reduced manual labor + error correction)</li>
+<li>Capacity increase: 6x without hiring</li>
+</ul>
+<!-- portfolio:expanded-v2 -->
+<h2 id="document-intelligence-workflow">Document Intelligence Workflow</h2>
+<p><img src="/images/diagrams/post-framework/document-intelligence-workflow.svg" alt="Training Custom AI Models for Insurance Document Processing"></p>
+<p>This diagram shows the <strong>Document Intelligence</strong> workflow, from document upload and labeling through model training, API integration, and downstream business rules validation.</p>
+<h2 id="post-specific-engineering-lens">Post-Specific Engineering Lens</h2>
+<p>For this post, the primary objective is: <strong>Balance model quality with deterministic runtime constraints.</strong></p>
+<h3 id="implementation-decisions-for-this-case">Implementation decisions for this case</h3>
+<ul>
+<li>Chose Azure Document Intelligence for enterprise-grade OCR and layout analysis</li>
+<li>Implemented normalization layer to convert extracted text to canonical schema</li>
+<li>Used human-in-the-loop for low-confidence extractions</li>
+<li>Designed for multilingual support from the start</li>
+</ul>
+<h3 id="practical-command-path">Practical command path</h3>
+<p>These are representative execution checkpoints:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Submit document for analysis</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -X</span><span style="color:#9ECBFF"> POST</span><span style="color:#9ECBFF"> https://resource.cognitiveservices.azure.com/formrecognizer/documentModels/model_v3:analyze</span><span style="color:#79B8FF"> -H</span><span style="color:#9ECBFF"> "Ocp-Apim-Subscription-Key: KEY"</span><span style="color:#79B8FF"> --data-binary</span><span style="color:#9ECBFF"> @policy.pdf</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check analysis results</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#9ECBFF"> https://resource.cognitiveservices.azure.com/formrecognizer/operations/operation_id</span><span style="color:#79B8FF"> -H</span><span style="color:#9ECBFF"> "Ocp-Apim-Subscription-Key: KEY"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate extracted data</span></span>
+<span class="line"><span style="color:#B392F0">python</span><span style="color:#9ECBFF"> validate_policy.py</span><span style="color:#79B8FF"> --input</span><span style="color:#9ECBFF"> extracted_data.json</span><span style="color:#79B8FF"> --rules</span><span style="color:#9ECBFF"> business_rules.json</span></span></code></pre>
+<h2 id="validation-matrix">Validation Matrix</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Validation goal</th><th>What to baseline</th><th>What confirms success</th></tr></thead><tbody><tr><td>Extraction accuracy</td><td>precision/recall per field</td><td>>95% precision, >95% recall on validation set</td></tr><tr><td>Normalization correctness</td><td>date/currency/amount formats</td><td>All dates in ISO 8601, all amounts as numbers</td></tr><tr><td>Business rules compliance</td><td>policy logic validation</td><td>No validation errors for correctly extracted policies</td></tr><tr><td>Processing latency</td><td>end-to-end processing time</td><td>&#x3C;30 seconds per policy (including OCR)</td></tr></tbody></table>
+<h2 id="failure-modes-and-mitigations">Failure Modes and Mitigations</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Failure mode</th><th>Why it appears in this type of work</th><th>Mitigation used in this post pattern</th></tr></thead><tbody><tr><td>Poor OCR quality</td><td>Scanned documents with low resolution</td><td>Flag for manual review, request better quality scans</td></tr><tr><td>Missing fields</td><td>Field not present in document layout</td><td>Use optional fields, flag for manual completion</td></tr><tr><td>Wrong normalization</td><td>Unusual date/number format</td><td>Expand normalization rules, add to training data</td></tr><tr><td>New insurer format</td><td>Format not in training set</td><td>Add to training set, retrain model</td></tr></tbody></table>
+<h2 id="recruiter-readable-impact-summary">Recruiter-Readable Impact Summary</h2>
+<ul>
+<li><strong>Scope</strong>: Automated extraction of 40+ fields from multilingual insurance policies</li>
+<li><strong>Execution quality</strong>: Guarded by validation rules, human-in-the-loop, and continuous monitoring</li>
+<li><strong>Outcome signal</strong>: 85% reduction in processing time, 6x capacity increase, 4-month payback</li>
+<li><strong>Technical depth</strong>: Azure AI Document Intelligence, model training, multilingual NLP, business rules validation</li>
+</ul> </div> <footer class="article-footer"> <a href="/archive/" class="back-link" data-i18n="nav.browseArchive">← Browse archive</a> </footer> </article>  </div> <footer class="site-footer" aria-label="Site footer"> <div class="footer-content"> <span data-i18n="site.brand">Sergio B. / Field Notes</span> <span aria-hidden="true">•</span> <span data-i18n="site.footer">Case-study driven engineering portfolio</span> </div> </footer> </main> </div> <script>(function(){const i18nDict = {"site.brand":{"en":"Sergio B. / Field Notes","es":"Sergio B. / Notas de Campo"},"site.role":{"en":"Linux & Virtualization Engineer","es":"Ingeniero Linux y Virtualización"},"site.tagline":{"en":"Infrastructure delivery, automation, and applied enterprise AI","es":"Infraestructura, automatización e IA empresarial aplicada"},"site.description":{"en":"Case-study driven portfolio focused on Linux platform engineering, virtualization, Ansible automation, RHEL lifecycle modernization, and practical AI integration in enterprise environments.","es":"Portfolio de ingeniería basado en casos reales: plataformas Linux, virtualización, automatización con Ansible, modernización RHEL e integración práctica de IA en entornos corporativos."},"site.profileSummary":{"en":"Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.","es":"Ingeniero Linux y virtualización que documenta patrones reales de entrega: problemas claros, decisiones de implementación y resultados en producción."},"site.footer":{"en":"Case-study driven engineering portfolio","es":"Portfolio de ingeniería con casos prácticos"},"nav.home":{"en":"Home","es":"Inicio"},"nav.archive":{"en":"Archive","es":"Archivo"},"nav.about":{"en":"About + CV","es":"Acerca de + CV"},"nav.domains":{"en":"Domains","es":"Dominios"},"nav.years":{"en":"Years","es":"Años"},"nav.portfolio":{"en":"Portfolio","es":"Portfolio"},"nav.search":{"en":"Search","es":"Buscar"},"nav.searchPlaceholder":{"en":"grep post...","es":"buscar post..."},"nav.go":{"en":"Go","es":"Ir"},"nav.links":{"en":"Links","es":"Enlaces"},"nav.session":{"en":"Session:","es":"Sesión:"},"nav.commandPalette":{"en":"Command palette:","es":"Paleta de comandos:"},"nav.skipToContent":{"en":"Skip to content","es":"Ir al contenido"},"nav.breadcrumbHome":{"en":"Home","es":"Inicio"},"nav.backToPosts":{"en":"← Back to posts","es":"← Volver a posts"},"nav.browseArchive":{"en":"← Browse archive","es":"← Explorar archivo"},"hero.kicker":{"en":"sergio@portfolio:~$ whoami","es":"sergio@portfolio:~$ whoami"},"hero.typewriter":{"en":"Production ops and platform modernization field notes","es":"Notas de campo: operaciones en producción y modernización de plataformas"},"hero.description":{"en":"Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.","es":"Posts prácticos en formato caso de estudio: situación, problema, solución, contexto de uso e impacto."},"hero.recruiterView":{"en":"Recruiter View","es":"Vista Recruiter"},"hero.aboutCv":{"en":"About + CV","es":"Acerca de + CV"},"hero.archive":{"en":"Archive","es":"Archivo"},"hero.currentRole":{"en":"Current role","es":"Puesto actual"},"hero.roleTitle":{"en":"Linux & Virtualization Engineer","es":"Ingeniero Linux y Virtualización"},"hero.roleCompany":{"en":"Deutsche Pfandbriefbank AG · Madrid · Hybrid","es":"Deutsche Pfandbriefbank AG · Madrid · Híbrido"},"hero.publishedPosts":{"en":"Published posts","es":"Posts publicados"},"hero.postsMeta":{"en":"Case-study driven technical notes","es":"Notas técnicas con formato caso práctico"},"hero.lastUpdate":{"en":"Last update","es":"Última actualización"},"hero.noPostsYet":{"en":"No posts yet","es":"Sin posts aún"},"hero.archiveFirst":{"en":"Archive-first publishing flow","es":"Publicación centrada en el archivo"},"focus.title":{"en":"Delivery Focus","es":"Áreas de Entrega"},"focus.profile":{"en":"Profile","es":"Perfil"},"focus.infraTitle":{"en":"Infrastructure automation at scale","es":"Automatización de infraestructura a escala"},"focus.infraDesc":{"en":"Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.","es":"Flujos Ansible + Git para despliegues auditables, gestión de ciclo de vida y ejecución operativa segura."},"focus.rhelTitle":{"en":"RHEL modernization","es":"Modernización RHEL"},"focus.rhelDesc":{"en":"RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.","es":"Migración RHEL 7/8 a 9, gestión Satellite, orquestación de parches y bastionado."},"focus.aiTitle":{"en":"Applied enterprise AI","es":"IA empresarial aplicada"},"focus.aiDesc":{"en":"Architected inference gateways with Azure AI Foundry, translating document intelligence pilots into operationally viable, production-ready enterprise workloads.","es":"Arquitectura de gateways de inferencia con Azure AI Foundry, llevando pilotos de inteligencia documental hacia cargas de trabajo empresariales en producción."},"audience.title":{"en":"Choose Your View","es":"Elige tu vista"},"audience.currentRecruiter":{"en":"Current: Recruiter Mode","es":"Actual: Modo Recruiter"},"audience.currentEngineer":{"en":"Current: Engineer Mode","es":"Actual: Modo Ingeniero"},"audience.recruiterMode":{"en":"Recruiter Mode","es":"Modo Recruiter"},"audience.engineerMode":{"en":"Engineer Mode","es":"Modo Ingeniero"},"audience.copy":{"en":"Recruiter view prioritizes impact, role fit, and business outcomes first. Engineer view enables full live labs, telemetry streams, and command simulations.","es":"La vista Recruiter destaca impacto, encaje profesional y resultados de negocio. La vista Ingeniero abre labs en vivo, telemetría y simulación de comandos."},"recruiter.title":{"en":"Recruiter Snapshot","es":"Resumen Profesional"},"recruiter.fullProfile":{"en":"Full profile","es":"Perfil completo"},"recruiter.badge":{"en":"● Recruiter-ready overview","es":"● Vista rápida para recruiters"},"recruiter.summary":{"en":"Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability, and practical enterprise AI implementation. Proven track record reducing operational toil and accelerating time-to-market.","es":"Ingeniero Linux y virtualización con portfolio orientado a resultados: automatización, fiabilidad de plataformas e implementación práctica de IA empresarial. Acelerando TTM y reduciendo carga operativa."},"recruiter.roleFit":{"en":"Role fit","es":"Encaje profesional"},"recruiter.roleFit1":{"en":"Linux platform administration in enterprise environments","es":"Administración de plataformas Linux en entornos corporativos"},"recruiter.roleFit2":{"en":"Infrastructure as code with Ansible + Git workflow discipline","es":"Infraestructura como código con Ansible y flujos Git"},"recruiter.roleFit3":{"en":"Cross-team delivery from design through operational handoff","es":"Entrega transversal desde diseño hasta puesta en producción"},"recruiter.topOutcomes":{"en":"Top outcomes","es":"Logros destacados"},"recruiter.outcome1":{"en":"Patch and lifecycle orchestration patterns for safer rollouts","es":"Orquestación de parches y ciclo de vida para despliegues seguros"},"recruiter.outcome2":{"en":"RHEL modernization playbooks for controlled migrations","es":"Playbooks de modernización RHEL para migraciones controladas"},"recruiter.outcome3":{"en":"Applied AI pilots documented from prototype to operations","es":"Pilotos de IA documentados de prototipo a producción"},"recruiter.quickActions":{"en":"Quick actions","es":"Acceso rápido"},"recruiter.openProfile":{"en":"Open profile and experience summary","es":"Ver perfil y experiencia"},"recruiter.reviewStudies":{"en":"Review all case studies","es":"Ver todos los casos prácticos"},"recruiter.ctaText":{"en":"Ready to review full experience and delivery outcomes?","es":"¿Quieres ver la experiencia completa y los resultados?"},"recruiter.ctaButton":{"en":"Open Profile & CV","es":"Ver Perfil y CV"},"production.title":{"en":"Production Spotlight","es":"En Producción"},"production.badge":{"en":"● Live on Google Play & Web","es":"● Disponible en Google Play y Web"},"production.appTitle":{"en":"IntelliFlow: AI Budget Tracker","es":"IntelliFlow: Gestor Financiero Inteligente"},"production.appDesc":{"en":"A production-grade personal finance application serving real users. Features an AI-powered financial coach, offline-first architecture, and cross-platform syncing.","es":"Aplicación de finanzas personales en producción con usuarios reales. Incluye un coach financiero impulsado por IA, arquitectura offline-first y sincronización multiplataforma."},"production.playStore":{"en":"Get it on Google Play","es":"Descargar en Google Play"},"production.webApp":{"en":"Open Web App","es":"Abrir Web App"},"engineer.labsTitle":{"en":"Engineer Labs","es":"Labs de Ingeniería"},"engineer.switchButton":{"en":"Switch to Engineer Mode","es":"Activar Modo Ingeniero"},"engineer.teaserText":{"en":"Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry, command simulation, and network topology labs.","es":"El Modo Recruiter mantiene el portfolio conciso y centrado en impacto. Activa el Modo Ingeniero para abrir labs de telemetría Linux, simulación de comandos y topología de red en vivo."},"engineerLab.title":{"en":"Engineer Lab · Live Linux + AI Simulation","es":"Lab de Ingeniería · Simulación Linux + IA en Vivo"},"engineerLab.status":{"en":"stream: ready","es":"stream: listo"},"engineerLab.tabOps":{"en":"ops stream","es":"stream ops"},"engineerLab.tabAnsible":{"en":"ansible rollout","es":"rollout ansible"},"engineerLab.tabAi":{"en":"ai inference","es":"inferencia ia"},"opsDeck.title":{"en":"Ops Cockpit · top + command sandbox","es":"Cockpit Ops · top + sandbox de comandos"},"opsDeck.modeNormal":{"en":"Mode: Normal","es":"Modo: Normal"},"opsDeck.modeHardcore":{"en":"Mode: Hardcore","es":"Modo: Hardcore"},"opsDeck.cpu":{"en":"CPU load","es":"Carga CPU"},"opsDeck.memory":{"en":"Memory pressure","es":"Presión de memoria"},"opsDeck.errors":{"en":"Error rate","es":"Tasa de errores"},"opsDeck.cache":{"en":"Prompt cache hit","es":"Acierto caché prompt"},"opsDeck.processTitle":{"en":"Process monitor","es":"Monitor de procesos"},"opsDeck.processMeta":{"en":"click headers to sort · values stream live","es":"clic en cabecera para ordenar · datos en tiempo real"},"opsDeck.sandboxTitle":{"en":"Command sandbox","es":"Sandbox de comandos"},"opsDeck.sandboxMeta":{"en":"try: top · journalctl -n 5 · ansible --version · ai.health","es":"prueba: top · journalctl -n 5 · ansible --version · ai.health"},"opsDeck.inputPlaceholder":{"en":"Type a command...","es":"Escribe un comando..."},"opsDeck.run":{"en":"Run","es":"Ejecutar"},"opsDeck.helpHint":{"en":"Try `help` for available commands.","es":"Prueba `help` para ver comandos disponibles."},"network.title":{"en":"Live Network Topology","es":"Topología de Red en Vivo"},"network.status":{"en":"mode: normal · mesh stable","es":"modo: normal · malla estable"},"domains.title":{"en":"Domains","es":"Dominios"},"domains.browseAll":{"en":"Browse all","es":"Ver todos"},"domains.activeDomains":{"en":"active domains with published case studies.","es":"dominios activos con casos de estudio publicados."},"cat.infrastructure":{"en":"Infrastructure","es":"Infraestructura"},"cat.infrastructure.desc":{"en":"RHEL lifecycle, automation, virtualization, and production operations.","es":"Ciclo de vida RHEL, automatización, virtualización y operaciones en producción."},"cat.automation":{"en":"Automation","es":"Automatización"},"cat.automation.desc":{"en":"Ansible playbooks, task automation, and configuration management.","es":"Playbooks Ansible, automatización de tareas y gestión de configuración."},"cat.ai":{"en":"AI","es":"IA"},"cat.ai.desc":{"en":"Generative AI use cases, integration patterns, and practical lessons.","es":"Casos de uso de IA generativa, patrones de integración y lecciones prácticas."},"cat.cloud":{"en":"Cloud","es":"Cloud"},"cat.cloud.desc":{"en":"Azure architecture, infrastructure design, and delivery practices.","es":"Arquitectura Azure, diseño de infraestructura y prácticas de entrega."},"cat.local-ai":{"en":"Local AI","es":"IA Local"},"cat.local-ai.desc":{"en":"Running models on local hardware with privacy-first workflows.","es":"Ejecución de modelos en hardware local con privacidad como prioridad."},"cat.kotlin":{"en":"Kotlin","es":"Kotlin"},"cat.kotlin.desc":{"en":"Kotlin projects, notes, and engineering experiments.","es":"Proyectos Kotlin, notas y experimentos de ingeniería."},"cat.snippets":{"en":"Snippets","es":"Snippets"},"cat.snippets.desc":{"en":"Quick commands and reusable building blocks for day-to-day work.","es":"Comandos rápidos y bloques reutilizables para el día a día."},"cat.career":{"en":"Career","es":"Carrera"},"cat.career.desc":{"en":"Professional updates, retrospectives, and growth notes.","es":"Actualizaciones profesionales, retrospectivas y notas de crecimiento."},"posts.recent":{"en":"Recent Case Studies","es":"Casos de Estudio Recientes"},"posts.allPosts":{"en":"All posts","es":"Todos los posts"},"posts.noPosts":{"en":"No posts published yet.","es":"Sin posts publicados aún."},"posts.minRead":{"en":"min read","es":"min de lectura"},"posts.issue":{"en":"Issue:","es":"Problema:"},"posts.solution":{"en":"Solution:","es":"Solución:"},"posts.usedIn":{"en":"Used In:","es":"Usado en:"},"posts.impact":{"en":"Impact:","es":"Impacto:"},"posts.situation":{"en":"Situation","es":"Situación"},"archive.title":{"en":"All Case Studies","es":"Todos los Casos de Estudio"},"archive.eyebrow":{"en":"Archive","es":"Archivo"},"archive.description":{"en":"posts grouped by year, each with clear issue and solution framing.","es":"posts agrupados por año, cada uno con problema y solución bien definidos."},"archive.searchPlaceholder":{"en":"Search all posts (title, issue, solution, tags)...","es":"Buscar posts (título, problema, solución, tags)..."},"archive.searchPosts":{"en":"Search posts","es":"Buscar posts"},"archive.noMatches":{"en":"No matches.","es":"Sin resultados."},"archive.matches":{"en":"matches","es":"coincidencias"},"archive.match":{"en":"match","es":"coincidencia"},"about.pageTitle":{"en":"About","es":"Acerca de"},"about.pageDesc":{"en":"Professional profile, impact statements, and CV summary.","es":"Perfil profesional, logros de impacto y resumen del CV."},"about.eyebrow":{"en":"Profile","es":"Perfil"},"about.headline":{"en":"Linux & Virtualization Engineer with automation-first execution.","es":"Ingeniero Linux y Virtualización con mentalidad automation-first."},"about.intro":{"en":"I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge infrastructure operations with practical Generative AI implementations.","es":"Diseño y opero plataformas Linux corporativas, estandarizo entregas con Ansible y Git, y conecto operaciones de infraestructura con implementaciones reales de IA Generativa."},"about.snapshot":{"en":"Professional Snapshot","es":"Resumen Profesional"},"about.infraTitle":{"en":"Infrastructure lifecycle ownership","es":"Gestión del ciclo de vida de infraestructura"},"about.infraDesc":{"en":"RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.","es":"Migraciones RHEL, gestión Satellite, parches, bastionado y preparación HA/DR."},"about.autoTitle":{"en":"Automation discipline","es":"Disciplina de automatización"},"about.autoDesc":{"en":"Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.","es":"Orquestación Ansible y control de cambios con Git para operaciones repetibles, revisadas y auditables."},"about.aiTitle":{"en":"AI integration for business cases","es":"Integración de IA en negocio"},"about.aiDesc":{"en":"Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.","es":"Iniciativas GenAI con Azure AI Foundry, inteligencia documental y flujos de fine-tuning."},"about.experience":{"en":"Experience","es":"Experiencia"},"about.coreAreas":{"en":"Core Areas","es":"Áreas Principales"},"about.cvTitle":{"en":"CV / Resume","es":"CV / Currículum"},"about.cvLabel":{"en":"View CV","es":"Ver CV"},"about.cvDesc":{"en":"Detailed CV with role scope, delivery outcomes, and full technology coverage.","es":"CV detallado con alcance del puesto, resultados de entrega y cobertura tecnológica completa."},"about.cvDisabled":{"en":"CV link is temporarily unavailable.","es":"El enlace al CV no está disponible temporalmente."},"about.coverLetterTitle":{"en":"Cover Letter","es":"Carta de Presentación"},"about.coverLetterLabel":{"en":"View Cover Letter","es":"Ver Carta de Presentación"},"about.coverLetterDesc":{"en":"Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.","es":"Presentación profesional — quién soy, en qué trabajo y cómo enfoco la infraestructura y la automatización."},"about.coverLetterDisabled":{"en":"Cover letter link is temporarily unavailable.","es":"El enlace a la carta de presentación no está disponible temporalmente."},"about.principles":{"en":"Operating Principles","es":"Principios Operativos"},"about.principle1Title":{"en":"Codify repeatable operations","es":"Codificar operaciones repetibles"},"about.principle1Desc":{"en":"Every recurring action should move from ad-hoc command execution into tested automation.","es":"Toda acción recurrente debe pasar de ejecución manual a automatización probada."},"about.principle2Title":{"en":"State the problem before the tool","es":"Plantear el problema antes que la herramienta"},"about.principle2Desc":{"en":"Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.","es":"Las decisiones tecnológicas se justifican con patrones de incidentes, restricciones y resultados medibles."},"about.principle3Title":{"en":"Keep portfolio content safe","es":"Mantener el contenido del portfolio seguro"},"about.principle3Desc":{"en":"Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.","es":"Documentar con profundidad práctica sin exponer arquitectura confidencial ni datos sensibles."},"exp.pbb.title":{"en":"Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG","es":"Ingeniero Linux y Virtualización · Deutsche Pfandbriefbank AG"},"exp.pbb.subtitle":{"en":"Full-time · Hybrid · Madrid, Comunidad de Madrid, España","es":"Tiempo completo · Híbrido · Madrid, Comunidad de Madrid, España"},"exp.pbb.period":{"en":"Jul 2025 - Present","es":"Jul 2025 - Presente"},"exp.pbb.0":{"en":"Part of the Linux infrastructure team responsible for 300+ RHEL production servers across multiple datacenters under BaFin/ECB regulatory oversight.","es":"Parte del equipo de infraestructura Linux responsable de más de 300 servidores RHEL en producción en múltiples datacenters bajo supervisión regulatoria BaFin/ECB."},"exp.pbb.1":{"en":"Designed Ansible + Git automation pipelines for server provisioning, configuration drift remediation, and lifecycle operations.","es":"Diseño de pipelines Ansible + Git para aprovisionamiento, corrección de desvíos de configuración y operaciones de ciclo de vida."},"exp.pbb.2":{"en":"Leading phased RHEL 7/8 to RHEL 9 migration across 300+ servers with Satellite-based provisioning and compliance enforcement.","es":"Liderazgo de migración RHEL 7/8 → 9 en más de 300 servidores con aprovisionamiento Satellite y cumplimiento normativo."},"exp.pbb.3":{"en":"Deploying and maintaining application stacks across Nginx, Apache, Tomcat, JBoss/WildFly, and PostgreSQL — SSL/TLS hardening, reverse proxy tuning, and production optimization for banking-critical workloads.","es":"Despliegue y mantenimiento de stacks de aplicaciones con Nginx, Apache, Tomcat, JBoss/WildFly y PostgreSQL — bastionado SSL/TLS, ajuste de proxy inverso y optimización en producción para cargas bancarias críticas."},"exp.pbb.4":{"en":"Owning end-to-end patching and hardening cycles for 300+ servers aligned to financial-sector security requirements.","es":"Gestión integral de parcheo y bastionado de más de 300 servidores alineada con requisitos de seguridad del sector financiero."},"exp.pbb.5":{"en":"Operating Pacemaker-based HA clusters and executing disaster-recovery drills across distributed datacenters.","es":"Operación de clústeres HA con Pacemaker y ejecución de simulacros DR en datacenters distribuidos."},"exp.pbb.6":{"en":"Administering VMware vSphere environments for VM provisioning, capacity planning, and platform lifecycle maintenance.","es":"Administración VMware vSphere: aprovisionamiento de VMs, planificación de capacidad y mantenimiento."},"exp.pbb.7":{"en":"Delivering enterprise AI use cases with Azure AI Foundry — optimizing document intelligence pipelines and model fine-tuning for scalable process automation.","es":"Entrega de casos de IA empresarial con Azure AI Foundry: optimización de pipelines de inteligencia documental y fine-tuning de modelos para automatización de procesos a escala."},"exp.pbb.8":{"en":"Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.","es":"Consultoría de infraestructura para equipos de aplicaciones, traduciendo requisitos de negocio en planes de entrega."},"exp.sopra1.title":{"en":"Information Technology Application Specialist - Linux System Administrator · Sopra Steria","es":"Especialista en Aplicaciones TI - Administrador de Sistemas Linux · Sopra Steria"},"exp.sopra1.subtitle":{"en":"Full-time · Hybrid · Madrid, Community of Madrid, Spain","es":"Tiempo completo · Híbrido · Madrid, Comunidad de Madrid, España"},"exp.sopra1.period":{"en":"Nov 2023 - Jul 2025","es":"Nov 2023 - Jul 2025"},"exp.sopra1.1":{"en":"Led a team of 5 technicians managing 100+ Linux and Windows servers for a Norwegian financial client in a fully English-speaking environment.","es":"Liderazgo de equipo de 5 técnicos gestionando más de 100 servidores Linux y Windows para un cliente financiero noruego en entorno anglófono."},"exp.sopra1.2":{"en":"Maintained RHEL compliance across 100+ servers using Red Hat Satellite; built Ansible automation reducing deployment time from hours to minutes.","es":"Cumplimiento RHEL en más de 100 servidores con Red Hat Satellite; automatización Ansible reduciendo el aprovisionamiento de horas a minutos."},"exp.sopra1.3":{"en":"Managed VMware vSphere and vCenter environments handling VM lifecycle, snapshot management, and capacity optimization.","es":"Gestión de entornos VMware vSphere y vCenter: ciclo de vida de VMs, snapshots y optimización de capacidad."},"exp.sopra1.4":{"en":"Resolved incidents and managed change operations in ServiceNow within SLA deadlines with structured escalation documentation.","es":"Resolución de incidencias y gestión de cambios en ServiceNow dentro de SLAs con documentación de escalado estructurada."},"exp.sopra1.5":{"en":"Administered Active Directory computer object lifecycle, group policies, and Kerberos integration for Linux servers.","es":"Administración del ciclo de vida de objetos AD, políticas de grupo e integración Kerberos para servidores Linux."},"exp.sopra2.title":{"en":"Information Technology Application Specialist · Sopra Steria","es":"Especialista en Aplicaciones TI · Sopra Steria"},"exp.sopra2.subtitle":{"en":"Full-time · Madrid, Community of Madrid, Spain","es":"Tiempo completo · Madrid, Comunidad de Madrid, España"},"exp.sopra2.period":{"en":"Apr 2023 - Jan 2025","es":"Abr 2023 - Ene 2025"},"exp.sopra2.1":{"en":"Delivered advanced technical support across multiple technologies in enterprise production contexts.","es":"Soporte técnico avanzado en producción con múltiples tecnologías."},"exp.sopra2.2":{"en":"Contributed to cloud-transition support initiatives and workplace modernization programs.","es":"Participación en iniciativas de migración a cloud y modernización del puesto de trabajo."},"exp.sopra2.3":{"en":"Worked across global collaboration environments with structured escalation and resolution flows.","es":"Colaboración en equipos globales con flujos de escalado y resolución estructurados."},"exp.intern.title":{"en":"Internship Trainee · Sopra Steria","es":"Becario en Prácticas · Sopra Steria"},"exp.intern.subtitle":{"en":"Internship · Madrid, Community of Madrid, Spain","es":"Prácticas · Madrid, Comunidad de Madrid, España"},"exp.intern.period":{"en":"Apr 2023 - Jun 2023","es":"Abr 2023 - Jun 2023"},"exp.intern.1":{"en":"Built foundations in incident handling, directory services, and enterprise support workflows.","es":"Formación en gestión de incidentes, servicios de directorio y flujos de soporte corporativo."},"skill.linux":{"en":"Linux Platform Engineering","es":"Ingeniería de Plataformas Linux"},"skill.linux.desc":{"en":"RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.","es":"Ciclo de vida RHEL, diagnóstico, ajuste de kernel/sistema y prácticas de fiabilidad operativa."},"skill.auto":{"en":"Automation & Governance","es":"Automatización y Gobernanza"},"skill.auto.desc":{"en":"Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.","es":"Playbooks Ansible, roles reutilizables, flujos Git y controles de cambio basados en evidencia."},"skill.virt":{"en":"Virtualization & Datacenter Ops","es":"Virtualización y Ops de Datacenter"},"skill.virt.desc":{"en":"VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.","es":"Administración VMware vSphere, ciclo de vida de servidores, alta disponibilidad y recuperación ante desastres."},"skill.mid":{"en":"App Platforms & Databases","es":"Plataformas y Bases de Datos"},"skill.mid.desc":{"en":"Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS, reverse proxy, and production database operations.","es":"Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — despliegue de aplicaciones, SSL/TLS, proxy inverso y operaciones de bases de datos en producción."},"skill.cloud":{"en":"Cloud + AI Integration","es":"Cloud + Integración IA"},"skill.cloud.desc":{"en":"Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.","es":"Azure AI Foundry, inteligencia documental y patrones de implementación GenAI alineados con operaciones."},"skill.team":{"en":"Cross-Team Delivery","es":"Entrega Cross-Team"},"skill.team.desc":{"en":"Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.","es":"Gestión de interlocutores, consultoría técnica para equipos de aplicaciones y traducción de requisitos a plataforma."},"catPage.published":{"en":"published","es":"publicados"},"catPage.article":{"en":"article","es":"artículo"},"catPage.articles":{"en":"articles","es":"artículos"},"catPage.caseSummary":{"en":"Each post in this domain is written in case-study format: situation, issue, solution, usage context, and delivery impact.","es":"Cada post en este dominio está escrito en formato de caso de estudio: situación, problema, solución, contexto de uso e impacto de entrega."},"catPage.noPosts":{"en":"No posts in this category yet.","es":"Sin posts en esta categoría aún."},"catPage.searchPlaceholder":{"en":"Search posts...","es":"Buscar posts..."},"post.caseSnapshot":{"en":"Case Snapshot","es":"Resumen del Caso"},"boot.title":{"en":"Booting Engineer Runtime","es":"Iniciando entorno de ingeniería"},"boot.hint":{"en":"Click to skip · Esc to continue instantly","es":"Clic para saltar · Esc para continuar"},"boot.gateLabel":{"en":"Type unlock to continue","es":"Escribe unlock para continuar"},"palette.title":{"en":"Engineer Command Palette","es":"Paleta de comandos"},"palette.searchPlaceholder":{"en":"Search commands... (mode, nav, boot)","es":"Buscar comandos… (modo, nav, boot)"},"palette.close":{"en":"Close","es":"Cerrar"},"palette.noMatch":{"en":"No command matched.","es":"Ningún comando coincide."},"cmd.goHome":{"en":"Go to Home","es":"Ir a Inicio"},"cmd.goArchive":{"en":"Go to Archive","es":"Ir a Archivo"},"cmd.goAbout":{"en":"Go to About","es":"Ir a Acerca de"},"cmd.goRecruiter":{"en":"Go to Recruiter Snapshot","es":"Ir a Resumen Recruiter"},"cmd.goTopology":{"en":"Go to Network Topology","es":"Ir a Topología de Red"},"cmd.hardcoreEnable":{"en":"Enable Hardcore Mode","es":"Activar Modo Hardcore"},"cmd.normalEnable":{"en":"Enable Normal Mode","es":"Activar Modo Normal"},"cmd.recruiterSwitch":{"en":"Switch to Recruiter Mode","es":"Cambiar a Modo Recruiter"},"cmd.engineerSwitch":{"en":"Switch to Engineer Mode","es":"Cambiar a Modo Ingeniero"},"cmd.bootReplay":{"en":"Replay Boot Sequence","es":"Repetir Secuencia de Arranque"},"cmd.bootGate":{"en":"Toggle Boot Unlock Gate","es":"Alternar Puerta de Desbloqueo"},"cmd.switchLang":{"en":"Switch to Español","es":"Switch to English"},"cmd.groupNav":{"en":"Navigation","es":"Navegación"},"cmd.groupMode":{"en":"Mode","es":"Modo"},"cmd.groupAudience":{"en":"Audience","es":"Audiencia"},"cmd.groupSystem":{"en":"System","es":"Sistema"},"cmd.groupLang":{"en":"Language","es":"Idioma"},"toast.hardcoreEnabled":{"en":"Hardcore mode enabled","es":"Modo hardcore activado"},"toast.normalEnabled":{"en":"Normal mode enabled","es":"Modo normal activado"},"toast.recruiterActive":{"en":"Recruiter mode active","es":"Modo recruiter activo"},"toast.engineerActive":{"en":"Engineer mode active","es":"Modo ingeniero activo"},"toast.bootGateEnabled":{"en":"Boot gate enabled","es":"Puerta de arranque activada"},"toast.bootGateDisabled":{"en":"Boot gate disabled","es":"Puerta de arranque desactivada"},"toast.langSwitched":{"en":"Switched to English","es":"Cambiado a Español"},"metric.host":{"en":"host","es":"host"},"metric.automation":{"en":"automation","es":"automatización"},"metric.aiMode":{"en":"ai mode","es":"modo ia"},"metric.hostValue":{"en":"rhel-prod-09","es":"rhel-prod-09"},"metric.automationValue":{"en":"ansible-playbook --check","es":"ansible-playbook --check"},"metric.aiModeValue":{"en":"low-latency edge validation","es":"validación edge de baja latencia"},"cv.openPublic":{"en":"Open Public CV","es":"Abrir CV Público"},"lang.switch":{"en":"ES","es":"EN"},"lang.switchLabel":{"en":"Cambiar a Español","es":"Switch to English"}};
+
+      window.__i18n = i18nDict;
+    })();</script> <script src="/scripts/nav.js" defer></script> <script>
+      // Interactive background grid mask
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.body.style.setProperty("--mouse-x", `${x}%`);
+        document.body.style.setProperty("--mouse-y", `${y}%`);
+      });
+    </script> </body> </html>
