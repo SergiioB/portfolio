@@ -5047,3 +5047,77 @@ border: 1px solid var(--border);
 .post-card-tags .tag {
   font-size: 0.7rem;
 }
+
+/* Hero actions */
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* Domains section - fix collision */
+.domains-section .domains-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.domain-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  min-height: 120px;
+}
+
+/* GitHub Projects section */
+.github-section .projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.project-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Badge category colors */
+.badge.category-infrastructure {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--category-infrastructure);
+}
+.badge.category-automation {
+  background: rgba(210, 153, 34, 0.15);
+  color: var(--category-automation);
+}
+.badge.category-ai {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--category-ai);
+}
+.badge.category-cloud {
+  background: rgba(188, 140, 255, 0.15);
+  color: var(--category-cloud);
+}
+.badge.category-local-ai {
+  background: rgba(86, 211, 100, 0.15);
+  color: var(--category-local-ai);
+}
+.badge.category-kotlin {
+  background: rgba(247, 140, 108, 0.15);
+  color: var(--category-kotlin);
+}
+.badge.category-snippets {
+  background: rgba(126, 231, 135, 0.15);
+  color: var(--category-snippets);
+}
+.badge.category-career {
+  background: rgba(255, 215, 97, 0.15);
+  color: var(--category-career);
+}

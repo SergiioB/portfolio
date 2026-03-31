@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 
 import PostCard from "../components/PostCard.astro";
-import { SITE } from "../config/site";
+import { PUBLIC_CV, SITE } from "../config/site";
 import { CATEGORY_META, CATEGORY_ORDER } from "../content/categories";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
@@ -21,6 +21,7 @@ const categoryCounts = CATEGORY_ORDER.map((category) => ({
 })).filter((c) => c.count > 0);
 
 const latestDate = publishedPosts[0]?.data.pubDate;
+const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 ---
 
 <BaseLayout
@@ -31,6 +32,33 @@ const latestDate = publishedPosts[0]?.data.pubDate;
   <section class="hero">
     <h1 class="hero-title">Structured Engineering Case Studies</h1>
     <p class="hero-description">Linux & Virtualization Engineering Portfolio</p>
+
+    <div class="hero-actions">
+      {
+        PUBLIC_CV.enabled && (
+          <a
+            href={publicCvHref}
+            class="btn btn-primary"
+            target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
+            rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
+          >
+            {PUBLIC_CV.label}
+          </a>
+        )
+      }
+      <a
+        href="https://github.com/SergiioB"
+        class="btn btn-outline"
+        target="_blank"
+        rel="noopener noreferrer">GitHub Profile</a
+      >
+      <a
+        href="https://www.linkedin.com/in/sergio-barrientose/"
+        class="btn btn-outline"
+        target="_blank"
+        rel="noopener noreferrer">LinkedIn</a
+      >
+    </div>
 
     <div class="hero-stats">
       <div class="stat-item">
@@ -143,13 +171,13 @@ const latestDate = publishedPosts[0]?.data.pubDate;
   </section>
 
   <!-- Domains -->
-  <section class="section">
+  <section class="section domains-section">
     <div class="section-header">
       <h2 class="section-title">Domains</h2>
       <a href={withBase("archive/")} class="section-link">Browse All →</a>
     </div>
 
-    <div class="domains-grid grid-auto">
+    <div class="domains-grid">
       {
         categoryCounts.map((category) => (
           <a href={withBase(`${category.slug}/`)} class="card domain-card">
@@ -161,6 +189,52 @@ const latestDate = publishedPosts[0]?.data.pubDate;
           </a>
         ))
       }
+    </div>
+  </section>
+
+  <!-- GitHub Projects -->
+  <section class="section github-section">
+    <div class="section-header">
+      <h2 class="section-title">Open Source Projects</h2>
+      <a
+        href="https://github.com/SergiioB"
+        class="section-link"
+        target="_blank"
+        rel="noopener noreferrer">View All →</a
+      >
+    </div>
+
+    <div class="projects-grid">
+      <a
+        href="https://github.com/SergiioB/llamacpp-workbench"
+        class="card project-card"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3 class="card-title">llamacpp-workbench</h3>
+        <p class="card-meta">Local LLM inference workbench for RK3588 and edge devices</p>
+        <span class="badge badge-accent">Rust</span>
+      </a>
+      <a
+        href="https://github.com/SergiioB"
+        class="card project-card"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3 class="card-title">IntelliFlow</h3>
+        <p class="card-meta">AI-powered personal finance app with offline-first architecture</p>
+        <span class="badge badge-accent">Flutter</span>
+      </a>
+      <a
+        href="https://github.com/SergiioB"
+        class="card project-card"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3 class="card-title">Ansible Collections</h3>
+        <p class="card-meta">Infrastructure automation playbooks and roles</p>
+        <span class="badge badge-accent">Ansible</span>
+      </a>
     </div>
   </section>
 
