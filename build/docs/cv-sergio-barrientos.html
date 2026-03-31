@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sergio Barrientos - Linux &amp; Virtualization Engineer</title>
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --text-soft: #444;
+      --text-muted: #666;
+      --accent: #1a5fb4;
+      --border: #ddd;
+      --bg: #fff;
+      --section-gap: 0.62rem;
+    }
+
+    @page {
+      size: A4;
+      margin: 10mm 12mm;
+    }
+
+    @media print {
+      body {
+        font-size: 9pt;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      a {
+        color: var(--text) !important;
+        text-decoration: none !important;
+      }
+
+      h2,
+      .job-header,
+      .edu-row {
+        break-after: avoid;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 12mm;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 9.6pt;
+      line-height: 1.4;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: var(--section-gap);
+      padding-bottom: 0.55rem;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    h1 {
+      margin-bottom: 0.15rem;
+      font-size: 17pt;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin-bottom: 0.38rem;
+      color: var(--accent);
+      font-size: 10.8pt;
+      font-weight: 600;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.22rem 0.85rem;
+      color: var(--text-soft);
+      font-size: 8.9pt;
+    }
+
+    .contact-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .section {
+      margin-bottom: var(--section-gap);
+    }
+
+    h2 {
+      margin-bottom: 0.38rem;
+      padding-bottom: 0.18rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 10.5pt;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .summary,
+    .portfolio-copy {
+      color: var(--text-soft);
+    }
+
+    .job {
+      margin-bottom: 0.48rem;
+    }
+
+    .job:last-child {
+      margin-bottom: 0;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.12rem 0.75rem;
+      margin-bottom: 0.12rem;
+    }
+
+    .job-title {
+      font-size: 9.7pt;
+      font-weight: 700;
+    }
+
+    .job-company {
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    .job-period,
+    .job-meta,
+    .edu-detail {
+      color: var(--text-muted);
+      font-size: 8.6pt;
+    }
+
+    .job-meta {
+      margin-bottom: 0.2rem;
+    }
+
+    .job ul {
+      padding-left: 1rem;
+    }
+
+    .job li {
+      margin-bottom: 0.08rem;
+      color: var(--text-soft);
+      font-size: 9pt;
+    }
+
+    .job li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.18rem 0.7rem;
+      font-size: 9pt;
+    }
+
+    .skill-label,
+    .edu-title {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .skill-value {
+      color: var(--text-soft);
+    }
+
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.1rem 0.8rem;
+      margin-bottom: 0.2rem;
+      font-size: 9pt;
+    }
+
+    .language-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1rem;
+      color: var(--text-soft);
+      font-size: 9pt;
+    }
+
+    .language-row strong {
+      color: var(--text);
+    }
+
+    .print-bar {
+      padding-top: 0.8rem;
+      text-align: center;
+    }
+
+    .print-btn {
+      border: none;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-size: 9.6pt;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      padding: 0.5rem 1.6rem;
+    }
+
+    .print-note {
+      margin-top: 0.35rem;
+      color: var(--text-muted);
+      font-size: 8pt;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>SERGIO BARRIENTOS</h1>
+    <div class="subtitle">Linux &amp; Virtualization Engineer</div>
+    <div class="contact-row">
+      <span>Madrid, Spain</span>
+      <span>|</span>
+      <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+      <span>|</span>
+      <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+      <span>|</span>
+      <a href="https://sergiiob.dev/">sergiiob.dev</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>Professional Summary</h2>
+    <p class="summary">
+      Linux and Virtualization Engineer supporting 300+ RHEL servers in a regulated banking environment.
+      Focused on RHEL modernization, Ansible automation, VMware operations, and practical Azure AI delivery
+      for internal workflows. Previously led a 5-person operations team supporting 100+ servers for an
+      international financial client.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Work Experience</h2>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">Linux and Virtualization Engineer <span class="job-company">| Deutsche Pfandbriefbank AG</span></div>
+        <div class="job-period">Jul 2025 - Present</div>
+      </div>
+      <div class="job-meta">Full-time | Hybrid | Madrid, Spain | BaFin/ECB-supervised bank | 300+ Linux servers</div>
+      <ul>
+        <li><strong>Platform ownership:</strong> Part of the Linux infrastructure team operating 300+ RHEL servers across multiple datacenters for banking-critical workloads.</li>
+        <li><strong>RHEL modernization:</strong> Leading phased RHEL 7/8 to 9 migration with Satellite-based provisioning, patching, and compliance controls while maintaining service continuity.</li>
+        <li><strong>Automation:</strong> Built Ansible and Git workflows for provisioning, patching, and configuration drift remediation, replacing manual runbooks with auditable changes.</li>
+        <li><strong>Operations:</strong> Running HA and DR activities across Pacemaker clusters, VMware vSphere, and application platforms including Nginx, Apache, Tomcat, WildFly, and PostgreSQL.</li>
+        <li><strong>Applied AI:</strong> Delivering Azure AI Foundry use cases for document extraction and internal process automation.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">Linux Red Hat Specialist / IT Application Specialist <span class="job-company">| Sopra Steria</span></div>
+        <div class="job-period">Nov 2023 - Jul 2025</div>
+      </div>
+      <div class="job-meta">Full-time | Hybrid | Madrid, Spain | Financial services client | 100+ servers</div>
+      <ul>
+        <li><strong>Team leadership:</strong> Led a 5-person operations team supporting 100+ Linux and Windows servers for a Norwegian financial client and consistently met SLA targets.</li>
+        <li><strong>Systems automation:</strong> Maintained RHEL compliance with Satellite and built Ansible automation that reduced deployment effort from hours to minutes.</li>
+        <li><strong>Virtualization:</strong> Managed VMware vSphere and vCenter operations, VM lifecycle tasks, and resource optimization across cloud and on-prem environments.</li>
+        <li><strong>Enterprise operations:</strong> Handled ServiceNow incident/change flows and Active Directory plus Kerberos integration for Linux systems.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">IT Application Specialist <span class="job-company">| Sopra Steria</span></div>
+        <div class="job-period">Apr 2023 - Jan 2025</div>
+      </div>
+      <div class="job-meta">Full-time | Madrid, Spain | Multi-technology enterprise support</div>
+      <ul>
+        <li>Provided enterprise support across Linux, Windows, and cloud environments, building the operational foundation later applied in Linux platform engineering roles.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title">Internship Trainee <span class="job-company">| Sopra Steria</span></div>
+        <div class="job-period">Apr 2023 - Jun 2023</div>
+      </div>
+      <div class="job-meta">Internship | Madrid, Spain</div>
+      <ul>
+        <li>Built early experience in incident handling, directory services, and ITIL-oriented enterprise support workflows.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Technical Skills</h2>
+    <div class="skills-grid">
+      <span class="skill-label">Linux</span>
+      <span class="skill-value">RHEL 7/8/9, Red Hat Satellite, Pacemaker, LVM, systemd, SELinux, Kickstart</span>
+
+      <span class="skill-label">Automation</span>
+      <span class="skill-value">Ansible, Bash scripting, Git workflows, CI/CD pipelines</span>
+
+      <span class="skill-label">Platforms</span>
+      <span class="skill-value">VMware vSphere/vCenter, Nginx, Apache HTTP Server, Tomcat, WildFly, PostgreSQL, SSL/TLS</span>
+
+      <span class="skill-label">Cloud &amp; AI</span>
+      <span class="skill-value">Microsoft Azure, Azure AI Foundry, Document Intelligence, RAG workflows</span>
+
+      <span class="skill-label">Operations</span>
+      <span class="skill-value">CheckMK, ServiceNow, Active Directory, Kerberos integration</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Certifications &amp; Education</h2>
+    <div class="edu-row">
+      <span class="edu-title">RHCSA - Red Hat Certified System Administrator</span>
+      <span class="edu-detail">Sep 2024</span>
+    </div>
+    <div class="edu-row">
+      <span class="edu-title">RHCE - Red Hat Certified Engineer</span>
+      <span class="edu-detail">Planned 2026</span>
+    </div>
+    <div class="edu-row">
+      <span class="edu-title">Technician in Computer Systems and Networks Administration</span>
+      <span class="edu-detail">Jun 2023 | Madrid, Spain</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Languages</h2>
+    <div class="language-row">
+      <span><strong>Spanish:</strong> Native</span>
+      <span><strong>English:</strong> Professional working proficiency</span>
+      <span><strong>French:</strong> Basic</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Portfolio</h2>
+    <p class="portfolio-copy">
+      <a href="https://sergiiob.dev/">sergiiob.dev</a> - Engineering portfolio with 40+ structured case studies on
+      infrastructure automation, RHEL lifecycle management, platform operations, and applied AI delivery.
+    </p>
+  </section>
+
+  <div class="print-bar no-print">
+    <button class="print-btn" onclick="window.print()">Save as PDF</button>
+    <div class="print-note">Use your browser print dialog to export a clean, ATS-friendly PDF.</div>
+  </div>
+</body>
+</html>

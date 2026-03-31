@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-label="Ansible Patching Waves Orchestration Timeline">
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#0b1020" rx="20"/>
+
+  <!-- Subtle Data Visualization Grid -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+    </pattern>
+    <linearGradient id="glowRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0.2" />
+    </linearGradient>
+    <linearGradient id="glowBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.2" />
+    </linearGradient>
+    <linearGradient id="glowPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+
+  <!-- Grid overlay -->
+  <rect x="50" y="150" width="1100" height="500" fill="url(#grid)" />
+  
+  <!-- Title -->
+  <text x="60" y="80" fill="#f8fafc" font-size="32" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold">Ansible Patching Orchestration</text>
+  <text x="60" y="115" fill="#94a3b8" font-size="18" font-family="Segoe UI, Inter, Arial, sans-serif">Dependency-aware rolling updates enforcing strict tier sequences via limits.</text>
+
+  <!-- Timeline Axis / Progress Line -->
+  <path d="M 120 200 L 120 600" fill="none" stroke="#334155" stroke-width="6" stroke-linecap="round"/>
+  
+  <text x="120" y="160" fill="#cbd5e1" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="600" text-anchor="middle" letter-spacing="1">EXECUTION TIME</text>
+
+  <!-- WAVE 1 -->
+  <!-- Node dot -->
+  <circle cx="120" cy="240" r="14" fill="#0f172a" stroke="#ef4444" stroke-width="4"/>
+  
+  <!-- Content Box -->
+  <g transform="translate(180, 200)">
+    <rect x="-4" y="0" width="280" height="80" rx="8" fill="url(#glowRed)"/>
+    <rect x="0" y="0" width="400" height="80" rx="8" fill="#0f172a" stroke="#ef4444" stroke-width="2"/>
+    <text x="20" y="30" fill="#fca5a5" font-size="20" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold">WAVE 1: Databases</text>
+    <rect x="20" y="45" width="220" height="24" rx="4" fill="#1e293b" />
+    <text x="30" y="62" fill="#ef4444" font-size="14" font-family="Consolas, monospace">--limit='dev_patch_wave01_db'</text>
+    <text x="260" y="62" fill="#94a3b8" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Wait for DBA ACK</text>
+  </g>
+
+  <!-- Dependency Link 1 to 2 -->
+  <path d="M 120 300 L 120 370" fill="none" stroke="#ef4444" stroke-width="4" stroke-dasharray="6 4"/>
+  <text x="140" y="340" fill="#ef4444" font-size="14" font-family="Consolas, monospace">IF Success(W1)</text>
+
+  <!-- WAVE 2 -->
+  <!-- Node dot -->
+  <circle cx="120" cy="400" r="14" fill="#0f172a" stroke="#3b82f6" stroke-width="4"/>
+  
+  <!-- Content Box -->
+  <g transform="translate(180, 360)">
+    <rect x="-4" y="0" width="340" height="80" rx="8" fill="url(#glowBlue)"/>
+    <rect x="0" y="0" width="450" height="80" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
+    <text x="20" y="30" fill="#93c5fd" font-size="20" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold">WAVE 2: Applications</text>
+    <rect x="20" y="45" width="230" height="24" rx="4" fill="#1e293b" />
+    <text x="30" y="62" fill="#3b82f6" font-size="14" font-family="Consolas, monospace">--limit='dev_patch_wave02_app'</text>
+    <text x="270" y="62" fill="#94a3b8" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Check App Endpoints</text>
+  </g>
+
+  <!-- Dependency Link 2 to 3 -->
+  <path d="M 120 460 L 120 530" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="6 4"/>
+  <text x="140" y="500" fill="#3b82f6" font-size="14" font-family="Consolas, monospace">IF Success(W2)</text>
+
+  <!-- WAVE 3 -->
+  <!-- Node dot -->
+  <circle cx="120" cy="560" r="14" fill="#0f172a" stroke="#a855f7" stroke-width="4"/>
+  
+  <!-- Content Box -->
+  <g transform="translate(180, 520)">
+    <rect x="-4" y="0" width="380" height="80" rx="8" fill="url(#glowPurple)"/>
+    <rect x="0" y="0" width="500" height="80" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+    <text x="20" y="30" fill="#d8b4fe" font-size="20" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold">WAVE 3: Specialized / Standalone</text>
+    <rect x="20" y="45" width="260" height="24" rx="4" fill="#1e293b" />
+    <text x="30" y="62" fill="#a855f7" font-size="14" font-family="Consolas, monospace">--limit='dev_patch_wave03_special'</text>
+    <text x="300" y="62" fill="#94a3b8" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Manual validations</text>
+  </g>
+  
+  <!-- Right Side Architectural Context -->
+  <rect x="750" y="200" width="380" height="400" rx="12" fill="#1e293b" stroke="#334155"/>
+  <rect x="750" y="200" width="380" height="40" rx="12" fill="#111827" />
+  <rect x="750" y="220" width="380" height="20" fill="#111827" />
+  <text x="770" y="226" fill="#e2e8f0" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="600">Blast Radius Control Checks</text>
+
+  <!-- Verification 1 -->
+  <g transform="translate(770, 270)">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <path d="M 6 12 L 10 16 L 18 8" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <text x="35" y="17" fill="#f8fafc" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Pre-Flight Host Confirmation</text>
+    <text x="35" y="35" fill="#94a3b8" font-size="13" font-family="Consolas, monospace">--list-hosts --limit &lt;target&gt;</text>
+  </g>
+
+  <!-- Verification 2 -->
+  <g transform="translate(770, 350)">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <path d="M 6 12 L 10 16 L 18 8" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <text x="35" y="17" fill="#f8fafc" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Segregate Updates from Reboots</text>
+    <text x="35" y="35" fill="#94a3b8" font-size="13" font-family="Consolas, monospace">patching.yml &amp; rebooting.yml</text>
+  </g>
+
+  <!-- Verification 3 -->
+  <g transform="translate(770, 430)">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <path d="M 6 12 L 10 16 L 18 8" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <text x="35" y="17" fill="#f8fafc" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Active Status Assertion</text>
+    <text x="35" y="35" fill="#94a3b8" font-size="13" font-family="Consolas, monospace">systemctl --failed</text>
+  </g>
+
+</svg>

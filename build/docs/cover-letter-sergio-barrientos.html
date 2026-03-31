@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter — Sergio Barrientos</title>
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --text-soft: #444;
+      --text-muted: #666;
+      --accent: #1a5fb4;
+      --accent-light: #e8f0fc;
+      --border: #ddd;
+      --bg: #fff;
+    }
+
+    @media print {
+      @page { size: A4; margin: 18mm 16mm; }
+      body { font-size: 10pt; }
+      .no-print { display: none !important; }
+      a { color: var(--text) !important; text-decoration: none !important; }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 18mm 16mm;
+    }
+
+    .header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .header h1 {
+      font-size: 17pt;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.15rem;
+    }
+
+    .header .subtitle {
+      font-size: 11pt;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.2rem;
+      font-size: 9.2pt;
+      color: var(--text-soft);
+    }
+
+    .contact-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .date {
+      margin-bottom: 1.5rem;
+      font-size: 9.5pt;
+      color: var(--text-muted);
+    }
+
+    .greeting {
+      font-weight: 600;
+      font-size: 10.5pt;
+      margin-bottom: 0.6rem;
+    }
+
+    .body p {
+      margin-bottom: 0.8rem;
+      text-align: justify;
+      color: var(--text-soft);
+      font-size: 10pt;
+      line-height: 1.65;
+    }
+
+    .body p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .closing {
+      margin-top: 1.5rem;
+    }
+
+    .closing p {
+      margin-bottom: 0.2rem;
+      font-size: 10pt;
+      color: var(--text-soft);
+    }
+
+    .closing .name {
+      font-weight: 700;
+      font-size: 11pt;
+      color: var(--text);
+      margin-top: 0.8rem;
+    }
+
+    .print-bar {
+      text-align: center;
+      padding: 1.5rem 0 0.5rem;
+    }
+
+    .print-btn {
+      display: inline-block;
+      padding: 0.5rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 10pt;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .print-btn:hover { background: #154a93; }
+
+    .print-note {
+      font-size: 8pt;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>SERGIO BARRIENTOS</h1>
+    <div class="subtitle">Linux &amp; Virtualization Engineer</div>
+    <div class="contact-row">
+      <span>Madrid, Spain</span>
+      <span>·</span>
+      <a href="mailto:sergiobarrientose@outlook.com">sergiobarrientose@outlook.com</a>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/sergio-barrientose/">linkedin.com/in/sergio-barrientose</a>
+      <span>·</span>
+      <a href="https://sergiiob.dev/">sergiiob.dev</a>
+    </div>
+  </header>
+
+  <div class="date">March 2026</div>
+
+  <div class="greeting">Hello,</div>
+
+  <div class="body">
+    <p>
+      My name is Sergio Barrientos. I am a Linux systems administrator and virtualization engineer based in Madrid, and this page is a brief introduction to my background and the kind of work I do.
+    </p>
+
+    <p>
+      Currently I am part of the infrastructure team at <strong>Deutsche Pfandbriefbank</strong>, a European bank regulated under BaFin and the ECB. We manage over 300 Red Hat Enterprise Linux servers across multiple datacenters, and my responsibilities cover the full server lifecycle: provisioning through Red Hat Satellite, large-scale patching coordination, ongoing RHEL 9 migrations, and general platform reliability. Working in a strictly regulated banking environment means every change is documented, reviewed, and fully auditable.
+    </p>
+
+    <p>
+      Improving operational efficiency through automation has been a consistent focus throughout my career. Using <strong>Ansible and Git</strong> I have built version-controlled infrastructure workflows that replaced unreliable manual processes with repeatable, peer-reviewed code. I also work regularly at the application layer managing platforms such as <strong>Nginx, Apache, Tomcat, JBoss, and PostgreSQL</strong>, covering everything from reverse proxy configuration and SSL management to deployment troubleshooting and database tuning.
+    </p>
+
+    <p>
+      Before joining pbb, I led a small technical team at <strong>Sopra Steria</strong> supporting a Norwegian financial client across mixed Linux and Windows environments, with all communication in English. That experience strengthened both my technical range and my ability to manage delivery alongside a team.
+    </p>
+
+    <p>
+      Outside my main role I dedicate a significant amount of time to applied AI, working with Azure AI Foundry to build document intelligence pipelines and experimenting with local language models. I document this work alongside infrastructure solutions on my website <strong><a href="https://sergiiob.dev/">sergiiob.dev</a></strong>, which now has over 40 technical posts based on real problems I have encountered and solved.
+    </p>
+
+    <p>
+      I currently hold the <strong>RHCSA</strong> certification and am actively preparing for the RHCE. I am also comfortable working with VMware vSphere, Active Directory and Kerberos integrations, and ServiceNow workflows. This portfolio is a practical showcase of how I work and what I build.
+    </p>
+  </div>
+
+  <div class="closing">
+    <p>Sergio Barrientos</p>
+  </div>
+
+  <div class="print-bar no-print">
+    <button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+    <div class="print-note">Use "Save as PDF" as the printer destination.</div>
+  </div>
+
+</body>
+</html>

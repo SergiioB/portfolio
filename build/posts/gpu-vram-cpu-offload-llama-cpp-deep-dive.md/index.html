@@ -1,0 +1,737 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="An advanced guide to local GPU inference with llama.cpp: why bandwidth matters more than model fit, how hybrid GPU+CPU offload behaves on cards like the RTX 3060 and 5070, what quantization really means mathematically, and how to run it on Linux, Windows, and WSL."><meta name="author" content="Sergio B."><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta name="color-scheme" content="light"><meta name="theme-color" content="#0d1117"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; frame-src 'none'; manifest-src 'self'; upgrade-insecure-requests"><link rel="canonical" href="https://sergiiob.dev/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive.md/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><meta property="og:site_name" content="Sergio B. / Field Notes"><meta property="og:title" content="GPU VRAM, CPU Offload, and llama.cpp: The Real Performance Cliff | Sergio B."><meta property="og:description" content="An advanced guide to local GPU inference with llama.cpp: why bandwidth matters more than model fit, how hybrid GPU+CPU offload behaves on cards like the RTX 3060 and 5070, what quantization really means mathematically, and how to run it on Linux, Windows, and WSL."><meta property="og:type" content="website"><meta property="og:url" content="https://sergiiob.dev/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive.md/"><meta property="og:image" content="https://sergiiob.dev/images/og-preview.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GPU VRAM, CPU Offload, and llama.cpp: The Real Performance Cliff | Sergio B."><meta name="twitter:description" content="An advanced guide to local GPU inference with llama.cpp: why bandwidth matters more than model fit, how hybrid GPU+CPU offload behaves on cards like the RTX 3060 and 5070, what quantization really means mathematically, and how to run it on Linux, Windows, and WSL."><meta name="twitter:image" content="https://sergiiob.dev/images/og-preview.png"><!-- AI-friendly meta --><meta name="ai-content-type" content="developer-portfolio"><meta name="ai-author" content="Sergio B."><meta name="ai-summary" content="Portfolio of Sergio B., Linux & Virtualization Engineer. Case-study driven technical notes on RHEL lifecycle, Ansible automation, enterprise AI, and infrastructure delivery. Bilingual: English and Spanish."><meta name="ai-topics" content="Linux, RHEL, Ansible, VMware, Azure AI, Infrastructure, Automation, DevOps, Platform Engineering"><!-- JSON-LD Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://sergiiob.dev/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive.md/#person","name":"Sergio B.","jobTitle":"Linux & Virtualization Engineer","worksFor":{"@type":"Organization","name":"Deutsche Pfandbriefbank AG"},"url":"https://sergiiob.dev/","knowsAbout":["Linux","RHEL","Ansible","VMware vSphere","Azure AI","Infrastructure Automation","Enterprise AI","Platform Engineering"],"sameAs":["https://github.com/SergiioB","https://linkedin.com/in/sergio-barrientos-dev"]},{"@type":"WebSite","@id":"https://sergiiob.dev/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive.md/#website","name":"Sergio B. / Field Notes","url":"https://sergiiob.dev/","description":"An advanced guide to local GPU inference with llama.cpp: why bandwidth matters more than model fit, how hybrid GPU+CPU offload behaves on cards like the RTX 3060 and 5070, what quantization really means mathematically, and how to run it on Linux, Windows, and WSL.","inLanguage":["en","es"],"author":{"@id":"https://sergiiob.dev/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive.md/#person"}}]}</script><title>GPU VRAM, CPU Offload, and llama.cpp: The Real Performance Cliff | Sergio B.</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><link rel="stylesheet" href="/_astro/_category_.DVDm2n6L.css"></head> <body> <div class="boot-sequence done" data-boot-sequence aria-hidden="true"> <div class="boot-shell" role="presentation"> <div class="boot-head"> <span class="boot-title" data-i18n="boot.title">Booting Engineer Runtime</span> <span class="boot-host">ssh://sergiio@rhel-core-01</span> </div> <div class="boot-meta"> <span class="boot-percent" data-boot-percent>0%</span> <span class="boot-hint" data-i18n="boot.hint">Click to skip · Esc to continue instantly</span> </div> <div class="boot-output" data-boot-output></div> <div class="boot-gate" data-boot-gate hidden> <label for="boot-gate-input" class="boot-gate-label" data-i18n="boot.gateLabel">Type unlock to continue</label> <div class="boot-gate-row"> <span class="boot-gate-prompt">root@runtime:~#</span> <input id="boot-gate-input" class="boot-gate-input" data-boot-gate-input type="text" autocomplete="off" spellcheck="false"> </div> </div> <div class="boot-progress" aria-hidden="true"> <span data-boot-progress></span> </div> </div> </div> <div class="command-palette" data-command-palette> <div class="command-palette-backdrop" data-command-palette-close></div> <div class="command-palette-shell" role="dialog" aria-modal="true" aria-labelledby="command-palette-title"> <div class="command-palette-head"> <h2 id="command-palette-title" data-i18n="palette.title">Engineer Command Palette</h2> <div class="command-palette-head-actions"> <span class="command-palette-hint">Ctrl+K</span> <button class="command-palette-close" type="button" data-command-palette-close aria-label="Close command palette" data-i18n="palette.close">Close</button> </div> </div> <input class="command-palette-input" data-command-palette-input type="text" data-i18n-placeholder="palette.searchPlaceholder" placeholder="Search commands... (mode, nav, boot)" autocomplete="off"> <div class="command-palette-list" data-command-palette-list></div> </div> </div> <a class="skip-link" href="#main-content" data-i18n="nav.skipToContent">Skip to content</a> <div class="site-shell"> <aside class="sidebar" id="site-sidebar" data-sidebar> <div class="sidebar-header"> <a href="/" class="site-brand"> <span class="brand-name">Sergio B. / Field Notes</span> <span class="brand-role">Linux &amp; Virtualization Engineer</span> </a> <p class="sidebar-summary">Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.</p> </div> <nav class="sidebar-nav" aria-label="Primary navigation"> <div class="nav-section"> <div class="nav-section-title">Navigation</div> <ul class="nav-list"> <li class="nav-item"> <a href="/" class="nav-link">Home</a> </li> <li class="nav-item"> <a href="/archive/" class="nav-link">Archive</a> </li> <li class="nav-item"> <a href="/about/" class="nav-link">About</a> </li> </ul> </div> <div class="nav-section"> <div class="nav-section-title">Domains</div> <ul class="nav-list"> <li class="nav-item"> <a href="/infrastructure/" class="nav-link"> <span class="nav-link-label">Infrastructure</span> <span class="nav-link-count">22</span> </a> </li><li class="nav-item"> <a href="/automation/" class="nav-link"> <span class="nav-link-label">Automation</span> <span class="nav-link-count">12</span> </a> </li><li class="nav-item"> <a href="/ai/" class="nav-link"> <span class="nav-link-label">AI</span> <span class="nav-link-count">7</span> </a> </li><li class="nav-item"> <a href="/cloud/" class="nav-link"> <span class="nav-link-label">Cloud</span> <span class="nav-link-count">2</span> </a> </li><li class="nav-item"> <a href="/local-ai/" class="nav-link"> <span class="nav-link-label">Local AI</span> <span class="nav-link-count">7</span> </a> </li><li class="nav-item"> <a href="/kotlin/" class="nav-link"> <span class="nav-link-label">Kotlin</span> <span class="nav-link-count">6</span> </a> </li><li class="nav-item"> <a href="/snippets/" class="nav-link"> <span class="nav-link-label">Snippets</span> <span class="nav-link-count">4</span> </a> </li> </ul> </div> </nav> <div class="sidebar-footer"> <a href="/cv/" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> View CV </a> <div class="sidebar-links"> <a href="https://www.linkedin.com/in/sergio-barrientose/" class="sidebar-link" target="_blank" rel="noopener noreferrer"> LinkedIn </a> </div> </div> </aside> <header class="mobile-header"> <button class="menu-toggle" type="button" data-menu-toggle aria-label="Toggle navigation"> <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg> </button> <a href="/" class="mobile-brand">Sergio B. / Field Notes</a> </header> <main class="main-content" id="main-content"> <div class="content-wrapper">  <a href="/" class="back-link" data-i18n="nav.backToPosts">← Back to posts</a> <article class="article-shell"> <header class="article-header"> <nav class="breadcrumbs" aria-label="Breadcrumb"> <a href="/" data-i18n="nav.breadcrumbHome">Home</a> <span>/</span> <a href="/local-ai/">Local AI</a>  </nav> <div class="article-meta"> <time datetime="2026-03-25T00:00:00.000Z"> March 25, 2026 </time> <span aria-hidden="true">•</span> <span>15 <span data-i18n="posts.minRead">min read</span></span>  </div> <h1 class="article-title">GPU VRAM, CPU Offload, and llama.cpp: The Real Performance Cliff</h1> <p class="page-description">An advanced guide to local GPU inference with llama.cpp: why bandwidth matters more than model fit, how hybrid GPU+CPU offload behaves on cards like the RTX 3060 and 5070, what quantization really means mathematically, and how to run it on Linux, Windows, and WSL.</p> <div class="post-tags post-tags-spaced" aria-label="Post tags"> <span class="tag">local-ai</span><span class="tag">llama.cpp</span><span class="tag">cuda</span><span class="tag">vram</span><span class="tag">offload</span><span class="tag">quantization</span><span class="tag">wsl</span><span class="tag">windows</span> </div> </header> <section class="case-snapshot panel panel-soft" aria-label="Case snapshot"> <h2 data-i18n="post.caseSnapshot">Case Snapshot</h2> <div class="case-grid"> <article class="case-card"> <h3>Situation</h3> <p>Teams running local models on consumer GPUs often assume that if a model loads, it is production-ready. In practice, once model layers or KV cache spill from VRAM into system RAM, the system hits a bandwidth cliff and throughput collapses.</p> </article><article class="case-card"> <h3>Issue</h3> <p>Operators lacked a practical framework for choosing quantization, sizing VRAM budgets, deciding when CPU offload is acceptable, and understanding the difference between weight quantization and KV cache quantization. Windows-specific setup questions also created confusion around native builds versus WSL.</p> </article><article class="case-card"> <h3>Solution</h3> <p>Documented the bandwidth-first model, explained hybrid offload behavior for 12 GB and mid-range modern GPUs, compared quantization choices such as Q4_K_M and q4_0 KV cache, and provided concrete llama.cpp launch patterns for Linux, Windows, and WSL.</p> </article><article class="case-card"> <h3>Used In</h3> <p>Local-first AI engineering runtimes and workstation inference setups using llama.cpp on consumer NVIDIA GPUs.</p> </article><article class="case-card"> <h3>Impact</h3> <p>Gives engineers a repeatable way to choose practical model sizes, avoid false-positive &#39;it fits&#39; decisions, and explain why partially offloaded large models often feel much slower than smaller models that stay inside VRAM.</p> </article> </div> </section> <div class="article-content prose-shell"> <h2 id="situation">Situation</h2>
+<p>The biggest mistake in local GPU inference is thinking in terms of capacity only:</p>
+<blockquote>
+<p>“If the model loads, I’m done.”</p>
+</blockquote>
+<p>That is the wrong mental model.</p>
+<p>The real model is:</p>
+<blockquote>
+<p>“If the hot path stays in the fastest memory tier, the model is useful. If it spills into a slower tier, performance can collapse.”</p>
+</blockquote>
+<p>This post is the advanced version of that idea, focused on:</p>
+<ul>
+<li>VRAM budgeting</li>
+<li>CPU offload</li>
+<li>bandwidth cliffs</li>
+<li>quantized weights</li>
+<li>quantized KV cache</li>
+<li>Linux / Windows / WSL execution patterns</li>
+</ul>
+<p><img src="/images/diagrams/gpu-offload-bandwidth-cliff.svg" alt="llama.cpp GPU offload bandwidth cliff"></p>
+<p>This diagram is intentionally simple: move more layers into VRAM until you approach the stable limit, then stop before the spill zone turns RAM traffic into your bottleneck.</p>
+<h2 id="the-bandwidth-wall">The Bandwidth Wall</h2>
+<h3 id="why-partial-offload-hurts-so-much">Why partial offload hurts so much</h3>
+<p>A GPU can execute matrix math extremely fast, but only if the next layers arrive fast enough. When part of the model sits in VRAM and the rest has to be pulled from system RAM, the GPU spends more time waiting on transfers.</p>
+<p>That is the real performance cliff.</p>
+<p>A simplified memory hierarchy:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Memory tier</th><th align="right">Approx bandwidth</th><th>What it means for inference</th></tr></thead><tbody><tr><td>GPU VRAM</td><td align="right">very high</td><td>ideal home for hot layers and KV activity</td></tr><tr><td>System RAM</td><td align="right">much lower</td><td>acceptable for preload / support data, bad for hot inference path</td></tr><tr><td>Disk</td><td align="right">unusable for hot path</td><td>only for load time</td></tr></tbody></table>
+<p>The exact numbers vary by card and platform, but the operating principle does not:</p>
+<ul>
+<li>fully-in-VRAM models feel dramatically faster</li>
+<li>hybrid GPU+RAM models can still work</li>
+<li>once too much of the model lives in RAM, tokens/s and TTFT can drop hard</li>
+</ul>
+<h2 id="the-core-rule">The Core Rule</h2>
+<h3 id="fit-is-not-enough">Fit is not enough</h3>
+<p>If a <code>27B</code> quantized model only fits by splitting across VRAM and RAM, it may still be worse interactively than a <code>7B</code>, <code>9B</code>, or <code>14B</code> model that fits mostly inside VRAM.</p>
+<p>That is why practical local inference is mostly a bandwidth optimization problem.</p>
+<h2 id="weight-quantization-vs-kv-cache-quantization">Weight Quantization vs KV Cache Quantization</h2>
+<p>These are related, but they are not the same thing.</p>
+<h3 id="weight-quantization">Weight quantization</h3>
+<p>This reduces the precision of the model parameters themselves.</p>
+<p>In rough terms, if full precision stores a weight as a higher-precision value, quantization stores an approximation:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>w ≈ s * q</span></span></code></pre>
+<p>Where:</p>
+<ul>
+<li><code>w</code> is the original weight</li>
+<li><code>q</code> is a low-bit integer code</li>
+<li><code>s</code> is a scale factor used to reconstruct an approximate value</li>
+</ul>
+<p>In grouped/block quantization, you usually have something closer to:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>w_i ≈ s_block * q_i</span></span></code></pre>
+<p>for all weights <code>i</code> in a quantization block.</p>
+<p>That is the intuition behind formats like:</p>
+<ul>
+<li><code>Q4_K_M</code></li>
+<li><code>Q5_K_M</code></li>
+<li><code>Q8_0</code></li>
+</ul>
+<p>The important operational point:</p>
+<ul>
+<li>lower-bit weight quantization reduces VRAM/RAM needs</li>
+<li>but can reduce model fidelity</li>
+<li>and some quant families preserve quality better than others at the same nominal bit width</li>
+</ul>
+<h3 id="kv-cache-quantization">KV cache quantization</h3>
+<p>This does <strong>not</strong> quantize the stored model weights. It quantizes the attention cache created during inference.</p>
+<p>Conceptually, for each token the model stores key/value vectors across layers:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>K_t, V_t</span></span></code></pre>
+<p>As context grows, those tensors grow too. KV cache quantization stores approximations of those tensors using lower precision:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>K_t ≈ s_k * q_k</span></span>
+<span class="line"><span>V_t ≈ s_v * q_v</span></span></code></pre>
+<p>The main value is:</p>
+<ul>
+<li>less memory per token of context</li>
+<li>more headroom for long prompts</li>
+<li>lower risk of OOM under concurrency</li>
+</ul>
+<p>The tradeoff is possible quality degradation, especially at longer contexts or more demanding tasks.</p>
+<h2 id="what-the-common-quant-names-mean">What the common quant names mean</h2>
+<h3 id="weight-quant-formats">Weight quant formats</h3>
+<p>Practical mental model:</p>
+<ul>
+<li><code>Q4_*</code>: usually the best default when you need a strong size/performance tradeoff</li>
+<li><code>Q5_*</code>: larger, often slightly better quality, may be worth it on bigger GPUs</li>
+<li><code>Q8_0</code>: much heavier; useful when you want closer-to-higher-precision behavior and have enough memory</li>
+</ul>
+<p>For llama.cpp local workstation use, <code>Q4_K_M</code> is often the best default recommendation because it is usually:</p>
+<ul>
+<li>small enough to fit</li>
+<li>high quality relative to its size</li>
+<li>broadly practical on consumer hardware</li>
+</ul>
+<p>In practical terms, <code>Q4</code>-class weights are often the best middle ground:</p>
+<ul>
+<li>the memory savings versus heavier quants are large</li>
+<li>the quality loss is often small enough to be acceptable for real work</li>
+<li>and avoiding VRAM spill usually matters more than chasing a smaller theoretical quality gain with a heavier quant</li>
+</ul>
+<p>That should still be read as a practical rule, not a law of physics. Some models hold up better than others under quantization, and some tasks are more sensitive than others.</p>
+<h3 id="kv-cache-formats">KV cache formats</h3>
+<p>The main llama.cpp flags are:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">-ctk</span><span style="color:#9ECBFF"> f16</span></span>
+<span class="line"><span style="color:#B392F0">-ctv</span><span style="color:#9ECBFF"> f16</span></span></code></pre>
+<p>or:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">-ctk</span><span style="color:#9ECBFF"> q8_0</span></span>
+<span class="line"><span style="color:#B392F0">-ctv</span><span style="color:#9ECBFF"> q8_0</span></span></code></pre>
+<p>or:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">-ctk</span><span style="color:#9ECBFF"> q4_0</span></span>
+<span class="line"><span style="color:#B392F0">-ctv</span><span style="color:#9ECBFF"> q4_0</span></span></code></pre>
+<p>Practical rule:</p>
+<ul>
+<li><code>f16</code> = safest baseline</li>
+<li><code>q8_0</code> = balanced compromise</li>
+<li><code>q4_0</code> = aggressive memory-saving mode</li>
+</ul>
+<h2 id="card-by-card-thinking">Card-by-card thinking</h2>
+<h2 id="rtx-3060-12-gb">RTX 3060 12 GB</h2>
+<p>This is one of the most interesting local-AI cards because it is affordable, but small enough that bad decisions show up quickly.</p>
+<h3 id="what-it-is-good-at">What it is good at</h3>
+<ul>
+<li>small to medium quantized models that fit mostly in VRAM</li>
+<li>practical interactive use with sensible model sizes</li>
+<li>experimentation with larger models using partial offload</li>
+</ul>
+<h3 id="what-to-avoid">What to avoid</h3>
+<ul>
+<li>assuming 27B is a good default just because it can be coerced to load</li>
+<li>running high context plus heavy offload plus high concurrency at once</li>
+</ul>
+<h3 id="practical-recommendation">Practical recommendation</h3>
+<p>On a 3060:</p>
+<ul>
+<li>prefer <code>Q4_K_M</code> for bigger models</li>
+<li>keep concurrency low</li>
+<li>treat <code>27B</code> hybrid offload as a deliberate quality-over-speed mode</li>
+</ul>
+<p>Representative command:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./llama-server</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -m</span><span style="color:#9ECBFF"> /models/Qwen3.5-27B-Q4_K_M.gguf</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --host</span><span style="color:#79B8FF"> 127.0.0.1</span><span style="color:#79B8FF"> --port</span><span style="color:#79B8FF"> 8080</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -c</span><span style="color:#79B8FF"> 4096</span><span style="color:#79B8FF"> -t</span><span style="color:#79B8FF"> 8</span><span style="color:#79B8FF"> --parallel</span><span style="color:#79B8FF"> 1</span><span style="color:#79B8FF"> --jinja</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -ngl</span><span style="color:#79B8FF"> 28</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -ctk</span><span style="color:#9ECBFF"> q8_0</span><span style="color:#79B8FF"> -ctv</span><span style="color:#9ECBFF"> q8_0</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -fa</span><span style="color:#9ECBFF"> on</span></span></code></pre>
+<p>The exact <code>-ngl</code> depends on:</p>
+<ul>
+<li>the model family</li>
+<li>the quant</li>
+<li>the build</li>
+<li>the context size</li>
+<li>KV cache choice</li>
+<li>what else is already using VRAM</li>
+</ul>
+<h3 id="the-honest-expectation">The honest expectation</h3>
+<p>When a 27B model is only partially on GPU:</p>
+<ul>
+<li>TTFT rises</li>
+<li>prompt processing slows sharply</li>
+<li>decode speed drops</li>
+<li>tokens/s can fall by multiple times compared with a smaller model that stays mostly in VRAM</li>
+</ul>
+<p>So if the goal is fast interactive chat, a smaller model that fits well is usually the better engineering decision.</p>
+<h2 id="rtx-5070-class-thinking">RTX 5070-class thinking</h2>
+<p>The exact consumer card variants and VRAM amounts differ, but the same rules apply:</p>
+<ul>
+<li>more VRAM gives you more room to keep hot layers on GPU</li>
+<li>faster memory reduces how much pain you feel before spillover</li>
+<li>CPU offload is still a tax, just a smaller one if less of the model spills</li>
+</ul>
+<p>A stronger modern GPU shifts the breakpoints upward:</p>
+<ul>
+<li>larger models become practical</li>
+<li>bigger contexts become practical</li>
+<li>you may be able to keep a <code>14B</code> or even larger class model mostly on-device</li>
+</ul>
+<p>But the wrong conclusion is still:</p>
+<blockquote>
+<p>“VRAM got bigger, so bandwidth no longer matters.”</p>
+</blockquote>
+<p>Bandwidth still matters. It just fails later.</p>
+<h2 id="quick-comparison-3060-vs-5070-class-vs-full-vram-fit">Quick comparison: 3060 vs 5070-class vs full-VRAM fit</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Setup</th><th>What usually happens</th><th>Best use case</th></tr></thead><tbody><tr><td>RTX 3060 12 GB + hybrid offload</td><td>Strong pressure to spill larger models into RAM; 27B is possible but clearly taxed</td><td>deliberate quality-over-speed experiments</td></tr><tr><td>5070-class mid-range modern GPU</td><td>More room for larger models and higher context before the cliff</td><td>practical workstation inference with better latency headroom</td></tr><tr><td>Model fully or mostly inside VRAM</td><td>Best TTFT and tokens/s; GPU stays fed</td><td>interactive chat, coding, agent loops</td></tr></tbody></table>
+<p>The pattern is simple:</p>
+<ul>
+<li>the closer you are to full VRAM residency, the better the experience</li>
+<li>the more you spill into RAM, the more you pay in TTFT and throughput</li>
+</ul>
+<h2 id="q4_k_m-vs-q5_k_m-vs-q8_0">Q4_K_M vs Q5_K_M vs Q8_0</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Quant</th><th>Typical tradeoff</th><th>When to choose it</th></tr></thead><tbody><tr><td><code>Q4_K_M</code></td><td>best default size/quality balance</td><td>first choice for most local users</td></tr><tr><td><code>Q5_K_M</code></td><td>more memory, often a modest quality gain</td><td>when the model still fits comfortably</td></tr><tr><td><code>Q8_0</code></td><td>much heavier, closer to higher precision</td><td>when you have abundant memory and care more about fidelity than fit</td></tr></tbody></table>
+<p>Practical reading:</p>
+<ul>
+<li>if <code>Q5_K_M</code> causes spill but <code>Q4_K_M</code> fits, <code>Q4_K_M</code> is usually the better real-world choice</li>
+<li><code>Q8_0</code> can make sense for smaller models on bigger cards, but is often the wrong choice on constrained consumer setups</li>
+</ul>
+<h2 id="a-practical-vram-budgeting-formula">A practical VRAM budgeting formula</h2>
+<p>Do not budget only the GGUF file size. Play with the calculator below to see how context length and offloading affect the memory footprint.</p>
+<div class="interactive-calculator-container" id="vram-calc">
+  <div class="calculator-header">
+    <h4 style="margin:0;">Interactive VRAM Simulator</h4>
+    <span style="font-size:0.8rem; color:var(--text-muted);">Estimates are approximate</span>
+  </div>
+  <div class="calc-row">
+    <div class="calc-col">
+      <label for="calc-params">Parameters (Billion)</label>
+      <input type="range" id="calc-params" min="1" max="70" step="1" value="8" oninput="updateVramCalc()">
+      <div class="val-display"><span id="val-params">8</span>B</div>
+    </div>
+    <div class="calc-col">
+      <label for="calc-quant">Quantization</label>
+      <select id="calc-quant" onchange="updateVramCalc()">
+        <option value="4.5">Q4_K_M (~4.5 bits/weight)</option>
+        <option value="5.5">Q5_K_M (~5.5 bits/weight)</option>
+        <option value="8.0">Q8_0 (~8.0 bits/weight)</option>
+        <option value="16.0">FP16 (16.0 bits/weight)</option>
+      </select>
+    </div>
+  </div>
+  <div class="calc-row">
+    <div class="calc-col">
+      <label for="calc-ctx">Context length (tokens)</label>
+      <input type="range" id="calc-ctx" min="512" max="32768" step="512" value="4096" oninput="updateVramCalc()">
+      <div class="val-display"><span id="val-ctx">4096</span></div>
+    </div>
+    <div class="calc-col">
+      <label for="calc-kv">KV Cache Quant</label>
+      <select id="calc-kv" onchange="updateVramCalc()">
+        <option value="16">f16 (standard)</option>
+        <option value="8">q8_0 (half size)</option>
+        <option value="4">q4_0 (quarter size)</option>
+      </select>
+    </div>
+  </div>
+  <div class="calc-row">
+    <div class="calc-col">
+      <label for="calc-offload">Offload Percentage (%)</label>
+      <input type="range" id="calc-offload" min="0" max="100" step="5" value="100" oninput="updateVramCalc()">
+      <div class="val-display"><span id="val-offload">100</span>% (mapped via -ngl)</div>
+    </div>
+  </div>
+  <div class="calc-result">
+    <div class="result-box">
+      <span class="result-label">Weights (VRAM)</span>
+      <span class="result-value" id="res-weights">4.5 GB</span>
+    </div>
+    <div class="result-box">
+      <span class="result-label">KV Cache (VRAM)</span>
+      <span class="result-value" id="res-kv">0.5 GB</span>
+    </div>
+    <div class="result-box">
+      <span class="result-label">Overhead</span>
+      <span class="result-value">0.6 GB</span>
+    </div>
+    <div class="result-box highlight">
+      <span class="result-label">Est. VRAM Needed</span>
+      <span class="result-value" id="res-total">5.6 GB</span>
+    </div>
+  </div>
+  <div class="calc-assessment" id="calc-assessment">
+    Will fit easily on an 8GB GPU.
+  </div>
+</div>
+<script>
+function updateVramCalc() {
+  const p = parseFloat(document.getElementById('calc-params').value);
+  const qBits = parseFloat(document.getElementById('calc-quant').value);
+  const ctx = parseInt(document.getElementById('calc-ctx').value);
+  const kvBits = parseInt(document.getElementById('calc-kv').value);
+  const offloadPct = parseInt(document.getElementById('calc-offload').value) / 100;
+
+  document.getElementById('val-params').innerText = p;
+  document.getElementById('val-ctx').innerText = ctx;
+  document.getElementById('val-offload').innerText = document.getElementById('calc-offload').value;
+
+  const totalWeightGb = (p * 1e9 * qBits) / 8 / (1024 ** 3);
+  const vramWeightGb = totalWeightGb * offloadPct;
+
+  const kvBaseHeuristicGb = (1.2 * (p/8) * (ctx/1000)) / 1024;
+  const vramKvGb = kvBaseHeuristicGb * (kvBits / 16);
+
+  const overheadGb = 0.6;
+  const totalVramGb = vramWeightGb + vramKvGb + overheadGb;
+
+  document.getElementById('res-weights').innerText = vramWeightGb.toFixed(1) + ' GB';
+  document.getElementById('res-kv').innerText = vramKvGb.toFixed(1) + ' GB';
+  document.getElementById('res-total').innerText = totalVramGb.toFixed(1) + ' GB';
+
+  let msg = '';
+  if (totalVramGb > 24) msg = '<span style="color:#ef4444">Requires a massive 24GB+ GPU (like RTX 3090/4090) or multi-GPU.</span>';
+  else if (totalVramGb > 16) msg = '<span style="color:#f59e0b">Requires a 20GB+ GPU or 24GB card (e.g. RTX 4090).</span>';
+  else if (totalVramGb > 12) msg = '<span style="color:#f59e0b">Requires a 16GB GPU (e.g. RTX 4080).</span>';
+  else if (totalVramGb > 8) msg = '<span style="color:#10b981">Fits on a 12GB GPU (e.g. RTX 3060).</span>';
+  else if (totalVramGb > 6) msg = '<span style="color:#10b981">Fits on an 8GB GPU.</span>';
+  else msg = '<span style="color:#10b981">Fits comfortably on almost any modern 6GB+ card.</span>';
+  
+  if (offloadPct < 1.0) {
+    msg += ' <br/><span style="font-size:0.85em; opacity:0.8;">Note: Partial offload triggers the system RAM bandwidth cliff.</span>';
+  }
+
+  document.getElementById('calc-assessment').innerHTML = msg;
+}
+if (typeof document !== 'undefined') {
+  setTimeout(updateVramCalc, 100);
+}
+</script>
+<style>
+.interactive-calculator-container {
+  background: var(--bg-surface, #1e293b);
+  border: 1px solid var(--border-color, #334155);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+.calculator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color, #334155);
+  padding-bottom: 0.5rem;
+}
+.calc-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+.calc-col {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.calc-col label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  margin-bottom: 0.4rem;
+}
+.calc-col input[type=range], .calc-col select {
+  width: 100%;
+  margin-bottom: 0.3rem;
+  background-color: var(--bg-body, #0f172a);
+  color: var(--text-main, #f8fafc);
+  border: 1px solid var(--border-color, #334155);
+  padding: 0.4rem;
+  border-radius: 4px;
+}
+.val-display {
+  font-size: 0.8rem;
+  color: var(--text-main, #f8fafc);
+  text-align: right;
+  font-family: var(--font-mono, monospace);
+}
+.calc-result {
+  display: flex;
+  gap: 1rem;
+  background: var(--bg-body, #0f172a);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.result-box {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+.result-box.highlight {
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.result-label {
+  font-size: 0.7rem;
+  color: var(--text-muted, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.result-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+  font-family: var(--font-mono, monospace);
+  margin-top: 0.3rem;
+}
+.result-box.highlight .result-value {
+  color: #10b981;
+}
+.calc-assessment {
+  margin-top: 1.2rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-main, #f8fafc);
+}
+</style>
+<p>The raw formula under the hood of the calculator is roughly:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>total_vram_needed ≈ (weights_gb * offload_pct) + kv_cache_gb + runtime_overhead</span></span></code></pre>
+<p>Where:</p>
+<ul>
+<li><code>offloaded_weight_bytes</code> is the portion of the model actually placed on GPU</li>
+<li><code>kv_cache_bytes</code> grows with context length, layer count, and cache precision</li>
+<li><code>runtime_overhead</code> covers allocator slack, CUDA buffers, graph memory, and general serving overhead</li>
+</ul>
+<p>Practical rule:</p>
+<ul>
+<li>leave headroom</li>
+<li>do not try to fill VRAM to 100%</li>
+<li>if a model “barely fits,” assume it does not fit well enough for a stable interactive setup</li>
+</ul>
+<h2 id="what--ngl-actually-means">What <code>-ngl</code> actually means</h2>
+<p>In llama.cpp, <code>-ngl</code> controls how many transformer layers you attempt to offload to the GPU.</p>
+<p>Mental model:</p>
+<ul>
+<li>lower <code>-ngl</code> = more layers stay on CPU/RAM</li>
+<li>higher <code>-ngl</code> = more layers move to GPU/VRAM</li>
+<li><code>-ngl 999</code> is often used as shorthand for “offload as much as possible”</li>
+</ul>
+<p>This is layer-based, not byte-based.</p>
+<h3 id="how-to-tune--ngl">How to tune <code>-ngl</code></h3>
+<p>Start simple:</p>
+<ol>
+<li>pick your model and quant</li>
+<li>start with a moderate <code>-ngl</code></li>
+<li>watch VRAM usage and whether the model loads cleanly</li>
+<li>increase until you approach the memory cliff</li>
+<li>back off slightly and keep margin for KV cache and runtime overhead</li>
+</ol>
+<p>For example:</p>
+<ul>
+<li>if <code>-ngl 40</code> fails or causes unstable VRAM pressure</li>
+<li>but <code>-ngl 28</code> is stable</li>
+<li>then <code>28</code> is the better production number even if <code>40</code> looked better on paper</li>
+</ul>
+<p>Each extra offloaded layer pushes more of the hot path into VRAM. That usually helps until you run out of headroom.</p>
+<h2 id="monitor-the-right-thing-with-nvidia-smi">Monitor the right thing with <code>nvidia-smi</code></h2>
+<p><code>nvidia-smi</code> is not enough by itself, but it is still the fastest sanity check while tuning <code>-ngl</code>.</p>
+<p>Typical workflow:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">watch</span><span style="color:#79B8FF"> -n</span><span style="color:#79B8FF"> 1</span><span style="color:#9ECBFF"> nvidia-smi</span></span></code></pre>
+<p>What to look for:</p>
+<ul>
+<li>VRAM usage climbing as <code>-ngl</code> increases</li>
+<li>whether the model load succeeds cleanly</li>
+<li>whether you still have headroom for KV cache and runtime overhead</li>
+</ul>
+<p>If VRAM is effectively full and the experience still feels slow, you may already be beyond the practical point where more offload helps.</p>
+<h2 id="how-to-run-a-compiled-llamacpp-build-with-gpu--cpu-offload">How to run a compiled llama.cpp build with GPU + CPU offload</h2>
+<p>Yes. This is exactly the point of the GPU/offload post.</p>
+<p>The hybrid path is:</p>
+<ol>
+<li>build <code>llama.cpp</code> with CUDA enabled</li>
+<li>run <code>llama-server</code> or <code>llama-cli</code></li>
+<li>offload only as many layers as VRAM can support</li>
+<li>let the remaining layers live in system RAM</li>
+</ol>
+<h3 id="linux-cuda-build">Linux CUDA build</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/ggml-org/llama.cpp.git</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> llama.cpp</span></span>
+<span class="line"><span style="color:#B392F0">cmake</span><span style="color:#79B8FF"> -B</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -DGGML_CUDA=ON</span></span>
+<span class="line"><span style="color:#B392F0">cmake</span><span style="color:#79B8FF"> --build</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -j</span></span></code></pre>
+<p>Then run a hybrid-offload server:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./build/bin/llama-server</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -m</span><span style="color:#9ECBFF"> /models/Qwen3.5-27B-Q4_K_M.gguf</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --host</span><span style="color:#79B8FF"> 127.0.0.1</span><span style="color:#79B8FF"> --port</span><span style="color:#79B8FF"> 8080</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -c</span><span style="color:#79B8FF"> 4096</span><span style="color:#79B8FF"> -t</span><span style="color:#79B8FF"> 8</span><span style="color:#79B8FF"> --parallel</span><span style="color:#79B8FF"> 1</span><span style="color:#79B8FF"> --jinja</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -ngl</span><span style="color:#79B8FF"> 28</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -ctk</span><span style="color:#9ECBFF"> q8_0</span><span style="color:#79B8FF"> -ctv</span><span style="color:#9ECBFF"> q8_0</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -fa</span><span style="color:#9ECBFF"> on</span></span></code></pre>
+<h3 id="windows-cuda-build">Windows CUDA build</h3>
+<p>On Windows, the practical route is:</p>
+<ul>
+<li>install recent NVIDIA drivers</li>
+<li>install Visual Studio Build Tools</li>
+<li>install CUDA toolkit</li>
+<li>build <code>llama.cpp</code> with CUDA enabled</li>
+</ul>
+<p>Representative flow:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">git clone https:</span><span style="color:#F97583">//</span><span style="color:#79B8FF">github.com</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">ggml</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">org</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">llama.cpp.git</span></span>
+<span class="line"><span style="color:#E1E4E8">cd llama.cpp</span></span>
+<span class="line"><span style="color:#E1E4E8">cmake </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">B build </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">DGGML_CUDA</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">ON</span></span>
+<span class="line"><span style="color:#E1E4E8">cmake </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">build build </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">config Release</span></span></code></pre>
+<p>Then run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">.\build\bin\Release\</span><span style="color:#79B8FF">llama-server.exe</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">m D:\models\Qwen3.</span><span style="color:#79B8FF">5</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">27B</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">Q4_K_M.gguf </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#F97583">  --</span><span style="color:#E1E4E8">host </span><span style="color:#79B8FF">127.0</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0.1</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">port </span><span style="color:#79B8FF">8080</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">c </span><span style="color:#79B8FF">4096</span><span style="color:#F97583"> -</span><span style="color:#E1E4E8">t </span><span style="color:#79B8FF">8</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">parallel </span><span style="color:#79B8FF">1</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">jinja </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">ngl </span><span style="color:#79B8FF">28</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">ctk q8_0 </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ctv q8_0 </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">fa on</span></span></code></pre>
+<h3 id="wsl-setup-guidance">WSL setup guidance</h3>
+<p>Use WSL if you specifically want:</p>
+<ul>
+<li>Linux-style scripts</li>
+<li>Linux build steps</li>
+<li>easier parity with server environments</li>
+</ul>
+<p>But WSL only makes sense if GPU passthrough is actually working.</p>
+<p>Minimum checks:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">nvidia-smi</span></span>
+<span class="line"><span style="color:#B392F0">./build/bin/llama-server</span><span style="color:#79B8FF"> --version</span></span></code></pre>
+<p>If <code>nvidia-smi</code> fails inside WSL, you are not running a real GPU inference path there.</p>
+<h2 id="windows-vs-linux-vs-wsl">Windows vs Linux vs WSL</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Option</th><th>Best when</th><th>Tradeoffs</th></tr></thead><tbody><tr><td>Native Windows</td><td>you want the shortest path to a local desktop setup</td><td>build/tooling can be more Windows-specific</td></tr><tr><td>WSL2</td><td>you want Linux-like scripts and closer parity with server environments</td><td>must verify GPU passthrough and avoid bad filesystem placement</td></tr><tr><td>Linux</td><td>you want the cleanest benchmarking and deployment workflow</td><td>requires a Linux host or dual-boot/server access</td></tr></tbody></table>
+<h2 id="linux">Linux</h2>
+<p>Linux is still the cleanest path for llama.cpp workstation inference:</p>
+<ul>
+<li>easiest CUDA builds</li>
+<li>easier scripting and benchmarking</li>
+<li>lower environment ambiguity</li>
+</ul>
+<h2 id="native-windows">Native Windows</h2>
+<p>Native Windows can work fine if you:</p>
+<ul>
+<li>use a good CUDA-enabled llama.cpp build</li>
+<li>keep drivers current</li>
+<li>avoid mixing too many runtime layers</li>
+</ul>
+<p>Representative command:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">.\</span><span style="color:#79B8FF">llama-server.exe</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">m D:\models\Qwen3.</span><span style="color:#79B8FF">5</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">14B</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">Q4_K_M.gguf </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#F97583">  --</span><span style="color:#E1E4E8">host </span><span style="color:#79B8FF">127.0</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0.1</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">port </span><span style="color:#79B8FF">8080</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">c </span><span style="color:#79B8FF">4096</span><span style="color:#F97583"> -</span><span style="color:#E1E4E8">t </span><span style="color:#79B8FF">8</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">parallel </span><span style="color:#79B8FF">1</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">jinja </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">ngl </span><span style="color:#79B8FF">999</span><span style="color:#F97583"> `</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">ctk q8_0 </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ctv q8_0 </span><span style="color:#F97583">`</span></span>
+<span class="line"><span style="color:#F97583">  -</span><span style="color:#E1E4E8">fa on</span></span></code></pre>
+<h2 id="wsl">WSL</h2>
+<p>WSL is often the best compromise for Windows users who want a Linux-like workflow.</p>
+<p>But it should be set up intentionally.</p>
+<h3 id="if-you-use-wsl-do-this-properly">If you use WSL, do this properly</h3>
+<ul>
+<li>use WSL2</li>
+<li>verify CUDA passthrough actually works</li>
+<li>verify the GPU is visible inside WSL before you benchmark</li>
+<li>keep model files on a performant filesystem path</li>
+<li>avoid cross-filesystem overhead for hot workflows when possible</li>
+</ul>
+<p>Typical validation steps:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">nvidia-smi</span></span>
+<span class="line"><span style="color:#B392F0">./llama-cli</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./llama-server</span><span style="color:#79B8FF"> --version</span></span></code></pre>
+<p>If WSL GPU passthrough is not working, you are not benchmarking the setup you think you are benchmarking.</p>
+<h2 id="how-to-choose-quantization-in-practice">How to choose quantization in practice</h2>
+<h3 id="default-recommendation">Default recommendation</h3>
+<p>If someone asks for a single practical answer:</p>
+<blockquote>
+<p>Start with <code>Q4_K_M</code>.</p>
+</blockquote>
+<p>Why:</p>
+<ul>
+<li>it is usually the best first compromise</li>
+<li>it keeps memory pressure down</li>
+<li>it is more likely to fit fully or mostly in VRAM</li>
+<li>it often delivers much better overall UX than a larger higher-quality quant that spills badly</li>
+</ul>
+<h3 id="when-to-move-up">When to move up</h3>
+<p>Try larger or heavier quants when:</p>
+<ul>
+<li>the model already fits comfortably</li>
+<li>you care more about quality than latency</li>
+<li>you have enough VRAM headroom for both weights and KV cache</li>
+</ul>
+<h3 id="when-to-quantize-kv-cache-more-aggressively">When to quantize KV cache more aggressively</h3>
+<p>Use <code>q8_0</code> or <code>q4_0</code> KV cache when:</p>
+<ul>
+<li>context length is growing</li>
+<li>multiple sessions exist</li>
+<li>you are near the memory cliff</li>
+</ul>
+<h2 id="practical-sizing-checklist">Practical sizing checklist</h2>
+<p>Before locking a model in:</p>
+<ol>
+<li>estimate weight footprint</li>
+<li>budget KV cache separately</li>
+<li>leave VRAM headroom for runtime overhead</li>
+<li>test TTFT, not just steady-state t/s</li>
+<li>test with realistic context, not toy prompts</li>
+<li>prefer the smaller model if the larger one spills too much</li>
+</ol>
+<h2 id="failure-modes">Failure modes</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Failure mode</th><th>What it looks like</th><th>What usually caused it</th></tr></thead><tbody><tr><td>”It loads but feels slow”</td><td>very high TTFT, weak decode speed</td><td>too much offload to system RAM</td></tr><tr><td>OOM at higher context</td><td>works at 2K, fails at 8K</td><td>KV cache budget ignored</td></tr><tr><td>GPU underutilized</td><td>low throughput despite CUDA</td><td>host-memory bottleneck or poor offload split</td></tr><tr><td>WSL confusion</td><td>inconsistent results</td><td>GPU passthrough or storage-path issues</td></tr></tbody></table>
+<!-- portfolio:expanded-v2 -->
+<h2 id="architecture-diagram">Architecture Diagram</h2>
+<p><img src="/images/diagrams/gpu-offload-bandwidth-cliff.svg" alt="llama.cpp GPU offload bandwidth cliff"></p>
+<p>This animated SVG shows the practical tuning story: increase <code>-ngl</code>, watch <code>nvidia-smi</code>, and stop at the highest stable GPU residency point before VRAM pressure turns hybrid offload into a RAM bottleneck.</p>
+<h2 id="takeaway">Takeaway</h2>
+<p>The real local inference rule is simple:</p>
+<blockquote>
+<p>A model that mostly fits in fast memory beats a larger model that technically loads through spillover.</p>
+</blockquote>
+<p>That is why <code>Q4_K_M</code> is often the right default, why KV cache quantization matters, and why hybrid offload should be treated as a measured engineering tradeoff instead of a free upgrade.</p> </div> <footer class="article-footer"> <a href="/archive/" class="back-link" data-i18n="nav.browseArchive">← Browse archive</a> </footer> </article>  </div> <footer class="site-footer" aria-label="Site footer"> <div class="footer-content"> <span data-i18n="site.brand">Sergio B. / Field Notes</span> <span aria-hidden="true">•</span> <span data-i18n="site.footer">Case-study driven engineering portfolio</span> </div> </footer> </main> </div> <script>(function(){const i18nDict = {"site.brand":{"en":"Sergio B. / Field Notes","es":"Sergio B. / Notas de Campo"},"site.role":{"en":"Linux & Virtualization Engineer","es":"Ingeniero Linux y Virtualización"},"site.tagline":{"en":"Infrastructure delivery, automation, and applied enterprise AI","es":"Infraestructura, automatización e IA empresarial aplicada"},"site.description":{"en":"Case-study driven portfolio focused on Linux platform engineering, virtualization, Ansible automation, RHEL lifecycle modernization, and practical AI integration in enterprise environments.","es":"Portfolio de ingeniería basado en casos reales: plataformas Linux, virtualización, automatización con Ansible, modernización RHEL e integración práctica de IA en entornos corporativos."},"site.profileSummary":{"en":"Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.","es":"Ingeniero Linux y virtualización que documenta patrones reales de entrega: problemas claros, decisiones de implementación y resultados en producción."},"site.footer":{"en":"Case-study driven engineering portfolio","es":"Portfolio de ingeniería con casos prácticos"},"nav.home":{"en":"Home","es":"Inicio"},"nav.archive":{"en":"Archive","es":"Archivo"},"nav.about":{"en":"About + CV","es":"Acerca de + CV"},"nav.domains":{"en":"Domains","es":"Dominios"},"nav.years":{"en":"Years","es":"Años"},"nav.portfolio":{"en":"Portfolio","es":"Portfolio"},"nav.search":{"en":"Search","es":"Buscar"},"nav.searchPlaceholder":{"en":"grep post...","es":"buscar post..."},"nav.go":{"en":"Go","es":"Ir"},"nav.links":{"en":"Links","es":"Enlaces"},"nav.session":{"en":"Session:","es":"Sesión:"},"nav.commandPalette":{"en":"Command palette:","es":"Paleta de comandos:"},"nav.skipToContent":{"en":"Skip to content","es":"Ir al contenido"},"nav.breadcrumbHome":{"en":"Home","es":"Inicio"},"nav.backToPosts":{"en":"← Back to posts","es":"← Volver a posts"},"nav.browseArchive":{"en":"← Browse archive","es":"← Explorar archivo"},"hero.kicker":{"en":"sergio@portfolio:~$ whoami","es":"sergio@portfolio:~$ whoami"},"hero.typewriter":{"en":"Production ops and platform modernization field notes","es":"Notas de campo: operaciones en producción y modernización de plataformas"},"hero.description":{"en":"Practical posts organized as case studies with clear situation, issue, solution, usage context, and impact.","es":"Posts prácticos en formato caso de estudio: situación, problema, solución, contexto de uso e impacto."},"hero.recruiterView":{"en":"Recruiter View","es":"Vista Recruiter"},"hero.aboutCv":{"en":"About + CV","es":"Acerca de + CV"},"hero.archive":{"en":"Archive","es":"Archivo"},"hero.currentRole":{"en":"Current role","es":"Puesto actual"},"hero.roleTitle":{"en":"Linux & Virtualization Engineer","es":"Ingeniero Linux y Virtualización"},"hero.roleCompany":{"en":"Deutsche Pfandbriefbank AG · Madrid · Hybrid","es":"Deutsche Pfandbriefbank AG · Madrid · Híbrido"},"hero.publishedPosts":{"en":"Published posts","es":"Posts publicados"},"hero.postsMeta":{"en":"Case-study driven technical notes","es":"Notas técnicas con formato caso práctico"},"hero.lastUpdate":{"en":"Last update","es":"Última actualización"},"hero.noPostsYet":{"en":"No posts yet","es":"Sin posts aún"},"hero.archiveFirst":{"en":"Archive-first publishing flow","es":"Publicación centrada en el archivo"},"focus.title":{"en":"Delivery Focus","es":"Áreas de Entrega"},"focus.profile":{"en":"Profile","es":"Perfil"},"focus.infraTitle":{"en":"Infrastructure automation at scale","es":"Automatización de infraestructura a escala"},"focus.infraDesc":{"en":"Ansible + Git workflows for auditable rollouts, lifecycle changes, and safer operational execution.","es":"Flujos Ansible + Git para despliegues auditables, gestión de ciclo de vida y ejecución operativa segura."},"focus.rhelTitle":{"en":"RHEL modernization","es":"Modernización RHEL"},"focus.rhelDesc":{"en":"RHEL 7/8 to 9 migration planning, Satellite lifecycle control, patch orchestration, and hardening.","es":"Migración RHEL 7/8 a 9, gestión Satellite, orquestación de parches y bastionado."},"focus.aiTitle":{"en":"Applied enterprise AI","es":"IA empresarial aplicada"},"focus.aiDesc":{"en":"Architected inference gateways with Azure AI Foundry, translating document intelligence pilots into operationally viable, production-ready enterprise workloads.","es":"Arquitectura de gateways de inferencia con Azure AI Foundry, llevando pilotos de inteligencia documental hacia cargas de trabajo empresariales en producción."},"audience.title":{"en":"Choose Your View","es":"Elige tu vista"},"audience.currentRecruiter":{"en":"Current: Recruiter Mode","es":"Actual: Modo Recruiter"},"audience.currentEngineer":{"en":"Current: Engineer Mode","es":"Actual: Modo Ingeniero"},"audience.recruiterMode":{"en":"Recruiter Mode","es":"Modo Recruiter"},"audience.engineerMode":{"en":"Engineer Mode","es":"Modo Ingeniero"},"audience.copy":{"en":"Recruiter view prioritizes impact, role fit, and business outcomes first. Engineer view enables full live labs, telemetry streams, and command simulations.","es":"La vista Recruiter destaca impacto, encaje profesional y resultados de negocio. La vista Ingeniero abre labs en vivo, telemetría y simulación de comandos."},"recruiter.title":{"en":"Recruiter Snapshot","es":"Resumen Profesional"},"recruiter.fullProfile":{"en":"Full profile","es":"Perfil completo"},"recruiter.badge":{"en":"● Recruiter-ready overview","es":"● Vista rápida para recruiters"},"recruiter.summary":{"en":"Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability, and practical enterprise AI implementation. Proven track record reducing operational toil and accelerating time-to-market.","es":"Ingeniero Linux y virtualización con portfolio orientado a resultados: automatización, fiabilidad de plataformas e implementación práctica de IA empresarial. Acelerando TTM y reduciendo carga operativa."},"recruiter.roleFit":{"en":"Role fit","es":"Encaje profesional"},"recruiter.roleFit1":{"en":"Linux platform administration in enterprise environments","es":"Administración de plataformas Linux en entornos corporativos"},"recruiter.roleFit2":{"en":"Infrastructure as code with Ansible + Git workflow discipline","es":"Infraestructura como código con Ansible y flujos Git"},"recruiter.roleFit3":{"en":"Cross-team delivery from design through operational handoff","es":"Entrega transversal desde diseño hasta puesta en producción"},"recruiter.topOutcomes":{"en":"Top outcomes","es":"Logros destacados"},"recruiter.outcome1":{"en":"Patch and lifecycle orchestration patterns for safer rollouts","es":"Orquestación de parches y ciclo de vida para despliegues seguros"},"recruiter.outcome2":{"en":"RHEL modernization playbooks for controlled migrations","es":"Playbooks de modernización RHEL para migraciones controladas"},"recruiter.outcome3":{"en":"Applied AI pilots documented from prototype to operations","es":"Pilotos de IA documentados de prototipo a producción"},"recruiter.quickActions":{"en":"Quick actions","es":"Acceso rápido"},"recruiter.openProfile":{"en":"Open profile and experience summary","es":"Ver perfil y experiencia"},"recruiter.reviewStudies":{"en":"Review all case studies","es":"Ver todos los casos prácticos"},"recruiter.ctaText":{"en":"Ready to review full experience and delivery outcomes?","es":"¿Quieres ver la experiencia completa y los resultados?"},"recruiter.ctaButton":{"en":"Open Profile & CV","es":"Ver Perfil y CV"},"production.title":{"en":"Production Spotlight","es":"En Producción"},"production.badge":{"en":"● Live on Google Play & Web","es":"● Disponible en Google Play y Web"},"production.appTitle":{"en":"IntelliFlow: AI Budget Tracker","es":"IntelliFlow: Gestor Financiero Inteligente"},"production.appDesc":{"en":"A production-grade personal finance application serving real users. Features an AI-powered financial coach, offline-first architecture, and cross-platform syncing.","es":"Aplicación de finanzas personales en producción con usuarios reales. Incluye un coach financiero impulsado por IA, arquitectura offline-first y sincronización multiplataforma."},"production.playStore":{"en":"Get it on Google Play","es":"Descargar en Google Play"},"production.webApp":{"en":"Open Web App","es":"Abrir Web App"},"engineer.labsTitle":{"en":"Engineer Labs","es":"Labs de Ingeniería"},"engineer.switchButton":{"en":"Switch to Engineer Mode","es":"Activar Modo Ingeniero"},"engineer.teaserText":{"en":"Recruiter Mode keeps this portfolio concise and impact-first. Switch to Engineer Mode to open live Linux telemetry, command simulation, and network topology labs.","es":"El Modo Recruiter mantiene el portfolio conciso y centrado en impacto. Activa el Modo Ingeniero para abrir labs de telemetría Linux, simulación de comandos y topología de red en vivo."},"engineerLab.title":{"en":"Engineer Lab · Live Linux + AI Simulation","es":"Lab de Ingeniería · Simulación Linux + IA en Vivo"},"engineerLab.status":{"en":"stream: ready","es":"stream: listo"},"engineerLab.tabOps":{"en":"ops stream","es":"stream ops"},"engineerLab.tabAnsible":{"en":"ansible rollout","es":"rollout ansible"},"engineerLab.tabAi":{"en":"ai inference","es":"inferencia ia"},"opsDeck.title":{"en":"Ops Cockpit · top + command sandbox","es":"Cockpit Ops · top + sandbox de comandos"},"opsDeck.modeNormal":{"en":"Mode: Normal","es":"Modo: Normal"},"opsDeck.modeHardcore":{"en":"Mode: Hardcore","es":"Modo: Hardcore"},"opsDeck.cpu":{"en":"CPU load","es":"Carga CPU"},"opsDeck.memory":{"en":"Memory pressure","es":"Presión de memoria"},"opsDeck.errors":{"en":"Error rate","es":"Tasa de errores"},"opsDeck.cache":{"en":"Prompt cache hit","es":"Acierto caché prompt"},"opsDeck.processTitle":{"en":"Process monitor","es":"Monitor de procesos"},"opsDeck.processMeta":{"en":"click headers to sort · values stream live","es":"clic en cabecera para ordenar · datos en tiempo real"},"opsDeck.sandboxTitle":{"en":"Command sandbox","es":"Sandbox de comandos"},"opsDeck.sandboxMeta":{"en":"try: top · journalctl -n 5 · ansible --version · ai.health","es":"prueba: top · journalctl -n 5 · ansible --version · ai.health"},"opsDeck.inputPlaceholder":{"en":"Type a command...","es":"Escribe un comando..."},"opsDeck.run":{"en":"Run","es":"Ejecutar"},"opsDeck.helpHint":{"en":"Try `help` for available commands.","es":"Prueba `help` para ver comandos disponibles."},"network.title":{"en":"Live Network Topology","es":"Topología de Red en Vivo"},"network.status":{"en":"mode: normal · mesh stable","es":"modo: normal · malla estable"},"domains.title":{"en":"Domains","es":"Dominios"},"domains.browseAll":{"en":"Browse all","es":"Ver todos"},"domains.activeDomains":{"en":"active domains with published case studies.","es":"dominios activos con casos de estudio publicados."},"cat.infrastructure":{"en":"Infrastructure","es":"Infraestructura"},"cat.infrastructure.desc":{"en":"RHEL lifecycle, automation, virtualization, and production operations.","es":"Ciclo de vida RHEL, automatización, virtualización y operaciones en producción."},"cat.automation":{"en":"Automation","es":"Automatización"},"cat.automation.desc":{"en":"Ansible playbooks, task automation, and configuration management.","es":"Playbooks Ansible, automatización de tareas y gestión de configuración."},"cat.ai":{"en":"AI","es":"IA"},"cat.ai.desc":{"en":"Generative AI use cases, integration patterns, and practical lessons.","es":"Casos de uso de IA generativa, patrones de integración y lecciones prácticas."},"cat.cloud":{"en":"Cloud","es":"Cloud"},"cat.cloud.desc":{"en":"Azure architecture, infrastructure design, and delivery practices.","es":"Arquitectura Azure, diseño de infraestructura y prácticas de entrega."},"cat.local-ai":{"en":"Local AI","es":"IA Local"},"cat.local-ai.desc":{"en":"Running models on local hardware with privacy-first workflows.","es":"Ejecución de modelos en hardware local con privacidad como prioridad."},"cat.kotlin":{"en":"Kotlin","es":"Kotlin"},"cat.kotlin.desc":{"en":"Kotlin projects, notes, and engineering experiments.","es":"Proyectos Kotlin, notas y experimentos de ingeniería."},"cat.snippets":{"en":"Snippets","es":"Snippets"},"cat.snippets.desc":{"en":"Quick commands and reusable building blocks for day-to-day work.","es":"Comandos rápidos y bloques reutilizables para el día a día."},"cat.career":{"en":"Career","es":"Carrera"},"cat.career.desc":{"en":"Professional updates, retrospectives, and growth notes.","es":"Actualizaciones profesionales, retrospectivas y notas de crecimiento."},"posts.recent":{"en":"Recent Case Studies","es":"Casos de Estudio Recientes"},"posts.allPosts":{"en":"All posts","es":"Todos los posts"},"posts.noPosts":{"en":"No posts published yet.","es":"Sin posts publicados aún."},"posts.minRead":{"en":"min read","es":"min de lectura"},"posts.issue":{"en":"Issue:","es":"Problema:"},"posts.solution":{"en":"Solution:","es":"Solución:"},"posts.usedIn":{"en":"Used In:","es":"Usado en:"},"posts.impact":{"en":"Impact:","es":"Impacto:"},"posts.situation":{"en":"Situation","es":"Situación"},"archive.title":{"en":"All Case Studies","es":"Todos los Casos de Estudio"},"archive.eyebrow":{"en":"Archive","es":"Archivo"},"archive.description":{"en":"posts grouped by year, each with clear issue and solution framing.","es":"posts agrupados por año, cada uno con problema y solución bien definidos."},"archive.searchPlaceholder":{"en":"Search all posts (title, issue, solution, tags)...","es":"Buscar posts (título, problema, solución, tags)..."},"archive.searchPosts":{"en":"Search posts","es":"Buscar posts"},"archive.noMatches":{"en":"No matches.","es":"Sin resultados."},"archive.matches":{"en":"matches","es":"coincidencias"},"archive.match":{"en":"match","es":"coincidencia"},"about.pageTitle":{"en":"About","es":"Acerca de"},"about.pageDesc":{"en":"Professional profile, impact statements, and CV summary.","es":"Perfil profesional, logros de impacto y resumen del CV."},"about.eyebrow":{"en":"Profile","es":"Perfil"},"about.headline":{"en":"Linux & Virtualization Engineer with automation-first execution.","es":"Ingeniero Linux y Virtualización con mentalidad automation-first."},"about.intro":{"en":"I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge infrastructure operations with practical Generative AI implementations.","es":"Diseño y opero plataformas Linux corporativas, estandarizo entregas con Ansible y Git, y conecto operaciones de infraestructura con implementaciones reales de IA Generativa."},"about.snapshot":{"en":"Professional Snapshot","es":"Resumen Profesional"},"about.infraTitle":{"en":"Infrastructure lifecycle ownership","es":"Gestión del ciclo de vida de infraestructura"},"about.infraDesc":{"en":"RHEL migrations, Satellite lifecycle control, patch management, hardening, and HA/DR readiness.","es":"Migraciones RHEL, gestión Satellite, parches, bastionado y preparación HA/DR."},"about.autoTitle":{"en":"Automation discipline","es":"Disciplina de automatización"},"about.autoDesc":{"en":"Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.","es":"Orquestación Ansible y control de cambios con Git para operaciones repetibles, revisadas y auditables."},"about.aiTitle":{"en":"AI integration for business cases","es":"Integración de IA en negocio"},"about.aiDesc":{"en":"Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.","es":"Iniciativas GenAI con Azure AI Foundry, inteligencia documental y flujos de fine-tuning."},"about.experience":{"en":"Experience","es":"Experiencia"},"about.coreAreas":{"en":"Core Areas","es":"Áreas Principales"},"about.cvTitle":{"en":"CV / Resume","es":"CV / Currículum"},"about.cvLabel":{"en":"View CV","es":"Ver CV"},"about.cvDesc":{"en":"Detailed CV with role scope, delivery outcomes, and full technology coverage.","es":"CV detallado con alcance del puesto, resultados de entrega y cobertura tecnológica completa."},"about.cvDisabled":{"en":"CV link is temporarily unavailable.","es":"El enlace al CV no está disponible temporalmente."},"about.coverLetterTitle":{"en":"Cover Letter","es":"Carta de Presentación"},"about.coverLetterLabel":{"en":"View Cover Letter","es":"Ver Carta de Presentación"},"about.coverLetterDesc":{"en":"Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.","es":"Presentación profesional — quién soy, en qué trabajo y cómo enfoco la infraestructura y la automatización."},"about.coverLetterDisabled":{"en":"Cover letter link is temporarily unavailable.","es":"El enlace a la carta de presentación no está disponible temporalmente."},"about.principles":{"en":"Operating Principles","es":"Principios Operativos"},"about.principle1Title":{"en":"Codify repeatable operations","es":"Codificar operaciones repetibles"},"about.principle1Desc":{"en":"Every recurring action should move from ad-hoc command execution into tested automation.","es":"Toda acción recurrente debe pasar de ejecución manual a automatización probada."},"about.principle2Title":{"en":"State the problem before the tool","es":"Plantear el problema antes que la herramienta"},"about.principle2Desc":{"en":"Technology choices are justified by incident patterns, constraints, and measurable operational outcomes.","es":"Las decisiones tecnológicas se justifican con patrones de incidentes, restricciones y resultados medibles."},"about.principle3Title":{"en":"Keep portfolio content safe","es":"Mantener el contenido del portfolio seguro"},"about.principle3Desc":{"en":"Write with practical depth while avoiding confidential architecture, identities, or customer-sensitive data.","es":"Documentar con profundidad práctica sin exponer arquitectura confidencial ni datos sensibles."},"exp.pbb.title":{"en":"Linux and Virtualization Engineer · Deutsche Pfandbriefbank AG","es":"Ingeniero Linux y Virtualización · Deutsche Pfandbriefbank AG"},"exp.pbb.subtitle":{"en":"Full-time · Hybrid · Madrid, Comunidad de Madrid, España","es":"Tiempo completo · Híbrido · Madrid, Comunidad de Madrid, España"},"exp.pbb.period":{"en":"Jul 2025 - Present","es":"Jul 2025 - Presente"},"exp.pbb.0":{"en":"Part of the Linux infrastructure team responsible for 300+ RHEL production servers across multiple datacenters under BaFin/ECB regulatory oversight.","es":"Parte del equipo de infraestructura Linux responsable de más de 300 servidores RHEL en producción en múltiples datacenters bajo supervisión regulatoria BaFin/ECB."},"exp.pbb.1":{"en":"Designed Ansible + Git automation pipelines for server provisioning, configuration drift remediation, and lifecycle operations.","es":"Diseño de pipelines Ansible + Git para aprovisionamiento, corrección de desvíos de configuración y operaciones de ciclo de vida."},"exp.pbb.2":{"en":"Leading phased RHEL 7/8 to RHEL 9 migration across 300+ servers with Satellite-based provisioning and compliance enforcement.","es":"Liderazgo de migración RHEL 7/8 → 9 en más de 300 servidores con aprovisionamiento Satellite y cumplimiento normativo."},"exp.pbb.3":{"en":"Deploying and maintaining application stacks across Nginx, Apache, Tomcat, JBoss/WildFly, and PostgreSQL — SSL/TLS hardening, reverse proxy tuning, and production optimization for banking-critical workloads.","es":"Despliegue y mantenimiento de stacks de aplicaciones con Nginx, Apache, Tomcat, JBoss/WildFly y PostgreSQL — bastionado SSL/TLS, ajuste de proxy inverso y optimización en producción para cargas bancarias críticas."},"exp.pbb.4":{"en":"Owning end-to-end patching and hardening cycles for 300+ servers aligned to financial-sector security requirements.","es":"Gestión integral de parcheo y bastionado de más de 300 servidores alineada con requisitos de seguridad del sector financiero."},"exp.pbb.5":{"en":"Operating Pacemaker-based HA clusters and executing disaster-recovery drills across distributed datacenters.","es":"Operación de clústeres HA con Pacemaker y ejecución de simulacros DR en datacenters distribuidos."},"exp.pbb.6":{"en":"Administering VMware vSphere environments for VM provisioning, capacity planning, and platform lifecycle maintenance.","es":"Administración VMware vSphere: aprovisionamiento de VMs, planificación de capacidad y mantenimiento."},"exp.pbb.7":{"en":"Delivering enterprise AI use cases with Azure AI Foundry — optimizing document intelligence pipelines and model fine-tuning for scalable process automation.","es":"Entrega de casos de IA empresarial con Azure AI Foundry: optimización de pipelines de inteligencia documental y fine-tuning de modelos para automatización de procesos a escala."},"exp.pbb.8":{"en":"Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.","es":"Consultoría de infraestructura para equipos de aplicaciones, traduciendo requisitos de negocio en planes de entrega."},"exp.sopra1.title":{"en":"Information Technology Application Specialist - Linux System Administrator · Sopra Steria","es":"Especialista en Aplicaciones TI - Administrador de Sistemas Linux · Sopra Steria"},"exp.sopra1.subtitle":{"en":"Full-time · Hybrid · Madrid, Community of Madrid, Spain","es":"Tiempo completo · Híbrido · Madrid, Comunidad de Madrid, España"},"exp.sopra1.period":{"en":"Nov 2023 - Jul 2025","es":"Nov 2023 - Jul 2025"},"exp.sopra1.1":{"en":"Led a team of 5 technicians managing 100+ Linux and Windows servers for a Norwegian financial client in a fully English-speaking environment.","es":"Liderazgo de equipo de 5 técnicos gestionando más de 100 servidores Linux y Windows para un cliente financiero noruego en entorno anglófono."},"exp.sopra1.2":{"en":"Maintained RHEL compliance across 100+ servers using Red Hat Satellite; built Ansible automation reducing deployment time from hours to minutes.","es":"Cumplimiento RHEL en más de 100 servidores con Red Hat Satellite; automatización Ansible reduciendo el aprovisionamiento de horas a minutos."},"exp.sopra1.3":{"en":"Managed VMware vSphere and vCenter environments handling VM lifecycle, snapshot management, and capacity optimization.","es":"Gestión de entornos VMware vSphere y vCenter: ciclo de vida de VMs, snapshots y optimización de capacidad."},"exp.sopra1.4":{"en":"Resolved incidents and managed change operations in ServiceNow within SLA deadlines with structured escalation documentation.","es":"Resolución de incidencias y gestión de cambios en ServiceNow dentro de SLAs con documentación de escalado estructurada."},"exp.sopra1.5":{"en":"Administered Active Directory computer object lifecycle, group policies, and Kerberos integration for Linux servers.","es":"Administración del ciclo de vida de objetos AD, políticas de grupo e integración Kerberos para servidores Linux."},"exp.sopra2.title":{"en":"Information Technology Application Specialist · Sopra Steria","es":"Especialista en Aplicaciones TI · Sopra Steria"},"exp.sopra2.subtitle":{"en":"Full-time · Madrid, Community of Madrid, Spain","es":"Tiempo completo · Madrid, Comunidad de Madrid, España"},"exp.sopra2.period":{"en":"Apr 2023 - Jan 2025","es":"Abr 2023 - Ene 2025"},"exp.sopra2.1":{"en":"Delivered advanced technical support across multiple technologies in enterprise production contexts.","es":"Soporte técnico avanzado en producción con múltiples tecnologías."},"exp.sopra2.2":{"en":"Contributed to cloud-transition support initiatives and workplace modernization programs.","es":"Participación en iniciativas de migración a cloud y modernización del puesto de trabajo."},"exp.sopra2.3":{"en":"Worked across global collaboration environments with structured escalation and resolution flows.","es":"Colaboración en equipos globales con flujos de escalado y resolución estructurados."},"exp.intern.title":{"en":"Internship Trainee · Sopra Steria","es":"Becario en Prácticas · Sopra Steria"},"exp.intern.subtitle":{"en":"Internship · Madrid, Community of Madrid, Spain","es":"Prácticas · Madrid, Comunidad de Madrid, España"},"exp.intern.period":{"en":"Apr 2023 - Jun 2023","es":"Abr 2023 - Jun 2023"},"exp.intern.1":{"en":"Built foundations in incident handling, directory services, and enterprise support workflows.","es":"Formación en gestión de incidentes, servicios de directorio y flujos de soporte corporativo."},"skill.linux":{"en":"Linux Platform Engineering","es":"Ingeniería de Plataformas Linux"},"skill.linux.desc":{"en":"RHEL lifecycle management, troubleshooting, kernel/system tuning, and operational reliability practices.","es":"Ciclo de vida RHEL, diagnóstico, ajuste de kernel/sistema y prácticas de fiabilidad operativa."},"skill.auto":{"en":"Automation & Governance","es":"Automatización y Gobernanza"},"skill.auto.desc":{"en":"Ansible playbooks, reusable role design, Git workflows, and evidence-based operational change controls.","es":"Playbooks Ansible, roles reutilizables, flujos Git y controles de cambio basados en evidencia."},"skill.virt":{"en":"Virtualization & Datacenter Ops","es":"Virtualización y Ops de Datacenter"},"skill.virt.desc":{"en":"VMware vSphere administration, server lifecycle tasks, HA awareness, and disaster-recovery execution.","es":"Administración VMware vSphere, ciclo de vida de servidores, alta disponibilidad y recuperación ante desastres."},"skill.mid":{"en":"App Platforms & Databases","es":"Plataformas y Bases de Datos"},"skill.mid.desc":{"en":"Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS, reverse proxy, and production database operations.","es":"Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — despliegue de aplicaciones, SSL/TLS, proxy inverso y operaciones de bases de datos en producción."},"skill.cloud":{"en":"Cloud + AI Integration","es":"Cloud + Integración IA"},"skill.cloud.desc":{"en":"Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.","es":"Azure AI Foundry, inteligencia documental y patrones de implementación GenAI alineados con operaciones."},"skill.team":{"en":"Cross-Team Delivery","es":"Entrega Cross-Team"},"skill.team.desc":{"en":"Stakeholder management, technical consulting for app owners, and requirement-to-platform translation.","es":"Gestión de interlocutores, consultoría técnica para equipos de aplicaciones y traducción de requisitos a plataforma."},"catPage.published":{"en":"published","es":"publicados"},"catPage.article":{"en":"article","es":"artículo"},"catPage.articles":{"en":"articles","es":"artículos"},"catPage.caseSummary":{"en":"Each post in this domain is written in case-study format: situation, issue, solution, usage context, and delivery impact.","es":"Cada post en este dominio está escrito en formato de caso de estudio: situación, problema, solución, contexto de uso e impacto de entrega."},"catPage.noPosts":{"en":"No posts in this category yet.","es":"Sin posts en esta categoría aún."},"catPage.searchPlaceholder":{"en":"Search posts...","es":"Buscar posts..."},"post.caseSnapshot":{"en":"Case Snapshot","es":"Resumen del Caso"},"boot.title":{"en":"Booting Engineer Runtime","es":"Iniciando entorno de ingeniería"},"boot.hint":{"en":"Click to skip · Esc to continue instantly","es":"Clic para saltar · Esc para continuar"},"boot.gateLabel":{"en":"Type unlock to continue","es":"Escribe unlock para continuar"},"palette.title":{"en":"Engineer Command Palette","es":"Paleta de comandos"},"palette.searchPlaceholder":{"en":"Search commands... (mode, nav, boot)","es":"Buscar comandos… (modo, nav, boot)"},"palette.close":{"en":"Close","es":"Cerrar"},"palette.noMatch":{"en":"No command matched.","es":"Ningún comando coincide."},"cmd.goHome":{"en":"Go to Home","es":"Ir a Inicio"},"cmd.goArchive":{"en":"Go to Archive","es":"Ir a Archivo"},"cmd.goAbout":{"en":"Go to About","es":"Ir a Acerca de"},"cmd.goRecruiter":{"en":"Go to Recruiter Snapshot","es":"Ir a Resumen Recruiter"},"cmd.goTopology":{"en":"Go to Network Topology","es":"Ir a Topología de Red"},"cmd.hardcoreEnable":{"en":"Enable Hardcore Mode","es":"Activar Modo Hardcore"},"cmd.normalEnable":{"en":"Enable Normal Mode","es":"Activar Modo Normal"},"cmd.recruiterSwitch":{"en":"Switch to Recruiter Mode","es":"Cambiar a Modo Recruiter"},"cmd.engineerSwitch":{"en":"Switch to Engineer Mode","es":"Cambiar a Modo Ingeniero"},"cmd.bootReplay":{"en":"Replay Boot Sequence","es":"Repetir Secuencia de Arranque"},"cmd.bootGate":{"en":"Toggle Boot Unlock Gate","es":"Alternar Puerta de Desbloqueo"},"cmd.switchLang":{"en":"Switch to Español","es":"Switch to English"},"cmd.groupNav":{"en":"Navigation","es":"Navegación"},"cmd.groupMode":{"en":"Mode","es":"Modo"},"cmd.groupAudience":{"en":"Audience","es":"Audiencia"},"cmd.groupSystem":{"en":"System","es":"Sistema"},"cmd.groupLang":{"en":"Language","es":"Idioma"},"toast.hardcoreEnabled":{"en":"Hardcore mode enabled","es":"Modo hardcore activado"},"toast.normalEnabled":{"en":"Normal mode enabled","es":"Modo normal activado"},"toast.recruiterActive":{"en":"Recruiter mode active","es":"Modo recruiter activo"},"toast.engineerActive":{"en":"Engineer mode active","es":"Modo ingeniero activo"},"toast.bootGateEnabled":{"en":"Boot gate enabled","es":"Puerta de arranque activada"},"toast.bootGateDisabled":{"en":"Boot gate disabled","es":"Puerta de arranque desactivada"},"toast.langSwitched":{"en":"Switched to English","es":"Cambiado a Español"},"metric.host":{"en":"host","es":"host"},"metric.automation":{"en":"automation","es":"automatización"},"metric.aiMode":{"en":"ai mode","es":"modo ia"},"metric.hostValue":{"en":"rhel-prod-09","es":"rhel-prod-09"},"metric.automationValue":{"en":"ansible-playbook --check","es":"ansible-playbook --check"},"metric.aiModeValue":{"en":"low-latency edge validation","es":"validación edge de baja latencia"},"cv.openPublic":{"en":"Open Public CV","es":"Abrir CV Público"},"lang.switch":{"en":"ES","es":"EN"},"lang.switchLabel":{"en":"Cambiar a Español","es":"Switch to English"}};
+
+      window.__i18n = i18nDict;
+    })();</script> <script src="/scripts/nav.js" defer></script> <script>
+      // Interactive background grid mask
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.body.style.setProperty("--mouse-x", `${x}%`);
+        document.body.style.setProperty("--mouse-y", `${y}%`);
+      });
+    </script> </body> </html>
