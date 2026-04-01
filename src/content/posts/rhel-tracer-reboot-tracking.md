@@ -2,8 +2,6 @@
 title: "Tracking Required Reboots with RHEL Tracer"
 description: "How to use the tracer utility to identify which services need restart after package updates, and plan reboots strategically across server tiers."
 situation: "After monthly patching, we never knew which servers actually needed reboots. We either rebooted everything unnecessarily or missed critical restarts, causing application issues later."
-issue: "No visibility into which services had pending restarts, leading to either unnecessary reboots or missed restarts that caused instability."
-solution: "Implemented tracer integration to identify pending restarts, combined with a tiered reboot strategy based on application criticality."
 usedIn: "Monthly patching cycle for 200+ RHEL servers at a German bank, reducing unnecessary reboots by 60%."
 impact: "Reduced unplanned reboots by 60%, improved application stability post-patch, and enabled informed reboot scheduling."
 pubDate: 2026-02-01

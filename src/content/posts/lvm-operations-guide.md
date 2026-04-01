@@ -2,8 +2,6 @@
 title: "LVM Operations: Expand, Shrink, and Migrate Volumes"
 description: "A complete guide to Logical Volume Manager operations—expanding partitions online, shrinking safely, and migrating directories with minimal downtime."
 situation: "While managing a fleet of RHEL servers, storage operations were a recurring pain point. Applications would outgrow their allocated space, migrations required careful coordination, and shrink operations were dreaded due to data loss risks."
-issue: "Storage operations were handled inconsistently across the team. Some admins would reboot servers for partition changes, others would attempt risky online operations without proper checkpoints, and migrations often resulted in extended downtime windows."
-solution: "Documented a standardized LVM playbook covering the three core operations—expansion, shrinking, and migration—with clear pre-flight checks, execution steps, and rollback procedures."
 usedIn: "Used in Linux platform engineering for SAP deployments, PostgreSQL database servers, and application server fleets managed via Ansible."
 impact: "Reduced storage-related incidents by establishing consistent procedures. Expansion operations now happen without reboots, migrations complete within predictable maintenance windows, and shrink operations have clear safety gates."
 pubDate: 2026-03-03

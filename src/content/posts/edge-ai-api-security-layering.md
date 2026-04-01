@@ -2,8 +2,6 @@
 title: "Security Layering for Edge AI APIs: Encryption, Rate Limits, Validation, and Monitoring"
 description: "A concrete security module set for an edge AI backend: AES-256-GCM at rest, adaptive rate limiting, input validation, alerting, and automated scanning."
 situation: "A local-first AI platform needed an API surface for chat, agents, and document workflows while remaining safe for home lab and edge deployments."
-issue: "Without explicit controls, an AI API is vulnerable to abuse (burst traffic), unsafe inputs (command/path traversal), leaked secrets, and silent security regressions from dependencies."
-solution: "Implemented five security modules: encryption at rest, enhanced rate limiting, advanced input validation, security monitoring + alerts, and vulnerability scanning with report generation."
 usedIn: "Used in the RADXA AI Suite TypeScript backend security package (`backend-ts`)."
 impact: "Created a reusable, production-oriented security baseline that can be integrated as middleware and audited via generated reports and event logs."
 pubDate: 2026-02-28

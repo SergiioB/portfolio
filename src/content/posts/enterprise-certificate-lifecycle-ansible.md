@@ -1,9 +1,7 @@
-﻿---
+---
 title: "Enterprise Certificate Lifecycle Management with Ansible"
 description: "Complete guide to automating SSL/TLS certificate generation, deployment, rotation, and monitoring across enterprise Linux infrastructure using Ansible Vault and OpenSSL."
 situation: "Managing SSL/TLS certificates across 200+ servers was manual and error-prone. Certificates were tracked in spreadsheets, private keys were stored unencrypted, and expired certificates caused preventable outages. Compliance audits flagged security violations from plaintext secrets in shared storage."
-issue: "No certificate lifecycle management, manual deployment prone to human error, security risks from unencrypted private keys, and reactive rather than proactive expiration monitoring causing service disruptions."
-solution: "Implemented comprehensive certificate automation using OpenSSL for CSR generation, Ansible Vault for encryption, automated deployment roles, expiration monitoring with 90-day alerts, and standardized multi-SAN certificate templates."
 usedIn: "Enterprise Linux platform supporting Apache reverse proxies, load balancers, PostgreSQL, SAP systems, and secure application endpoints across dev, test, and production environments."
 impact: "Eliminated certificate-related outages, reduced deployment time from 2-3 hours to 5-10 minutes, achieved compliance for private key encryption, and established proactive monitoring preventing expiration incidents."
 pubDate: 2026-03-03

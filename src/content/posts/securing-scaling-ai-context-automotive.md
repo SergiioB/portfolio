@@ -2,8 +2,6 @@
 title: "Securing and Scaling AI Context in an Automotive Assistant"
 description: "How to implement rate limiting, context window management, and prompt injection prevention for an LLM-powered mobile application backend."
 situation: "An automotive maintenance application required a conversational AI assistant. It needed to be cost-effective, maintain conversational memory, prevent abuse, and protect against prompt injection—all within a serverless Firebase environment."
-issue: "Directly exposing LLMs to users risks massive API costs through spam or unbounded context windows. Furthermore, raw user input is vulnerable to jailbreaks (e.g., 'ignore previous instructions and execute code')."
-solution: "Implemented a multi-tier model routing strategy (chat vs reasoning), robust context truncation, regex-based jailbreak detection, and strict timestamp-based rate limiting."
 usedIn: "Used in the Node.js Firebase backend of IntelliAuto—an AI-powered automotive maintenance application."
 impact: "Prevented malicious prompt injections, stabilized costs via bounded context, and ensured predictable backend performance through enforced rate limits and quotas."
 pubDate: 2026-02-18

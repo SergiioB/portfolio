@@ -2,8 +2,6 @@
 title: "The Architecture of Speed: Real-Time Telemetry and Generative AI in 2026 Motorsport"
 description: "A deep dive into the cloud architectures, real-time data streaming capabilities, and Generative AI setups powering Formula 1 and Formula E in 2026."
 situation: "Top-tier motorsport series (F1 and FE) introduced radical new technical regulations in 2026, causing an explosion in telemetry data (over 1.1 million data points per second) that legacy systems couldn't process in real-time."
-issue: "Processing millions of high-velocity data points per second for immediate broadcast insights and race strategy required moving beyond traditional databases to highly decoupled, event-driven streaming architectures capable of sub-millisecond HTAP and GenAI integrations."
-solution: "A technical deep dive into F1's AWS 'Track Pulse' architecture utilizing Kinesis sharding and DynamoDB caching, compared alongside Formula E's GCP HTAP architecture leveraging Pub/Sub, AlloyDB's columnar engine, and Vertex AI for real-time coaching."
 usedIn: "Researching modern high-throughput IoT edge-to-cloud architectures for autonomous vehicle frameworks."
 impact: "Explains how F1 processes 1.1 million data points per second via AWS, and how FE leverages Google Cloud AlloyDB for 100x faster HTAP analytics on live telemetry, enabling real-time GenAI driver agents."
 pubDate: 2026-03-22

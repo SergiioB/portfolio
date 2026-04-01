@@ -2,8 +2,6 @@
 title: "GPU VRAM, CPU Offload, and llama.cpp: The Real Performance Cliff"
 description: "An advanced guide to local GPU inference with llama.cpp: why bandwidth matters more than model fit, how hybrid GPU+CPU offload behaves on cards like the RTX 3060 and 5070, what quantization really means mathematically, and how to run it on Linux, Windows, and WSL."
 situation: "Teams running local models on consumer GPUs often assume that if a model loads, it is production-ready. In practice, once model layers or KV cache spill from VRAM into system RAM, the system hits a bandwidth cliff and throughput collapses."
-issue: "Operators lacked a practical framework for choosing quantization, sizing VRAM budgets, deciding when CPU offload is acceptable, and understanding the difference between weight quantization and KV cache quantization. Windows-specific setup questions also created confusion around native builds versus WSL."
-solution: "Documented the bandwidth-first model, explained hybrid offload behavior for 12 GB and mid-range modern GPUs, compared quantization choices such as Q4_K_M and q4_0 KV cache, and provided concrete llama.cpp launch patterns for Linux, Windows, and WSL."
 usedIn: "Local-first AI engineering runtimes and workstation inference setups using llama.cpp on consumer NVIDIA GPUs."
 impact: "Gives engineers a repeatable way to choose practical model sizes, avoid false-positive 'it fits' decisions, and explain why partially offloaded large models often feel much slower than smaller models that stay inside VRAM."
 pubDate: 2026-03-25

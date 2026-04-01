@@ -2,8 +2,6 @@
 title: "Daily Linux Ops Command Cheatsheet"
 description: "A sanitized collection of Linux, storage, permissions, Git, cron, and Vim commands I keep close during day-to-day operations."
 situation: "Useful commands kept piling up in terminal history, scratch files, and chat messages. The commands were practical, but finding the right one during a change window or troubleshooting session was slower than it should be."
-issue: "The knowledge existed, but it was fragmented across storage work, account management, package checks, Git recovery, and automation workflows. That fragmentation increases the chance of typos and slows down repeat work."
-solution: "Consolidated the most reused Linux and admin commands into a snippets-first cheatsheet, grouped them by task, added flag guidance, and replaced every real identifier with placeholders."
 usedIn: "Daily Linux platform work on RHEL-like systems, automation repositories, and quick operational troubleshooting."
 impact: "Turned scattered command notes into a reusable reference that is faster to scan, safer to share, and easier to reuse under pressure."
 pubDate: 2026-03-09

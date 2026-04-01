@@ -2,8 +2,6 @@
 title: "IntelliAuto: AI-Powered Automotive Assistant with Secure Monetization"
 description: "Building an intelligent car maintenance companion with LLM-powered diagnostics, dynamic affiliate commerce, and defense-in-depth AI security."
 situation: "Car maintenance apps provide tracking but lack intelligence. Users need predictive insights, personalized recommendations, and trustworthy advice—without exposing sensitive vehicle data or falling for AI manipulation."
-issue: "Existing automotive apps are passive logs. Adding AI creates risks: prompt injection through user input, data privacy concerns, API cost runaway, and potential for incorrect safety-critical advice."
-solution: "Designed IntelliAuto with AutoMind AI assistant featuring backend proxy architecture, multi-layer prompt injection prevention, dynamic affiliate link generation, and strict safety disclaimers for automotive advice."
 usedIn: "Android automotive maintenance application with AI diagnostics, currently in production deployment."
 impact: "Enables intelligent car care guidance with secure monetization through affiliate commerce while maintaining user trust through privacy-first AI design and injection attack prevention."
 pubDate: 2026-03-03

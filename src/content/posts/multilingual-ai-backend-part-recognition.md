@@ -2,8 +2,6 @@
 title: "Building a Multilingual AI Backend for Part Recognition"
 description: "How to handle multi-language AI queries to provide accurate predictions and generate tailored localized search queries in a serverless environment."
 situation: "During the development of an automotive maintenance application, a need arose to support users entering data in multiple languages (Spanish, English, French) while keeping backend logic unified."
-issue: "The backend AI needed to recognize user intent and categorize vehicle parts accurately regardless of the input language, and subsequently generate both localized predictive maintenance responses and tailored affiliate search queries."
-solution: "Implemented comprehensive multi-language keyword dictionaries, extracted user language context directly from client requests, and used mapping dictionaries to serve localized response templates."
 usedIn: "Used in a serverless Node.js backend to manage AI-driven logic for a mobile application."
 impact: "Allowed seamless scaling to new markets without duplicating the core predictive algorithms, maintaining a single source of truth for part categorization."
 pubDate: 2026-02-14

@@ -2,8 +2,6 @@
 title: "IntelliFlow: Building a Production-Ready Finance App with AI"
 description: "From infrastructure engineer to Android developer—how I built and launched a personal finance app with AI-powered insights, now live on Google Play Store."
 situation: "As a Linux & Virtualization Engineer, I needed a finance tool I could actually trust. Existing apps lacked transparency about security, data handling, and architecture."
-issue: "Personal finance apps either had weak security practices, unclear data policies, or required trusting black-box systems. I needed full visibility and control."
-solution: "Built IntelliFlow from scratch with infrastructure-grade security: encrypted local storage, strict Firebase security rules, biometric auth, and AI features with privacy-preserving design and prompt injection safeguards."
 usedIn: "Production Android application deployed on Google Play Store with active users and continuous development."
 impact: "Successfully launched on Play Store with positive reviews, high AI categorization accuracy, and zero security incidents since launch."
 pubDate: 2026-03-03

@@ -2,8 +2,6 @@
 title: "Automating Firebase Deployments: Multi-Account Routing and Discord Notifications"
 description: "A documented deployment automation pattern for Firebase: scripted CLI operations, account profiles, environment routing, and Discord webhook alerts."
 situation: "A multi-environment Firebase setup needed repeatable deployments across accounts/projects without manually reconfiguring the CLI each time."
-issue: "Manual Firebase deployments are easy to mis-target (wrong project/hosting target), hard to audit, and slow to coordinate without realtime status notifications."
-solution: "Centralized deployment configuration into an `accounts.json` profile, added API endpoints for account switching, and integrated Discord webhooks for start/success/failure notifications with log snippets."
 usedIn: "Used in RADXA AI Suite deployment automation documentation and tooling."
 impact: "Reduced human error risk during deploys and made deployments observable via structured configuration and Discord notifications."
 pubDate: 2026-02-28

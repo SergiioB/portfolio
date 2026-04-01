@@ -2,8 +2,6 @@
 title: "Apache as a Reverse Proxy: Ansible Deployment Pattern"
 description: "How to deploy and configure Apache as a reverse proxy with Ansible, including SSL termination, load balancing, and health checks."
 situation: "Our internal applications needed a standardized reverse proxy setup for SSL termination and load balancing. Each deployment was custom-built, leading to configuration drift and security vulnerabilities."
-issue: "No consistent reverse proxy pattern, manual SSL certificate management, and inconsistent load balancer configurations across environments."
-solution: "Developed an Ansible role for Apache reverse proxy with automated SSL deployment, health check endpoints, and standardized load balancer configurations."
 usedIn: "Internal application platform at a German bank, supporting 20+ applications with standardized reverse proxy setups."
 impact: "Reduced reverse proxy deployment time from days to hours, eliminated SSL configuration errors, and standardized security posture across all applications."
 pubDate: 2026-02-20

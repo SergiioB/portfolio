@@ -2,8 +2,6 @@
 title: "RK3588 LLM Performance: NPU vs CPU in a Discord Agent"
 description: "Benchmarking local LLM inference on RK3588 and why NPU acceleration (RKLLM) is the difference between real-time chat and unusable latency."
 situation: "A Discord-native autonomous agent was deployed on an RK3588 (Radxa ROCK 5B) and needed responsive, streaming replies for simple chat and routing decisions."
-issue: "CPU-only inference on small models was too slow for interactive UX, and some NPU model runs initially failed for non-runtime reasons (corrupted downloads or wrong target platform conversions)."
-solution: "Benchmarked CPU (Ollama) vs NPU (RKLLM), applied system and inference parameter optimizations, and documented failure modes to distinguish model-file issues from NPU/runtime issues."
 usedIn: "Used in Engram AI (local-first Discord bot) running on RK3588."
 impact: "Validated that NPU-accelerated models deliver ~26x to ~53x higher throughput than CPU-only runs for comparable prompts, making real-time Discord interaction feasible."
 pubDate: 2026-02-28

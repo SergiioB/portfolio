@@ -2,8 +2,6 @@
 title: "Building Custom Ansible Execution Environments"
 description: "How to package Ansible dependencies into a portable, containerized Execution Environment (EE) for consistent automation across runners."
 situation: "Our Ansible automation was failing on newer execution nodes because of missing Python libraries and collection dependencies. Each runner had a slightly different environment, causing unpredictable failures."
-issue: "Ansible playbooks that worked on the control node failed on execution environments with missing dependencies, and reproducing issues was difficult without consistent environments."
-solution: "Built custom Execution Environments using ansible-builder, packaging all Python dependencies, Ansible collections, and system packages into versioned container images."
 usedIn: "Enterprise Linux platform automation at a German bank, supporting 200+ servers with consistent execution environments."
 impact: "Eliminated environment-related playbook failures and reduced troubleshooting time by 80%."
 pubDate: 2026-02-24

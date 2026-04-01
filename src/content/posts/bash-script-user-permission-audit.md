@@ -2,8 +2,6 @@
 title: "Bash Script for User Permission Audits"
 description: "A practical bash script to audit user permissions, sudo access, and group memberships across Linux servers for compliance reporting."
 situation: "Our internal audit required a comprehensive report of all user permissions across 200+ servers. The existing process involved manually logging into each server and running commands, taking weeks to complete."
-issue: "No automated way to gather user permission data, manual auditing was error-prone and time-consuming, and compliance reports were always delayed."
-solution: "Developed a bash script that collects user accounts, sudo access, and group memberships, outputting a standardized report that could be consolidated across all servers."
 usedIn: "Compliance audits at a German bank, covering 200+ Linux servers for SOX and internal security requirements."
 impact: "Reduced audit preparation time from weeks to hours, eliminated manual errors, and enabled real-time permission visibility."
 pubDate: 2026-02-08

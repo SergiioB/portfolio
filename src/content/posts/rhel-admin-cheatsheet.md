@@ -2,8 +2,6 @@
 title: "Essential Red Hat Linux Administrator Commands"
 description: "A practical cheatsheet covering the most essential commands for managing RHEL systems on a daily basis: systemd, storage, networking, and user management."
 situation: "New team members were constantly asking for the same commands during onboarding, and senior engineers had their own scattered notes. We needed a unified reference."
-issue: "No single source of truth for common RHEL administration commands, leading to inconsistent practices and repeated onboarding questions."
-solution: "Created a living cheatsheet covering systemd, LVM, networking, user management, and troubleshooting - the commands used daily in our environment."
 usedIn: "RHEL platform administration at a German bank, covering 200+ servers running SAP, PostgreSQL, and middleware."
 impact: "Reduced onboarding time for new engineers by 50% and became the go-to reference for the entire Linux team."
 pubDate: 2026-01-30

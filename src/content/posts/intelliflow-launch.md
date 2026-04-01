@@ -2,8 +2,6 @@
 title: "Shipping My First Android App: IntelliFlow"
 description: "How I leveraged AI scaffolding to focus on infrastructure, security, and architecture while building a personal finance app — now live on Google Play Store."
 situation: "During cloud-native application and platform design projects, this case came from work related to shipping my first Android app."
-issue: "Needed a repeatable way to leverage AI scaffolding to focus on infrastructure, security, and architecture while building a personal finance app."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
 usedIn: "Used in cloud projects that required security-first architecture and reliable service behavior."
 impact: "Improved delivery speed while preserving security and operational control. App now live on Google Play Store."
 pubDate: 2026-02-18

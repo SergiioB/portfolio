@@ -2,8 +2,6 @@
 title: "Managing Linux Users and Groups with Ansible"
 description: "A practical pattern for managing local users, groups, and sudo access across Linux servers using Ansible with host-specific variables."
 situation: "User management was manual and inconsistent. Service accounts had different UIDs across servers, sudo access was granted via one-off edits, and onboarding new servers required hours of manual work."
-issue: "No centralized user management for local accounts, UID/GID inconsistencies breaking applications, and sudo access scattered across individual sudoers files."
-solution: "Implemented Ansible-based user management with host_vars for server-specific accounts, standardized UID/GID ranges, and templated sudoers configurations."
 usedIn: "Linux platform at a German bank, managing 50+ service accounts and 200+ servers with consistent user configurations."
 impact: "Reduced user provisioning time from hours to minutes, eliminated UID/GID conflicts, and enabled audit-compliant sudo access management."
 pubDate: 2026-02-10

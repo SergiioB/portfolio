@@ -2,8 +2,6 @@
 title: "Building Golden Images with Packer and StackGuardian"
 description: "How to create standardized golden images for VMware using Packer with StackGuardian integration for automated image pipelines."
 situation: "New VM provisioning took days because base images were manually built with inconsistent configurations. Each team had their own image-building process with no standardization."
-issue: "No standardized golden images, manual image building was error-prone, and configuration drift between images caused deployment failures."
-solution: "Implemented Packer with StackGuardian for automated golden image pipelines, creating standardized RHEL images with consistent configurations."
 usedIn: "VMware environment at a German bank, creating standardized RHEL 8/9 images for SAP and middleware workloads."
 impact: "Reduced image build time from days to hours, eliminated configuration drift, and enabled consistent VM provisioning across all teams."
 pubDate: 2026-02-18

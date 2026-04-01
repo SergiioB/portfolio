@@ -2,8 +2,6 @@
 title: "llamacpp-workbench: Remote llama.cpp Control and REAP Model Serving on RK3588"
 description: "Publishing a practical local-AI control plane for llama.cpp: remote model loading, runtime tuning, streaming chat, and real REAP model serving on a Radxa ROCK 5B+."
 situation: "I wanted a serious remote control surface for local GGUF inference on a Radxa ROCK 5B+ instead of one-off shell commands or generic UIs that hide the important llama.cpp knobs."
-issue: "Most local model UIs either abstract away the runtime details that actually matter on constrained hardware or assume desktop-class GPUs. On RK3588, that makes it harder to tune context, KV cache quantization, reasoning behavior, and model selection credibly."
-solution: "Built and published `llamacpp-workbench`, a remote llama.cpp workbench with explicit runtime controls, model presets, markdown chat rendering, streaming responses, and benchmark-backed defaults for REAP and dense GGUF models."
 usedIn: "Local-first AI serving on a Radxa ROCK 5B+ / RK3588 using source-built llama.cpp and GGUF models, including GLM-4.7-Flash-REAP-23B-A3B."
 impact: "Turned a board-class ARM64 deployment into a usable remote LLM workstation: one-click model switching, stable high-context serving, and documented RK3588 tuning guidance backed by real measurements rather than generic local-AI advice."
 pubDate: 2026-03-30
