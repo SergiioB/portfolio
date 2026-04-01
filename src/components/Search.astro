@@ -1,5 +1,7 @@
 ---
-// Search component for technical portfolio
+import { withBase } from "../utils/paths";
+
+const searchDataUrl = withBase("search.json");
 ---
 
 <div class="search-wrapper">
@@ -28,145 +30,197 @@
   </div>
 </div>
 
-<script is:inline>
-  // Search functionality
-  (function() {
-    const container = document.getElementById('search-container');
-    const input = document.getElementById('search-input');
-    const dropdown = document.getElementById('search-dropdown');
-    const resultsList = document.getElementById('search-results-list');
-    const resultsCount = document.getElementById('search-results-count');
-    const closeBtn = document.getElementById('search-close-btn');
-    const cursor = document.getElementById('search-cursor');
+<script is:inline define:vars={{ searchDataUrl }}>
+  (() => {
+    const state =
+      window.__portfolioSearchState ||
+      (window.__portfolioSearchState = {
+        postsData: [],
+        isLoaded: false,
+        pendingLoad: null,
+        initPage: null,
+      });
 
-    let postsData = [];
-    let isLoaded = false;
+    const getElements = () => ({
+      container: document.getElementById("search-container"),
+      input: document.getElementById("search-input"),
+      dropdown: document.getElementById("search-dropdown"),
+      resultsList: document.getElementById("search-results-list"),
+      resultsCount: document.getElementById("search-results-count"),
+      closeBtn: document.getElementById("search-close-btn"),
+      cursor: document.getElementById("search-cursor"),
+    });
 
-    // Load search data
-    function loadSearchData() {
-      if (isLoaded) return Promise.resolve();
-      
-      return fetch('/search.json')
-        .then(res => res.json())
-        .then(data => {
-          postsData = data;
-          isLoaded = true;
+    const escapeHtml = (text) => {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const highlightText = (text, query) => {
+      const regex = new RegExp(`(${escapeRegex(query)})`, "gi");
+      return escapeHtml(text).replace(regex, "<mark>$1</mark>");
+    };
+
+    const loadSearchData = () => {
+      if (state.isLoaded) return Promise.resolve(state.postsData);
+      if (state.pendingLoad) return state.pendingLoad;
+
+      state.pendingLoad = fetch(searchDataUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          state.postsData = data;
+          state.isLoaded = true;
+          return data;
         })
-        .catch(err => console.error('Search load error:', err));
-    }
-
-    // Keyboard shortcut - Ctrl+F or Cmd+F for search
-    document.addEventListener('keydown', function(e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-        e.preventDefault();
-        e.stopPropagation();
-        loadSearchData().then(() => {
-          input.focus();
-          container.classList.add('active');
+        .catch((error) => {
+          console.error("Search load error:", error);
+          return [];
+        })
+        .finally(() => {
+          state.pendingLoad = null;
         });
-      }
-      
-      if (e.key === 'Escape') {
-        closeSearch();
-      }
-    }, true);
 
-    // Focus handling
-    input.addEventListener('focus', function() {
-      container.classList.add('active');
-      cursor.style.animationPlayState = 'running';
-      loadSearchData();
-      
-      if (input.value.trim().length >= 2) {
-        performSearch(input.value.trim().toLowerCase());
-      }
-    });
+      return state.pendingLoad;
+    };
 
-    input.addEventListener('blur', function() {
-      cursor.style.animationPlayState = 'paused';
-    });
+    const closeSearch = () => {
+      const { container, input, dropdown } = getElements();
+      if (!container || !input || !dropdown) return;
 
-    // Input handling
-    input.addEventListener('input', function(e) {
-      const query = e.target.value.trim().toLowerCase();
-      
-      if (query.length < 2) {
-        hideDropdown();
-        return;
-      }
-      
-      performSearch(query);
-    });
-
-    // Close button
-    closeBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      closeSearch();
-    });
-
-    function closeSearch() {
       dropdown.hidden = true;
-      container.classList.remove('active');
+      container.classList.remove("active");
       input.blur();
-    }
+    };
 
-    function hideDropdown() {
-      dropdown.hidden = true;
-    }
+    const showResults = (results, query) => {
+      const { dropdown, resultsCount, resultsList } = getElements();
+      if (!dropdown || !resultsCount || !resultsList) return;
 
-    function performSearch(query) {
-      if (!postsData.length) return;
+      resultsCount.textContent = `${results.length} result${results.length !== 1 ? "s" : ""}`;
 
-      const results = postsData.filter(function(post) {
-        const searchText = (post.title + ' ' + post.description + ' ' + post.category.join(' ') + ' ' + (post.tags || []).join(' ')).toLowerCase();
+      if (results.length === 0) {
+        resultsList.innerHTML = `<div class="search-no-results">No matches found for "${escapeHtml(query)}"</div>`;
+      } else {
+        resultsList.innerHTML = results
+          .map(
+            (post) => `<a href="${post.url}" class="search-result-item" data-search-result-link>
+              <div class="search-result-meta">
+                <span class="search-result-category">${escapeHtml(post.category[0])}</span>
+                <span class="search-result-date">${escapeHtml(post.date)}</span>
+              </div>
+              <h4 class="search-result-title">${highlightText(post.title, query)}</h4>
+              <p class="search-result-desc">${highlightText(post.description, query)}</p>
+              ${
+                post.tags && post.tags.length
+                  ? `<div class="search-result-tags">${post.tags
+                      .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
+                      .join("")}</div>`
+                  : ""
+              }
+            </a>`
+          )
+          .join("");
+      }
+
+      dropdown.hidden = false;
+    };
+
+    const performSearch = (query) => {
+      if (!state.postsData.length) return;
+
+      const results = state.postsData.filter((post) => {
+        const searchText =
+          `${post.title} ${post.description} ${post.category.join(" ")} ${(post.tags || []).join(" ")}`.toLowerCase();
         return searchText.includes(query);
       });
 
       showResults(results, query);
-    }
+    };
 
-    function showResults(results, query) {
-      resultsCount.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '');
-      
-      if (results.length === 0) {
-        resultsList.innerHTML = '<div class="search-no-results">No matches found for "' + escapeHtml(query) + '"</div>';
-      } else {
-        resultsList.innerHTML = results.map(function(post) {
-          return '<a href="' + post.url + '" class="search-result-item" onclick="closeSearch()">' +
-            '<div class="search-result-meta">' +
-              '<span class="search-result-category">' + post.category[0] + '</span>' +
-              '<span class="search-result-date">' + post.date + '</span>' +
-            '</div>' +
-            '<h4 class="search-result-title">' + highlightText(post.title, query) + '</h4>' +
-            '<p class="search-result-desc">' + highlightText(post.description, query) + '</p>' +
-            (post.tags && post.tags.length ? '<div class="search-result-tags">' + post.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' : '') +
-          '</a>';
-        }).join('');
-      }
-      
-      dropdown.hidden = false;
-    }
+    state.initPage = () => {
+      const { container, input, dropdown, resultsList, closeBtn, cursor } = getElements();
+      if (!container || !input || !dropdown || !resultsList || !closeBtn || !cursor) return;
+      if (container.dataset.searchBound === "1") return;
+      container.dataset.searchBound = "1";
 
-    function highlightText(text, query) {
-      const regex = new RegExp('(' + escapeRegex(query) + ')', 'gi');
-      return escapeHtml(text).replace(regex, '<mark>$1</mark>');
-    }
+      input.addEventListener("focus", () => {
+        container.classList.add("active");
+        cursor.style.animationPlayState = "running";
+        loadSearchData();
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+        const query = input.value.trim().toLowerCase();
+        if (query.length >= 2) {
+          performSearch(query);
+        }
+      });
 
-    function escapeRegex(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
+      input.addEventListener("blur", () => {
+        cursor.style.animationPlayState = "paused";
+      });
 
-    // Close on click outside
-    document.addEventListener('click', function(e) {
-      if (!container.contains(e.target)) {
+      input.addEventListener("input", (event) => {
+        const query = event.target.value.trim().toLowerCase();
+
+        if (query.length < 2) {
+          dropdown.hidden = true;
+          return;
+        }
+
+        performSearch(query);
+      });
+
+      closeBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
         closeSearch();
-      }
-    });
+      });
+
+      resultsList.addEventListener("click", (event) => {
+        if (event.target.closest("[data-search-result-link]")) {
+          closeSearch();
+        }
+      });
+    };
+
+    if (!state.globalBound) {
+      state.globalBound = true;
+
+      document.addEventListener(
+        "keydown",
+        (event) => {
+          const { container, input } = getElements();
+
+          if ((event.ctrlKey || event.metaKey) && event.key === "f") {
+            if (!container || !input) return;
+            event.preventDefault();
+            event.stopPropagation();
+            loadSearchData().then(() => {
+              input.focus();
+              container.classList.add("active");
+            });
+          }
+
+          if (event.key === "Escape") {
+            closeSearch();
+          }
+        },
+        true
+      );
+
+      document.addEventListener("click", (event) => {
+        const { container } = getElements();
+        if (container && !container.contains(event.target)) {
+          closeSearch();
+        }
+      });
+
+      document.addEventListener("astro:page-load", () => {
+        state.initPage?.();
+      });
+    }
+
+    state.initPage();
   })();
 </script>

@@ -47,58 +47,58 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll("/", "-") || 
 </section>
 
 <script is:inline define:vars={{ inputId, statusId, emptyId, itemSelector, sectionSelector }}>
-  // Defer until the full DOM is parsed — the search items are rendered
-  // *below* this component in the page, so an inline synchronous query
-  // would return an empty NodeList if run at parse time.
-  // Use both DOMContentLoaded (initial load) AND astro:page-load (SPA navigations).
-  function initPostSearch() {
-    function normalize(value) {
-      return String(value ?? "")
-        .toLowerCase()
-        .trim();
-    }
+  (() => {
+    const initPostSearch = () => {
+      const normalize = (value) =>
+        String(value ?? "")
+          .toLowerCase()
+          .trim();
 
-    const input = document.getElementById(inputId);
-    const status = document.getElementById(statusId);
-    const empty = document.getElementById(emptyId);
-    const items = Array.from(document.querySelectorAll(itemSelector));
-    const sections = sectionSelector ? Array.from(document.querySelectorAll(sectionSelector)) : [];
+      const input = document.getElementById(inputId);
+      const status = document.getElementById(statusId);
+      const empty = document.getElementById(emptyId);
 
-    function applyQuery(rawQuery) {
-      const query = normalize(rawQuery);
-      const searchTerms = query.split(/\s+/).filter((t) => t.length > 0);
-      let visibleCount = 0;
+      if (!input || input.dataset.searchBound === "1") return;
+      input.dataset.searchBound = "1";
 
-      for (const item of items) {
-        const haystack = normalize(item.dataset.search);
+      const items = Array.from(document.querySelectorAll(itemSelector));
+      const sections = sectionSelector
+        ? Array.from(document.querySelectorAll(sectionSelector))
+        : [];
 
-        // Multi-word matching: EVERY term in the query must be found in the haystack (AND logic)
-        // This is much better than strict exact substring matching.
-        const matches =
-          searchTerms.length === 0 || searchTerms.every((term) => haystack.includes(term));
+      const applyQuery = (rawQuery) => {
+        const query = normalize(rawQuery);
+        const searchTerms = query.split(/\s+/).filter((term) => term.length > 0);
+        let visibleCount = 0;
 
-        item.hidden = !matches;
-        if (matches) visibleCount++;
-      }
+        for (const item of items) {
+          const haystack = normalize(item.dataset.search);
+          const matches =
+            searchTerms.length === 0 || searchTerms.every((term) => haystack.includes(term));
 
-      if (sections.length > 0) {
-        for (const section of sections) {
-          // Hide empty year blocks while searching.
-          const hasAnyVisible = section.querySelector(`${itemSelector}:not([hidden])`) !== null;
-          section.hidden = !hasAnyVisible;
+          item.hidden = !matches;
+          if (matches) visibleCount++;
         }
-      }
 
-      if (status) {
-        status.textContent =
-          query.length === 0 ? "" : `${visibleCount} match${visibleCount === 1 ? "" : "es"} found`;
-      }
-      if (empty) {
-        empty.hidden = !(query.length > 0 && visibleCount === 0);
-      }
-    }
+        if (sections.length > 0) {
+          for (const section of sections) {
+            const hasAnyVisible = section.querySelector(`${itemSelector}:not([hidden])`) !== null;
+            section.hidden = !hasAnyVisible;
+          }
+        }
 
-    if (input) {
+        if (status) {
+          status.textContent =
+            query.length === 0
+              ? ""
+              : `${visibleCount} match${visibleCount === 1 ? "" : "es"} found`;
+        }
+
+        if (empty) {
+          empty.hidden = !(query.length > 0 && visibleCount === 0);
+        }
+      };
+
       const params = new URLSearchParams(window.location.search);
       const initial = params.get("q");
       if (initial) {
@@ -109,9 +109,8 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll("/", "-") || 
       input.addEventListener("input", (event) => {
         applyQuery(event.target.value);
 
-        // Update URL to make searches shareable, without causing page reload
         if (window.history.replaceState) {
-          const url = new URL(window.location);
+          const url = new URL(window.location.href);
           if (event.target.value) {
             url.searchParams.set("q", event.target.value);
           } else {
@@ -120,10 +119,19 @@ const emptyId = `post-search-empty-${Astro.url.pathname.replaceAll("/", "-") || 
           window.history.replaceState(null, "", url);
         }
       });
+    };
+
+    if (!window.__portfolioPostSearchBound) {
+      window.__portfolioPostSearchBound = true;
+      document.addEventListener("astro:page-load", initPostSearch);
     }
-  }
-  document.addEventListener("DOMContentLoaded", initPostSearch);
-  document.addEventListener("astro:page-load", initPostSearch);
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initPostSearch, { once: true });
+    } else {
+      initPostSearch();
+    }
+  })();
 </script>
 
 <style>
