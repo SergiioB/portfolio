@@ -2,8 +2,6 @@
 title: "Infrastructure as Code: Structuring Ansible Repositories"
 description: "Best practices for organizing your Ansible inventory, group_vars, and host_vars to cleanly separate development and production environments."
 situation: "Our Ansible repository had grown to 200+ playbooks with inconsistent variable naming, making it unclear which variables applied to which environments. A developer accidentally ran a production playbook against dev hosts."
-issue: "No clear separation between dev and prod environments, inconsistent variable hierarchy, and accidental cross-environment changes were becoming common."
-solution: "Implemented a standardized repository structure with separate inventory directories, clear group_vars/host_vars hierarchy, and environment-specific variable overrides."
 usedIn: "Enterprise Linux platform at a German bank, supporting 200+ servers across dev, test, and prod environments."
 impact: "Eliminated cross-environment accidents, reduced onboarding time for new engineers, and made variable debugging straightforward."
 pubDate: 2026-01-20

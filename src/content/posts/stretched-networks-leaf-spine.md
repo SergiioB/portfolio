@@ -2,8 +2,6 @@
 title: "Stretched Networks and Leaf-Spine Architecture"
 description: "Understanding stretched Layer 2 networks across data centers, leaf-spine fabric design, and the trade-offs for enterprise applications."
 situation: "A disaster recovery project required stretching Layer 2 networks between primary and DR data centers. The network team proposed a leaf-spine architecture, but application teams were concerned about latency and complexity."
-issue: "Lack of understanding about stretched networks, leaf-spine trade-offs, and how application traffic patterns would be affected."
-solution: "Documented the stretched network architecture, analyzed application traffic flows, and provided clear guidance on which applications were suitable for stretched L2 vs. Layer 3 approaches."
 usedIn: "Disaster recovery architecture at a German bank, supporting SAP and critical middleware across two data centers."
 impact: "Enabled informed architecture decisions, reduced project risk by clarifying trade-offs, and provided a reference for future DR projects."
 pubDate: 2026-02-28

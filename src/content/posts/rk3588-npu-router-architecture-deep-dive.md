@@ -2,8 +2,6 @@
 title: "RK3588 NPU Router Architecture: What Actually Runs, What Wins, and Why"
 description: "A benchmark-backed deep dive into the real RK3588 inference stack: llama.cpp CPU winners, NPU roles, KV cache choices, quantization tradeoffs, and how to think about 27B with GPU+CPU offload."
 situation: "A local-first Discord AI runtime needed verified, practical inference on RK3588 rather than aspirational model support. The job was to identify what really works interactively, what should be reserved for batch use, and how to explain the system honestly."
-issue: "Several paths technically loaded but were not practically usable. Large models timed out or delivered poor latency, CPU tuning mattered more than expected, and the product narrative needed to shift from 'many runtimes' to a benchmark-backed llama.cpp-first architecture."
-solution: "Benchmarked llama.cpp and RKLLM on RK3588, identified the winning CPU configs for Qwen 3.5 4B and 9B, clarified where the NPU helps, documented KV cache and quantization choices, and reframed the architecture as llama.cpp-first with NPU used selectively."
 usedIn: "Engram AI, a local collaborative engineering runtime designed for private on-device development workflows."
 impact: "Established Qwen3.5-4B-Q4_K_M as the practical interactive default, Qwen3.5-9B-Q4_K_M as the quality step-up, proved 27B is not practical on RK3588 CPU, and documented exact commands and deployment tradeoffs for real operators."
 pubDate: 2026-03-22

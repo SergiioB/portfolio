@@ -2,8 +2,6 @@
 title: "Ansible Vault, Python, and Molecule Snippets"
 description: "A sanitized reference for the Ansible Vault, Python virtualenv, dependency bootstrap, linting, and Molecule commands I reuse in automation repositories."
 situation: "The automation side of my notes kept growing separately from the Linux admin snippets. Vault operations, Python environment setup, collection dependencies, and Molecule scenarios were all useful, but they made one cheatsheet too crowded."
-issue: "One mixed list of Linux and automation commands is hard to scan during a delivery window. The commands need context, safe placeholders, and a quick explanation of the flags that matter."
-solution: "Split the automation workflow into its own sanitized snippets post and grouped the commands into the same order I usually follow in a fresh repository: bootstrap, dependencies, secrets, linting, test scenarios, and quick local sharing."
 usedIn: "Daily Ansible repository work, secret handling, collection setup, and role validation with Molecule."
 impact: "Turned the automation side of the notes into a shareable reference that is easier to follow during setup, safer to publish, and faster to reuse across repositories."
 pubDate: 2026-03-09

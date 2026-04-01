@@ -2,8 +2,6 @@
 title: "Automating NFS Share Management at Scale"
 description: "How to provision, mount, and troubleshoot NFS exports across enterprise Linux servers using Ansible, LVM, and proper network segmentation."
 situation: "Managing NFS exports for Oracle databases, SAP systems, and application home directories across 200+ servers required manual coordination between storage, network, and Linux teams. Mount failures, permission issues, and network routing problems caused frequent outages."
-issue: "NFS configuration was inconsistent across servers. Some used hostnames, others used IPs. Network routing issues caused connections over slow backup networks instead of high-bandwidth production networks. Permission errors blocked user access."
-solution: "Implemented automated NFS management using Ansible roles for export configuration, client mounting with proper network selection, and troubleshooting runbooks for common failure scenarios."
 usedIn: "Enterprise storage infrastructure supporting Oracle databases, SAP applications, and administrative home directories across RHEL 8/9 servers."
 impact: "Reduced NFS-related incidents by 80%, standardized mount configurations with proper options, and enabled rapid troubleshooting of stuck mounts without server reboots."
 pubDate: 2026-03-03

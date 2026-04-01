@@ -2,8 +2,6 @@
 title: "Qwen3.5 on RK3588 with llama.cpp: Real Benchmarks from a Radxa ROCK 5B+"
 description: "An advanced benchmark report for running Qwen3.5 locally on RK3588 with source-built llama.cpp: prefill speed, decode speed, stable context, tool-calling behavior, and the practical model choices that actually work on a Radxa ROCK 5B+."
 situation: "I was tuning a local-first Discord engineering agent on a Radxa ROCK 5B+ (RK3588, 24 GB RAM) and needed hard data for which Qwen3.5 models were actually practical on CPU inference with llama.cpp."
-issue: "The usual local-AI advice overemphasizes parameter count and underexplains bandwidth, context budget, KV cache policy, and interactive latency. On RK3588, that leads to bad defaults: models that technically load but feel broken in real chat and tool-calling workloads."
-solution: "I ran a corrected Qwen3.5 sweep on RK3588 using source-built llama.cpp, quantized KV cache, and task-pass validation. Then I compared prefill, decode, stable context, average latency, and tool-calling behavior to determine the right model for each workload."
 usedIn: "Local-first Discord agent runtime on Radxa ROCK 5B+ / RK3588, built around raw llama.cpp rather than Ollama or LM Studio."
 impact: "Showed that Qwen3.5-2B is the best overall default on RK3588, Qwen3.5-9B is the best practical quality tier, and Qwen3.5-27B is not viable interactively on this board. Also established a benchmark-backed way to talk about context fit and KV cache tradeoffs credibly."
 pubDate: 2026-03-28

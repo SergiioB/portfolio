@@ -2,8 +2,6 @@
 title: "Safely Resolving Git Merge Conflicts"
 description: "A methodical approach to resolving git merge conflicts using git stash to protect your local work."
 situation: 'During day-to-day incident handling and collaborative delivery workflows, this case came from work related to "Safely Resolving Git Merge Conflicts."'
-issue: "Needed a repeatable way to resolve git merge conflicts using git stash to protect your local work."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
 usedIn: "Used in daily engineering operations to reduce mistakes and speed up safe execution."
 impact: "Reduced failure rate in recurring engineering tasks and improved recovery speed."
 pubDate: 2026-01-27

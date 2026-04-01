@@ -2,8 +2,6 @@
 title: "Testing Ansible Roles with Molecule and Docker"
 description: "How to set up automated testing for Ansible roles using Molecule with Docker drivers, ensuring playbooks work before production deployment."
 situation: "Ansible role changes were tested directly in production, causing outages when syntax errors or logic bugs slipped through. We had no automated testing pipeline."
-issue: "No automated testing for Ansible roles, production deployments were the first test, and role regressions were discovered only after incidents."
-solution: "Implemented Molecule with Docker for local role testing, integrated into CI pipeline to catch issues before merge."
 usedIn: "Ansible automation at a German bank, testing 50+ roles across development and production environments."
 impact: "Eliminated role-related production incidents, reduced development cycle time, and enabled confident refactoring of legacy roles."
 pubDate: 2026-02-14

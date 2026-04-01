@@ -2,8 +2,6 @@
 title: "Server Provisioning Playbook: From VM Request to Production"
 description: "A practical guide to the Linux server provisioning workflow—from creating AD groups and technical users to Ansible role deployment and application-specific configurations."
 situation: "As part of the Linux infrastructure team, I handle server provisioning requests end-to-end. A typical request involves creating Active Directory groups, setting up technical users, deploying base configurations via Ansible, and handing off to application teams."
-issue: "Server provisioning was inconsistent across team members. Some skipped steps, documentation was scattered across wikis and emails, and handoffs to application teams were incomplete—missing access groups, wrong technical user configurations, or incomplete application dependencies."
-solution: "Developed a standardized provisioning checklist and Ansible playbook structure that covers the complete lifecycle from VM deployment to application-ready state."
 usedIn: "Linux platform engineering for SAP, PostgreSQL, and custom application servers in a regulated enterprise environment."
 impact: "Reduced provisioning time from days to hours, eliminated missing configuration steps, and created clear handoff documentation for application teams."
 pubDate: 2026-03-03

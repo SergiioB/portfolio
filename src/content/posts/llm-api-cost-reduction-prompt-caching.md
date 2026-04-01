@@ -2,8 +2,6 @@
 title: "Slashing LLM API Costs with System Prompt Caching"
 description: "How to structure LLM requests for prompt caching (when supported) to reduce repeated system-prompt input costs."
 situation: "An AI-powered mobile application was running a heavy, multi-paragraph system prompt on every single user request. As traffic scaled, the input token costs quickly outpaced the output token costs."
-issue: "Large Language Models charge per token. When you send a 1,000-token system prompt alongside a 50-token user question, you pay for 1,050 tokens every time, even though 95% of the payload never changes between requests."
-solution: "Restructured the API payload to isolate static system instructions so the backend can take advantage of cached-input pricing or prompt caching features where the provider supports it."
 usedIn: "Evaluated for a Node.js backend of an AI conversational assistant using an OpenAI-compatible chat API."
 impact: "Modeled a ~60% reduction in total LLM spend in scenarios where cached-input pricing is available and the system prompt stays byte-identical across requests."
 pubDate: 2026-02-12

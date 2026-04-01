@@ -2,8 +2,6 @@
 title: "Training Custom AI Models for Insurance Document Processing"
 description: "How to build, train, and deploy custom document intelligence models for extracting structured data from multilingual insurance policies using Azure AI Foundry."
 situation: "Insurance policy processing required manual data extraction from PDFs in multiple languages (Spanish, German, English). Each policy had different formats, fields varied by insurer, and manual processing was slow and error-prone."
-issue: "Off-the-shelf OCR solutions couldn't handle the complexity of insurance documents. Different insurers used different layouts, multilingual support was limited, and extracted data needed to conform to a strict canonical schema for downstream systems."
-solution: "Implemented a custom document intelligence solution using Azure AI Document Intelligence, training models on labeled examples to extract and normalize fields across multiple insurers and languages."
 usedIn: "Document processing pipeline for insurance policies, claims processing, and compliance verification in a regulated financial environment."
 impact: "Reduced manual processing time by 90%, achieved 95%+ field extraction accuracy, and enabled automated policy validation against business rules."
 pubDate: 2026-03-03

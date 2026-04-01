@@ -2,8 +2,6 @@
 title: "Orchestrating Patching Waves for Enterprise Linux"
 description: "How to structure Ansible patching playbooks into controlled waves with health checks, rollback triggers, and clear ownership boundaries."
 situation: "Our monthly patching cycle involved 200+ servers patched in a single batch. When a bad patch caused application failures, we had no way to quickly identify which servers were affected or rollback selectively."
-issue: "Big-bang patching caused widespread outages with no rollback strategy, and identifying affected systems took hours during incidents."
-solution: "Implemented wave-based patching with health gates between waves, automatic rollback triggers, and per-wave ownership documentation."
 usedIn: "Monthly patching cycle for 200+ RHEL servers at a German bank, supporting SAP, PostgreSQL, and middleware workloads."
 impact: "Reduced patching incidents by 90%, rollback time from hours to minutes, and enabled selective patching by application tier."
 pubDate: 2026-02-15

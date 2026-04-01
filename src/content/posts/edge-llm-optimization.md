@@ -2,8 +2,6 @@
 title: "Edge LLM Optimization: Memory Bandwidth and Context Management"
 description: "Lessons learned running LLMs on constrained hardware—why bandwidth matters more than capacity, how KV cache quantization helps, and context folding for long conversations."
 situation: "I deployed a local-first Discord AI agent on an RK3588 (Radxa ROCK 5B). The goal was real-time streaming responses, but initial CPU-only inference was unusably slow (~0.21 t/s). Through iterative optimization, I learned that memory bandwidth, not capacity, is the real constraint—and that context management becomes critical for long-running sessions."
-issue: "Edge devices have hard constraints: limited RAM, no GPU VRAM, and strict latency requirements for interactive applications. The naive approach of 'make the model fit' failed repeatedly—either latency was too high or context windows would overflow during long conversations."
-solution: "Developed a three-pronged approach: (1) enforce bandwidth-first model selection, (2) use KV cache quantization to reduce memory footprint, and (3) implement hierarchical context folding for long conversations."
 usedIn: "Engram AI (Discord bot) and RADXA AI Suite running on RK3588 ARM64 hardware."
 impact: "Achieved 55 t/s throughput (vs 4 t/s before), stable memory usage during long sessions, and predictable context behavior without hard crashes."
 pubDate: 2026-03-03

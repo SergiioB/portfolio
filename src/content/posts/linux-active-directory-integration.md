@@ -2,8 +2,6 @@
 title: "Linux-Active Directory Integration: Access Control, SSO, and Troubleshooting"
 description: "A complete guide to integrating Linux with Active Directory: mapping AD groups to local permissions, deploying Kerberos SSO, and troubleshooting PAM issues."
 situation: "Enterprise Linux servers needed centralized identity management through Active Directory. We had three recurring challenges: managing sudo/access permissions across servers, setting up Kerberos SSO for web applications, and diagnosing 'Permission Denied' errors when users tried to switch accounts."
-issue: "AD integration was fragmented across multiple playbooks with no unified approach. Users couldn't 'su' to service accounts, SSO setup was manual and error-prone, and access control required manual sudoers edits on each server."
-solution: "Implemented a unified AD integration strategy: AD group mapping for sudo access, automated Kerberos keytab deployment via Ansible, and standardized PAM configuration across all servers."
 usedIn: "Enterprise Linux platform at a German bank, supporting 200+ servers with SAP, PostgreSQL, and middleware workloads."
 impact: "Reduced access provisioning time from days to hours, eliminated manual sudoers edits, and reduced PAM-related incidents by 90%."
 pubDate: 2026-03-03

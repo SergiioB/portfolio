@@ -2,8 +2,6 @@
 title: "Automating AD Computer Object Deletion on Linux Decommission"
 description: "How to use Ansible and adcli to safely remove a Linux server's computer object from Active Directory during decommissioning."
 situation: 'During Ansible-driven lifecycle automation and controlled release windows, this case came from work related to "Automating AD Computer Object Deletion on Linux Decommission."'
-issue: "Needed a repeatable way to use Ansible and adcli to safely remove a Linux server's computer object from Active Directory during decommissioning."
-solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
 usedIn: "Used in Ansible playbook pipelines for provisioning, patching, and decommissioning with audit requirements."
 impact: "Reduced manual steps and change variance while improving deployment consistency."
 pubDate: 2026-02-27

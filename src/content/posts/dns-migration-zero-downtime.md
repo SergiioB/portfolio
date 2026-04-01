@@ -2,8 +2,6 @@
 title: "DNS Migration Strategy for Zero-Downtime System Replacement"
 description: "How to use DNS record management and staged certificate deployment to migrate critical services without service interruption."
 situation: "A legacy system serving multiple applications needed replacement, but downtime was not an option. The system had multiple DNS aliases, SSL certificates, and dependent applications across different environments."
-issue: "Direct IP replacement would cause service disruption. Applications had hardcoded references to old hostnames. Certificates were tied to specific DNS names. Testing needed to happen in parallel with production operation."
-solution: "Implemented a two-phase DNS migration strategy using temporary test records, multi-SAN certificates, and coordinated DNS switchover during a planned maintenance window."
 usedIn: "Enterprise infrastructure migration for QA and production systems supporting business-critical applications."
 impact: "Achieved zero-downtime migration, enabled parallel testing without affecting production users, and established a repeatable pattern for future system replacements."
 pubDate: 2026-03-03

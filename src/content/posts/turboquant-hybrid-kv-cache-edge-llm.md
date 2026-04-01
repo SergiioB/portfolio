@@ -17,8 +17,6 @@ tags:
     "iclr",
   ]
 situation: "Running a local-first Discord AI agent (Engram) on a $130 RK3588 single-board computer with 24GB RAM. The challenge: KV cache memory during long conversations would crash the bot or cause severe latency spikes."
-issue: "Every time you message an AI chatbot, the model stores your conversation in temporary memory called the KV cache. On large models, this cache alone can consume 40GB—more than the model itself. On a constrained edge device, this is the difference between working and broken."
-solution: "Implemented hybrid per-layer KV cache quantization inspired by Google's TurboQuant (ICLR 2026). By using 8-bit quantization for early transformer layers (where attention quality matters most) and 4-bit quantization for later layers, we achieved 17% better compression without quality loss."
 usedIn: "Engram AI Discord bot, RADXA AI Suite"
 impact: "17% better compression, stable long-conversation sessions, zero OOM crashes on RK3588"
 draft: false

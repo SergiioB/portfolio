@@ -2,8 +2,6 @@
 title: "Implementing the Outbox Pattern for Offline-First Sync"
 description: "Resolving data synchronization failures in mobile apps by transitioning to an Outbox Pattern with exponential backoff and eventual consistency."
 situation: "An offline-first mobile application relying on local databases (Room) and cloud storage (Firestore) was experiencing silent data loss and sync failures."
-issue: "Direct-to-cloud write operations failed silently during poor network conditions. Historical data had hardcoded sync limits, and offline/guest modes were improperly triggering authentication flows."
-solution: "Adopted the Outbox Pattern for all write operations, separated local execution from cloud sync workers, and implemented comprehensive state tracking with retry logic."
 usedIn: "Used in a mobile application architecture requiring robust offline capabilities and reliable eventual consistency."
 impact: "Prevented silent data loss scenarios, enabled full offline functionality with eventual consistency, and provided real-time sync state visibility to the user."
 pubDate: 2026-02-05
