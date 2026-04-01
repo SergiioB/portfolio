@@ -14,7 +14,7 @@ import {
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return CATEGORY_ORDER.map((category) => ({
     params: { category },
     props: { category },
@@ -28,7 +28,9 @@ const posts = await getCollection("posts");
 const targetCategories = category === "ai" ? ["ai", "local-ai"] : [category as string];
 
 const filteredPosts = posts
-  .filter((post) => targetCategories.includes(post.data.category) && !post.data.draft)
+  .filter(
+    (post) => !post.data.draft && post.data.category.some((slug) => targetCategories.includes(slug))
+  )
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const catName = getCategoryLabel(category as string);
