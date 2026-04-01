@@ -391,21 +391,24 @@
       bar.className = 'scroll-progress-bar';
       document.body.appendChild(bar);
     }
+    let rafId = 0;
+    const updateScrollProgress = () => {
+      rafId = 0;
+      const b = document.querySelector('.scroll-progress-bar');
+      if (!b) return;
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      b.style.width = progress + '%';
+    };
     if (!scrollProgressBound) {
       scrollProgressBound = true;
       window.addEventListener('scroll', () => {
-        const b = document.querySelector('.scroll-progress-bar');
-        if (!b) return;
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        b.style.width = progress + '%';
+        if (rafId) return;
+        rafId = requestAnimationFrame(updateScrollProgress);
       }, { passive: true });
     }
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    bar.style.width = progress + '%';
+    updateScrollProgress();
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -675,11 +678,10 @@
           if (searchInput) {
             searchInput.focus();
           } else {
-            window.location.href = base + 'archive/';
+            spaNavigate(base + 'archive/');
           }
         },
       },
-    ];
       {
         id: 'boot-gate', group: T('cmd.groupSystem'), icon: '⚿',
         label: T('cmd.bootGate'),

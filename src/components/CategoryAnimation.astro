@@ -30,6 +30,10 @@ const { category } = Astro.props;
 
 <script>
   function initAnimations() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     const wrappers = document.querySelectorAll(
       ".category-animation-wrapper:not([data-initialized])"
     );
@@ -45,27 +49,37 @@ const { category } = Astro.props;
 
       let width = 0;
       let height = 0;
+      let destroyed = false;
+      let isVisible = true;
+      let animationFrameId = 0;
+      let lastFrameTime = 0;
+
+      const frameInterval =
+        category === "ai" || category === "local-ai" || category === "custom-ai"
+          ? 33
+          : category === "infrastructure" || category === "cloud"
+            ? 40
+            : 55;
 
       const resize = () => {
         const rect = wrapper.getBoundingClientRect();
-        // Handle high DPI displays
         const dpr = window.devicePixelRatio || 1;
         width = rect.width;
         height = rect.height;
         canvas.width = width * dpr;
         canvas.height = height * dpr;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr, dpr);
       };
 
       window.addEventListener("resize", resize);
       resize();
 
-      let animationFrameId: number;
-
       if (category === "ai" || category === "local-ai" || category === "custom-ai") {
-        // --- NEURAL NETWORK NODES ---
         const nodes: { x: number; y: number; vx: number; vy: number; radius: number }[] = [];
         const numNodes = Math.min(Math.floor((width * height) / 12000), 80);
+        const maxDistance = 120;
+        const maxDistanceSquared = maxDistance * maxDistance;
 
         for (let i = 0; i < numNodes; i++) {
           nodes.push({
@@ -77,10 +91,9 @@ const { category } = Astro.props;
           });
         }
 
-        const animateAI = () => {
+        const drawAI = () => {
           ctx.clearRect(0, 0, width, height);
           ctx.fillStyle = "#58a6ff";
-          ctx.strokeStyle = "rgba(88, 166, 255, 0.15)";
           ctx.lineWidth = 1;
 
           for (let i = 0; i < nodes.length; i++) {
@@ -99,23 +112,37 @@ const { category } = Astro.props;
               const other = nodes[j];
               const dx = node.x - other.x;
               const dy = node.y - other.y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
+              const distanceSquared = dx * dx + dy * dy;
 
-              if (dist < 120) {
+              if (distanceSquared < maxDistanceSquared) {
                 ctx.beginPath();
                 ctx.moveTo(node.x, node.y);
                 ctx.lineTo(other.x, other.y);
-                const opacity = 1 - dist / 120;
+                const opacity = 1 - Math.sqrt(distanceSquared) / maxDistance;
                 ctx.strokeStyle = `rgba(88, 166, 255, ${opacity * 0.25})`;
                 ctx.stroke();
               }
             }
           }
-          animationFrameId = requestAnimationFrame(animateAI);
         };
-        animateAI();
+
+        const tick = (time: number) => {
+          if (destroyed) return;
+          if (!isVisible) {
+            animationFrameId = requestAnimationFrame(tick);
+            return;
+          }
+
+          if (time - lastFrameTime >= frameInterval) {
+            drawAI();
+            lastFrameTime = time;
+          }
+
+          animationFrameId = requestAnimationFrame(tick);
+        };
+
+        animationFrameId = requestAnimationFrame(tick);
       } else if (category === "infrastructure" || category === "cloud") {
-        // --- DATA PACKET TRAFFIC FLOW ---
         const lines: {
           y: number;
           speed: number;
@@ -139,7 +166,7 @@ const { category } = Astro.props;
         ctx.shadowBlur = 8;
         ctx.shadowColor = "#3fb950";
 
-        const animateInfra = () => {
+        const drawInfra = () => {
           ctx.clearRect(0, 0, width, height);
 
           for (const line of lines) {
@@ -156,16 +183,30 @@ const { category } = Astro.props;
               ctx.fillRect(packet.x, line.y - line.size / 2, packet.length, line.size);
             }
           }
-          animationFrameId = requestAnimationFrame(animateInfra);
         };
-        animateInfra();
+
+        const tick = (time: number) => {
+          if (destroyed) return;
+          if (!isVisible) {
+            animationFrameId = requestAnimationFrame(tick);
+            return;
+          }
+
+          if (time - lastFrameTime >= frameInterval) {
+            drawInfra();
+            lastFrameTime = time;
+          }
+
+          animationFrameId = requestAnimationFrame(tick);
+        };
+
+        animationFrameId = requestAnimationFrame(tick);
       } else {
-        // --- MATRIX RAIN / TERMINAL SHIMMER ---
         const columns = Math.floor(width / 20);
         const drops: number[] = new Array(columns).fill(0).map(() => Math.random() * -100);
         const chars = "01ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
 
-        const animateMatrix = () => {
+        const drawMatrix = () => {
           ctx.fillStyle = "rgba(13, 17, 23, 0.1)";
           ctx.fillRect(0, 0, width, height);
 
@@ -184,33 +225,56 @@ const { category } = Astro.props;
             }
             drops[i]++;
           }
-          animationFrameId = requestAnimationFrame(animateMatrix);
         };
-        // Throttle matrix animation slightly
-        let lastTime = 0;
+
         const tick = (time: number) => {
-          if (time - lastTime > 40) {
-            animateMatrix();
-            lastTime = time;
-          } else {
+          if (destroyed) return;
+          if (!isVisible) {
             animationFrameId = requestAnimationFrame(tick);
+            return;
           }
+
+          if (time - lastFrameTime >= frameInterval) {
+            drawMatrix();
+            lastFrameTime = time;
+          }
+
+          animationFrameId = requestAnimationFrame(tick);
         };
+
         animationFrameId = requestAnimationFrame(tick);
       }
 
-      // Cleanup on page unmount
+      const visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry?.isIntersecting ?? true;
+        },
+        { threshold: 0.05 }
+      );
+
+      visibilityObserver.observe(wrapper);
+
       document.addEventListener(
         "astro:before-swap",
         () => {
+          destroyed = true;
           cancelAnimationFrame(animationFrameId);
           window.removeEventListener("resize", resize);
+          visibilityObserver.disconnect();
         },
         { once: true }
       );
     });
   }
 
-  // Setup on initial load and view transitions
-  document.addEventListener("astro:page-load", initAnimations);
+  window.__portfolioInitCategoryAnimations = initAnimations;
+
+  if (!window.__portfolioCategoryAnimationBound) {
+    window.__portfolioCategoryAnimationBound = true;
+    document.addEventListener("astro:page-load", () => {
+      window.__portfolioInitCategoryAnimations?.();
+    });
+  }
+
+  initAnimations();
 </script>
