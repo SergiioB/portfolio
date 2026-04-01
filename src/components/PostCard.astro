@@ -12,8 +12,7 @@ interface Props {
       pubDate: Date;
       category: string[];
       tags?: string[];
-      issue?: string;
-      solution?: string;
+      situation?: string;
       usedIn?: string;
     };
     body: string;
@@ -21,13 +20,22 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, category, tags, issue, solution } = post.data;
+const { title, description, pubDate, category, tags, usedIn, situation } = post.data;
 const readingTime = estimateReadingTime(post.body);
 const postUrl = withBase(`posts/${post.id}/`);
 const primaryCategory = category[0];
+
+// Build searchable text for the search component
+const searchContent = [title, description, situation, usedIn, tags?.join(" "), primaryCategory]
+  .filter(Boolean)
+  .join(" ");
 ---
 
-<article class={`post-card category-${primaryCategory}`}>
+<article
+  class={`post-card category-${primaryCategory}`}
+  data-search-item
+  data-search={searchContent}
+>
   <div class="post-card-header">
     <time class="post-date" datetime={pubDate.toISOString()}>
       {pubDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
@@ -55,18 +63,18 @@ const primaryCategory = category[0];
   }
 
   {
-    (issue || solution) && (
+    (situation || usedIn) && (
       <div class="post-card-details">
-        {issue && (
+        {situation && (
           <div class="detail-row">
-            <span class="detail-label detail-label-issue">Issue</span>
-            <span class="detail-value">{issue}</span>
+            <span class="detail-label">Situation</span>
+            <span class="detail-value">{situation}</span>
           </div>
         )}
-        {solution && (
+        {usedIn && (
           <div class="detail-row">
-            <span class="detail-label detail-label-solution">Solution</span>
-            <span class="detail-value">{solution}</span>
+            <span class="detail-label">Used In</span>
+            <span class="detail-value">{usedIn}</span>
           </div>
         )}
       </div>
