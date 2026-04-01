@@ -23,8 +23,12 @@ export async function getStaticPaths() {
 
 const { category } = Astro.params;
 const posts = await getCollection("posts");
+
+// For "ai" category, also include "local-ai" posts (Applied AI & Edge combined view)
+const targetCategories = category === "ai" ? ["ai", "local-ai"] : [category as string];
+
 const filteredPosts = posts
-  .filter((post) => post.data.category.includes(category as string) && !post.data.draft)
+  .filter((post) => targetCategories.includes(post.data.category) && !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const catName = getCategoryLabel(category as string);
