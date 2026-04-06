@@ -712,36 +712,3 @@ ansible-playbook deploy.yml --limit prod -e @vault-prod.yml --ask-vault-pass
   </defs>
 </svg>
 ```
-
----
-
-## Validation Matrix
-
-| Validation Goal      | What to Baseline                                 | Success Criteria                                            |
-| -------------------- | ------------------------------------------------ | ----------------------------------------------------------- |
-| Certificate Validity | Expiration date, chain completeness, SAN entries | `openssl verify` returns OK, browser shows valid connection |
-| Service Availability | HTTPS endpoint responds, no SSL errors           | `curl -vI https://hostname` returns 200 with valid cert     |
-| Security Compliance  | Key permissions, vault encryption, no plaintext  | `ls -l` shows 0600, all keys encrypted with Vault           |
-| Renewal Readiness    | Monitoring alerts, renewal procedure tested      | Alert received 90 days before expiration, renewal tested    |
-
----
-
-## Failure Modes and Mitigations
-
-| Failure Mode               | Why It Appears                              | Mitigation                                           |
-| -------------------------- | ------------------------------------------- | ---------------------------------------------------- |
-| Missing SAN entries        | CSR generated without `-addext` flag        | Template includes all required SANs by default       |
-| Expired certificate        | Renewal not started early enough            | Monitoring alerts 90 days before expiration          |
-| Wrong certificate deployed | Manual file selection error                 | Automation uses `inventory_hostname` to select files |
-| Private key exposed        | Insecure permissions or unencrypted storage | Vault encryption, 0600 permissions enforced          |
-| Chain incomplete           | CA chain not concatenated properly          | Automated deployment includes full chain             |
-
----
-
-## Recruiter-Readable Impact Summary
-
-- **Scope**: Secure certificate lifecycle management across 200+ enterprise servers
-- **Execution quality**: Guarded by automated validation, proactive monitoring, encryption
-- **Outcome signal**: Zero outages, standardized configurations, full audit trail
-- **Technical depth**: OpenSSL, PKI, Ansible Vault, Apache SSL, compliance requirements
-- **Business impact**: 93% time reduction, 100% compliance, zero preventable outages
