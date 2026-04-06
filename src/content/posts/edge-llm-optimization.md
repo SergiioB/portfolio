@@ -2,8 +2,8 @@
 title: "Edge LLM Optimization: Memory Bandwidth and Context Management"
 description: "Lessons learned running LLMs on constrained hardware—why bandwidth matters more than capacity, how KV cache quantization helps, and context folding for long conversations."
 situation: "I deployed a local-first Discord AI agent on an RK3588 (Radxa ROCK 5B). The goal was real-time streaming responses, but initial CPU-only inference was unusably slow (~0.21 t/s). Through iterative optimization, I learned that memory bandwidth, not capacity, is the real constraint—and that context management becomes critical for long-running sessions."
-usedIn: "Engram AI (Discord bot) and RADXA AI Suite running on RK3588 ARM64 hardware."
-impact: "Achieved 55 t/s throughput (vs 4 t/s before), stable memory usage during long sessions, and predictable context behavior without hard crashes."
+usedIn: "The tuning work behind Engram and related RK3588 local-AI experiments on ARM64 hardware."
+impact: "Changed the way I tune local inference on constrained hardware: bandwidth became a first-class routing constraint, KV cache quantization became normal instead of exotic, and long-session context handling stopped being an afterthought."
 pubDate: 2026-03-03
 category: "local-ai"
 tags: ["local-ai", "edge-ai", "llama.cpp", "kv-cache", "context-folding", "rk3588", "optimization"]
@@ -33,7 +33,7 @@ Google's paper ["Challenges in Inference Hardware"](https://arxiv.org/abs/2601.0
 
 When model layers spill from VRAM to system RAM, throughput drops by 20-50x. The GPU spends most of its time **waiting** for data, not computing.
 
-On pure CPU inference (no GPU), the same principle applies: keep everything in the fastest available memory tier. When I wrote `HardwareOracle` to enforce this rule—reject any model that can't fit entirely in high-bandwidth memory—throughput jumped from ~4 t/s to ~55 t/s.
+On pure CPU inference (no GPU), the same principle applies: keep everything in the fastest available memory tier. Once I started treating memory placement as a routing rule instead of an afterthought, model selection got a lot less romantic and a lot more useful.
 
 ### The Basic Math
 
@@ -163,58 +163,3 @@ The 26-53x speedup makes the difference between unusable latency and real-time c
 If you want the workstation / consumer GPU version of the same problem, see the companion post on VRAM, CPU offload, Windows/WSL, and llama.cpp hybrid inference:
 
 - `/posts/gpu-vram-cpu-offload-llama-cpp-deep-dive/`
-
-<!-- portfolio:expanded-v2 -->
-
-## Architecture Diagram
-
-![Edge LLM Memory Architecture](/images/diagrams/post-framework/local-ai-memory.svg)
-
-This diagram illustrates the bandwidth wall between GPU VRAM (green zone, ~1,800 GB/s) and system RAM (red zone, ~80 GB/s). Models that straddle both pay a 20-50x latency penalty.
-
-## Post-Specific Engineering Lens
-
-For this post, the primary objective is: **Optimize local inference under strict memory and latency budgets.**
-
-### Implementation decisions for this case
-
-- Prioritized bandwidth over model size
-- Used KV cache quantization to extend context capacity
-- Implemented hierarchical context folding for long sessions
-
-### Practical command path
-
-```bash
-# Check memory fit
-free -h
-cat /proc/meminfo | grep MemAvailable
-
-# Launch with KV cache quantization
-./llama-server --ctx-size 4096 --cache-type-k q4_0 --cache-type-v q4_0
-
-# Monitor during inference
-watch -n 1 'nvidia-smi || cat /proc/meminfo | head -5'
-```
-
-## Validation Matrix
-
-| Validation goal  | What to baseline       | What confirms success         |
-| ---------------- | ---------------------- | ----------------------------- |
-| Throughput       | t/s baseline           | t/s within target range       |
-| Memory stability | RSS at idle            | RSS stays bounded during load |
-| Context behavior | Empty context response | Full context response quality |
-
-## Failure Modes and Mitigations
-
-| Failure mode         | Why it appears                 | Mitigation                                |
-| -------------------- | ------------------------------ | ----------------------------------------- |
-| Layers in system RAM | Model too large for fast tier  | Use smaller model or heavier quantization |
-| KV cache OOM         | Long context + no quantization | Enable q4 KV cache                        |
-| Context overflow     | No folding mechanism           | Implement hierarchical folding            |
-| Thermal throttling   | Sustained inference load       | Monitor thermals, add cooling             |
-
-## Recruiter-Readable Impact Summary
-
-- **Scope:** Edge LLM deployment on ARM64 hardware
-- **Execution quality:** Systematic optimization across memory, cache, and context
-- **Outcome signal:** 26-53x throughput improvement, stable long-running sessions

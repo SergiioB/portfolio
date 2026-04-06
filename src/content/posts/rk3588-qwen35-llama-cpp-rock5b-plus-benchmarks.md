@@ -1,9 +1,9 @@
 ---
-title: "Qwen3.5 on RK3588 with llama.cpp: Real Benchmarks from a Radxa ROCK 5B+"
-description: "An advanced benchmark report for running Qwen3.5 locally on RK3588 with source-built llama.cpp: prefill speed, decode speed, stable context, tool-calling behavior, and the practical model choices that actually work on a Radxa ROCK 5B+."
+title: "Qwen3.5 on RK3588 with llama.cpp: A CPU-Only Benchmark Snapshot"
+description: "A March 2026 benchmark report for running Qwen3.5 locally on RK3588 with source-built llama.cpp: prefill speed, decode speed, stable context, tool-calling behavior, and what the CPU-only sweep actually showed on a Radxa ROCK 5B+."
 situation: "I was tuning a local-first Discord engineering agent on a Radxa ROCK 5B+ (RK3588, 24 GB RAM) and needed hard data for which Qwen3.5 models were actually practical on CPU inference with llama.cpp."
 usedIn: "Local-first Discord agent runtime on Radxa ROCK 5B+ / RK3588, built around raw llama.cpp rather than Ollama or LM Studio."
-impact: "Showed that Qwen3.5-2B is the best overall default on RK3588, Qwen3.5-9B is the best practical quality tier, and Qwen3.5-27B is not viable interactively on this board. Also established a benchmark-backed way to talk about context fit and KV cache tradeoffs credibly."
+impact: "Established a reliable CPU-only baseline inside the Qwen3.5 family on RK3588: 2B was the strongest interactive result in that sweep, 9B was the slower quality tier, and 27B was not practical for real-time use."
 pubDate: 2026-03-28
 category: "local-ai"
 tags:
@@ -29,6 +29,8 @@ I wanted one clean answer to a very specific question:
 > What is the best Qwen3.5 model stack for a Radxa ROCK 5B+ if you care about real interactive local inference, not just whether a model can technically load?
 
 This was not a cloud benchmark and not a GPU benchmark. The target was a **Radxa ROCK 5B+** with **RK3588**, **24 GB RAM**, and a Discord-native engineering agent running locally.
+
+One important clarification before the numbers: this article is a **CPU-only Qwen3.5 snapshot from March 2026**, not the final word on the current mixed NPU/CPU routing stack. The live Engram routing picture changed later, and I covered that separately in the newer RK3588 router architecture post.
 
 The runtime path was also intentional:
 
@@ -168,9 +170,9 @@ But it is still a small model. I would not use it as the main engineering model 
 
 ### Qwen3.5-2B
 
-This was the best overall model on the board.
+This was the best overall result in this CPU-only Qwen3.5 sweep.
 
-It is the one I would actually deploy as the default interactive model because it balanced:
+At the time, it was the one I would actually deploy as the default interactive CPU model because it balanced:
 
 - speed
 - context fit
@@ -332,11 +334,11 @@ For the Qwen3.5-4B 4K-context KV example used in that analysis:
 | Q4_0         | 10.5 MB |
 | Hybrid Q8+Q4 |  ~12 MB |
 
-That is why the current truthful summary is:
+That is the truthful summary of that benchmark set:
 
 - the **Qwen3.5 sweep** used standard `q4_0 / q4_0`
 - the **hybrid/TurboQuant-inspired implementation exists**
-- the **current practical recommendation** remains standard `q4_0`
+- the **practical recommendation from that work** remained standard `q4_0`
 
 That is a more credible engineering story than forcing a hype narrative.
 
@@ -346,71 +348,13 @@ If I had to explain this benchmark campaign in one line, it would be:
 
 > On RK3588, the winning model is not the largest model that fits. It is the model that preserves tool-calling and enough reasoning quality while staying inside a usable latency envelope.
 
-For this board, that winner was **Qwen3.5-2B Q4_K_M**.
+For that CPU-only sweep, the winner was **Qwen3.5-2B Q4_K_M**.
 
-My practical model map after the sweep:
+My practical model map from that sweep:
 
 - **Fastest micro-model**: `Qwen3.5-0.8B`
-- **Best overall default**: `Qwen3.5-2B`
+- **Best overall CPU result**: `Qwen3.5-2B`
 - **Best quality tier**: `Qwen3.5-9B`
 - **Not practical interactively**: `Qwen3.5-27B`
 
 That is the version of local AI benchmarking I trust: measured, board-specific, and willing to say when a popular bigger model is simply the wrong choice.
-
-<!-- portfolio:expanded-v2 -->
-
-## Post-Specific Engineering Lens
-
-For this post, the primary objective is: **Turn model selection on constrained hardware into a benchmark-backed engineering decision instead of a guess.**
-
-### Implementation decisions for this case
-
-- Used source-built `llama.cpp` to keep context and KV cache choices explicit
-- Compared throughput and task behavior instead of throughput alone
-- Treated stable context as a first-class metric, not an afterthought
-- Kept the TurboQuant story separate from the Qwen3.5 runtime sweep to avoid overstating results
-
-### Practical command path
-
-```bash
-# Build llama.cpp on RK3588
-cmake -B build \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DGGML_CPU_ARM_ARCH=armv8.2-a \
-  -DGGML_INTERNAL_DOTPROD=ON \
-  -DGGML_INTERNAL_FP16_VECTOR_ARITHMETIC=ON \
-  -DGGML_OPENMP=ON
-
-cmake --build build --config Release -j8
-
-# Launch the best overall model
-taskset -c 0-7 ./build/bin/llama-server \
-  -m Qwen3.5-2B-Q4_K_M.gguf \
-  -c 32768 -t 4 -ngl 0 -fa on \
-  --cache-type-k q4_0 \
-  --cache-type-v q4_0
-```
-
-## Validation Matrix
-
-| Validation goal       | What to baseline                     | What confirms success                                                                |
-| --------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| Interactive viability | average latency + decode speed       | responses stay in a usable latency range for real chat                               |
-| Context fit           | highest successful context per model | model can hold the target context without failing or degrading into a broken default |
-| Agent readiness       | tool-call success and task score     | model performs tool-backed tasks instead of just chatting about them                 |
-| Runtime honesty       | model size vs observed usability     | larger models that load but fail interactively are not promoted as defaults          |
-
-## Failure Modes and Mitigations
-
-| Failure mode                       | Why it appears                                               | Mitigation                                                                |
-| ---------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| Bigger-is-better bias              | model size gets mistaken for practical quality               | benchmark the actual board and rank by latency, tool use, and context fit |
-| False-positive “it fits” decisions | weights fit in RAM but latency collapses                     | treat throughput and response time as the real gate                       |
-| Context overclaiming               | theoretical window exceeds practical stable window           | record only successful tested contexts                                    |
-| Quantization hype                  | prototype compression work gets mixed into production claims | separate runtime benchmarks from research experiments                     |
-
-## Recruiter-Readable Impact Summary
-
-- **Scope:** benchmark and tune local LLM inference on ARM64 edge hardware
-- **Execution quality:** measured throughput, context stability, tool-calling behavior, and practical deployment tradeoffs
-- **Outcome signal:** converted a vague “run Qwen locally on RK3588” idea into a concrete model strategy with reproducible evidence and deployable defaults

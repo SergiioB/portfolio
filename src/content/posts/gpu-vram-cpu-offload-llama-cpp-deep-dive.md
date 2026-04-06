@@ -762,18 +762,3 @@ Before locking a model in:
 | GPU underutilized         | low throughput despite CUDA       | host-memory bottleneck or poor offload split |
 | WSL confusion             | inconsistent results              | GPU passthrough or storage-path issues       |
 
-<!-- portfolio:expanded-v2 -->
-
-## Architecture Diagram
-
-![llama.cpp GPU offload bandwidth cliff](/images/diagrams/gpu-offload-bandwidth-cliff.svg)
-
-This animated SVG shows the practical tuning story: increase `-ngl`, watch `nvidia-smi`, and stop at the highest stable GPU residency point before VRAM pressure turns hybrid offload into a RAM bottleneck.
-
-## Takeaway
-
-The real local inference rule is simple:
-
-> A model that mostly fits in fast memory beats a larger model that technically loads through spillover.
-
-That is why `Q4_K_M` is often the right default, why KV cache quantization matters, and why hybrid offload should be treated as a measured engineering tradeoff instead of a free upgrade.

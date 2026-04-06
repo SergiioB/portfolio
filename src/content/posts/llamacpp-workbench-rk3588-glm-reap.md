@@ -115,7 +115,7 @@ On this board, the useful split became:
 
 ## Why Publish It
 
-I published the workbench because this was no longer a private experiment.
+I published the workbench because it had stopped being a one-off experiment.
 
 By the time the UI had:
 
@@ -150,55 +150,3 @@ That combination is exactly what I care about in local AI engineering: not just 
 If you want the broader context around the rest of the engineering work, the portfolio homepage is here:
 
 - [sergiiob.dev](https://sergiiob.dev/)
-
-<!-- portfolio:expanded-v2 -->
-
-## Post-Specific Engineering Lens
-
-For this post, the primary objective is: **make local GGUF inference operationally usable on constrained hardware without giving up runtime control**.
-
-### Implementation decisions for this case
-
-- kept the project centered on raw `llama.cpp` instead of abstracted local model managers
-- exposed context, KV cache, threads, batch, and model-switch controls directly in the UI
-- documented the validated RK3588 profile separately from generic portability guidance
-
-### Practical command path
-
-Representative checkpoints for this project:
-
-```bash
-# launch the workbench
-python -m llama_webui.main --host 0.0.0.0 --port 8095
-
-# source-built llama.cpp server path
-./llama-server --model /path/to/model.gguf --ctx-size 202752
-
-# example KV cache profile
-./llama-server --cache-type-k q8_0 --cache-type-v q4_0
-```
-
-### Validation matrix
-
-| Validation goal | What to baseline                  | What confirms success                                                        |
-| --------------- | --------------------------------- | ---------------------------------------------------------------------------- |
-| Runtime control | hidden defaults vs explicit knobs | the UI settings match the actual `llama.cpp` launch parameters               |
-| Model serving   | model load and health state       | remote start/stop works and the API stays healthy                            |
-| Response UX     | raw text vs usable interface      | markdown rendering, streaming output, and persistent chats work correctly    |
-| Hardware fit    | ARM board memory and latency      | the board can run the selected model without degrading into unusable latency |
-
-### Failure modes and mitigations
-
-| Failure mode                                     | Why it appears here                                    | Mitigation used                                     |
-| ------------------------------------------------ | ------------------------------------------------------ | --------------------------------------------------- |
-| Large model technically loads but feels unusable | capacity was treated as success instead of latency     | benchmark and preserve separate fast/strong presets |
-| Thinking mode destroys interactivity             | constrained CPU inference magnifies reasoning overhead | disable reasoning for interactive profiles          |
-| Generic UI hides the real bottleneck             | runtime parameters are abstracted away                 | expose `llama.cpp` knobs directly                   |
-| Machine-specific paths block publication         | local experiment assumptions leak into code            | move paths and roots into configuration             |
-
-### Recruiter-Readable Impact Summary
-
-- **Scope:** designed and shipped a public local-AI workbench for `llama.cpp`
-- **Platform depth:** validated on ARM64 RK3588, not just described abstractly
-- **Execution quality:** combined runtime tuning, UI engineering, and documentation into a reusable published project
-- **Outcome signal:** practical remote control of local GGUF inference with benchmark-backed hardware guidance
