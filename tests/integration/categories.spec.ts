@@ -32,4 +32,14 @@ test.describe("Category Pages", () => {
       await expect(heading).toBeVisible();
     });
   }
+
+  test("/ai should include local-ai posts in the listing", async ({ page }) => {
+    await page.goto("/ai/");
+
+    await expect(
+      page.locator("a", {
+        hasText: "llamacpp-workbench: Remote llama.cpp Control and REAP Model Serving on RK3588",
+      })
+    ).toBeVisible();
+  });
 });

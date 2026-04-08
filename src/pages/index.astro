@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 
 import PostCard from "../components/PostCard.astro";
 import { PUBLIC_CV, SITE } from "../config/site";
-import { CATEGORY_META, CATEGORY_ORDER } from "../content/categories";
+import { CATEGORY_META, CATEGORY_ORDER, categoryMatches } from "../content/categories";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
 
@@ -17,7 +17,7 @@ const categoryCounts = CATEGORY_ORDER.map((category) => ({
   slug: category,
   label: CATEGORY_META[category].label,
   description: CATEGORY_META[category].description,
-  count: publishedPosts.filter((post) => post.data.category.includes(category)).length,
+  count: publishedPosts.filter((post) => categoryMatches(post.data.category, category)).length,
 })).filter((c) => c.count > 0);
 
 const latestDate = publishedPosts[0]?.data.pubDate;
@@ -30,8 +30,10 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 >
   <!-- Hero Section -->
   <section class="hero">
-    <h1 class="hero-title">Structured Engineering Case Studies</h1>
-    <p class="hero-description">Linux & Virtualization Engineering Portfolio</p>
+    <h1 class="hero-title" data-i18n="home.heroTitle">Structured Engineering Case Studies</h1>
+    <p class="hero-description" data-i18n="home.heroDescription">
+      Linux & Virtualization Engineering Portfolio
+    </p>
 
     <div class="hero-actions">
       {
@@ -41,6 +43,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
             class="btn btn-primary"
             target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
             rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
+            data-i18n="about.cvLabel"
           >
             {PUBLIC_CV.label}
           </a>
@@ -53,6 +56,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub Profile"
+          data-i18n-label="home.githubProfile"
         >
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path
@@ -66,6 +70,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn Profile"
+          data-i18n-label="home.linkedinProfile"
         >
           <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
             <path
@@ -78,29 +83,31 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 
     <div class="hero-stats">
       <div class="stat-item">
-        <span class="stat-label">CURRENT ROLE</span>
-        <span class="stat-value">{SITE.role}</span>
-        <span class="stat-meta">Deutsche Pfandbriefbank AG · Madrid</span>
+        <span class="stat-label" data-i18n="hero.currentRole">Current role</span>
+        <span class="stat-value" data-i18n="hero.roleTitle">{SITE.role}</span>
+        <span class="stat-meta" data-i18n="home.roleMeta">Deutsche Pfandbriefbank AG · Madrid</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">PUBLISHED CASES</span>
+        <span class="stat-label" data-i18n="hero.publishedPosts">Published posts</span>
         <span class="stat-value">{publishedPosts.length}</span>
-        <span class="stat-meta">Technical deep dives</span>
+        <span class="stat-meta" data-i18n="hero.postsMeta">Case-study driven technical notes</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">LAST UPDATE</span>
-        <span class="stat-value">
-          {
-            latestDate
-              ? latestDate.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : "—"
-          }
-        </span>
-        <span class="stat-meta">Archive-first publishing</span>
+        <span class="stat-label" data-i18n="hero.lastUpdate">Last update</span>
+        {
+          latestDate ? (
+            <time class="stat-value" datetime={latestDate.toISOString()} data-localize-date="long">
+              {latestDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </time>
+          ) : (
+            <span class="stat-value">—</span>
+          )
+        }
+        <span class="stat-meta" data-i18n="hero.archiveFirst">Archive-first publishing flow</span>
       </div>
     </div>
   </section>
@@ -108,63 +115,67 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <!-- Quick Overview -->
   <section class="section overview">
     <div class="section-header">
-      <h2 class="section-title">At a Glance</h2>
-      <a href={withBase("about/")} class="section-link">Full Profile →</a>
+      <h2 class="section-title" data-i18n="home.overviewTitle">At a Glance</h2>
+      <a href={withBase("about/")} class="section-link" data-i18n="home.fullProfile"
+        >Full Profile →</a
+      >
     </div>
 
     <div class="overview-content">
-      <p class="overview-summary">{SITE.profileSummary}</p>
+      <p class="overview-summary" data-i18n="site.profileSummary">{SITE.profileSummary}</p>
 
       <div class="overview-grid">
         <a href={withBase("infrastructure/")} class="card glance-card glance-card-large">
           <div class="glance-header">
             <span class="glance-icon">🐧</span>
-            <span class="glance-count"
-              >{categoryCounts.find((c) => c.slug === "infrastructure")?.count || 0} posts</span
-            >
+            <span class="glance-count">
+              {categoryCounts.find((c) => c.slug === "infrastructure")?.count || 0}
+              <span data-i18n="home.postsSuffix">posts</span>
+            </span>
           </div>
-          <h3 class="card-title">Linux Infrastructure</h3>
-          <p class="card-meta">
+          <h3 class="card-title" data-i18n="home.glanceInfraTitle">Linux Infrastructure</h3>
+          <p class="card-meta" data-i18n="home.glanceInfraDesc">
             RHEL lifecycle management, kernel tuning, Satellite, enterprise Linux operations
           </p>
           <div class="glance-tags">
-            <span class="badge category-infrastructure">Infrastructure</span>
-            <span class="badge category-automation">Automation</span>
+            <span class="badge category-infrastructure" data-i18n="cat.infrastructure"
+              >Infrastructure</span
+            >
+            <span class="badge category-automation" data-i18n="cat.automation">Automation</span>
           </div>
         </a>
         <a href={withBase("automation/")} class="card glance-card glance-card-large">
           <div class="glance-header">
             <span class="glance-icon">⚡</span>
-            <span class="glance-count"
-              >{categoryCounts.find((c) => c.slug === "automation")?.count || 0} posts</span
-            >
+            <span class="glance-count">
+              {categoryCounts.find((c) => c.slug === "automation")?.count || 0}
+              <span data-i18n="home.postsSuffix">posts</span>
+            </span>
           </div>
-          <h3 class="card-title">Platform Automation</h3>
-          <p class="card-meta">
+          <h3 class="card-title" data-i18n="home.glanceAutomationTitle">Platform Automation</h3>
+          <p class="card-meta" data-i18n="home.glanceAutomationDesc">
             Ansible playbooks, IaC, Git workflows, CI/CD pipelines, VMware automation
           </p>
           <div class="glance-tags">
-            <span class="badge category-automation">Automation</span>
-            <span class="badge category-cloud">Cloud</span>
+            <span class="badge category-automation" data-i18n="cat.automation">Automation</span>
+            <span class="badge category-cloud" data-i18n="cat.cloud">Cloud</span>
           </div>
         </a>
         <a href={withBase("ai/")} class="card glance-card glance-card-large">
           <div class="glance-header">
             <span class="glance-icon">🤖</span>
-            <span class="glance-count"
-              >{
-                (categoryCounts.find((c) => c.slug === "ai")?.count || 0) +
-                  (categoryCounts.find((c) => c.slug === "local-ai")?.count || 0)
-              } posts</span
-            >
+            <span class="glance-count">
+              {categoryCounts.find((c) => c.slug === "ai")?.count || 0}
+              <span data-i18n="home.postsSuffix">posts</span>
+            </span>
           </div>
-          <h3 class="card-title">Applied AI & Edge</h3>
-          <p class="card-meta">
+          <h3 class="card-title" data-i18n="home.glanceAiTitle">Applied AI & Edge</h3>
+          <p class="card-meta" data-i18n="home.glanceAiDesc">
             Azure AI Foundry, local LLM inference, RK3588 edge deployment, document intelligence
           </p>
           <div class="glance-tags">
-            <span class="badge category-ai">AI</span>
-            <span class="badge category-local-ai">Local AI</span>
+            <span class="badge category-ai" data-i18n="cat.ai">AI</span>
+            <span class="badge category-local-ai" data-i18n="cat.local-ai">Local AI</span>
           </div>
         </a>
       </div>
@@ -174,19 +185,26 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <!-- Production Spotlight -->
   <section class="section spotlight" style="border-left: 4px solid var(--accent);">
     <div class="section-header">
-      <h2 class="section-title" style="color: var(--accent);">Production Spotlight</h2>
+      <h2 class="section-title" style="color: var(--accent);" data-i18n="production.title">
+        Production Spotlight
+      </h2>
       <a
         href="https://play.google.com/store/apps/details?id=com.intelliflow.finances&hl=en"
         class="section-link"
         target="_blank"
-        rel="noopener noreferrer">App Store →</a
+        rel="noopener noreferrer"
+        data-i18n="home.appStore">App Store →</a
       >
     </div>
 
     <div class="spotlight-content">
-      <span class="badge badge-accent">● Live on Google Play & Web</span>
-      <h3 class="spotlight-title">📱 IntelliFlow: AI Budget Tracker</h3>
-      <p class="spotlight-description">
+      <span class="badge badge-accent" data-i18n="production.badge"
+        >● Live on Google Play & Web</span
+      >
+      <h3 class="spotlight-title" data-i18n="production.appTitle">
+        📱 IntelliFlow: AI Budget Tracker
+      </h3>
+      <p class="spotlight-description" data-i18n="production.appDesc">
         A production-grade personal finance application serving real users. Features an AI-powered
         financial coach, offline-first architecture, and cross-platform syncing.
       </p>
@@ -202,7 +220,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
               d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,16.05L15.39,12L17.89,7.95L20.16,10.81M16.81,8.88L14.54,11.15L6.05,2.66L16.81,8.88Z"
             ></path></svg
           >
-          Get it on Google Play
+          <span data-i18n="production.playStore">Get it on Google Play</span>
         </a>
         <a
           href="https://intelliflow-finance.web.app/"
@@ -215,7 +233,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
             ></path></svg
           >
-          Open Web App
+          <span data-i18n="production.webApp">Open Web App</span>
         </a>
       </div>
     </div>
@@ -224,8 +242,10 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <!-- Domains -->
   <section class="section domains-section">
     <div class="section-header">
-      <h2 class="section-title">Domains</h2>
-      <a href={withBase("archive/")} class="section-link">Browse All →</a>
+      <h2 class="section-title" data-i18n="domains.title">Domains</h2>
+      <a href={withBase("archive/")} class="section-link" data-i18n="domains.browseAll"
+        >Browse all</a
+      >
     </div>
 
     <div class="domains-grid">
@@ -233,10 +253,14 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         categoryCounts.map((category) => (
           <a href={withBase(`${category.slug}/`)} class="card domain-card">
             <div class="domain-header">
-              <span class={`badge category-${category.slug}`}>{category.label}</span>
+              <span class={`badge category-${category.slug}`} data-i18n={`cat.${category.slug}`}>
+                {category.label}
+              </span>
               <span class="domain-count">{category.count}</span>
             </div>
-            <p class="domain-description">{category.description}</p>
+            <p class="domain-description" data-i18n={`cat.${category.slug}.desc`}>
+              {category.description}
+            </p>
           </a>
         ))
       }
@@ -246,12 +270,13 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <!-- GitHub Projects -->
   <section class="section github-section">
     <div class="section-header">
-      <h2 class="section-title">Featured Projects</h2>
+      <h2 class="section-title" data-i18n="home.projectsTitle">Featured Projects</h2>
       <a
         href="https://github.com/SergiioB"
         class="section-link"
         target="_blank"
-        rel="noopener noreferrer">View GitHub →</a
+        rel="noopener noreferrer"
+        data-i18n="home.viewGithub">View GitHub →</a
       >
     </div>
 
@@ -263,17 +288,23 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
         rel="noopener noreferrer"
       >
         <h3 class="card-title">llamacpp-workbench</h3>
-        <p class="card-meta">Local LLM inference workbench for RK3588 and edge devices</p>
+        <p class="card-meta" data-i18n="home.projectWorkbenchDesc">
+          Local LLM inference workbench for RK3588 and edge devices
+        </p>
         <span class="badge badge-accent">Python · JavaScript</span>
       </a>
       <div class="card project-card">
         <h3 class="card-title">IntelliFlow</h3>
-        <p class="card-meta">AI-powered personal finance app with offline-first architecture</p>
+        <p class="card-meta" data-i18n="home.projectIntelliflowDesc">
+          AI-powered personal finance app with offline-first architecture
+        </p>
         <span class="badge badge-warm">Flutter · Production</span>
       </div>
       <div class="card project-card">
-        <h3 class="card-title">Ansible Playbooks</h3>
-        <p class="card-meta">Infrastructure automation for enterprise Linux environments</p>
+        <h3 class="card-title" data-i18n="home.projectAnsibleTitle">Ansible Playbooks</h3>
+        <p class="card-meta" data-i18n="home.projectAnsibleDesc">
+          Infrastructure automation for enterprise Linux environments
+        </p>
         <span class="badge badge-accent">Ansible · YAML</span>
       </div>
     </div>
@@ -282,13 +313,19 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
   <!-- Recent Posts -->
   <section class="section" style="background: transparent; border: none; padding: 0;">
     <div class="section-header">
-      <h2 class="section-title">Recent Case Studies</h2>
-      <a href={withBase("archive/")} class="section-link">All Posts →</a>
+      <h2 class="section-title" data-i18n="posts.recent">Recent Case Studies</h2>
+      <a href={withBase("archive/")} class="section-link" data-i18n="posts.allPosts">All posts</a>
     </div>
 
     <div class="posts-feed">
       {latestPosts.map((post) => <PostCard post={post} />)}
-      {publishedPosts.length === 0 && <p class="empty-state">No posts published yet.</p>}
+      {
+        publishedPosts.length === 0 && (
+          <p class="empty-state" data-i18n="posts.noPosts">
+            No posts published yet.
+          </p>
+        )
+      }
     </div>
   </section>
 </BaseLayout>

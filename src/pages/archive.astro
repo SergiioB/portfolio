@@ -68,7 +68,11 @@ const years = Object.keys(postsByYear)
                 data-search-item
                 data-search={`${post.data.title} ${post.data.description} ${post.data.issue ?? ""} ${post.data.solution ?? ""} ${post.data.usedIn ?? ""} ${(post.data.tags ?? []).join(" ")} ${post.data.category.join(" ")}`}
               >
-                <time class="archive-post-date" datetime={post.data.pubDate.toISOString()}>
+                <time
+                  class="archive-post-date"
+                  datetime={post.data.pubDate.toISOString()}
+                  data-localize-date="short"
+                >
                   {post.data.pubDate.toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -80,11 +84,12 @@ const years = Object.keys(postsByYear)
                     {post.data.title}
                   </a>
                   <p class="archive-post-summary">
-                    <strong>Issue:</strong> {post.data.issue ?? post.data.description}
+                    <strong data-i18n="posts.issue">Issue:</strong>{" "}
+                    {post.data.issue ?? post.data.description}
                   </p>
                   {post.data.solution && (
                     <p class="archive-post-summary">
-                      <strong>Solution:</strong> {post.data.solution}
+                      <strong data-i18n="posts.solution">Solution:</strong> {post.data.solution}
                     </p>
                   )}
                 </div>

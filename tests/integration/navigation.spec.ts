@@ -33,6 +33,18 @@ test.describe("Navigation", () => {
     // Most pages should have exactly one h1
     expect(h1Count).toBeGreaterThanOrEqual(0);
   });
+
+  test("should expose a visible language switcher and switch chrome text", async ({ page }) => {
+    await page.goto("/");
+
+    const spanishButton = page.locator("[data-lang-option='es']").first();
+    await expect(spanishButton).toBeVisible();
+    await spanishButton.click();
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "es");
+    await expect(page.locator("[data-i18n='nav.home']").first()).toHaveText("Inicio");
+    await expect(page.locator("[data-i18n='about.cvLabel']").first()).toHaveText("Ver CV");
+  });
 });
 
 test.describe("Accessibility", () => {

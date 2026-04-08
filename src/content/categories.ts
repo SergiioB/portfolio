@@ -22,7 +22,8 @@ export const CATEGORY_META: Record<CategorySlug, { label: string; description: s
   },
   ai: {
     label: "AI",
-    description: "Generative AI use cases, integration patterns, and practical lessons.",
+    description:
+      "Applied AI across cloud services, local inference, and practical delivery lessons.",
   },
   cloud: {
     label: "Cloud",
@@ -46,9 +47,32 @@ export const CATEGORY_META: Record<CategorySlug, { label: string; description: s
   },
 };
 
+const CATEGORY_ROUTE_GROUPS: Record<CategorySlug, readonly CategorySlug[]> = {
+  infrastructure: ["infrastructure"],
+  automation: ["automation"],
+  ai: ["ai", "local-ai"],
+  cloud: ["cloud"],
+  "local-ai": ["local-ai"],
+  kotlin: ["kotlin"],
+  snippets: ["snippets"],
+  career: ["career"],
+};
+
 export function getCategoryLabel(slug: string): string {
   if (slug in CATEGORY_META) {
     return CATEGORY_META[slug as CategorySlug].label;
   }
   return slug;
+}
+
+export function getCategoryRouteSlugs(slug: string): string[] {
+  if (slug in CATEGORY_ROUTE_GROUPS) {
+    return [...CATEGORY_ROUTE_GROUPS[slug as CategorySlug]];
+  }
+  return [slug];
+}
+
+export function categoryMatches(postCategories: string[], slug: string): boolean {
+  const routeSlugs = getCategoryRouteSlugs(slug);
+  return routeSlugs.some((routeSlug) => postCategories.includes(routeSlug));
 }

@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 
 import { PUBLIC_CV, PUBLIC_LINKS, SITE } from "../config/site";
-import { CATEGORY_META, CATEGORY_ORDER } from "../content/categories";
+import { CATEGORY_META, CATEGORY_ORDER, categoryMatches } from "../content/categories";
 import { withBase } from "../utils/paths";
 
 const posts = await getCollection("posts");
@@ -11,7 +11,7 @@ const publishedPosts = posts.filter((post) => !post.data.draft);
 const categoryCounts = CATEGORY_ORDER.map((category) => ({
   slug: category,
   label: CATEGORY_META[category].label,
-  count: publishedPosts.filter((post) => post.data.category?.includes(category)).length,
+  count: publishedPosts.filter((post) => categoryMatches(post.data.category, category)).length,
 })).filter((cat) => cat.count > 0);
 
 const currentPath = Astro.url.pathname;
@@ -31,42 +31,78 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 <aside class="sidebar" id="site-sidebar" data-sidebar>
   <div class="sidebar-header">
     <a href={withBase()} class="site-brand">
-      <span class="brand-name">{SITE.brand}</span>
-      <span class="brand-role">{SITE.role}</span>
+      <span class="brand-name" data-i18n="site.brand">{SITE.brand}</span>
+      <span class="brand-role" data-i18n="site.role">{SITE.role}</span>
     </a>
-    <p class="sidebar-summary">{SITE.profileSummary}</p>
+    <p class="sidebar-summary" data-i18n="site.profileSummary">{SITE.profileSummary}</p>
+    <div class="sidebar-language-switcher">
+      <span class="sidebar-language-label" data-i18n="lang.label">Language</span>
+      <div
+        class="lang-switcher-pill"
+        role="group"
+        aria-label="Language"
+        data-i18n-label="lang.label"
+      >
+        <button
+          type="button"
+          class="lang-option-btn"
+          data-lang-option="en"
+          data-i18n-label="lang.english"
+          aria-pressed="true"
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          class="lang-option-btn"
+          data-lang-option="es"
+          data-i18n-label="lang.spanish"
+          aria-pressed="false"
+        >
+          ES
+        </button>
+      </div>
+    </div>
   </div>
 
   <nav class="sidebar-nav" aria-label="Primary navigation">
     <div class="nav-section">
-      <div class="nav-section-title">Navigation</div>
+      <div class="nav-section-title" data-i18n="nav.portfolio">Portfolio</div>
       <ul class="nav-list">
         <li class="nav-item">
-          <a href={withBase()} class:list={["nav-link", { active: isActive(withBase()) }]}>Home</a>
+          <a
+            href={withBase()}
+            class:list={["nav-link", { active: isActive(withBase()) }]}
+            data-i18n="nav.home">Home</a
+          >
         </li>
         <li class="nav-item">
           <a
             href={withBase("archive/")}
-            class:list={["nav-link", { active: isActive(withBase("archive/")) }]}>Archive</a
+            class:list={["nav-link", { active: isActive(withBase("archive/")) }]}
+            data-i18n="nav.archive">Archive</a
           >
         </li>
         <li class="nav-item">
           <a
             href={withBase("about/")}
-            class:list={["nav-link", { active: isActive(withBase("about/")) }]}>About</a
+            class:list={["nav-link", { active: isActive(withBase("about/")) }]}
+            data-i18n="nav.about">About + CV</a
           >
         </li>
       </ul>
     </div>
 
     <div class="nav-section">
-      <div class="nav-section-title">Domains</div>
+      <div class="nav-section-title" data-i18n="nav.domains">Domains</div>
       <ul class="nav-list">
         {
           categoryCounts.map((cat) => (
             <li class="nav-item">
-              <a href={withBase(`${cat.slug}/`)} class="nav-link">
-                <span class="nav-link-label">{cat.label}</span>
+              <a href={withBase(`${cat.slug}/`)} class={`nav-link category-${cat.slug}`}>
+                <span class="nav-link-label" data-i18n={`cat.${cat.slug}`}>
+                  {cat.label}
+                </span>
                 <span class="nav-link-count">{cat.count}</span>
               </a>
             </li>
@@ -84,6 +120,7 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
           class="btn btn-primary"
           target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
           rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
+          data-i18n="about.cvLabel"
         >
           {PUBLIC_CV.label}
         </a>
@@ -92,7 +129,13 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
     <div class="sidebar-links">
       {
         PUBLIC_LINKS.map((link) => (
-          <a href={link.href} class="sidebar-link" target="_blank" rel="noopener noreferrer">
+          <a
+            href={link.href}
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n={link.label === "LinkedIn" ? "link.linkedin" : undefined}
+          >
             {link.label}
           </a>
         ))
@@ -102,10 +145,16 @@ const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.hr
 </aside>
 
 <header class="mobile-header">
-  <button class="menu-toggle" type="button" data-menu-toggle aria-label="Toggle navigation">
+  <button
+    class="menu-toggle"
+    type="button"
+    data-menu-toggle
+    aria-label="Toggle navigation"
+    data-i18n-label="nav.menuLabel"
+  >
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
       ><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg
     >
   </button>
-  <a href={withBase()} class="mobile-brand">{SITE.brand}</a>
+  <a href={withBase()} class="mobile-brand" data-i18n="site.brand">{SITE.brand}</a>
 </header>

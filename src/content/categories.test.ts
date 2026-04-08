@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
 
-import { CATEGORY_ORDER, CATEGORY_META, getCategoryLabel } from "./categories";
+import {
+  CATEGORY_ORDER,
+  CATEGORY_META,
+  categoryMatches,
+  getCategoryLabel,
+  getCategoryRouteSlugs,
+} from "./categories";
 
 describe("CATEGORY_ORDER", () => {
   it("should be a readonly array of category slugs", () => {
@@ -72,5 +78,32 @@ describe("getCategoryLabel", () => {
   it("is case-sensitive for unknown slugs", () => {
     expect(getCategoryLabel("Infrastructure")).toBe("Infrastructure");
     expect(getCategoryLabel("INFRASTRUCTURE")).toBe("INFRASTRUCTURE");
+  });
+});
+
+describe("getCategoryRouteSlugs", () => {
+  it("returns ai plus local-ai for the AI route", () => {
+    expect(getCategoryRouteSlugs("ai")).toEqual(["ai", "local-ai"]);
+  });
+
+  it("returns the category itself for non-aggregated routes", () => {
+    expect(getCategoryRouteSlugs("local-ai")).toEqual(["local-ai"]);
+    expect(getCategoryRouteSlugs("automation")).toEqual(["automation"]);
+  });
+
+  it("falls back to the raw slug for unknown routes", () => {
+    expect(getCategoryRouteSlugs("unknown")).toEqual(["unknown"]);
+  });
+});
+
+describe("categoryMatches", () => {
+  it("treats local-ai posts as part of the AI route", () => {
+    expect(categoryMatches(["local-ai"], "ai")).toBe(true);
+    expect(categoryMatches(["ai"], "ai")).toBe(true);
+  });
+
+  it("does not over-match unrelated categories", () => {
+    expect(categoryMatches(["cloud"], "ai")).toBe(false);
+    expect(categoryMatches(["ai"], "local-ai")).toBe(false);
   });
 });
