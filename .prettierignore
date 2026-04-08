@@ -1,6 +1,11 @@
 dist/
+build/
 node_modules/
 .astro/
 public/
+coverage/
+playwright-report/
+test-results/
+.reports/
 *.min.js
 *.min.css

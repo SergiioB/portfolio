@@ -1,12 +1,16 @@
 # Build output
 dist/
+build/
 
 # Astro internal cache
 .astro/
+.astro.bak-*/
 
 # Local assistant scratchpad
 .gemini/
 .factory
+.agents/
+skills-lock.json
 
 # Dependencies
 node_modules/
@@ -65,6 +69,9 @@ desktop.ini
 # Test / coverage artifacts
 coverage/
 .nyc_output/
+playwright-report/
+test-results/
+.reports/
 
 # Temp / patch leftovers
 *.tmp

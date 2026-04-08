@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "generate:og": "node scripts/generate-og-image.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
