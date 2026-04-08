@@ -8,6 +8,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
+      reportsDirectory: ".reports/coverage",
       thresholds: {
         branches: 60,
         functions: 60,

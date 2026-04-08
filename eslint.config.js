@@ -121,6 +121,18 @@ export default [
   },
   // Ignore patterns
   {
-    ignores: ["dist/**", "node_modules/**", ".astro/**", "public/**", "coverage/**", "*.d.ts"],
+    ignores: [
+      "build/**",
+      "dist/**",
+      "node_modules/**",
+      ".astro/**",
+      ".astro.bak-*/**",
+      "public/**",
+      "coverage/**",
+      "playwright-report/**",
+      "test-results/**",
+      ".reports/**",
+      "*.d.ts",
+    ],
   },
 ];
