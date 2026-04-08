@@ -45,6 +45,18 @@ test.describe("Navigation", () => {
     await expect(page.locator("[data-i18n='nav.home']").first()).toHaveText("Inicio");
     await expect(page.locator("[data-i18n='about.cvLabel']").first()).toHaveText("Ver CV");
   });
+
+  test("should point the CV button to the English document when English is active", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const englishButton = page.locator("[data-lang-option='en']").first();
+    await englishButton.click();
+
+    const cvLink = page.locator(".hero-actions a[data-href-en][data-href-es]").first();
+    await expect(cvLink).toHaveAttribute("href", "/docs/cv-sergio-barrientos.html");
+  });
 });
 
 test.describe("Accessibility", () => {
