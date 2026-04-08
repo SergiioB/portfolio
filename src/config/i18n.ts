@@ -39,8 +39,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Portfolio de ingeniería basado en casos reales: plataformas Linux, virtualización, automatización con Ansible, modernización RHEL e integración práctica de IA en entornos corporativos.",
   },
   "site.profileSummary": {
-    en: "Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.",
-    es: "Ingeniero Linux y virtualización que documenta patrones reales de entrega: problemas claros, decisiones de implementación y resultados en producción.",
+    en: "Linux and virtualization engineer documenting real delivery patterns across platform operations, automation, and applied AI work.",
+    es: "Ingeniero Linux y virtualización que documenta patrones reales de entrega en operaciones de plataforma, automatización y trabajo aplicado con IA.",
   },
   "site.footer": {
     en: "Case-study driven engineering portfolio",
@@ -64,6 +64,60 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "nav.breadcrumbHome": { en: "Home", es: "Inicio" },
   "nav.backToPosts": { en: "← Back to posts", es: "← Volver a posts" },
   "nav.browseArchive": { en: "← Browse archive", es: "← Explorar archivo" },
+  "nav.menuLabel": { en: "Toggle navigation", es: "Abrir navegación" },
+
+  /* ── Shared links ── */
+  "link.linkedin": { en: "LinkedIn", es: "LinkedIn" },
+
+  /* ── Home page ── */
+  "home.heroTitle": {
+    en: "Structured Engineering Case Studies",
+    es: "Casos de Ingeniería Estructurados",
+  },
+  "home.heroDescription": {
+    en: "Linux & Virtualization Engineering Portfolio",
+    es: "Portfolio de Ingeniería Linux y Virtualización",
+  },
+  "home.githubProfile": { en: "GitHub profile", es: "Perfil de GitHub" },
+  "home.linkedinProfile": { en: "LinkedIn profile", es: "Perfil de LinkedIn" },
+  "home.roleMeta": {
+    en: "Deutsche Pfandbriefbank AG · Madrid",
+    es: "Deutsche Pfandbriefbank AG · Madrid",
+  },
+  "home.overviewTitle": { en: "At a Glance", es: "Resumen Rápido" },
+  "home.fullProfile": { en: "Full Profile →", es: "Perfil Completo →" },
+  "home.postsSuffix": { en: "posts", es: "posts" },
+  "home.glanceInfraTitle": { en: "Linux Infrastructure", es: "Infraestructura Linux" },
+  "home.glanceInfraDesc": {
+    en: "RHEL lifecycle management, kernel tuning, Satellite, and enterprise Linux operations.",
+    es: "Gestión del ciclo de vida RHEL, tuning de kernel, Satellite y operaciones Linux corporativas.",
+  },
+  "home.glanceAutomationTitle": { en: "Platform Automation", es: "Automatización de Plataforma" },
+  "home.glanceAutomationDesc": {
+    en: "Ansible playbooks, infrastructure as code, Git workflows, CI/CD pipelines, and VMware automation.",
+    es: "Playbooks Ansible, infraestructura como código, flujos Git, pipelines CI/CD y automatización VMware.",
+  },
+  "home.glanceAiTitle": { en: "Applied AI & Edge", es: "IA Aplicada y Edge" },
+  "home.glanceAiDesc": {
+    en: "Azure AI Foundry, local LLM inference, RK3588 edge deployment, and document intelligence.",
+    es: "Azure AI Foundry, inferencia local con LLM, despliegue edge sobre RK3588 e inteligencia documental.",
+  },
+  "home.appStore": { en: "App Store →", es: "Tienda →" },
+  "home.projectsTitle": { en: "Featured Projects", es: "Proyectos Destacados" },
+  "home.viewGithub": { en: "View GitHub →", es: "Ver GitHub →" },
+  "home.projectWorkbenchDesc": {
+    en: "Local LLM inference workbench for RK3588 and edge devices.",
+    es: "Workbench de inferencia local con LLM para RK3588 y dispositivos edge.",
+  },
+  "home.projectIntelliflowDesc": {
+    en: "AI-powered personal finance app with offline-first architecture.",
+    es: "Aplicación de finanzas personales con IA y arquitectura offline-first.",
+  },
+  "home.projectAnsibleTitle": { en: "Ansible Playbooks", es: "Playbooks Ansible" },
+  "home.projectAnsibleDesc": {
+    en: "Infrastructure automation for enterprise Linux environments.",
+    es: "Automatización de infraestructura para entornos Linux corporativos.",
+  },
 
   /* ── Hero section ── */
   "hero.kicker": { en: "sergio@portfolio:~$ whoami", es: "sergio@portfolio:~$ whoami" },
@@ -117,8 +171,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   },
   "focus.aiTitle": { en: "Applied enterprise AI", es: "IA empresarial aplicada" },
   "focus.aiDesc": {
-    en: "Architected inference gateways with Azure AI Foundry, translating document intelligence pilots into operationally viable, production-ready enterprise workloads.",
-    es: "Arquitectura de gateways de inferencia con Azure AI Foundry, llevando pilotos de inteligencia documental hacia cargas de trabajo empresariales en producción.",
+    en: "Working on Azure AI Foundry and document intelligence use cases while also building practical local-inference tooling and benchmark-backed runtime guidance.",
+    es: "Trabajo con Azure AI Foundry y casos de uso de inteligencia documental, además de herramientas prácticas de inferencia local y guías basadas en benchmarks.",
   },
 
   /* ── Audience mode ── */
@@ -137,8 +191,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "recruiter.fullProfile": { en: "Full profile", es: "Perfil completo" },
   "recruiter.badge": { en: "● Recruiter-ready overview", es: "● Vista rápida para recruiters" },
   "recruiter.summary": {
-    en: "Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability, and practical enterprise AI implementation. Proven track record reducing operational toil and accelerating time-to-market.",
-    es: "Ingeniero Linux y virtualización con portfolio orientado a resultados: automatización, fiabilidad de plataformas e implementación práctica de IA empresarial. Acelerando TTM y reduciendo carga operativa.",
+    en: "Linux and virtualization engineer with a delivery-first portfolio focused on automation, platform reliability, and practical AI implementation across cloud and local runtimes.",
+    es: "Ingeniero Linux y virtualización con un portfolio orientado a resultados: automatización, fiabilidad de plataformas e implementación práctica de IA en cloud y runtimes locales.",
   },
   "recruiter.roleFit": { en: "Role fit", es: "Encaje profesional" },
   "recruiter.roleFit1": {
@@ -266,8 +320,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   },
   "cat.ai": { en: "AI", es: "IA" },
   "cat.ai.desc": {
-    en: "Generative AI use cases, integration patterns, and practical lessons.",
-    es: "Casos de uso de IA generativa, patrones de integración y lecciones prácticas.",
+    en: "Applied AI across cloud services, local inference, and practical delivery lessons.",
+    es: "IA aplicada en cloud, inferencia local y lecciones prácticas de entrega.",
   },
   "cat.cloud": { en: "Cloud", es: "Cloud" },
   "cat.cloud.desc": {
@@ -301,10 +355,13 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "posts.noPosts": { en: "No posts published yet.", es: "Sin posts publicados aún." },
   "posts.minRead": { en: "min read", es: "min de lectura" },
   "posts.issue": { en: "Issue:", es: "Problema:" },
+  "posts.issueLabel": { en: "Issue", es: "Problema" },
   "posts.solution": { en: "Solution:", es: "Solución:" },
+  "posts.solutionLabel": { en: "Solution", es: "Solución" },
   "posts.usedIn": { en: "Used In:", es: "Usado en:" },
   "posts.impact": { en: "Impact:", es: "Impacto:" },
   "posts.situation": { en: "Situation", es: "Situación" },
+  "posts.updated": { en: "Updated", es: "Actualizado" },
 
   /* ── Archive ── */
   "archive.title": { en: "All Case Studies", es: "Todos los Casos de Estudio" },
@@ -334,8 +391,13 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Ingeniero Linux y Virtualización con mentalidad automation-first.",
   },
   "about.intro": {
-    en: "I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and bridge infrastructure operations with practical Generative AI implementations.",
-    es: "Diseño y opero plataformas Linux corporativas, estandarizo entregas con Ansible y Git, y conecto operaciones de infraestructura con implementaciones reales de IA Generativa.",
+    en: "I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and complement that core work with practical AI projects in Azure and local inference.",
+    es: "Diseño y opero plataformas Linux corporativas, estandarizo entregas con Ansible y Git, y complemento ese trabajo principal con proyectos prácticos de IA en Azure e inferencia local.",
+  },
+  "about.tldrTitle": { en: "TL;DR for Recruiters", es: "Resumen para Recruiters" },
+  "about.tldrBody": {
+    en: "My core profile is Linux platform engineering and virtualization, with a strong automation focus. Alongside that, I work on applied AI use cases in Azure and build local-AI projects around llama.cpp, benchmarking, and edge inference. I am comfortable moving between operations, implementation, and technical communication.",
+    es: "Mi perfil principal es ingeniería de plataformas Linux y virtualización, con un enfoque fuerte en automatización. Junto a eso, trabajo en casos de uso de IA aplicada en Azure y construyo proyectos de IA local alrededor de llama.cpp, benchmarking e inferencia edge. Me siento cómodo moviéndome entre operaciones, implementación y comunicación técnica.",
   },
   "about.snapshot": { en: "Professional Snapshot", es: "Resumen Profesional" },
   "about.infraTitle": {
@@ -353,16 +415,16 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   },
   "about.aiTitle": { en: "AI integration for business cases", es: "Integración de IA en negocio" },
   "about.aiDesc": {
-    en: "Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model fine-tuning workflows.",
-    es: "Iniciativas GenAI con Azure AI Foundry, inteligencia documental y flujos de fine-tuning.",
+    en: "Applied AI initiatives using Azure AI Foundry, document intelligence, and hands-on local inference work with llama.cpp, benchmarking, and edge hardware.",
+    es: "Iniciativas de IA aplicada con Azure AI Foundry, inteligencia documental y trabajo práctico de inferencia local con llama.cpp, benchmarking y hardware edge.",
   },
   "about.experience": { en: "Experience", es: "Experiencia" },
   "about.coreAreas": { en: "Core Areas", es: "Áreas Principales" },
   "about.cvTitle": { en: "CV / Resume", es: "CV / Currículum" },
   "about.cvLabel": { en: "View CV", es: "Ver CV" },
   "about.cvDesc": {
-    en: "Detailed CV with role scope, delivery outcomes, and full technology coverage.",
-    es: "CV detallado con alcance del puesto, resultados de entrega y cobertura tecnológica completa.",
+    en: "Detailed CV with role scope, delivery outcomes, and recent AI work alongside Linux and virtualization responsibilities.",
+    es: "CV detallado con alcance del puesto, resultados de entrega y trabajo reciente en IA junto a responsabilidades de Linux y virtualización.",
   },
   "about.cvDisabled": {
     en: "CV link is temporarily unavailable.",
@@ -371,9 +433,12 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "about.coverLetterTitle": { en: "Cover Letter", es: "Carta de Presentación" },
   "about.coverLetterLabel": { en: "View Cover Letter", es: "Ver Carta de Presentación" },
   "about.coverLetterDesc": {
-    en: "Professional introduction — who I am, what I work on, and how I approach infrastructure and automation.",
-    es: "Presentación profesional — quién soy, en qué trabajo y cómo enfoco la infraestructura y la automatización.",
+    en: "Professional introduction — who I am, what I work on, and how I combine Linux platform engineering with practical AI projects.",
+    es: "Presentación profesional — quién soy, en qué trabajo y cómo combino ingeniería de plataforma Linux con proyectos prácticos de IA.",
   },
+  "coverLetter.download": { en: "Download PDF", es: "Descargar PDF" },
+  "coverLetter.print": { en: "⬇ Print / Save as PDF", es: "⬇ Imprimir / Guardar como PDF" },
+  "coverLetter.backAbout": { en: "← About", es: "← Acerca de" },
   "about.coverLetterDisabled": {
     en: "Cover letter link is temporarily unavailable.",
     es: "El enlace a la carta de presentación no está disponible temporalmente.",
@@ -443,8 +508,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Administración VMware vSphere: aprovisionamiento de VMs, planificación de capacidad y mantenimiento.",
   },
   "exp.pbb.7": {
-    en: "Delivering enterprise AI use cases with Azure AI Foundry — optimizing document intelligence pipelines and model fine-tuning for scalable process automation.",
-    es: "Entrega de casos de IA empresarial con Azure AI Foundry: optimización de pipelines de inteligencia documental y fine-tuning de modelos para automatización de procesos a escala.",
+    en: "Delivering enterprise AI use cases with Azure AI Foundry, including document intelligence pipelines and model adaptation work for internal process automation.",
+    es: "Entrega de casos de IA empresarial con Azure AI Foundry, incluyendo pipelines de inteligencia documental y trabajo de adaptación de modelos para automatización interna.",
   },
   "exp.pbb.8": {
     en: "Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.",
@@ -537,8 +602,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   },
   "skill.cloud": { en: "Cloud + AI Integration", es: "Cloud + Integración IA" },
   "skill.cloud.desc": {
-    en: "Azure AI Foundry, document intelligence, and practical GenAI implementation patterns aligned with operations.",
-    es: "Azure AI Foundry, inteligencia documental y patrones de implementación GenAI alineados con operaciones.",
+    en: "Azure AI Foundry, document intelligence, and practical AI implementation patterns aligned with operations, local inference, and delivery constraints.",
+    es: "Azure AI Foundry, inteligencia documental y patrones prácticos de implementación de IA alineados con operaciones, inferencia local y restricciones reales de entrega.",
   },
   "skill.team": { en: "Cross-Team Delivery", es: "Entrega Cross-Team" },
   "skill.team.desc": {
@@ -623,6 +688,9 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "cv.openPublic": { en: "Open Public CV", es: "Abrir CV Público" },
 
   /* ── Language switcher ── */
+  "lang.label": { en: "Language", es: "Idioma" },
+  "lang.english": { en: "Switch to English", es: "Cambiar a inglés" },
+  "lang.spanish": { en: "Switch to Spanish", es: "Cambiar a español" },
   "lang.switch": { en: "ES", es: "EN" },
   "lang.switchLabel": { en: "Cambiar a Español", es: "Switch to English" },
 };

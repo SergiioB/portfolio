@@ -29,11 +29,14 @@ const primaryCategory = category[0];
 
 <article class={`post-card category-${primaryCategory}`}>
   <div class="post-card-header">
-    <time class="post-date" datetime={pubDate.toISOString()}>
+    <time class="post-date" datetime={pubDate.toISOString()} data-localize-date="long">
       {pubDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
     </time>
     <span class="post-meta-sep">•</span>
-    <span class="post-reading-time">{readingTime} min read</span>
+    <span class="post-reading-time">
+      {readingTime}
+      <span data-i18n="posts.minRead">min read</span>
+    </span>
   </div>
 
   <h3 class="post-card-title">
@@ -47,7 +50,7 @@ const primaryCategory = category[0];
       <div class="post-card-categories">
         {category.map((cat) => (
           <a href={withBase(`${cat}/`)} class={`badge category-${cat}`}>
-            {CATEGORY_META[cat]?.label ?? cat}
+            <span data-i18n={`cat.${cat}`}>{CATEGORY_META[cat]?.label ?? cat}</span>
           </a>
         ))}
       </div>
@@ -59,13 +62,17 @@ const primaryCategory = category[0];
       <div class="post-card-details">
         {issue && (
           <div class="detail-row">
-            <span class="detail-label detail-label-issue">Issue</span>
+            <span class="detail-label detail-label-issue" data-i18n="posts.issueLabel">
+              Issue
+            </span>
             <span class="detail-value">{issue}</span>
           </div>
         )}
         {solution && (
           <div class="detail-row">
-            <span class="detail-label detail-label-solution">Solution</span>
+            <span class="detail-label detail-label-solution" data-i18n="posts.solutionLabel">
+              Solution
+            </span>
             <span class="detail-value">{solution}</span>
           </div>
         )}

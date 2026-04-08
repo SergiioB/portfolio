@@ -34,11 +34,11 @@ const readingTime = estimateReadingTime(post.body);
 const primaryCategory = category[0]; // First category is primary for breadcrumb
 
 const caseItems = [
-  { label: "Situation", value: situation },
-  { label: "Issue", value: issue },
-  { label: "Solution", value: solution },
-  { label: "Used In", value: usedIn },
-  { label: "Impact", value: impact },
+  { label: "Situation", labelKey: "posts.situation", value: situation },
+  { label: "Issue:", labelKey: "posts.issue", value: issue },
+  { label: "Solution:", labelKey: "posts.solution", value: solution },
+  { label: "Used In:", labelKey: "posts.usedIn", value: usedIn },
+  { label: "Impact:", labelKey: "posts.impact", value: impact },
 ].filter((item) => item.value);
 ---
 
@@ -50,7 +50,9 @@ const caseItems = [
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
         <span>/</span>
-        <a href={withBase(`${primaryCategory}/`)}>{getCategoryLabel(primaryCategory)}</a>
+        <a href={withBase(`${primaryCategory}/`)} data-i18n={`cat.${primaryCategory}`}>
+          {getCategoryLabel(primaryCategory)}
+        </a>
         {
           category.length > 1 && (
             <>
@@ -59,7 +61,11 @@ const caseItems = [
                 {category.slice(1).map((cat, i) => (
                   <>
                     {i > 0 && ", "}
-                    <a href={withBase(`${cat}/`)} class="secondary-category">
+                    <a
+                      href={withBase(`${cat}/`)}
+                      class="secondary-category"
+                      data-i18n={`cat.${cat}`}
+                    >
                       {getCategoryLabel(cat)}
                     </a>
                   </>
@@ -71,7 +77,7 @@ const caseItems = [
       </nav>
 
       <div class="article-meta">
-        <time datetime={pubDate.toISOString()}>
+        <time datetime={pubDate.toISOString()} data-localize-date="full">
           {
             pubDate.toLocaleDateString("en-US", {
               year: "numeric",
@@ -86,7 +92,12 @@ const caseItems = [
           updatedDate && (
             <>
               <span aria-hidden="true">•</span>
-              <span>Updated {updatedDate.toLocaleDateString("en-US")}</span>
+              <span>
+                <span data-i18n="posts.updated">Updated</span>{" "}
+                <time datetime={updatedDate.toISOString()} data-localize-date="numeric">
+                  {updatedDate.toLocaleDateString("en-US")}
+                </time>
+              </span>
             </>
           )
         }
@@ -113,7 +124,7 @@ const caseItems = [
           <div class="case-grid">
             {caseItems.map((item) => (
               <article class="case-card">
-                <h3>{item.label}</h3>
+                <h3 data-i18n={item.labelKey}>{item.label}</h3>
                 <p>{item.value}</p>
               </article>
             ))}

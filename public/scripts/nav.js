@@ -101,11 +101,48 @@
     });
   };
 
+  const applyLocalizedDates = () => {
+    const locale = currentLang === 'es' ? 'es-ES' : 'en-US';
+    const dateFormats = {
+      long: { year: 'numeric', month: 'short', day: 'numeric' },
+      short: { month: 'short', day: 'numeric' },
+      full: { year: 'numeric', month: 'long', day: 'numeric' },
+      numeric: { year: 'numeric', month: '2-digit', day: '2-digit' },
+    };
+
+    document.querySelectorAll('[data-localize-date]').forEach((el) => {
+      const isoDate = el.getAttribute('datetime') || el.getAttribute('data-date');
+      if (!isoDate) return;
+
+      const date = new Date(isoDate);
+      if (Number.isNaN(date.getTime())) return;
+
+      const style = el.getAttribute('data-localize-date') || 'long';
+      const format = dateFormats[style] || dateFormats.long;
+      el.textContent = new Intl.DateTimeFormat(locale, format).format(date);
+    });
+  };
+
+  const syncLangControls = () => {
+    document.querySelectorAll('[data-lang-option]').forEach((btn) => {
+      const targetLang = btn.getAttribute('data-lang-option');
+      const isActive = targetLang === currentLang;
+      btn.setAttribute('aria-pressed', String(isActive));
+      btn.classList.toggle('is-active', isActive);
+    });
+
+    document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
+      btn.textContent = T('lang.switch');
+    });
+  };
+
   const setLang = (lang) => {
     currentLang = lang === 'es' ? 'es' : 'en';
     try { window.localStorage.setItem(LANG_KEY, currentLang); } catch { }
     applyI18nDom();
     applyLocalizedHrefs();
+    applyLocalizedDates();
+    syncLangControls();
     buildCommands();
     renderCommands('');
     const audience = document.body.classList.contains('audience-engineer') ? 'engineer' : 'recruiter';
@@ -120,6 +157,8 @@
     }
 
     applyLocalizedHrefs();
+    applyLocalizedDates();
+    syncLangControls();
 
     window.dispatchEvent(new CustomEvent('portfolio-lang-change', { detail: { lang: currentLang } }));
   };
@@ -892,6 +931,17 @@
    *  Language switcher button binding
    * ═══════════════════════════════════════════════════════════════════════ */
   const initLangSwitcher = () => {
+    document.querySelectorAll('[data-lang-option]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        const nextLang = btn.getAttribute('data-lang-option');
+        if (!nextLang || nextLang === currentLang) return;
+        setLang(nextLang);
+        showToast(T('toast.langSwitched'));
+      });
+    });
+
     document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
       if (btn.dataset.bound === '1') return;
       btn.dataset.bound = '1';
@@ -899,10 +949,10 @@
         const nextLang = currentLang === 'en' ? 'es' : 'en';
         setLang(nextLang);
         showToast(T('toast.langSwitched'));
-        /* Update the button label itself */
-        btn.textContent = T('lang.switch');
       });
     });
+
+    syncLangControls();
   };
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -1065,6 +1115,8 @@
     initLangSwitcher();
     applyI18nDom();
     applyLocalizedHrefs();
+    applyLocalizedDates();
+    syncLangControls();
 
     /* 9. Console Easter egg */
     printConsoleEgg();
