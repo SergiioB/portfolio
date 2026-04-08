@@ -19,8 +19,8 @@ export const PUBLIC_LINKS: Array<{ label: string; href: string }> = [
 export const PUBLIC_CV = {
   enabled: true,
   label: "View CV",
-  href: "cv/",
-  hrefEs: "cv/",
+  href: "docs/cv-sergio-barrientos.html",
+  hrefEs: "docs/cv-sergio-barrientos-es.html",
   external: false,
   openInNewTab: true,
 } as const;
