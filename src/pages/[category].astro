@@ -15,7 +15,7 @@ import {
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return CATEGORY_ORDER.map((category) => ({
     params: { category },
     props: { category },

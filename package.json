@@ -1,7 +1,30 @@
 {
   "name": "portfolio",
+  "private": true,
   "type": "module",
   "version": "1.0.0",
+  "description": "Case-study driven engineering portfolio and technical blog focused on Linux, automation, systems architecture, and practical local AI.",
+  "author": "Sergio Barrientos",
+  "homepage": "https://sergiiob.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergiioB/portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SergiioB/portfolio/issues"
+  },
+  "keywords": [
+    "astro",
+    "portfolio",
+    "technical-blog",
+    "linux",
+    "ansible",
+    "automation",
+    "devops",
+    "local-ai",
+    "llama-cpp",
+    "rk3588"
+  ],
   "engines": {
     "node": ">=18.20.8"
   },

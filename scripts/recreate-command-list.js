@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import path from "path";
+
 import puppeteer from "puppeteer";
 
 const categories = [
@@ -314,7 +314,7 @@ const columns = [
   { x: 2170, y: 250 },
 ];
 
-let svgNodes = [];
+const svgNodes = [];
 
 function escapeXml(unsafe) {
   return unsafe.replace(/[<>&'"]/g, function (c) {
@@ -335,7 +335,7 @@ function escapeXml(unsafe) {
 
 for (const cat of categories) {
   let blockY = 140;
-  let itemNodes = [];
+  const itemNodes = [];
 
   for (const item of cat.items) {
     const cmd = escapeXml(item.cmd);
@@ -353,16 +353,16 @@ for (const cat of categories) {
     }
   }
 
-  let blockHeight = blockY + 20;
+  const blockHeight = blockY + 20;
 
   let shortestCol = 0;
   for (let i = 1; i < 3; i++) {
     if (columns[i].y < columns[shortestCol].y) shortestCol = i;
   }
 
-  let currentX = columns[shortestCol].x;
-  let currentY = columns[shortestCol].y;
-  let color = colors[colorIdx % colors.length];
+  const currentX = columns[shortestCol].x;
+  const currentY = columns[shortestCol].y;
+  const color = colors[colorIdx % colors.length];
   colorIdx++;
 
   svgNodes.push(
@@ -406,7 +406,7 @@ const pngPath =
 
 async function main() {
   await fs.writeFile(outputPath, svg, "utf-8");
-  console.log("Saved SVG");
+  console.warn("Saved SVG");
 
   // Create PNG
   const browser = await puppeteer.launch();
@@ -415,7 +415,7 @@ async function main() {
   await page.goto(`file:///${outputPath.replace(/\\/g, "/")}`, { waitUntil: "load" });
   await new Promise((r) => setTimeout(r, 1000));
   await page.screenshot({ path: pngPath, fullPage: true });
-  console.log("Saved PNG");
+  console.warn("Saved PNG");
   await browser.close();
 }
 
