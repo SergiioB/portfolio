@@ -7,6 +7,7 @@ solution: "I ran a corrected Qwen3.5 sweep on RK3588 using source-built llama.cp
 usedIn: "Local-first Discord agent runtime on Radxa ROCK 5B+ / RK3588, built around raw llama.cpp rather than Ollama or LM Studio."
 impact: "Showed that Qwen3.5-2B is the best overall default on RK3588, Qwen3.5-9B is the best practical quality tier, and Qwen3.5-27B is not viable interactively on this board. Also established a benchmark-backed way to talk about context fit and KV cache tradeoffs credibly."
 pubDate: 2026-03-28
+updatedDate: 2026-04-10
 category: "local-ai"
 tags:
   [
@@ -69,6 +70,52 @@ The two benchmark layers I cared about were:
    - simple intelligence/task score
 
 That second layer matters. A model can post a decent synthetic throughput number and still be the wrong model for an interactive Discord agent.
+
+## Benchmark Hygiene: What I Had To Fix Later
+
+One useful follow-up lesson from this work is that the benchmark process itself needed tightening.
+
+The original sweep was directionally useful, but on a board like RK3588 small methodology mistakes can easily turn into bad runtime defaults. The three fixes that mattered most were:
+
+### 1. Only compare like-for-like mixed workloads
+
+I stopped trusting summary rows that mixed:
+
+- prompt-only measurements
+- decode-only measurements
+
+into one headline result.
+
+If the real workload is an interactive request that does both prefill and generation, the benchmark row should come from one invocation that also does both.
+
+### 2. Treat thermal cooldown as part of the benchmark
+
+On RK3588, thermal state is not background noise. A cooler board and a heat-soaked board are effectively different test environments.
+
+The corrected reruns used cooldown gates between runs so the comparison stayed credible instead of accidentally measuring "model plus leftover heat."
+
+### 3. Verify no-thinking mode from the real runtime, not just config
+
+This was the subtle one.
+
+It is easy to assume that a disabled reasoning budget means the model is really running without thinking mode. In practice, I found that the safer process is:
+
+1. check the actual `llama-server` startup flags
+2. confirm the server log behavior
+3. inspect visible outputs for leaked `<think>` wrappers
+
+That matters because some templates or models can still leak empty think tags even after reasoning is supposedly disabled.
+
+The practical rule I came away with was:
+
+> on constrained local stacks, benchmark methodology is part of the runtime, not a separate reporting step
+
+That follow-up did not reverse the main conclusion of this post. It made the conclusions narrower and more trustworthy:
+
+- `Qwen3.5-2B` stayed the fast interactive CPU tier
+- `Qwen3.5-4B` stayed slower, but more plausible as a quality tier
+- `Qwen3.5-9B` stayed optional rather than default
+- explicit no-thinking mode became part of production hygiene, not just a benchmark flag
 
 ## How I Built llama.cpp on RK3588
 
