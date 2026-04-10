@@ -5,6 +5,17 @@ export const SITE = {
   tagline: "Infrastructure delivery, automation, and applied enterprise AI",
   description:
     "Case-study driven portfolio focused on Linux platform engineering, virtualization, Ansible automation, RHEL lifecycle modernization, and practical AI integration in enterprise environments.",
+  keywords: [
+    "Linux engineer",
+    "Ansible automation",
+    "RHEL",
+    "platform engineering",
+    "technical portfolio",
+    "local AI",
+    "llama.cpp",
+    "RK3588",
+    "systems architecture",
+  ],
   profileSummary:
     "Linux and virtualization engineer documenting real delivery patterns: clear issue statements, implementation choices, and production outcomes.",
   publicLocation: "Madrid, Spain (Hybrid)",
