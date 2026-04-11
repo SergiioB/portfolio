@@ -7,7 +7,7 @@ solution: "I ran a corrected Qwen3.5 sweep on RK3588 using source-built llama.cp
 usedIn: "Local-first Discord agent runtime on Radxa ROCK 5B+ / RK3588, built around raw llama.cpp rather than Ollama or LM Studio."
 impact: "Showed that Qwen3.5-2B is the best overall default on RK3588, Qwen3.5-9B is the best practical quality tier, and Qwen3.5-27B is not viable interactively on this board. Also established a benchmark-backed way to talk about context fit and KV cache tradeoffs credibly."
 pubDate: 2026-03-28
-updatedDate: 2026-04-10
+updatedDate: 2026-04-11
 category: "local-ai"
 tags:
   [
@@ -405,6 +405,20 @@ My practical model map after the sweep:
 - **Not practical interactively**: `Qwen3.5-27B`
 
 That is the version of local AI benchmarking I trust: measured, board-specific, and willing to say when a popular bigger model is simply the wrong choice.
+
+## April 2026 Update: Full Pipeline Benchmark
+
+> **This post's synthetic benchmarks have been superseded** by a full 14-model pipeline benchmark that tests quality through the live Discord agent — not just raw llama.cpp throughput.
+>
+> Key changes from the new benchmark:
+>
+> - **NPU beats CPU**: Qwen2.5-3B on NPU delivers identical 11/14 quality at 2× lower latency (45s vs 87s)
+> - **Qwen3.5-2B confirmed** as best CPU reasoning model (3/3 reasoning, 12/14 quality)
+> - **4B models downgraded**: Qwen3.5-4B is slower AND worse than Qwen3.5-2B on RK3588
+> - **Code generation solved everywhere**: all 14 models (350M to 26B) pass code tests
+> - **Claude distillation breaks tool calling**: Qwen3.5-2B-Claude-Opus refuses all tool calls
+>
+> See the full results: **[14 Models Benchmarked on RK3588: The Definitive CPU vs NPU Ranking](/posts/rk3588-ultimate-14-model-benchmark-cpu-npu)**
 
 <!-- portfolio:expanded-v2 -->
 

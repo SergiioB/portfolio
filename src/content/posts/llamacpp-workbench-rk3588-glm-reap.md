@@ -204,3 +204,13 @@ python -m llama_webui.main --host 0.0.0.0 --port 8095
 - **Platform depth:** validated on ARM64 RK3588, not just described abstractly
 - **Execution quality:** combined runtime tuning, UI engineering, and documentation into a reusable published project
 - **Outcome signal:** practical remote control of local GGUF inference with benchmark-backed hardware guidance
+
+## April 2026 Update: REAP Model Benchmarked Through Discord Pipeline
+
+The GLM-4.7-Flash-REAP-23B-A3B model was benchmarked through the live Discord agent pipeline alongside 13 other models.
+
+**Results**: 10/14 quality (weighted 19.5), 62.1s average wall time, 5.7 t/s. The model passed reasoning (2/3), code (2/2), and tool calling (2/2), but failed factual accuracy (1/3) — it answered "Sydney" instead of "Canberra" for Australia's capital and gave incorrect population figures.
+
+The REAP model's MoE architecture (23B total, ~3B active) keeps RAM usage low (270 MB) but the active parameter computation is still heavy for RK3588 CPU. At 62s average, it's faster than expected for an 11 GB model but slower than 2B-3B NPU models that achieve higher quality.
+
+Full benchmark results: **[14 Models Benchmarked on RK3588: The Definitive CPU vs NPU Ranking](/posts/rk3588-ultimate-14-model-benchmark-cpu-npu)**
