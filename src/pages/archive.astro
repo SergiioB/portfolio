@@ -80,7 +80,10 @@ const years = Object.keys(postsByYear)
                 </time>
 
                 <div>
-                  <a href={withBase(`posts/${post.id}/`)} class="archive-post-title">
+                  <a
+                    href={withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`)}
+                    class="archive-post-title"
+                  >
                     {post.data.title}
                   </a>
                   <p class="archive-post-summary">

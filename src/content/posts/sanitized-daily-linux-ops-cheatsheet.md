@@ -26,7 +26,7 @@ Every example below is intentionally anonymized. Hostnames, usernames, domains, 
 
 This article covers the Linux, storage, permissions, Git, Vim, and scheduler commands from my notes. I moved the Ansible Vault, Python virtualenv, dependency bootstrap, and Molecule loop into a companion post so both references stay practical to scan:
 
-[Ansible Vault, Python, and Molecule Snippets](/posts/ansible-vault-python-molecule-snippets.md/)
+[Ansible Vault, Python, and Molecule Snippets](/posts/ansible-vault-python-molecule-snippets/)
 
 ## Placeholder legend
 
@@ -247,4 +247,4 @@ Most importantly, it is safe to publish. Every example here is sanitized, and th
 
 For the automation-side commands from the same notes, the companion reference is here:
 
-[Ansible Vault, Python, and Molecule Snippets](/posts/ansible-vault-python-molecule-snippets.md/)
+[Ansible Vault, Python, and Molecule Snippets](/posts/ansible-vault-python-molecule-snippets/)
