@@ -23,7 +23,7 @@ interface Props {
 const { post } = Astro.props;
 const { title, description, pubDate, category, tags, issue, solution } = post.data;
 const readingTime = estimateReadingTime(post.body);
-const postUrl = withBase(`posts/${post.id}/`);
+const postUrl = withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
 const primaryCategory = category[0];
 ---
 
