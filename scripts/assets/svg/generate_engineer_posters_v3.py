@@ -85,7 +85,7 @@ def panel(x,y,w,title,copy,label,lines, alt_idx=None):
     out.extend(boxes)
     out.append('</g>')
     
-    return h, '\\n'.join(out)
+    return h, '\n'.join(out)
 
 def poster(filename, title, subtitle, badge, panels_data, width=2200):
     col1_x = 90
@@ -129,8 +129,9 @@ def poster(filename, title, subtitle, badge, panels_data, width=2200):
             '</g>','<g filter="url(#shadow)">']
     out += panels_out
     out += ['</g>','</svg>']
-    (OUT/filename).write_text('\\n'.join(out))
+    (OUT/filename).write_text('\n'.join(out))
 
+# ─── Poster 1: Storage and Access ───
 poster('full-linux-engineer-storage.svg',
        'Linux Engineer Command List — Storage and Access',
        'Comprehensive disk usage, LVM growth/shrink workflows, account inspection, password policy, and SSH access.',
@@ -178,16 +179,17 @@ poster('full-linux-engineer-storage.svg',
                "awk -F: '($3 == \"0\") {print}' /etc/passwd",
                'visudo -c',
                'groups svc_user',
-               'find / -maxdepth 2 -type d \( -user svc_user -o -group svc_user \) -ls 2>/dev/null',
+               'find / -maxdepth 2 -type d \\( -user svc_user -o -group svc_user \\) -ls 2>/dev/null',
                'sudo -l -U svc_user | grep -v "not allowed"',
                'getent passwd svc_user'
            ], alt_idx={1,3,5,7,9})
        ])
 
+# ─── Poster 2: Python, Ansible, DB, and DNF Patching ───
 poster('full-linux-engineer-automation.svg',
-       'Linux Engineer Command List — Python, Ansible, and DB',
-       'Python environments, playbook runs, dry-runs, Vault workflows, and PostgreSQL SELinux fixes.',
-       'AUTOMATION / PYTHON / DATABASE',
+       'Linux Engineer Command List — Python, Ansible, DB, Patching',
+       'Python environments, playbook runs, Vault workflows, DNF advisory patching, Ansible ad-hoc, and PostgreSQL SELinux fixes.',
+       'AUTOMATION / PYTHON / DATABASE / PATCHING',
        [
            dict(title='1. Bootstrap the Python environment', copy='Create the virtual environment first so repository dependencies stay isolated. Manage requirements effectively.', label='PYTHON BOOTSTRAP', lines=[
                'python3.12 -m venv .venv',
@@ -198,40 +200,59 @@ poster('full-linux-engineer-automation.svg',
                'pip list --outdated',
                'python3.12 -m http.server 8080'
            ], alt_idx={1,3,5}),
-           dict(title='2. Common Ansible execution patterns', copy='These are the real playbook commands that repeatedly appear during provisioning, follow-up fixes, and safe dry-runs.', label='PLAYBOOK RUNS', lines=[
-               "ansible-playbook --check --diff playbook.yml",
-               "ansible-playbook playbook.yml --step",
-               "ansible-inventory -i inventory/stage/ --graph",
-               "ansible-playbook -i inventory/lab/ playbooks/platform-bootstrap.yml --limit='target-host' -t app_db_client",
-               "ansible-playbook -i inventory/stage/ playbooks/platform-bootstrap.yml --limit='target-host' -t common_usersetup,common_filesystems,common_rhel,common_security",
-               "ansible-playbook -i inventory/stage/ playbooks/app_postgresql_prereqs.yml --limit='target-host'"
-           ], alt_idx={1,3,5}),
-           dict(title='3. Galaxy, Vault, and ad-hoc debugging', copy='Use these when installing dependencies, managing secrets, or validating infrastructure states directly.', label='ANSIBLE CORE', lines=[
+           dict(title='2. DNF advisory-based patching', copy='Inspect available errata, review severity and CVEs, then apply specific advisories without updating everything on the system.', label='RHEL PATCH MANAGEMENT', lines=[
+               'dnf check-update',
+               'dnf updateinfo list',
+               'dnf updateinfo info',
+               'dnf updateinfo list --security',
+               'dnf updateinfo list --sec-severity=Critical --sec-severity=Important',
+               'dnf upgrade --advisory RHSA-2025:1234 -y',
+               'dnf upgrade --security -y',
+               'dnf upgrade --security --sec-severity=Critical -y',
+               'dnf download --resolve --destdir=/tmp/patches --security',
+               'rpm -qa --last | head -20',
+               'rpm -V package-name'
+           ], alt_idx={1,3,5,7,9}),
+           dict(title='3. Ansible ad-hoc execution patterns', copy='Run targeted commands across host groups without writing a playbook. Ideal for patching waves, health checks, and triage.', label='ANSIBLE AD-HOC', lines=[
+               'ansible all -i inventory/stage -m ping',
+               'ansible -i inventory/stage web_servers_rhel9_* \\',
+               '  -u svc_deploy -e "ansible_password={{ lookup(\'env\',\'DEPLOY_PASS\') }}" \\',
+               '  -e "ansible_become_password={{ lookup(\'env\',\'DEPLOY_PASS\') }}" \\',
+               '  -b -m shell -a \'dnf updateinfo; dnf upgrade --advisory RHSA-2025:1234 -y\'',
+               'ansible -i inventory/stage app_servers_* -u svc_deploy \\',
+               '  -e "ansible_password={{ lookup(\'env\',\'DEPLOY_PASS\') }}" \\',
+               '  -b -m shell -a \'df -h / /apps /data\'',
+               'ansible -i inventory/stage db_servers_* -u svc_deploy \\',
+               '  -e "ansible_password={{ lookup(\'env\',\'DEPLOY_PASS\') }}" \\',
+               '  -b -m shell -a \'rpm -q postgresql-server\'',
+               'ansible -i inventory/stage all -u svc_deploy \\',
+               '  -e "ansible_password={{ lookup(\'env\',\'DEPLOY_PASS\') }}" \\',
+               '  -b -m shell -a \'sestatus; getenforce\''
+           ], alt_idx={1,3,5,7}),
+           dict(title='4. Galaxy, Vault, and playbook runs', copy='Install dependencies, manage secrets, and run playbooks with safe dry-run and limit flags.', label='ANSIBLE CORE', lines=[
                'ansible-galaxy install -r requirements.yml',
-               'ansible-galaxy install -r roles/platform_role/collections/requirements.yml',
-               'pip install -r collections/ansible_collections/community/general/requirements.yml',
+               'ansible-playbook --check --diff playbook.yml',
+               'ansible-playbook playbook.yml --step',
+               'ansible-inventory -i inventory/stage/ --graph',
                "ansible-vault encrypt_string --stdin-name 'service_secret'",
-               'ansible-vault encrypt files/target-host/tls.key --vault-password-file ~/.secure/vault/platform.pass --encrypt-vault-id default',
-               'ansible-vault rekey files/target-host/tls.key',
+               'ansible-vault encrypt files/target-host/tls.key --vault-password-file ~/.secure/vault/platform.pass',
                'ansible-vault decrypt files/target-host/tls.crt --vault-password-file ~/.secure/vault/platform.pass',
                'ansible localhost -m debug -a "var=vault_secret_name" -e "@inventory/lab/group_vars/all/secret_vars.yml" --ask-vault-pass',
-               'ansible all -m ping -i inventory/lab/',
                'ansible all -m setup | grep ansible_os_family'
-           ], alt_idx={1,3,5,7,9}),
-           dict(title='4. PostgreSQL archive and SELinux fixes', copy='Small but critical operational commands that appear during archive troubleshooting, config reloading, and policy enforcement.', label='DB AND POLICY', lines=[
+           ], alt_idx={1,3,5,7}),
+           dict(title='5. PostgreSQL archive and SELinux fixes', copy='Small but critical operational commands for archive troubleshooting, config reloading, and policy enforcement.', label='DB AND POLICY', lines=[
                'vim /data/postgres/main/pg_hba.conf',
-               'sudo vi /data/postgres/main/postgresql.conf',
                'sudo -u postgres psql -c "SELECT pg_reload_conf();"',
                'tail -f /var/log/postgresql/postgresql-14-main.log',
                "archive_command = 'test -f /data/postgres/archive/%f || cp %p /data/postgres/archive/%f'",
                'sestatus',
                'audit2allow -a',
                'semanage fcontext -a -t postgresql_db_t "/data/postgres/archive(/.*)?"',
-               'restorecon -Rv /data/postgres/archive',
-               'getent passwd svc_user'
-           ], alt_idx={1,3,5,7,9})
+               'restorecon -Rv /data/postgres/archive'
+           ], alt_idx={1,3,5,7})
        ])
 
+# ─── Poster 3: Testing, Git, and Utilities ───
 poster('full-linux-engineer-delivery.svg',
        'Linux Engineer Command List — Testing, Git, and Utilities',
        'Molecule test cycles, safe Git branch recovery, silent installers, SSL cert validation, and system maintenance.',
@@ -246,16 +267,17 @@ poster('full-linux-engineer-delivery.svg',
                'molecule verify -s default',
                'molecule login -s default'
            ], alt_idx={1,3,5}),
-           dict(title='2. Git recovery sequence', copy='The smallest safe sequence for refreshing a feature branch from main, pruning dead branches, and squashing commits.', label='CONTROLLED MERGE FLOW', lines=[
+           dict(title='2. Git recovery and branch splitting', copy='Safe branch refresh, path-based checkout for splitting mixed branches, stash handling, and verification.', label='GIT WORKFLOW', lines=[
                'git fetch --all --prune',
-               'git stash',
-               'git checkout main',
-               'git pull',
-               'git checkout feature-branch',
+               'git stash -u',
+               'git switch main && git pull',
+               'git switch -c clean-branch',
+               'git checkout mixed-branch -- specific/path/',
+               'git diff --cached --name-only',
                'git merge main',
                'git stash pop',
-               'git add',
-               'git rebase -i HEAD~3',
+               'git restore --staged .',
+               'git restore --source=main --worktree .',
                'git log --graph --oneline --all'
            ], alt_idx={1,3,5,7,9}),
            dict(title='3. Silent installers and certificates', copy='Run non-interactive deployments, generate CSRs with SANs, and quickly validate SSL/TLS certificates and chains.', label='INSTALLERS AND CERTS', lines=[
@@ -268,21 +290,22 @@ poster('full-linux-engineer-delivery.svg',
                'openssl s_client -connect target-host:443 -showcerts',
                'certbot certificates'
            ], alt_idx={1,3,5,7}),
-           dict(title='4. Quick editor, symlink, and service fixes', copy='Tiny commands that prevent large mistakes in file layout, clean trailing whitespaces, and inspect live services.', label='SMALL BUT IMPORTANT', lines=[
-               ':%s/\\\\s\\\\+$//e',
-               ':%s/old-token/new-token/g',
-               'ln -s /etc/opt/vendor/app /apps/app',
-               'readlink -f /apps/app',
-               'unlink /apps/app',
-               'crontab -u svc_user -e',
-               'crontab -u svc_user -l',
-               '6 14 * * * /usr/bin/systemctl restart example-service',
-               "watch -n 1 'systemctl status example-service'",
+           dict(title='4. Systemd and service management', copy='Service lifecycle, boot-time control, log inspection, and live monitoring for RHEL systems.', label='SYSTEMD SERVICES', lines=[
+               'systemctl start example-service',
+               'systemctl restart example-service',
+               'systemctl reload example-service',
+               'systemctl status example-service',
+               'systemctl enable example-service',
+               'systemctl daemon-reload',
                'journalctl -u example-service --since "1 hour ago"',
-               'grep CRON /var/log/syslog'
+               'journalctl -xe',
+               "watch -n 1 'systemctl status example-service'",
+               'crontab -u svc_user -e',
+               'crontab -u svc_user -l'
            ], alt_idx={1,3,5,7,9})
        ])
 
+# ─── Poster 4: Networking and Performance ───
 poster('full-linux-engineer-networking.svg',
        'Linux Engineer Command List — Networking and Perf',
        'Traffic analysis, port diagnostics, load metrics, memory usage, and firewalls.',

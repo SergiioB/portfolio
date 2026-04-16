@@ -195,9 +195,25 @@ const categories = [
     ],
   },
   {
+    title: "DNF Advisory Patching (RHEL)",
+    items: [
+      { cmd: "dnf check-update", desc: "List all available package updates" },
+      { cmd: "dnf updateinfo list", desc: "List updates grouped by advisory" },
+      { cmd: "dnf updateinfo info", desc: "Show advisory severity, CVEs, packages" },
+      { cmd: "dnf updateinfo list --security", desc: "List only security-related advisories" },
+      { cmd: "dnf upgrade --advisory RHSA-2025:1234 -y", desc: "Apply a specific advisory only" },
+      { cmd: "dnf upgrade --security -y", desc: "Apply all security advisories" },
+      {
+        cmd: "dnf download --resolve --destdir=/tmp/p",
+        desc: "Download patches without installing",
+      },
+      { cmd: "rpm -qa --last | head -20", desc: "Show recently installed packages" },
+    ],
+  },
+  {
     title: "Ansible Core & Execution",
     items: [
-      { cmd: "ansible all -m ping -i inv/lab/", desc: "Ping all lab hosts" },
+      { cmd: "ansible all -m ping -i inv/stage/", desc: "Ping all stage hosts" },
       { cmd: "ansible-playbook pb.yml", desc: "Run a playbook" },
       { cmd: "ansible-playbook --check --diff pb", desc: "Dry-run with exact diffs" },
       { cmd: "ansible-playbook -i inv pb --step", desc: "Run interacting step-by-step" },
@@ -206,6 +222,31 @@ const categories = [
       { cmd: "ansible-doc -l", desc: "List all available modules" },
       { cmd: "ansible-galaxy install -r reqs.yml", desc: "Install collections/roles" },
       { cmd: "ansible all -m setup | grep os_family", desc: "Quick target OS check ad-hoc" },
+    ],
+  },
+  {
+    title: "Ansible Ad-Hoc Operations",
+    items: [
+      {
+        cmd: "ansible -i inv/stage web_rhel9_* -u svc_deploy",
+        desc: "Target host group as service account",
+      },
+      {
+        cmd: '  -e \'ansible_password={{lookup("env","DEPLOY_PASS")}}\'',
+        desc: "Inject SSH pass from env var",
+      },
+      { cmd: "  -b -m shell -a 'dnf updateinfo'", desc: "Check advisories on remote hosts" },
+      {
+        cmd: "  -b -m shell -a 'dnf upgrade --advisory RHSA-2025:1234 -y'",
+        desc: "Apply specific advisory remotely",
+      },
+      { cmd: "  -b -m shell -a 'df -h / /apps /data'", desc: "Gather disk usage from host group" },
+      { cmd: "  -b -m shell -a 'rpm -q pkg-name'", desc: "Verify package version remotely" },
+      { cmd: "  -b -m shell -a 'sestatus; getenforce'", desc: "Check SELinux status across hosts" },
+      {
+        cmd: "  -b -m systemd -a 'name=svc state=restarted'",
+        desc: "Restart service on remote hosts",
+      },
     ],
   },
   {
@@ -256,11 +297,10 @@ const categories = [
       { cmd: "apt update && apt upgrade", desc: "Update list & upgrade packages" },
       { cmd: "apt install pkg", desc: "Install package (Debian/Ubuntu)" },
       { cmd: "apt remove pkg", desc: "Remove package" },
-      { cmd: "yum check-update", desc: "Check for updates (RHEL/CentOS)" },
-      { cmd: "yum update", desc: "Update packages" },
-      { cmd: "yum install pkg", desc: "Install package" },
-      { cmd: "yum remove pkg", desc: "Remove package" },
       { cmd: "dnf install pkg", desc: "Install package (Modern RHEL/Fedora)" },
+      { cmd: "dnf check-update", desc: "Check for available updates" },
+      { cmd: "yum check-update", desc: "Check for updates (RHEL/CentOS)" },
+      { cmd: "yum install pkg", desc: "Install package" },
       { cmd: "pacman -Syu", desc: "Full system upgrade (Arch Linux)" },
     ],
   },
@@ -400,9 +440,9 @@ ${svgNodes.join("\n")}
 </svg>`;
 
 const outputPath =
-  "C:/Users/Sergiio/Syncthing/portfolio/public/images/diagrams/new/full-linux-engineer-command-list.svg";
+  "/home/radxa/projects/portfolio/public/images/diagrams/new/full-linux-engineer-command-list.svg";
 const pngPath =
-  "C:/Users/Sergiio/Syncthing/portfolio/public/images/diagrams/new/full-linux-engineer-command-list.png";
+  "/home/radxa/projects/portfolio/public/images/diagrams/new/full-linux-engineer-command-list.png";
 
 async function main() {
   await fs.writeFile(outputPath, svg, "utf-8");

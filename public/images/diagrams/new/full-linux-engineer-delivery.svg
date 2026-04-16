@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="2022" viewBox="0 0 2200 2022" role="img" aria-label="Linux Engineer Command List — Testing, Git, and Utilities poster">\n
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="2056" viewBox="0 0 2200 2056" role="img" aria-label="Linux Engineer Command List — Testing, Git, and Utilities poster">
+
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#07111d" />
@@ -15,19 +16,143 @@
     </filter>
     <style>
       .title { font: 700 42px "Segoe UI", Arial, sans-serif; fill: #f4f8ff; }
-      .subtitle { font: 400 18px "Segoe UI", Arial, sans-serif; fill: #e2e8f0; }
-      .badge { font: 700 18px "Consolas", "Courier New", monospace; fill: #bae6fd; letter-spacing: 2px; }
+      .subtitle { font: 400 18px "Segoe UI", Arial, sans-serif; fill: #a4b6c8; }
+      .badge { font: 700 18px "Consolas", "Courier New", monospace; fill: #8edcff; letter-spacing: 2px; }
       .panel { fill: rgba(10, 20, 33, 0.94); stroke: url(#stroke); stroke-width: 2; }
       .panel-title { font: 700 24px "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
-      .panel-copy { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #f1f5f9; }
-      .label { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #38bdf8; letter-spacing: 1px; }
-      .cmd { font: 400 15px "Consolas", "Courier New", monospace; fill: #4ade80; font-weight: bold; }
-      .cmd-alt { font: 400 15px "Consolas", "Courier New", monospace; fill: #7dd3fc; font-weight: bold; }
-      .small { font: 400 14px "Consolas", "Courier New", monospace; fill: #cbd5e1; }
+      .panel-copy { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #99aec0; }
+      .label { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #7bc7ff; letter-spacing: 1px; }
+      .cmd { font: 400 15px "Consolas", "Courier New", monospace; fill: #9ef2bf; }
+      .cmd-alt { font: 400 15px "Consolas", "Courier New", monospace; fill: #8dd9ff; }
+      .small { font: 400 14px "Consolas", "Courier New", monospace; fill: #90a5b6; }
       .chip { fill: #0b1f31; stroke: #275676; stroke-width: 1.2; }
-      .grid { stroke: rgba(255, 255, 255, 0.15); stroke-width: 1; }
-      .rule { stroke: rgba(255, 255, 255, 0.25); stroke-width: 1; }
-      .cmd-box { fill: #091524; stroke: rgba(255, 255, 255, 0.3); stroke-width: 1; }
+      .grid { stroke: rgba(120, 162, 190, 0.08); stroke-width: 1; }
+      .rule { stroke: rgba(120, 170, 201, 0.18); stroke-width: 1; }
+      .cmd-box { fill: #091524; stroke: rgba(85, 141, 182, 0.25); stroke-width: 1; }
     </style>
   </defs>
-\n<rect width="2200" height="2022" fill="url(#bg)" />\n<g opacity="0.22">\n<path d="M0 180h2200M0 400h2200M0 620h2200M0 840h2200M0 1060h2200M0 1280h2200M0 1500h2200M0 1720h2200M0 1940h2200" class="grid" />\n<path d="M150 0v2022M410 0v2022M670 0v2022M930 0v2022M1190 0v2022M1450 0v2022M1710 0v2022M1970 0v2022" class="grid" />\n</g>\n<circle cx="1930" cy="180" r="180" fill="#123257" opacity="0.16" />\n<circle cx="260" cy="1902" r="220" fill="#193b24" opacity="0.14" />\n<g transform="translate(90 84)">\n<rect x="0" y="0" width="540" height="44" rx="22" class="chip" />\n<text x="24" y="29" class="badge">DELIVERY / GIT / UTILITIES</text>\n<text x="0" y="104" class="title">Linux Engineer Command List — Testing, Git, and Utilities</text>\n<text x="0" y="142" class="subtitle">Molecule test cycles, safe Git branch recovery, silent installers, SSL cert validation, and system maintenance.</text>\n</g>\n<g filter="url(#shadow)">\n<g transform="translate(90 310)">\n<rect width="970" height="590" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">1. Molecule scenario loop</text>\n<text x="34" y="86" class="panel-copy">Complete cycle to reset, create, converge, test, and log in to inspect the ephemeral created</text>\n<text x="34" y="108" class="panel-copy">instance.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">ROLE TEST CYCLE</text>\n<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">molecule list</text>\n<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="254" class="cmd-alt">molecule destroy -s default</text>\n<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="310" class="cmd">molecule create -s default</text>\n<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="366" class="cmd-alt">molecule converge -s default</text>\n<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="422" class="cmd">molecule test -s default</text>\n<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="478" class="cmd-alt">molecule verify -s default</text>\n<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="534" class="cmd">molecule login -s default</text>\n</g>\n<g transform="translate(1140 310)">\n<rect width="970" height="758" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">2. Git recovery sequence</text>\n<text x="34" y="86" class="panel-copy">The smallest safe sequence for refreshing a feature branch from main, pruning dead branches,</text>\n<text x="34" y="108" class="panel-copy">and squashing commits.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">CONTROLLED MERGE FLOW</text>\n<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">git fetch --all --prune</text>\n<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="254" class="cmd-alt">git stash</text>\n<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="310" class="cmd">git checkout main</text>\n<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="366" class="cmd-alt">git pull</text>\n<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="422" class="cmd">git checkout feature-branch</text>\n<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="478" class="cmd-alt">git merge main</text>\n<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="534" class="cmd">git stash pop</text>\n<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="590" class="cmd-alt">git add</text>\n<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="646" class="cmd">git rebase -i HEAD~3</text>\n<rect x="34" y="678" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="702" class="cmd-alt">git log --graph --oneline --all</text>\n</g>\n<g transform="translate(90 940)">\n<rect width="970" height="706" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">3. Silent installers and certificates</text>\n<text x="34" y="86" class="panel-copy">Run non-interactive deployments, generate CSRs with SANs, and quickly validate SSL/TLS</text>\n<text x="34" y="108" class="panel-copy">certificates and chains.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">INSTALLERS AND CERTS</text>\n<rect x="34" y="174" width="902" height="64" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">/opt/software-depot/setup.sh -silent -responsefile</text>\n<text x="50" y="218" class="cmd">/opt/software-depot/response.properties -skiposlevelcheck</text>\n<rect x="34" y="250" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="274" class="cmd-alt">openssl req -new -newkey rsa:2048 -nodes</text>\n<rect x="34" y="306" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="330" class="cmd">-keyout files/target-host/tls.key -out files/target-host/tls.csr</text>\n<rect x="34" y="362" width="902" height="64" rx="12" class="cmd-box" />\n<text x="50" y="386" class="cmd-alt">-subj &quot;/C=DE/ST=State/L=City/O=Example</text>\n<text x="50" y="406" class="cmd-alt">Corp/OU=Platform/CN=app.example.internal&quot;</text>\n<rect x="34" y="438" width="902" height="64" rx="12" class="cmd-box" />\n<text x="50" y="462" class="cmd">-addext &quot;subjectAltName = DNS:app.example.internal,DNS:target-host.example.i</text>\n<text x="50" y="482" class="cmd">nternal&quot;</text>\n<rect x="34" y="514" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="538" class="cmd-alt">openssl x509 -in tls.crt -text -noout</text>\n<rect x="34" y="570" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="594" class="cmd">openssl s_client -connect target-host:443 -showcerts</text>\n<rect x="34" y="626" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="650" class="cmd-alt">certbot certificates</text>\n</g>\n<g transform="translate(1140 1108)">\n<rect width="970" height="814" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">4. Quick editor, symlink, and service fixes</text>\n<text x="34" y="86" class="panel-copy">Tiny commands that prevent large mistakes in file layout, clean trailing whitespaces, and</text>\n<text x="34" y="108" class="panel-copy">inspect live services.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">SMALL BUT IMPORTANT</text>\n<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">:%s/\\s\\+$//e</text>\n<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="254" class="cmd-alt">:%s/old-token/new-token/g</text>\n<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="310" class="cmd">ln -s /etc/opt/vendor/app /apps/app</text>\n<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="366" class="cmd-alt">readlink -f /apps/app</text>\n<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="422" class="cmd">unlink /apps/app</text>\n<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="478" class="cmd-alt">crontab -u svc_user -e</text>\n<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="534" class="cmd">crontab -u svc_user -l</text>\n<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="590" class="cmd-alt">6 14 * * * /usr/bin/systemctl restart example-service</text>\n<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="646" class="cmd">watch -n 1 'systemctl status example-service'</text>\n<rect x="34" y="678" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="702" class="cmd-alt">journalctl -u example-service --since &quot;1 hour ago&quot;</text>\n<rect x="34" y="734" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="758" class="cmd">grep CRON /var/log/syslog</text>\n</g>\n</g>\n</svg>
+
+<rect width="2200" height="2056" fill="url(#bg)" />
+<g opacity="0.22">
+<path d="M0 180h2200M0 400h2200M0 620h2200M0 840h2200M0 1060h2200M0 1280h2200M0 1500h2200M0 1720h2200M0 1940h2200" class="grid" />
+<path d="M150 0v2056M410 0v2056M670 0v2056M930 0v2056M1190 0v2056M1450 0v2056M1710 0v2056M1970 0v2056" class="grid" />
+</g>
+<circle cx="1930" cy="180" r="180" fill="#123257" opacity="0.16" />
+<circle cx="260" cy="1936" r="220" fill="#193b24" opacity="0.14" />
+<g transform="translate(90 84)">
+<rect x="0" y="0" width="540" height="44" rx="22" class="chip" />
+<text x="24" y="29" class="badge">DELIVERY / GIT / UTILITIES</text>
+<text x="0" y="104" class="title">Linux Engineer Command List — Testing, Git, and Utilities</text>
+<text x="0" y="142" class="subtitle">Molecule test cycles, safe Git branch recovery, silent installers, SSL cert validation, and system maintenance.</text>
+</g>
+<g filter="url(#shadow)">
+<g transform="translate(90 310)">
+<rect width="970" height="590" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">1. Molecule scenario loop</text>
+<text x="34" y="86" class="panel-copy">Complete cycle to reset, create, converge, test, and log in to inspect the ephemeral created</text>
+<text x="34" y="108" class="panel-copy">instance.</text>
+<line x1="34" y1="130" x2="936" y2="130" class="rule" />
+<text x="34" y="160" class="label">ROLE TEST CYCLE</text>
+<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="198" class="cmd">molecule list</text>
+<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="254" class="cmd-alt">molecule destroy -s default</text>
+<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="310" class="cmd">molecule create -s default</text>
+<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="366" class="cmd-alt">molecule converge -s default</text>
+<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="422" class="cmd">molecule test -s default</text>
+<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="478" class="cmd-alt">molecule verify -s default</text>
+<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="534" class="cmd">molecule login -s default</text>
+</g>
+<g transform="translate(1140 310)">
+<rect width="970" height="814" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">2. Git recovery and branch splitting</text>
+<text x="34" y="86" class="panel-copy">Safe branch refresh, path-based checkout for splitting mixed branches, stash handling, and</text>
+<text x="34" y="108" class="panel-copy">verification.</text>
+<line x1="34" y1="130" x2="936" y2="130" class="rule" />
+<text x="34" y="160" class="label">GIT WORKFLOW</text>
+<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="198" class="cmd">git fetch --all --prune</text>
+<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="254" class="cmd-alt">git stash -u</text>
+<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="310" class="cmd">git switch main &amp;&amp; git pull</text>
+<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="366" class="cmd-alt">git switch -c clean-branch</text>
+<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="422" class="cmd">git checkout mixed-branch -- specific/path/</text>
+<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="478" class="cmd-alt">git diff --cached --name-only</text>
+<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="534" class="cmd">git merge main</text>
+<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="590" class="cmd-alt">git stash pop</text>
+<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="646" class="cmd">git restore --staged .</text>
+<rect x="34" y="678" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="702" class="cmd-alt">git restore --source=main --worktree .</text>
+<rect x="34" y="734" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="758" class="cmd">git log --graph --oneline --all</text>
+</g>
+<g transform="translate(90 940)">
+<rect width="970" height="706" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">3. Silent installers and certificates</text>
+<text x="34" y="86" class="panel-copy">Run non-interactive deployments, generate CSRs with SANs, and quickly validate SSL/TLS</text>
+<text x="34" y="108" class="panel-copy">certificates and chains.</text>
+<line x1="34" y1="130" x2="936" y2="130" class="rule" />
+<text x="34" y="160" class="label">INSTALLERS AND CERTS</text>
+<rect x="34" y="174" width="902" height="64" rx="12" class="cmd-box" />
+<text x="50" y="198" class="cmd">/opt/software-depot/setup.sh -silent -responsefile</text>
+<text x="50" y="218" class="cmd">/opt/software-depot/response.properties -skiposlevelcheck</text>
+<rect x="34" y="250" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="274" class="cmd-alt">openssl req -new -newkey rsa:2048 -nodes</text>
+<rect x="34" y="306" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="330" class="cmd">-keyout files/target-host/tls.key -out files/target-host/tls.csr</text>
+<rect x="34" y="362" width="902" height="64" rx="12" class="cmd-box" />
+<text x="50" y="386" class="cmd-alt">-subj &quot;/C=DE/ST=State/L=City/O=Example</text>
+<text x="50" y="406" class="cmd-alt">Corp/OU=Platform/CN=app.example.internal&quot;</text>
+<rect x="34" y="438" width="902" height="64" rx="12" class="cmd-box" />
+<text x="50" y="462" class="cmd">-addext &quot;subjectAltName = DNS:app.example.internal,DNS:target-host.example.i</text>
+<text x="50" y="482" class="cmd">nternal&quot;</text>
+<rect x="34" y="514" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="538" class="cmd-alt">openssl x509 -in tls.crt -text -noout</text>
+<rect x="34" y="570" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="594" class="cmd">openssl s_client -connect target-host:443 -showcerts</text>
+<rect x="34" y="626" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="650" class="cmd-alt">certbot certificates</text>
+</g>
+<g transform="translate(1140 1164)">
+<rect width="970" height="792" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">4. Systemd and service management</text>
+<text x="34" y="86" class="panel-copy">Service lifecycle, boot-time control, log inspection, and live monitoring for RHEL systems.</text>
+<line x1="34" y1="108" x2="936" y2="108" class="rule" />
+<text x="34" y="138" class="label">SYSTEMD SERVICES</text>
+<rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="176" class="cmd">systemctl start example-service</text>
+<rect x="34" y="208" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="232" class="cmd-alt">systemctl restart example-service</text>
+<rect x="34" y="264" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="288" class="cmd">systemctl reload example-service</text>
+<rect x="34" y="320" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="344" class="cmd-alt">systemctl status example-service</text>
+<rect x="34" y="376" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="400" class="cmd">systemctl enable example-service</text>
+<rect x="34" y="432" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="456" class="cmd-alt">systemctl daemon-reload</text>
+<rect x="34" y="488" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="512" class="cmd">journalctl -u example-service --since &quot;1 hour ago&quot;</text>
+<rect x="34" y="544" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="568" class="cmd-alt">journalctl -xe</text>
+<rect x="34" y="600" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="624" class="cmd">watch -n 1 'systemctl status example-service'</text>
+<rect x="34" y="656" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="680" class="cmd-alt">crontab -u svc_user -e</text>
+<rect x="34" y="712" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="736" class="cmd">crontab -u svc_user -l</text>
+</g>
+</g>
+</svg>

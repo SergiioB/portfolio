@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1986" viewBox="0 0 2200 1986" role="img" aria-label="Linux Engineer Command List — Storage and Access poster">\n
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1986" viewBox="0 0 2200 1986" role="img" aria-label="Linux Engineer Command List — Storage and Access poster">
+
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#07111d" />
@@ -15,19 +16,143 @@
     </filter>
     <style>
       .title { font: 700 42px "Segoe UI", Arial, sans-serif; fill: #f4f8ff; }
-      .subtitle { font: 400 18px "Segoe UI", Arial, sans-serif; fill: #e2e8f0; }
-      .badge { font: 700 18px "Consolas", "Courier New", monospace; fill: #bae6fd; letter-spacing: 2px; }
+      .subtitle { font: 400 18px "Segoe UI", Arial, sans-serif; fill: #a4b6c8; }
+      .badge { font: 700 18px "Consolas", "Courier New", monospace; fill: #8edcff; letter-spacing: 2px; }
       .panel { fill: rgba(10, 20, 33, 0.94); stroke: url(#stroke); stroke-width: 2; }
       .panel-title { font: 700 24px "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
-      .panel-copy { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #f1f5f9; }
-      .label { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #38bdf8; letter-spacing: 1px; }
-      .cmd { font: 400 15px "Consolas", "Courier New", monospace; fill: #4ade80; font-weight: bold; }
-      .cmd-alt { font: 400 15px "Consolas", "Courier New", monospace; fill: #7dd3fc; font-weight: bold; }
-      .small { font: 400 14px "Consolas", "Courier New", monospace; fill: #cbd5e1; }
+      .panel-copy { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #99aec0; }
+      .label { font: 700 13px "Segoe UI", Arial, sans-serif; fill: #7bc7ff; letter-spacing: 1px; }
+      .cmd { font: 400 15px "Consolas", "Courier New", monospace; fill: #9ef2bf; }
+      .cmd-alt { font: 400 15px "Consolas", "Courier New", monospace; fill: #8dd9ff; }
+      .small { font: 400 14px "Consolas", "Courier New", monospace; fill: #90a5b6; }
       .chip { fill: #0b1f31; stroke: #275676; stroke-width: 1.2; }
-      .grid { stroke: rgba(255, 255, 255, 0.15); stroke-width: 1; }
-      .rule { stroke: rgba(255, 255, 255, 0.25); stroke-width: 1; }
-      .cmd-box { fill: #091524; stroke: rgba(255, 255, 255, 0.3); stroke-width: 1; }
+      .grid { stroke: rgba(120, 162, 190, 0.08); stroke-width: 1; }
+      .rule { stroke: rgba(120, 170, 201, 0.18); stroke-width: 1; }
+      .cmd-box { fill: #091524; stroke: rgba(85, 141, 182, 0.25); stroke-width: 1; }
     </style>
   </defs>
-\n<rect width="2200" height="1986" fill="url(#bg)" />\n<g opacity="0.22">\n<path d="M0 180h2200M0 400h2200M0 620h2200M0 840h2200M0 1060h2200M0 1280h2200M0 1500h2200M0 1720h2200M0 1940h2200" class="grid" />\n<path d="M150 0v1986M410 0v1986M670 0v1986M930 0v1986M1190 0v1986M1450 0v1986M1710 0v1986M1970 0v1986" class="grid" />\n</g>\n<circle cx="1930" cy="180" r="180" fill="#123257" opacity="0.16" />\n<circle cx="260" cy="1866" r="220" fill="#193b24" opacity="0.14" />\n<g transform="translate(90 84)">\n<rect x="0" y="0" width="540" height="44" rx="22" class="chip" />\n<text x="24" y="29" class="badge">LINUX / STORAGE / ACCESS</text>\n<text x="0" y="104" class="title">Linux Engineer Command List — Storage and Access</text>\n<text x="0" y="142" class="subtitle">Comprehensive disk usage, LVM growth/shrink workflows, account inspection, password policy, and SSH access.</text>\n</g>\n<g filter="url(#shadow)">\n<g transform="translate(90 310)">\n<rect width="970" height="702" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">1. Space, mounts, and package checks</text>\n<text x="34" y="86" class="panel-copy">Start with visibility before touching partitions, filesystems, or packages. Quickly identify</text>\n<text x="34" y="108" class="panel-copy">space hogs and open deleted files.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">QUICK TRIAGE</text>\n<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">du -sh /srv/app/* | sort -h</text>\n<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="254" class="cmd-alt">(df -h | head -n1 &amp;&amp; df -h | tail -n +2 | sort -hr -k5)</text>\n<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="310" class="cmd">lsblk -o NAME,SIZE,FSTYPE,TYPE,MOUNTPOINTS</text>\n<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="366" class="cmd-alt">ncdu /srv/app</text>\n<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="422" class="cmd">find /var/log -type f -name &quot;*.log&quot; -size +1G -exec ls -lh {} +</text>\n<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="478" class="cmd-alt">lsof +L1</text>\n<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="534" class="cmd">rsync -avHSx /source/ /destination/</text>\n<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="590" class="cmd-alt">rpm -qa | grep package-pattern</text>\n<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="646" class="cmd">rpm -qc package-name</text>\n</g>\n<g transform="translate(1140 310)">\n<rect width="970" height="702" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">2. Expand a disk and grow LVM</text>\n<text x="34" y="86" class="panel-copy">Use this sequence when the virtual disk has already been expanded upstream. Rescan, partition,</text>\n<text x="34" y="108" class="panel-copy">and extend.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">RESCAN AND EXTEND</text>\n<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">echo 1 &gt; /sys/class/block/sdb/device/rescan</text>\n<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="254" class="cmd-alt">blockdev --getsize64 /dev/sda</text>\n<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="310" class="cmd">fdisk /dev/sda</text>\n<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="366" class="cmd-alt">cfdisk /dev/sda</text>\n<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="422" class="cmd">partprobe /dev/sda</text>\n<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="478" class="cmd-alt">pvresize /dev/sda3</text>\n<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="534" class="cmd">vgs vg_main</text>\n<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="590" class="cmd-alt">lvextend -r -l +100%FREE /dev/vg_main/lv_root</text>\n<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="646" class="cmd">xfs_growfs /dev/vg_main/lv_root</text>\n</g>\n<g transform="translate(90 1052)">\n<rect width="970" height="680" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">3. Shrink ext4 carefully</text>\n<text x="34" y="86" class="panel-copy">Only the safe minimum order: backup, filesystem first, then logical volume. Never shrink XFS.</text>\n<line x1="34" y1="108" x2="936" y2="108" class="rule" />\n<text x="34" y="138" class="label">SAFE SHRINK ORDER</text>\n<rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="176" class="cmd">tar -czvf /backup/apps_backup.tar.gz /apps</text>\n<rect x="34" y="208" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="232" class="cmd-alt">umount /apps</text>\n<rect x="34" y="264" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="288" class="cmd">e2fsck -f /dev/vg_app/lv_apps</text>\n<rect x="34" y="320" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="344" class="cmd-alt">resize2fs /dev/vg_app/lv_apps 9.5G</text>\n<rect x="34" y="376" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="400" class="cmd">lvreduce -L 10G /dev/vg_app/lv_apps</text>\n<rect x="34" y="432" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="456" class="cmd-alt">mount /dev/vg_app/lv_apps /apps</text>\n<rect x="34" y="488" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="512" class="cmd">resize2fs /dev/vg_app/lv_apps</text>\n<rect x="34" y="544" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="568" class="cmd-alt">lvs /dev/vg_app/lv_apps</text>\n<rect x="34" y="600" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="624" class="cmd">df -h /apps</text>\n</g>\n<g transform="translate(1140 1052)">\n<rect width="970" height="834" rx="28" class="panel" />\n<text x="34" y="54" class="panel-title">4. Accounts, permissions, and audit</text>\n<text x="34" y="86" class="panel-copy">Useful account checks when validating service users, ownership, root equivalents, and sudo</text>\n<text x="34" y="108" class="panel-copy">exposure.</text>\n<line x1="34" y1="130" x2="936" y2="130" class="rule" />\n<text x="34" y="160" class="label">IDENTITY AND ACCESS</text>\n<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="198" class="cmd">id svc_user &amp;&amp; chage -l svc_user</text>\n<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="254" class="cmd-alt">chage -d &quot;$(date +%F)&quot; svc_user</text>\n<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="310" class="cmd">chage -m 7 -M 99999 -I -1 -E -1 svc_user</text>\n<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="366" class="cmd-alt">usermod -aG wheel ops_user</text>\n<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="422" class="cmd">ssh-copy-id ops_user@target-host</text>\n<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="478" class="cmd-alt">awk -F: '($3 == &quot;0&quot;) {print}' /etc/passwd</text>\n<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="534" class="cmd">visudo -c</text>\n<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="590" class="cmd-alt">groups svc_user</text>\n<rect x="34" y="622" width="902" height="64" rx="12" class="cmd-box" />\n<text x="50" y="646" class="cmd">find / -maxdepth 2 -type d \( -user svc_user -o -group svc_user \) -ls</text>\n<text x="50" y="666" class="cmd">2&gt;/dev/null</text>\n<rect x="34" y="698" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="722" class="cmd-alt">sudo -l -U svc_user | grep -v &quot;not allowed&quot;</text>\n<rect x="34" y="754" width="902" height="44" rx="12" class="cmd-box" />\n<text x="50" y="778" class="cmd">getent passwd svc_user</text>\n</g>\n</g>\n</svg>
+
+<rect width="2200" height="1986" fill="url(#bg)" />
+<g opacity="0.22">
+<path d="M0 180h2200M0 400h2200M0 620h2200M0 840h2200M0 1060h2200M0 1280h2200M0 1500h2200M0 1720h2200M0 1940h2200" class="grid" />
+<path d="M150 0v1986M410 0v1986M670 0v1986M930 0v1986M1190 0v1986M1450 0v1986M1710 0v1986M1970 0v1986" class="grid" />
+</g>
+<circle cx="1930" cy="180" r="180" fill="#123257" opacity="0.16" />
+<circle cx="260" cy="1866" r="220" fill="#193b24" opacity="0.14" />
+<g transform="translate(90 84)">
+<rect x="0" y="0" width="540" height="44" rx="22" class="chip" />
+<text x="24" y="29" class="badge">LINUX / STORAGE / ACCESS</text>
+<text x="0" y="104" class="title">Linux Engineer Command List — Storage and Access</text>
+<text x="0" y="142" class="subtitle">Comprehensive disk usage, LVM growth/shrink workflows, account inspection, password policy, and SSH access.</text>
+</g>
+<g filter="url(#shadow)">
+<g transform="translate(90 310)">
+<rect width="970" height="702" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">1. Space, mounts, and package checks</text>
+<text x="34" y="86" class="panel-copy">Start with visibility before touching partitions, filesystems, or packages. Quickly identify</text>
+<text x="34" y="108" class="panel-copy">space hogs and open deleted files.</text>
+<line x1="34" y1="130" x2="936" y2="130" class="rule" />
+<text x="34" y="160" class="label">QUICK TRIAGE</text>
+<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="198" class="cmd">du -sh /srv/app/* | sort -h</text>
+<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="254" class="cmd-alt">(df -h | head -n1 &amp;&amp; df -h | tail -n +2 | sort -hr -k5)</text>
+<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="310" class="cmd">lsblk -o NAME,SIZE,FSTYPE,TYPE,MOUNTPOINTS</text>
+<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="366" class="cmd-alt">ncdu /srv/app</text>
+<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="422" class="cmd">find /var/log -type f -name &quot;*.log&quot; -size +1G -exec ls -lh {} +</text>
+<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="478" class="cmd-alt">lsof +L1</text>
+<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="534" class="cmd">rsync -avHSx /source/ /destination/</text>
+<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="590" class="cmd-alt">rpm -qa | grep package-pattern</text>
+<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="646" class="cmd">rpm -qc package-name</text>
+</g>
+<g transform="translate(1140 310)">
+<rect width="970" height="702" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">2. Expand a disk and grow LVM</text>
+<text x="34" y="86" class="panel-copy">Use this sequence when the virtual disk has already been expanded upstream. Rescan, partition,</text>
+<text x="34" y="108" class="panel-copy">and extend.</text>
+<line x1="34" y1="130" x2="936" y2="130" class="rule" />
+<text x="34" y="160" class="label">RESCAN AND EXTEND</text>
+<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="198" class="cmd">echo 1 &gt; /sys/class/block/sdb/device/rescan</text>
+<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="254" class="cmd-alt">blockdev --getsize64 /dev/sda</text>
+<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="310" class="cmd">fdisk /dev/sda</text>
+<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="366" class="cmd-alt">cfdisk /dev/sda</text>
+<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="422" class="cmd">partprobe /dev/sda</text>
+<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="478" class="cmd-alt">pvresize /dev/sda3</text>
+<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="534" class="cmd">vgs vg_main</text>
+<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="590" class="cmd-alt">lvextend -r -l +100%FREE /dev/vg_main/lv_root</text>
+<rect x="34" y="622" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="646" class="cmd">xfs_growfs /dev/vg_main/lv_root</text>
+</g>
+<g transform="translate(90 1052)">
+<rect width="970" height="680" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">3. Shrink ext4 carefully</text>
+<text x="34" y="86" class="panel-copy">Only the safe minimum order: backup, filesystem first, then logical volume. Never shrink XFS.</text>
+<line x1="34" y1="108" x2="936" y2="108" class="rule" />
+<text x="34" y="138" class="label">SAFE SHRINK ORDER</text>
+<rect x="34" y="152" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="176" class="cmd">tar -czvf /backup/apps_backup.tar.gz /apps</text>
+<rect x="34" y="208" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="232" class="cmd-alt">umount /apps</text>
+<rect x="34" y="264" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="288" class="cmd">e2fsck -f /dev/vg_app/lv_apps</text>
+<rect x="34" y="320" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="344" class="cmd-alt">resize2fs /dev/vg_app/lv_apps 9.5G</text>
+<rect x="34" y="376" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="400" class="cmd">lvreduce -L 10G /dev/vg_app/lv_apps</text>
+<rect x="34" y="432" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="456" class="cmd-alt">mount /dev/vg_app/lv_apps /apps</text>
+<rect x="34" y="488" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="512" class="cmd">resize2fs /dev/vg_app/lv_apps</text>
+<rect x="34" y="544" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="568" class="cmd-alt">lvs /dev/vg_app/lv_apps</text>
+<rect x="34" y="600" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="624" class="cmd">df -h /apps</text>
+</g>
+<g transform="translate(1140 1052)">
+<rect width="970" height="834" rx="28" class="panel" />
+<text x="34" y="54" class="panel-title">4. Accounts, permissions, and audit</text>
+<text x="34" y="86" class="panel-copy">Useful account checks when validating service users, ownership, root equivalents, and sudo</text>
+<text x="34" y="108" class="panel-copy">exposure.</text>
+<line x1="34" y1="130" x2="936" y2="130" class="rule" />
+<text x="34" y="160" class="label">IDENTITY AND ACCESS</text>
+<rect x="34" y="174" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="198" class="cmd">id svc_user &amp;&amp; chage -l svc_user</text>
+<rect x="34" y="230" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="254" class="cmd-alt">chage -d &quot;$(date +%F)&quot; svc_user</text>
+<rect x="34" y="286" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="310" class="cmd">chage -m 7 -M 99999 -I -1 -E -1 svc_user</text>
+<rect x="34" y="342" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="366" class="cmd-alt">usermod -aG wheel ops_user</text>
+<rect x="34" y="398" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="422" class="cmd">ssh-copy-id ops_user@target-host</text>
+<rect x="34" y="454" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="478" class="cmd-alt">awk -F: '($3 == &quot;0&quot;) {print}' /etc/passwd</text>
+<rect x="34" y="510" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="534" class="cmd">visudo -c</text>
+<rect x="34" y="566" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="590" class="cmd-alt">groups svc_user</text>
+<rect x="34" y="622" width="902" height="64" rx="12" class="cmd-box" />
+<text x="50" y="646" class="cmd">find / -maxdepth 2 -type d \( -user svc_user -o -group svc_user \) -ls</text>
+<text x="50" y="666" class="cmd">2&gt;/dev/null</text>
+<rect x="34" y="698" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="722" class="cmd-alt">sudo -l -U svc_user | grep -v &quot;not allowed&quot;</text>
+<rect x="34" y="754" width="902" height="44" rx="12" class="cmd-box" />
+<text x="50" y="778" class="cmd">getent passwd svc_user</text>
+</g>
+</g>
+</svg>
