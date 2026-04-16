@@ -7,7 +7,7 @@ solution: "Compiled every sanitized, production-tested command snippet from my d
 usedIn: "Daily operations across RHEL-like systems, automation repositories, incident response, and general troubleshooting."
 impact: "Created a single-pane-of-glass reference for system and automation engineers, reducing search time and typos during live deployments."
 pubDate: 2026-03-11
-updatedDate: 2026-03-13
+updatedDate: 2026-04-16
 category: ["snippets", "infrastructure", "automation"]
 tags: ["linux", "ansible", "python", "git", "vim", "networking", "cheatsheet", "devops"]
 draft: false
@@ -300,6 +300,187 @@ iptables -t nat -L -n -v
 iptables-save > /etc/iptables/rules.v4
 ufw status verbose
 ```
+
+## 10. DNF package management and advisory patching
+
+On RHEL systems, `dnf` provides fine-grained control over which updates to apply. During monthly patching cycles, you rarely want to update everything at once. Instead, you inspect advisories, review severity, and apply selectively.
+
+### Check available updates and advisories
+
+```bash
+# List all available package updates
+dnf check-update
+
+# List updates grouped by advisory (errata)
+dnf updateinfo list
+
+# Show detailed advisory information (severity, CVEs, affected packages)
+dnf updateinfo info
+
+# List advisories affecting installed packages
+dnf updateinfo list --security
+
+# List only Critical and Important severity advisories
+dnf updateinfo list --sec-severity=Critical --sec-severity=Important
+```
+
+Parameter guide:
+
+- `dnf check-update`: shows which packages have newer versions available in enabled repositories.
+- `dnf updateinfo list`: groups updates by Red Hat advisory (RHSA, RHBA, RHEA) so you can see what type each update is.
+- `dnf updateinfo info`: expands each advisory to show the severity rating, associated CVEs, and the list of packages it fixes. Use this before applying anything.
+- `--security`: filters to only security-related advisories, skipping bug fixes and enhancements.
+- `--sec-severity=Critical`: further narrows to a specific severity band. Combine multiple flags to include multiple levels.
+
+### Apply updates by advisory
+
+When you need to apply a specific advisory without updating everything else on the system:
+
+```bash
+# Apply a specific advisory by its identifier
+dnf upgrade --advisory RHSA-2025:1234 -y
+
+# Apply all security advisories
+dnf upgrade --security -y
+
+# Apply only Critical and Important security advisories
+dnf upgrade --security --sec-severity=Critical --sec-severity=Important -y
+
+# Download packages without installing (for staged rollouts)
+dnf download --resolve --destdir=/tmp/patches --security
+```
+
+Parameter guide:
+
+- `--advisory RHSA-2025:1234`: targets exactly one advisory. This is the safest way to patch a specific CVE without risking unrelated package changes.
+- `--security`: applies all available security advisories in one pass. Use this when you need to close the security gap quickly.
+- `-y`: non-interactive confirmation. Required for automation and Ansible-driven patching.
+- `dnf download --resolve`: downloads the RPMs and their dependencies to a local directory without installing. Useful for air-gapped environments or pre-staging patches for a maintenance window.
+
+### Verify applied updates
+
+After patching, verify what changed:
+
+```bash
+# Show recently installed packages
+rpm -qa --last | head -20
+
+# Verify a specific package version
+rpm -q package-name
+
+# Check package integrity and configuration changes
+rpm -V package-name
+```
+
+## 11. Ansible ad-hoc execution patterns
+
+Ad-hoc commands are one of the most powerful Ansible features for operations that do not justify a full playbook. Use them for quick health checks, targeted patching, service restarts, and fast data gathering across server groups.
+
+### Targeted advisory patching across a server group
+
+This pattern runs `dnf updateinfo` to review available advisories and then applies a specific advisory on all matching hosts:
+
+```bash
+ansible -i inventory/stage web_servers_rhel9_* \
+  -u svc_deploy \
+  -e "ansible_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -e "ansible_become_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -b -m shell \
+  -a 'dnf updateinfo; dnf upgrade --advisory RHSA-2025:1234 -y'
+```
+
+Parameter guide:
+
+- `-i inventory/stage`: selects the stage environment inventory.
+- `web_servers_rhel9_*`: a host pattern with wildcard matching. Only hosts whose inventory name starts with this prefix receive the command.
+- `-u svc_deploy`: connects as this service account instead of your personal SSH user.
+- `-e "ansible_password=..."`: injects the SSH password from an environment variable so the command runs non-interactively. Never hardcode passwords in the command line.
+- `-e "ansible_become_password=..."`: provides the privilege escalation password. Using the same lookup keeps the secret in one place.
+- `-b`: enables `become` (sudo/root) escalation, required for `dnf upgrade`.
+- `-m shell`: uses the shell module to run arbitrary commands.
+- `-a 'dnf updateinfo; ...'`: the command string. The semicolon chains review and apply in one SSH session.
+
+### Quick health checks and service management
+
+```bash
+# Ping all hosts in an environment
+ansible all -i inventory/stage -m ping
+
+# Check uptime across a server group
+ansible -i inventory/stage app_servers_* \
+  -u svc_deploy \
+  -e "ansible_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -b -m shell -a 'uptime'
+
+# Verify package version across multiple hosts
+ansible -i inventory/stage db_servers_* \
+  -u svc_deploy \
+  -e "ansible_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -e "ansible_become_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -b -m shell -a 'rpm -q postgresql-server'
+
+# Restart a service on specific hosts
+ansible -i inventory/stage web_servers_rhel9_* \
+  -u svc_deploy \
+  -e "ansible_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -e "ansible_become_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -b -m systemd -a 'name=example-service state=restarted'
+
+# Gather disk usage facts
+ansible -i inventory/stage app_servers_* \
+  -u svc_deploy \
+  -e "ansible_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -b -m shell -a 'df -h / /apps /data'
+
+# Check SELinux status across all hosts
+ansible -i inventory/stage all \
+  -u svc_deploy \
+  -e "ansible_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -e "ansible_become_password={{ lookup('env', 'DEPLOY_PASS') }}" \
+  -b -m shell -a 'sestatus; getenforce'
+```
+
+### Why ad-hoc commands matter in operations
+
+Ad-hoc commands fill the gap between manual SSH sessions and full playbooks. In practice:
+
+- **Pre-patch verification**: run `dnf updateinfo` across all targets before committing to a playbook run.
+- **Post-patch validation**: check uptime, service status, and package versions to confirm the patching wave succeeded.
+- **Incident triage**: quickly gather disk usage, memory state, or service status from a group of hosts without writing a playbook first.
+- **Targeted remediation**: apply a single advisory or restart a single service on affected hosts without touching the rest.
+
+The key pattern is: connect as a service account, escalate with `become`, and pull secrets from environment variables so the command is both non-interactive and auditable.
+
+## 12. Systemd and service management
+
+These commands cover the daily cycle of starting, stopping, reloading, and inspecting services on RHEL systems.
+
+```bash
+# Service lifecycle
+systemctl start example-service
+systemctl stop example-service
+systemctl restart example-service
+systemctl reload example-service
+systemctl status example-service
+
+# Boot-time control
+systemctl enable example-service
+systemctl disable example-service
+systemctl daemon-reload
+
+# Log inspection
+journalctl -u example-service --since "1 hour ago"
+journalctl -xe
+
+# Live monitoring
+watch -n 1 'systemctl status example-service'
+```
+
+Parameter guide:
+
+- `reload`: sends a graceful configuration reload signal without stopping the process. Not all services support this.
+- `daemon-reload`: required after creating or editing unit files under `/etc/systemd/system/`.
+- `journalctl -xe`: shows the most recent log entries with full detail. `-x` adds explanatory help text, `-e` jumps to the end of the output.
 
 ## Summary
 

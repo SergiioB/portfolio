@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3200 6455" width="3200" height="6455">
-<rect width="3200" height="6455" fill="#24273a" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3200 6850" width="3200" height="6850">
+<rect width="3200" height="6850" fill="#24273a" />
 <text x="1600" y="160" font-family="sans-serif" font-size="70" font-weight="bold" fill="#cad3f5" text-anchor="middle">The Comprehensive Linux Engineer Command List</text>
 <line x1="100" y1="220" x2="3100" y2="220" stroke="#5b6078" stroke-width="4" />
 <rect x="100" y="250" width="930" height="894" rx="15" fill="#363a4f" stroke="#8aadf4" stroke-width="3" />
@@ -34,7 +34,7 @@
 <text x="1200" y="509" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Case-insensitive search</text>
 <text x="1165" y="564" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sed -i &apos;s/old/new/g&apos; file</text>
 <text x="1200" y="596" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Inline find and replace</text>
-<text x="1165" y="651" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">awk &apos;{print $1}&apos; file</text>
+<text x="1165" y="651" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">awk &apos;{print }&apos; file</text>
 <text x="1200" y="683" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Print first column of a file</text>
 <text x="1165" y="738" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">cut -d&apos;:&apos; -f1 /etc/passwd</text>
 <text x="1200" y="770" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Extract specific fields</text>
@@ -198,7 +198,7 @@
 <text x="580" y="2842" font-family="sans-serif" font-size="22" fill="#a5adcb">Change recursively (files)</text>
 <text x="130" y="2912" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chown user:group file</text>
 <text x="580" y="2912" font-family="sans-serif" font-size="22" fill="#a5adcb">Change file owner and group</text>
-<text x="130" y="2982" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chown -R user:group dir</text>
+<text x="130" y="2982" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">chown -R user:group dir/</text>
 <text x="580" y="2982" font-family="sans-serif" font-size="22" fill="#a5adcb">Change owner recursively</text>
 <text x="130" y="3052" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">usermod -aG group user</text>
 <text x="580" y="3052" font-family="sans-serif" font-size="22" fill="#a5adcb">Add user to a group</text>
@@ -210,7 +210,7 @@
 <text x="580" y="3262" font-family="sans-serif" font-size="22" fill="#a5adcb">Lock password aging policies</text>
 <text x="130" y="3332" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ssh-copy-id ops@target-host</text>
 <text x="580" y="3332" font-family="sans-serif" font-size="22" fill="#a5adcb">Deploy SSH key to target</text>
-<text x="130" y="3402" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">awk -F: &apos;($3 == &quot;0&quot;) {print}&apos; /etc/passwd</text>
+<text x="130" y="3402" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">awk -F: &apos;( == &quot;0&quot;) {print}&apos; /etc/passwd</text>
 <text x="165" y="3434" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Find root-equivalent users</text>
 <text x="130" y="3489" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">visudo -c</text>
 <text x="580" y="3489" font-family="sans-serif" font-size="22" fill="#a5adcb">Verify sudoers syntax safely</text>
@@ -293,134 +293,149 @@
 <text x="580" y="4266" font-family="sans-serif" font-size="22" fill="#a5adcb">List outdated pip packages</text>
 <text x="130" y="4336" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">python3 -m http.server 8080</text>
 <text x="580" y="4336" font-family="sans-serif" font-size="22" fill="#a5adcb">Quickly serve directory HTTP</text>
-<rect x="2170" y="3882" width="930" height="892" rx="15" fill="#363a4f" stroke="#c6a0f6" stroke-width="3" />
-<text x="2200" y="3947" font-family="sans-serif" font-size="36" font-weight="bold" fill="#c6a0f6">Ansible Core &amp; Execution</text>
+<rect x="2170" y="3882" width="930" height="788" rx="15" fill="#363a4f" stroke="#c6a0f6" stroke-width="3" />
+<text x="2200" y="3947" font-family="sans-serif" font-size="36" font-weight="bold" fill="#c6a0f6">DNF Advisory Patching (RHEL)</text>
 <line x1="2170" y1="3972" x2="3100" y2="3972" stroke="#494d64" stroke-width="2" />
-<text x="2200" y="4022" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible all -m ping -i inv/lab/</text>
-<text x="2235" y="4054" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Ping all lab hosts</text>
-<text x="2200" y="4109" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook pb.yml</text>
-<text x="2650" y="4109" font-family="sans-serif" font-size="22" fill="#a5adcb">Run a playbook</text>
-<text x="2200" y="4179" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --check --diff pb</text>
-<text x="2235" y="4211" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Dry-run with exact diffs</text>
-<text x="2200" y="4266" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook -i inv pb --step</text>
-<text x="2235" y="4298" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run interacting step-by-step</text>
-<text x="2200" y="4353" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook -K pb.yml</text>
-<text x="2650" y="4353" font-family="sans-serif" font-size="22" fill="#a5adcb">Ask for privilege escalation pass</text>
-<text x="2200" y="4423" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-inventory -i inv --graph</text>
-<text x="2235" y="4455" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; View inventory structure graphically</text>
-<text x="2200" y="4510" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-doc -l</text>
-<text x="2650" y="4510" font-family="sans-serif" font-size="22" fill="#a5adcb">List all available modules</text>
-<text x="2200" y="4580" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-galaxy install -r reqs.yml</text>
-<text x="2235" y="4612" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Install collections/roles</text>
-<text x="2200" y="4667" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible all -m setup | grep os_family</text>
-<text x="2235" y="4699" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Quick target OS check ad-hoc</text>
-<rect x="1135" y="4315" width="930" height="911" rx="15" fill="#363a4f" stroke="#ed8796" stroke-width="3" />
-<text x="1165" y="4380" font-family="sans-serif" font-size="36" font-weight="bold" fill="#ed8796">Ansible Vault &amp; Secrets</text>
+<text x="2200" y="4022" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf check-update</text>
+<text x="2650" y="4022" font-family="sans-serif" font-size="22" fill="#a5adcb">List all available package updates</text>
+<text x="2200" y="4092" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf updateinfo list</text>
+<text x="2650" y="4092" font-family="sans-serif" font-size="22" fill="#a5adcb">List updates grouped by advisory</text>
+<text x="2200" y="4162" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf updateinfo info</text>
+<text x="2235" y="4194" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Show advisory severity, CVEs, packages</text>
+<text x="2200" y="4249" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf updateinfo list --security</text>
+<text x="2235" y="4281" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; List only security-related advisories</text>
+<text x="2200" y="4336" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf upgrade --advisory RHSA-2025:1234 -y</text>
+<text x="2235" y="4368" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Apply a specific advisory only</text>
+<text x="2200" y="4423" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf upgrade --security -y</text>
+<text x="2650" y="4423" font-family="sans-serif" font-size="22" fill="#a5adcb">Apply all security advisories</text>
+<text x="2200" y="4493" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf download --resolve --destdir=/tmp/p</text>
+<text x="2235" y="4525" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Download patches without installing</text>
+<text x="2200" y="4580" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">rpm -qa --last | head -20</text>
+<text x="2650" y="4580" font-family="sans-serif" font-size="22" fill="#a5adcb">Show recently installed packages</text>
+<rect x="1135" y="4315" width="930" height="892" rx="15" fill="#363a4f" stroke="#ed8796" stroke-width="3" />
+<text x="1165" y="4380" font-family="sans-serif" font-size="36" font-weight="bold" fill="#ed8796">Ansible Core &amp; Execution</text>
 <line x1="1135" y1="4405" x2="2065" y2="4405" stroke="#494d64" stroke-width="2" />
-<text x="1165" y="4455" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault create file</text>
-<text x="1615" y="4455" font-family="sans-serif" font-size="22" fill="#a5adcb">Create encrypted file</text>
-<text x="1165" y="4525" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault edit file</text>
-<text x="1615" y="4525" font-family="sans-serif" font-size="22" fill="#a5adcb">Edit encrypted file</text>
-<text x="1165" y="4595" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault view file</text>
-<text x="1615" y="4595" font-family="sans-serif" font-size="22" fill="#a5adcb">View encrypted file without editing</text>
-<text x="1165" y="4665" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault encrypt file</text>
-<text x="1615" y="4665" font-family="sans-serif" font-size="22" fill="#a5adcb">Encrypt file with specific ID</text>
-<text x="1165" y="4735" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault decrypt file</text>
-<text x="1615" y="4735" font-family="sans-serif" font-size="22" fill="#a5adcb">Decrypt a file</text>
-<text x="1165" y="4805" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault rekey file</text>
-<text x="1615" y="4805" font-family="sans-serif" font-size="22" fill="#a5adcb">Change the vault password</text>
-<text x="1165" y="4875" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault encrypt_string</text>
-<text x="1615" y="4875" font-family="sans-serif" font-size="22" fill="#a5adcb">Encrypt string from stdin</text>
-<text x="1165" y="4945" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --ask-vault-pass</text>
-<text x="1200" y="4977" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run playbook and ask vault pass</text>
-<text x="1165" y="5032" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --vault-password-file .pass</text>
-<text x="1200" y="5064" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run playbook with pass file</text>
-<text x="1165" y="5119" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible local -m debug -a &apos;var=obj&apos;</text>
-<text x="1200" y="5151" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Debug print variables ad-hoc</text>
-<rect x="100" y="4466" width="930" height="720" rx="15" fill="#363a4f" stroke="#f5bde6" stroke-width="3" />
-<text x="130" y="4531" font-family="sans-serif" font-size="36" font-weight="bold" fill="#f5bde6">Ansible Molecule</text>
+<text x="1165" y="4455" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible all -m ping -i inv/stage/</text>
+<text x="1200" y="4487" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Ping all stage hosts</text>
+<text x="1165" y="4542" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook pb.yml</text>
+<text x="1615" y="4542" font-family="sans-serif" font-size="22" fill="#a5adcb">Run a playbook</text>
+<text x="1165" y="4612" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --check --diff pb</text>
+<text x="1200" y="4644" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Dry-run with exact diffs</text>
+<text x="1165" y="4699" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook -i inv pb --step</text>
+<text x="1200" y="4731" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run interacting step-by-step</text>
+<text x="1165" y="4786" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook -K pb.yml</text>
+<text x="1615" y="4786" font-family="sans-serif" font-size="22" fill="#a5adcb">Ask for privilege escalation pass</text>
+<text x="1165" y="4856" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-inventory -i inv --graph</text>
+<text x="1200" y="4888" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; View inventory structure graphically</text>
+<text x="1165" y="4943" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-doc -l</text>
+<text x="1615" y="4943" font-family="sans-serif" font-size="22" fill="#a5adcb">List all available modules</text>
+<text x="1165" y="5013" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-galaxy install -r reqs.yml</text>
+<text x="1200" y="5045" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Install collections/roles</text>
+<text x="1165" y="5100" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible all -m setup | grep os_family</text>
+<text x="1200" y="5132" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Quick target OS check ad-hoc</text>
+<rect x="100" y="4466" width="930" height="856" rx="15" fill="#363a4f" stroke="#f5bde6" stroke-width="3" />
+<text x="130" y="4531" font-family="sans-serif" font-size="36" font-weight="bold" fill="#f5bde6">Ansible Ad-Hoc Operations</text>
 <line x1="100" y1="4556" x2="1030" y2="4556" stroke="#494d64" stroke-width="2" />
-<text x="130" y="4606" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule init role r_name</text>
-<text x="580" y="4606" font-family="sans-serif" font-size="22" fill="#a5adcb">Initialize new role with molecule</text>
-<text x="130" y="4676" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule create -s default</text>
-<text x="580" y="4676" font-family="sans-serif" font-size="22" fill="#a5adcb">Create instances</text>
-<text x="130" y="4746" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule converge -s default</text>
-<text x="580" y="4746" font-family="sans-serif" font-size="22" fill="#a5adcb">Run playbook against instances</text>
-<text x="130" y="4816" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule idempotence</text>
-<text x="580" y="4816" font-family="sans-serif" font-size="22" fill="#a5adcb">Check playbook idempotence</text>
-<text x="130" y="4886" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule verify -s default</text>
-<text x="580" y="4886" font-family="sans-serif" font-size="22" fill="#a5adcb">Run tests (Testinfra, Lint)</text>
-<text x="130" y="4956" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule test -s default</text>
-<text x="580" y="4956" font-family="sans-serif" font-size="22" fill="#a5adcb">Run full lifecycle</text>
-<text x="130" y="5026" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule login -s default</text>
-<text x="580" y="5026" font-family="sans-serif" font-size="22" fill="#a5adcb">Log into a running instance</text>
-<text x="130" y="5096" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule destroy -s default</text>
-<text x="580" y="5096" font-family="sans-serif" font-size="22" fill="#a5adcb">Destroy instances</text>
-<rect x="2170" y="4814" width="930" height="807" rx="15" fill="#363a4f" stroke="#8aadf4" stroke-width="3" />
-<text x="2200" y="4879" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8aadf4">Docker Basics</text>
-<line x1="2170" y1="4904" x2="3100" y2="4904" stroke="#494d64" stroke-width="2" />
-<text x="2200" y="4954" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker build -t img .</text>
-<text x="2650" y="4954" font-family="sans-serif" font-size="22" fill="#a5adcb">Build image from Dockerfile</text>
-<text x="2200" y="5024" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker run -d -p 80:80 img</text>
-<text x="2650" y="5024" font-family="sans-serif" font-size="22" fill="#a5adcb">Run container in background</text>
-<text x="2200" y="5094" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker ps -a</text>
-<text x="2650" y="5094" font-family="sans-serif" font-size="22" fill="#a5adcb">List all containers</text>
-<text x="2200" y="5164" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker stop &lt;ID&gt;</text>
-<text x="2650" y="5164" font-family="sans-serif" font-size="22" fill="#a5adcb">Stop a container</text>
-<text x="2200" y="5234" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker rm &lt;ID&gt;</text>
-<text x="2650" y="5234" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove a container</text>
-<text x="2200" y="5304" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker rmi &lt;ID&gt;</text>
-<text x="2650" y="5304" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove an image</text>
-<text x="2200" y="5374" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker logs -f &lt;ID&gt;</text>
-<text x="2650" y="5374" font-family="sans-serif" font-size="22" fill="#a5adcb">Follow container logs</text>
-<text x="2200" y="5444" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker exec -it &lt;ID&gt; sh</text>
-<text x="2235" y="5476" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Open shell in container</text>
-<text x="2200" y="5531" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">docker system prune -a</text>
-<text x="2650" y="5531" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove unused data</text>
-<rect x="100" y="5226" width="930" height="807" rx="15" fill="#363a4f" stroke="#8bd5ca" stroke-width="3" />
-<text x="130" y="5291" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8bd5ca">Package Management</text>
-<line x1="100" y1="5316" x2="1030" y2="5316" stroke="#494d64" stroke-width="2" />
-<text x="130" y="5366" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt update &amp;&amp; apt upgrade</text>
-<text x="165" y="5398" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Update list &amp; upgrade packages</text>
-<text x="130" y="5453" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt install pkg</text>
-<text x="580" y="5453" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package (Debian/Ubuntu)</text>
-<text x="130" y="5523" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt remove pkg</text>
-<text x="580" y="5523" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove package</text>
-<text x="130" y="5593" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum check-update</text>
-<text x="580" y="5593" font-family="sans-serif" font-size="22" fill="#a5adcb">Check for updates (RHEL/CentOS)</text>
-<text x="130" y="5663" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum update</text>
-<text x="580" y="5663" font-family="sans-serif" font-size="22" fill="#a5adcb">Update packages</text>
-<text x="130" y="5733" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum install pkg</text>
-<text x="580" y="5733" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package</text>
-<text x="130" y="5803" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum remove pkg</text>
-<text x="580" y="5803" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove package</text>
-<text x="130" y="5873" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf install pkg</text>
-<text x="580" y="5873" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package (Modern RHEL/Fedora)</text>
-<text x="130" y="5943" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pacman -Syu</text>
-<text x="580" y="5943" font-family="sans-serif" font-size="22" fill="#a5adcb">Full system upgrade (Arch Linux)</text>
-<rect x="1135" y="5266" width="930" height="1049" rx="15" fill="#363a4f" stroke="#a6da95" stroke-width="3" />
-<text x="1165" y="5331" font-family="sans-serif" font-size="36" font-weight="bold" fill="#a6da95">DBs, SELinux &amp; Certs</text>
-<line x1="1135" y1="5356" x2="2065" y2="5356" stroke="#494d64" stroke-width="2" />
-<text x="1165" y="5406" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">vim /data/postgres/pg_hba.conf</text>
-<text x="1200" y="5438" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Edit Postgres client auth policy</text>
-<text x="1165" y="5493" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sudo -u postgres psql -c &apos;SELECT pg_reload_conf();&apos;</text>
-<text x="1200" y="5525" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Reload Postgres gracefully</text>
-<text x="1165" y="5580" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sestatus</text>
-<text x="1615" y="5580" font-family="sans-serif" font-size="22" fill="#a5adcb">Verify SELinux enablement state</text>
-<text x="1165" y="5650" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">audit2allow -a</text>
-<text x="1615" y="5650" font-family="sans-serif" font-size="22" fill="#a5adcb">Generate allow rules from audit logs</text>
-<text x="1165" y="5720" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">semanage fcontext -a -t postgresql_db_t &apos;/data(/.*)?&apos;</text>
-<text x="1200" y="5752" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Define SELinux contexts</text>
-<text x="1165" y="5807" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">restorecon -Rv /data</text>
-<text x="1615" y="5807" font-family="sans-serif" font-size="22" fill="#a5adcb">Apply SELinux fcontexts recursively</text>
-<text x="1165" y="5877" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">openssl req -new -newkey rsa:2048 -nodes -keyout k.key -out c.csr</text>
-<text x="1200" y="5909" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Generate CSR immediately</text>
-<text x="1165" y="5964" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">openssl x509 -in tls.crt -text -noout</text>
-<text x="1200" y="5996" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Inspect x509 certificate data</text>
-<text x="1165" y="6051" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">openssl s_client -connect host:443 -showcerts</text>
-<text x="1200" y="6083" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Examine remote SSL certificate</text>
-<text x="1165" y="6138" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">certbot certificates</text>
-<text x="1615" y="6138" font-family="sans-serif" font-size="22" fill="#a5adcb">List locally managed ACME certs</text>
-<text x="1165" y="6208" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">/opt/setup.sh -silent -responsefile props</text>
-<text x="1200" y="6240" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run enterprise installer silently</text>
+<text x="130" y="4606" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible -i inv/stage web_rhel9_* -u svc_deploy</text>
+<text x="165" y="4638" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Target host group as service account</text>
+<text x="130" y="4693" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -b -m shell -a &apos;dnf updateinfo&apos;</text>
+<text x="165" y="4725" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Check advisories on remote hosts</text>
+<text x="130" y="4780" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -b -m shell -a &apos;dnf upgrade --advisory RHSA-2025:1234 -y&apos;</text>
+<text x="165" y="4812" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Apply specific advisory remotely</text>
+<text x="130" y="4867" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -b -m shell -a &apos;df -h / /apps /data&apos;</text>
+<text x="165" y="4899" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Gather disk usage from host group</text>
+<text x="130" y="4954" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -b -m shell -a &apos;rpm -q pkg-name&apos;</text>
+<text x="165" y="4986" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Verify package version remotely</text>
+<text x="130" y="5041" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -b -m shell -a &apos;sestatus; getenforce&apos;</text>
+<text x="165" y="5073" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Check SELinux status across hosts</text>
+<text x="130" y="5128" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -b -m systemd -a &apos;name=svc state=restarted&apos;</text>
+<text x="165" y="5160" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Restart service on remote hosts</text>
+<text x="130" y="5215" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">  -e &apos;ansible_password={{lookup(&quot;env&quot;,&quot;DEPLOY_PASS&quot;)}}&apos;</text>
+<text x="165" y="5247" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Inject SSH pass from env var</text>
+<rect x="2170" y="4710" width="930" height="911" rx="15" fill="#363a4f" stroke="#8aadf4" stroke-width="3" />
+<text x="2200" y="4775" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8aadf4">Ansible Vault &amp; Secrets</text>
+<line x1="2170" y1="4800" x2="3100" y2="4800" stroke="#494d64" stroke-width="2" />
+<text x="2200" y="4850" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault create file</text>
+<text x="2650" y="4850" font-family="sans-serif" font-size="22" fill="#a5adcb">Create encrypted file</text>
+<text x="2200" y="4920" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault edit file</text>
+<text x="2650" y="4920" font-family="sans-serif" font-size="22" fill="#a5adcb">Edit encrypted file</text>
+<text x="2200" y="4990" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault view file</text>
+<text x="2650" y="4990" font-family="sans-serif" font-size="22" fill="#a5adcb">View encrypted file without editing</text>
+<text x="2200" y="5060" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault encrypt file</text>
+<text x="2650" y="5060" font-family="sans-serif" font-size="22" fill="#a5adcb">Encrypt file with specific ID</text>
+<text x="2200" y="5130" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault decrypt file</text>
+<text x="2650" y="5130" font-family="sans-serif" font-size="22" fill="#a5adcb">Decrypt a file</text>
+<text x="2200" y="5200" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault rekey file</text>
+<text x="2650" y="5200" font-family="sans-serif" font-size="22" fill="#a5adcb">Change the vault password</text>
+<text x="2200" y="5270" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-vault encrypt_string</text>
+<text x="2650" y="5270" font-family="sans-serif" font-size="22" fill="#a5adcb">Encrypt string from stdin</text>
+<text x="2200" y="5340" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --ask-vault-pass</text>
+<text x="2235" y="5372" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run playbook and ask vault pass</text>
+<text x="2200" y="5427" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible-playbook --vault-password-file .pass</text>
+<text x="2235" y="5459" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run playbook with pass file</text>
+<text x="2200" y="5514" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">ansible local -m debug -a &quot;var=obj&quot;</text>
+<text x="2235" y="5546" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Debug print variables ad-hoc</text>
+<rect x="1135" y="5247" width="930" height="720" rx="15" fill="#363a4f" stroke="#8bd5ca" stroke-width="3" />
+<text x="1165" y="5312" font-family="sans-serif" font-size="36" font-weight="bold" fill="#8bd5ca">Ansible Molecule</text>
+<line x1="1135" y1="5337" x2="2065" y2="5337" stroke="#494d64" stroke-width="2" />
+<text x="1165" y="5387" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule init role r_name</text>
+<text x="1615" y="5387" font-family="sans-serif" font-size="22" fill="#a5adcb">Initialize new role with molecule</text>
+<text x="1165" y="5457" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule create -s default</text>
+<text x="1615" y="5457" font-family="sans-serif" font-size="22" fill="#a5adcb">Create instances</text>
+<text x="1165" y="5527" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule converge -s default</text>
+<text x="1615" y="5527" font-family="sans-serif" font-size="22" fill="#a5adcb">Run playbook against instances</text>
+<text x="1165" y="5597" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule idempotence</text>
+<text x="1615" y="5597" font-family="sans-serif" font-size="22" fill="#a5adcb">Check playbook idempotence</text>
+<text x="1165" y="5667" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule verify -s default</text>
+<text x="1615" y="5667" font-family="sans-serif" font-size="22" fill="#a5adcb">Run tests (Testinfra, Lint)</text>
+<text x="1165" y="5737" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule test -s default</text>
+<text x="1615" y="5737" font-family="sans-serif" font-size="22" fill="#a5adcb">Run full lifecycle</text>
+<text x="1165" y="5807" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule login -s default</text>
+<text x="1615" y="5807" font-family="sans-serif" font-size="22" fill="#a5adcb">Log into a running instance</text>
+<text x="1165" y="5877" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">molecule destroy -s default</text>
+<text x="1615" y="5877" font-family="sans-serif" font-size="22" fill="#a5adcb">Destroy instances</text>
+<rect x="100" y="5362" width="930" height="737" rx="15" fill="#363a4f" stroke="#a6da95" stroke-width="3" />
+<text x="130" y="5427" font-family="sans-serif" font-size="36" font-weight="bold" fill="#a6da95">Package Management</text>
+<line x1="100" y1="5452" x2="1030" y2="5452" stroke="#494d64" stroke-width="2" />
+<text x="130" y="5502" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt update &amp;&amp; apt upgrade</text>
+<text x="165" y="5534" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Update list &amp; upgrade packages</text>
+<text x="130" y="5589" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt install pkg</text>
+<text x="580" y="5589" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package (Debian/Ubuntu)</text>
+<text x="130" y="5659" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">apt remove pkg</text>
+<text x="580" y="5659" font-family="sans-serif" font-size="22" fill="#a5adcb">Remove package</text>
+<text x="130" y="5729" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf install pkg</text>
+<text x="580" y="5729" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package (Modern RHEL/Fedora)</text>
+<text x="130" y="5799" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">dnf check-update</text>
+<text x="580" y="5799" font-family="sans-serif" font-size="22" fill="#a5adcb">Check for available updates</text>
+<text x="130" y="5869" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum check-update</text>
+<text x="580" y="5869" font-family="sans-serif" font-size="22" fill="#a5adcb">Check for updates (RHEL/CentOS)</text>
+<text x="130" y="5939" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">yum install pkg</text>
+<text x="580" y="5939" font-family="sans-serif" font-size="22" fill="#a5adcb">Install package</text>
+<text x="130" y="6009" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">pacman -Syu</text>
+<text x="580" y="6009" font-family="sans-serif" font-size="22" fill="#a5adcb">Full system upgrade (Arch Linux)</text>
+<rect x="2170" y="5661" width="930" height="1049" rx="15" fill="#363a4f" stroke="#f5a97f" stroke-width="3" />
+<text x="2200" y="5726" font-family="sans-serif" font-size="36" font-weight="bold" fill="#f5a97f">DBs, SELinux &amp; Certs</text>
+<line x1="2170" y1="5751" x2="3100" y2="5751" stroke="#494d64" stroke-width="2" />
+<text x="2200" y="5801" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">vim /data/postgres/pg_hba.conf</text>
+<text x="2235" y="5833" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Edit Postgres client auth policy</text>
+<text x="2200" y="5888" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sudo -u postgres psql -c &apos;SELECT pg_reload_conf();&apos;</text>
+<text x="2235" y="5920" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Reload Postgres gracefully</text>
+<text x="2200" y="5975" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">sestatus</text>
+<text x="2650" y="5975" font-family="sans-serif" font-size="22" fill="#a5adcb">Verify SELinux enablement state</text>
+<text x="2200" y="6045" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">audit2allow -a</text>
+<text x="2650" y="6045" font-family="sans-serif" font-size="22" fill="#a5adcb">Generate allow rules from audit logs</text>
+<text x="2200" y="6115" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">semanage fcontext -a -t postgresql_db_t &apos;/data(/.*)?&apos;</text>
+<text x="2235" y="6147" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Define SELinux contexts</text>
+<text x="2200" y="6202" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">restorecon -Rv /data</text>
+<text x="2650" y="6202" font-family="sans-serif" font-size="22" fill="#a5adcb">Apply SELinux fcontexts recursively</text>
+<text x="2200" y="6272" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">openssl req -new -newkey rsa:2048 -nodes -keyout k.key -out c.csr</text>
+<text x="2235" y="6304" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Generate CSR immediately</text>
+<text x="2200" y="6359" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">openssl x509 -in tls.crt -text -noout</text>
+<text x="2235" y="6391" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Inspect x509 certificate data</text>
+<text x="2200" y="6446" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">openssl s_client -connect host:443 -showcerts</text>
+<text x="2235" y="6478" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Examine remote SSL certificate</text>
+<text x="2200" y="6533" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">certbot certificates</text>
+<text x="2650" y="6533" font-family="sans-serif" font-size="22" fill="#a5adcb">List locally managed ACME certs</text>
+<text x="2200" y="6603" font-family="monospace, Courier New" font-size="24" font-weight="bold" fill="#cad3f5">/opt/setup.sh -silent -responsefile props</text>
+<text x="2235" y="6635" font-family="sans-serif" font-size="22" fill="#a5adcb">&#x21B3; Run enterprise installer silently</text>
 </svg>
