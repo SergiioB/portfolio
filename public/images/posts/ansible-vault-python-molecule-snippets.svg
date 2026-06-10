@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1850" viewBox="0 0 2200 1850" role="img" aria-label="Ansible Vault, Python, and Molecule snippets poster with structured command blocks">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07121c" />
+      <stop offset="55%" stop-color="#0b1a29" />
+      <stop offset="100%" stop-color="#051019" />
+    </linearGradient>
+    <linearGradient id="line" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#295c74" />
+      <stop offset="50%" stop-color="#3d8a76" />
+      <stop offset="100%" stop-color="#84b65b" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#02070c" flood-opacity="0.4" />
+    </filter>
+    <style>
+      .title { font: 700 52px "Segoe UI", Arial, sans-serif; fill: #f4f8fc; }
+      .subtitle { font: 400 22px "Segoe UI", Arial, sans-serif; fill: #9db4c8; }
+      .badge { font: 700 20px "Consolas", "Courier New", monospace; fill: #88d8ff; letter-spacing: 2px; }
+      .panel { fill: rgba(11, 24, 37, 0.94); stroke: url(#line); stroke-width: 2; }
+      .panel-title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #f6fbff; }
+      .panel-copy { font: 400 18px "Segoe UI", Arial, sans-serif; fill: #97afbf; }
+      .label { font: 700 15px "Segoe UI", Arial, sans-serif; fill: #7bc7ff; letter-spacing: 1px; }
+      .cmd { font: 400 18px "Consolas", "Courier New", monospace; fill: #9ef2bf; }
+      .cmd-alt { font: 400 18px "Consolas", "Courier New", monospace; fill: #90ddff; }
+      .note { font: 400 16px "Segoe UI", Arial, sans-serif; fill: #aec0cf; }
+      .small { font: 400 15px "Consolas", "Courier New", monospace; fill: #94aac0; }
+      .chip { fill: #0b2133; stroke: #275676; stroke-width: 1.2; }
+      .grid { stroke: rgba(128, 171, 196, 0.08); stroke-width: 1; }
+      .rule { stroke: rgba(128, 171, 196, 0.18); stroke-width: 1; }
+      .cmd-box { fill: #091524; stroke: rgba(85, 141, 182, 0.25); stroke-width: 1; rx: 14px; }
+    </style>
+  </defs>
+
+  <rect width="2200" height="1850" fill="url(#bg)" />
+
+  <g opacity="0.24">
+    <path d="M0 170h2200M0 370h2200M0 570h2200M0 770h2200M0 970h2200M0 1170h2200M0 1370h2200M0 1570h2200M0 1770h2200" class="grid" />
+    <path d="M140 0v1850M420 0v1850M700 0v1850M980 0v1850M1260 0v1850M1540 0v1850M1820 0v1850M2100 0v1850" class="grid" />
+  </g>
+
+  <circle cx="1910" cy="180" r="170" fill="#10354f" opacity="0.18" />
+  <circle cx="240" cy="1720" r="220" fill="#1e4a2a" opacity="0.16" />
+
+  
+
+  <g filter="url(#shadow)">
+    <g transform="translate(90 340)">
+      <rect width="970" height="430" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">1. Bootstrap the Python environment</text>
+      <text x="34" y="90" class="panel-copy">Create the virtual environment first so every dependency lands in the intended interpreter.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">STARTUP FLOW</text>
+      <rect x="34" y="160" width="902" height="52" class="cmd-box" />
+      <text x="52" y="193" class="cmd">python3.12 -m venv .venv</text>
+      <rect x="34" y="222" width="902" height="52" class="cmd-box" />
+      <text x="52" y="255" class="cmd">source .venv/bin/activate</text>
+      <rect x="34" y="284" width="902" height="52" class="cmd-box" />
+      <text x="52" y="317" class="cmd">python -m pip install --upgrade pip</text>
+      <rect x="34" y="346" width="902" height="52" class="cmd-box" />
+      <text x="52" y="379" class="cmd">pip install -r requirements.txt</text>
+    </g>
+
+    <g transform="translate(1140 340)">
+      <rect width="970" height="430" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">2. Install Galaxy and SDK dependencies</text>
+      <text x="34" y="90" class="panel-copy">Keep Ansible content installs and Python SDK requirements explicit.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">DEPENDENCY SET</text>
+      <rect x="34" y="160" width="902" height="52" class="cmd-box" />
+      <text x="52" y="193" class="cmd">ansible-galaxy install -r requirements.yml</text>
+      <rect x="34" y="222" width="902" height="52" class="cmd-box" />
+      <text x="52" y="255" class="cmd-alt">ansible-galaxy install -r roles/vmware_vm/collections/requirements.yml</text>
+      <rect x="34" y="284" width="902" height="52" class="cmd-box" />
+      <text x="52" y="317" class="cmd-alt">pip install -r collections/ansible_collections/community/vmware/requirements.yml</text>
+    </g>
+
+    <g transform="translate(90 820)">
+      <rect width="970" height="520" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">3. Vault operations and variable checks</text>
+      <text x="34" y="90" class="panel-copy">Good for secret creation, file encryption, and quick variable validation before a larger run.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">VAULT WORKFLOW</text>
+      <rect x="34" y="160" width="902" height="52" class="cmd-box" />
+      <text x="52" y="193" class="cmd">ansible-vault encrypt_string --stdin-name 'service_secret'</text>
+      <rect x="34" y="222" width="902" height="52" class="cmd-box" />
+      <text x="52" y="255" class="cmd">ansible-vault encrypt files/target-host/tls.key ...</text>
+      <rect x="34" y="284" width="902" height="52" class="cmd-box" />
+      <text x="52" y="317" class="cmd">ansible-vault decrypt files/target-host/tls.crt ...</text>
+      <rect x="34" y="346" width="902" height="52" class="cmd-box" />
+      <text x="52" y="379" class="cmd-alt">ansible localhost -m debug -a "var=vault_secret_name"</text>
+      <rect x="34" y="408" width="902" height="52" class="cmd-box" />
+      <text x="52" y="441" class="cmd-alt">-e "@inventory/dev/group_vars/all/secret_vars.yml" --ask-vault-pass</text>
+    </g>
+
+    <g transform="translate(1140 820)">
+      <rect width="970" height="520" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">4. Focus linting on changed files</text>
+      <text x="34" y="90" class="panel-copy">Helpful when you want branch-specific signal instead of repository-wide noise.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">DELTA-BASED LINTING</text>
+      <rect x="34" y="160" width="902" height="64" class="cmd-box" />
+      <text x="52" y="191" class="cmd-alt">git diff --name-only release-tag HEAD | grep -E '\.(yml|yaml)$'</text>
+      <text x="52" y="214" class="cmd-alt">| xargs -r ansible-lint</text>
+      <rect x="34" y="242" width="902" height="52" class="cmd-box" />
+      <text x="52" y="275" class="cmd">ansible-lint playbook.yml</text>
+    </g>
+
+    <g transform="translate(90 1390)">
+      <rect width="970" height="420" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">5. Molecule scenario loop</text>
+      <text x="34" y="90" class="panel-copy">Reset, create, converge, and then log in to inspect the resulting instance.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">TEST CYCLE</text>
+      <rect x="34" y="160" width="902" height="52" class="cmd-box" />
+      <text x="52" y="193" class="cmd">molecule list</text>
+      <rect x="34" y="222" width="902" height="52" class="cmd-box" />
+      <text x="52" y="255" class="cmd">molecule destroy -s default</text>
+      <rect x="34" y="284" width="902" height="52" class="cmd-box" />
+      <text x="52" y="317" class="cmd">molecule create -s default</text>
+      <rect x="34" y="346" width="902" height="52" class="cmd-box" />
+      <text x="52" y="379" class="cmd">molecule converge -s default &amp;&amp; molecule login -s default</text>
+    </g>
+
+    <g transform="translate(1140 1390)">
+      <rect width="970" height="420" rx="28" class="panel" />
+      <text x="34" y="56" class="panel-title">6. Quick local file share</text>
+      <text x="34" y="90" class="panel-copy">A tiny helper for temporary access to a directory on a trusted local network segment.</text>
+      <line x1="34" y1="114" x2="936" y2="114" class="rule" />
+      <text x="34" y="146" class="label">LOCAL HELPER</text>
+      <rect x="34" y="160" width="902" height="52" class="cmd-box" />
+      <text x="52" y="193" class="cmd">python3.12 -m http.server 8080</text>
+    </g>
+  </g>
+
+</svg>

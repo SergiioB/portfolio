@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Azure PTU Decision Flow">
+  <rect width="1200" height="800" fill="#0f172a"/>
+  
+  <!-- Title -->
+  <text x="60" y="50" fill="#e2e8f0" font-size="32" font-family="Segoe UI, Arial" font-weight="600">Azure Provisioned Throughput: Decision Flow</text>
+  
+  <!-- Left side: Pay-As-You-Go -->
+  <rect x="70" y="100" width="500" height="320" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <text x="90" y="135" fill="#94a3b8" font-size="18" font-family="Segoe UI, Arial">PAY-AS-YOU-GO</text>
+  
+  <!-- PAYG boxes -->
+  <rect x="90" y="160" width="200" height="70" rx="8" fill="#451a1a" stroke="#dc2626" stroke-width="1"/>
+  <text x="105" y="190" fill="#fca5a5" font-size="14" font-family="Segoe UI, Arial">Variable Latency</text>
+  <text x="105" y="210" fill="#b91c1c" font-size="11" font-family="Segoe UI, Arial">No guarantees</text>
+  
+  <rect x="310" y="160" width="240" height="70" rx="8" fill="#451a1a" stroke="#dc2626" stroke-width="1"/>
+  <text x="325" y="190" fill="#fca5a5" font-size="14" font-family="Segoe UI, Arial">HTTP 429 Throttling</text>
+  <text x="325" y="210" fill="#b91c1c" font-size="11" font-family="Segoe UI, Arial">During peak load</text>
+  
+  <rect x="90" y="250" width="200" height="70" rx="8" fill="#451a1a" stroke="#dc2626" stroke-width="1"/>
+  <text x="105" y="280" fill="#fca5a5" font-size="14" font-family="Segoe UI, Arial">Per-Token Billing</text>
+  <text x="105" y="300" fill="#b91c1c" font-size="11" font-family="Segoe UI, Arial">Scales with usage</text>
+  
+  <rect x="310" y="250" width="240" height="70" rx="8" fill="#451a1a" stroke="#dc2626" stroke-width="1"/>
+  <text x="325" y="280" fill="#fca5a5" font-size="14" font-family="Segoe UI, Arial">Best-Effort Service</text>
+  <text x="325" y="300" fill="#b91c1c" font-size="11" font-family="Segoe UI, Arial">Competes with others</text>
+  
+  <text x="90" y="345" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">Good for: prototyping, low volume, variable traffic</text>
+  
+  <!-- Right side: PTU -->
+  <rect x="630" y="100" width="500" height="320" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <text x="650" y="135" fill="#94a3b8" font-size="18" font-family="Segoe UI, Arial">PROVISIONED THROUGHPUT</text>
+  
+  <!-- PTU boxes -->
+  <rect x="650" y="160" width="200" height="70" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="1"/>
+  <text x="665" y="190" fill="#86efac" font-size="14" font-family="Segoe UI, Arial">Guaranteed Capacity</text>
+  <text x="665" y="210" fill="#16a34a" font-size="11" font-family="Segoe UI, Arial">Reserved compute</text>
+  
+  <rect x="870" y="160" width="240" height="70" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="1"/>
+  <text x="885" y="190" fill="#86efac" font-size="14" font-family="Segoe UI, Arial">Fixed Hourly Rate</text>
+  <text x="885" y="210" fill="#16a34a" font-size="11" font-family="Segoe UI, Arial">Predictable costs</text>
+  
+  <rect x="650" y="250" width="200" height="70" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="1"/>
+  <text x="665" y="280" fill="#86efac" font-size="14" font-family="Segoe UI, Arial">No Throttling</text>
+  <text x="665" y="300" fill="#16a34a" font-size="11" font-family="Segoe UI, Arial">Within reservation</text>
+  
+  <rect x="870" y="250" width="240" height="70" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="1"/>
+  <text x="885" y="280" fill="#86efac" font-size="14" font-family="Segoe UI, Arial">Overflow Safety</text>
+  <text x="885" y="300" fill="#16a34a" font-size="11" font-family="Segoe UI, Arial">Falls back to PAYG</text>
+  
+  <text x="650" y="345" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">Good for: production, SLAs, stable traffic, high volume</text>
+  
+  <!-- Decision diamond -->
+  <polygon points="600,260 650,310 600,360 550,310" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+  <text x="600" y="308" fill="#93c5fd" font-size="13" font-family="Segoe UI, Arial" text-anchor="middle">Volume</text>
+  <text x="600" y="325" fill="#93c5fd" font-size="13" font-family="Segoe UI, Arial" text-anchor="middle">> 500K</text>
+  <text x="600" y="342" fill="#93c5fd" font-size="13" font-family="Segoe UI, Arial" text-anchor="middle">tokens/day?</text>
+  
+  <!-- Arrows -->
+  <line x1="570" y1="310" x2="545" y2="310" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="655" y1="310" x2="630" y2="310" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+    </marker>
+  </defs>
+  
+  <!-- Bottom: Calculation Framework -->
+  <rect x="70" y="450" width="1060" height="320" rx="12" fill="#111827" stroke="#1e293b" stroke-width="2"/>
+  <text x="90" y="485" fill="#e2e8f0" font-size="20" font-family="Segoe UI, Arial" font-weight="600">PTU Sizing Calculation</text>
+  
+  <!-- Step 1 -->
+  <rect x="90" y="510" width="180" height="80" rx="8" fill="#1e293b" stroke="#475569"/>
+  <text x="105" y="540" fill="#e2e8f0" font-size="14" font-family="Segoe UI, Arial" font-weight="600">1. Gather Metrics</text>
+  <text x="105" y="560" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">Prompt tokens, completion</text>
+  <text x="105" y="575" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">tokens, requests/min</text>
+  
+  <!-- Step 2 -->
+  <rect x="290" y="510" width="180" height="80" rx="8" fill="#1e293b" stroke="#475569"/>
+  <text x="305" y="540" fill="#e2e8f0" font-size="14" font-family="Segoe UI, Arial" font-weight="600">2. Calculate Input</text>
+  <text x="305" y="560" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">Effective = Prompt×(1-cache)</text>
+  <text x="305" y="575" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">+ Completion×multiplier</text>
+  
+  <!-- Step 3 -->
+  <rect x="490" y="510" width="180" height="80" rx="8" fill="#1e293b" stroke="#475569"/>
+  <text x="505" y="540" fill="#e2e8f0" font-size="14" font-family="Segoe UI, Arial" font-weight="600">3. TPM Calculation</text>
+  <text x="505" y="560" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">Tokens Per Minute =</text>
+  <text x="505" y="575" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">Effective × Requests/min</text>
+  
+  <!-- Step 4 -->
+  <rect x="690" y="510" width="180" height="80" rx="8" fill="#1e293b" stroke="#475569"/>
+  <text x="705" y="540" fill="#e2e8f0" font-size="14" font-family="Segoe UI, Arial" font-weight="600">4. Size PTU</text>
+  <text x="705" y="560" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">PTU = TPM ÷ Model_rate</text>
+  <text x="705" y="575" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">Round to nearest 5</text>
+  
+  <!-- Step 5 -->
+  <rect x="890" y="510" width="220" height="80" rx="8" fill="#1e293b" stroke="#475569"/>
+  <text x="905" y="540" fill="#e2e8f0" font-size="14" font-family="Segoe UI, Arial" font-weight="600">5. Compare Costs</text>
+  <text x="905" y="560" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">PAYG vs PTU monthly</text>
+  <text x="905" y="575" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">Find break-even volume</text>
+  
+  <!-- Flow arrows between steps -->
+  <line x1="270" y1="550" x2="290" y2="550" stroke="#60a5fa" stroke-width="2"/>
+  <line x1="470" y1="550" x2="490" y2="550" stroke="#60a5fa" stroke-width="2"/>
+  <line x1="670" y1="550" x2="690" y2="550" stroke="#60a5fa" stroke-width="2"/>
+  <line x1="870" y1="550" x2="890" y2="550" stroke="#60a5fa" stroke-width="2"/>
+  
+  <!-- Key metrics -->
+  <text x="90" y="630" fill="#cbd5e1" font-size="14" font-family="Segoe UI, Arial">Key Metrics:</text>
+  <text x="90" y="655" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• GPT-4o: ~100-200K TPM per PTU</text>
+  <text x="90" y="675" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• GPT-5-mini: ~200-400K TPM per PTU (2x more efficient)</text>
+  <text x="90" y="695" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Prompt cache hits = 100% token discount</text>
+  <text x="90" y="715" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Minimum reservation: 15 PTU in EU regions</text>
+  
+  <text x="600" y="630" fill="#cbd5e1" font-size="14" font-family="Segoe UI, Arial">Break-Even Estimate:</text>
+  <text x="600" y="655" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Low volume (&lt; 500K tokens/day): PAYG wins</text>
+  <text x="600" y="675" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Medium volume (500K-1M tokens/day): Roughly break-even</text>
+  <text x="600" y="695" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• High volume (&gt; 1M tokens/day): PTU wins on cost + guarantees</text>
+  
+  <text x="950" y="630" fill="#cbd5e1" font-size="14" font-family="Segoe UI, Arial">Reservation Tips:</text>
+  <text x="950" y="655" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Start conservative (15 PTU min)</text>
+  <text x="950" y="675" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Yearly commitment = 20-30% discount</text>
+  <text x="950" y="695" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Monitor overflow ratio monthly</text>
+  <text x="950" y="715" fill="#94a3b8" font-size="12" font-family="Segoe UI, Arial">• Resize quarterly based on data</text>
+  
+  <!-- Legend -->
+  <rect x="90" y="745" width="15" height="15" fill="#14532d" stroke="#22c55e"/>
+  <text x="115" y="757" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">= PTU Advantage</text>
+  <rect x="230" y="745" width="15" height="15" fill="#451a1a" stroke="#dc2626"/>
+  <text x="255" y="757" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">= PAYG Limitations</text>
+  <rect x="400" y="745" width="15" height="15" fill="#1e3a5f" stroke="#3b82f6"/>
+  <text x="425" y="757" fill="#94a3b8" font-size="11" font-family="Segoe UI, Arial">= Decision Point</text>
+</svg>

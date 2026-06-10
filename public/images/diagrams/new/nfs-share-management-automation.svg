@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .text-title { fill: #f8fafc; font-family: monospace; font-size: 16px; font-weight: bold; }
+      .text-sub { fill: #94a3b8; font-family: monospace; font-size: 14px; }
+      .text-code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 6; }
+      .box-prod { fill: #1e293b; stroke: #10b981; stroke-width: 2; rx: 6; }
+      .box-backup { fill: #1e293b; stroke: #f59e0b; stroke-width: 2; rx: 6; }
+      .box-ansible { fill: #1e293b; stroke: #6366f1; stroke-width: 2; rx: 6; }
+      .arrow { stroke: #475569; stroke-width: 2; fill: none; }
+      .arrow-prod { stroke: #10b981; stroke-width: 2; fill: none; }
+      .arrow-bad { stroke: #ef4444; stroke-width: 2; fill: none; stroke-dasharray: 4; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+    </marker>
+    <marker id="arrowhead-prod" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+    </marker>
+    <marker id="arrowhead-bad" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444" />
+    </marker>
+  </defs>
+
+  <rect width="800" height="500" class="bg" />
+  
+  <text x="40" y="40" class="text-title">Automated NFS Management at Scale</text>
+  <text x="40" y="60" class="text-sub">Consistent provisioning and intelligent network routing</text>
+
+  <!-- Ansible Automation Layer -->
+  <rect x="40" y="90" width="720" height="80" class="box-ansible" />
+  <text x="60" y="120" class="text-title">Ansible Automation Layer</text>
+  <text x="60" y="145" class="text-code">Deploys LVM, exportfs rules, and Client fstab with explicit IPs</text>
+
+  <!-- Server -->
+  <rect x="40" y="200" width="200" height="260" class="box" />
+  <text x="60" y="230" class="text-title">NFS Server</text>
+  
+  <rect x="60" y="250" width="160" height="40" class="box" />
+  <text x="70" y="275" class="text-code">/srv/oracle_data</text>
+
+  <rect x="60" y="300" width="160" height="40" class="box" />
+  <text x="70" y="325" class="text-code">/srv/sapmnt</text>
+
+  <rect x="60" y="360" width="160" height="70" class="box" />
+  <text x="70" y="380" class="text-code">LVM Storage</text>
+  <text x="70" y="400" class="text-code">vg_storage</text>
+  <text x="70" y="415" class="text-code">ext4 (nodev,noatime)</text>
+
+  <!-- Networks -->
+  <rect x="290" y="220" width="220" height="70" class="box-prod" />
+  <text x="310" y="245" class="text-title">Production Net (10G)</text>
+  <text x="310" y="270" class="text-code">Direct IP: 10.76.x.x</text>
+
+  <rect x="290" y="350" width="220" height="70" class="box-backup" />
+  <text x="310" y="375" class="text-title">Backup Net (1G)</text>
+  <text x="310" y="400" class="text-code">DNS Resolved (172.x.x.x)</text>
+
+  <!-- Clients -->
+  <rect x="560" y="200" width="200" height="260" class="box" />
+  <text x="580" y="230" class="text-title">Client Servers</text>
+
+  <rect x="580" y="250" width="160" height="50" class="box" />
+  <text x="590" y="270" class="text-code">Oracle DB</text>
+  <text x="590" y="290" class="text-code">/oracle/oradata</text>
+
+  <rect x="580" y="320" width="160" height="50" class="box" />
+  <text x="590" y="340" class="text-code">SAP App</text>
+  <text x="590" y="360" class="text-code">/usr/sap</text>
+
+  <rect x="580" y="390" width="160" height="50" class="box" />
+  <text x="590" y="410" class="text-code">fstab: _netdev,</text>
+  <text x="590" y="425" class="text-code">hard,bg,rsize=32k</text>
+
+  <!-- Connections -->
+  <path d="M 240 255 L 290 255" class="arrow-prod" marker-end="url(#arrowhead-prod)" />
+  <path d="M 510 255 L 560 255" class="arrow-prod" marker-end="url(#arrowhead-prod)" />
+  <text x="515" y="245" class="text-code">Force IP</text>
+
+  <path d="M 240 385 L 290 385" class="arrow-bad" marker-end="url(#arrowhead-bad)" />
+  <path d="M 510 385 L 560 385" class="arrow-bad" marker-end="url(#arrowhead-bad)" />
+  <text x="515" y="375" class="text-code" style="fill:#ef4444">Avoid DNS</text>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .text-title { fill: #f8fafc; font-family: monospace; font-size: 18px; font-weight: bold; }
+      .text-sub { fill: #94a3b8; font-family: monospace; font-size: 14px; }
+      .text-code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 6; }
+      .box-highlight { fill: #1e293b; stroke: #eab308; stroke-width: 2; rx: 6; }
+      .box-primary { fill: #1e293b; stroke: #3b82f6; stroke-width: 2; rx: 6; }
+      .line { stroke: #475569; stroke-width: 2; stroke-dasharray: 4; }
+      .arrow { stroke: #475569; stroke-width: 2; fill: none; }
+      .arrow-sync { stroke: #eab308; stroke-width: 2; fill: none; stroke-dasharray: 4; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+    </marker>
+    <marker id="arrowhead-sync" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#eab308" />
+    </marker>
+  </defs>
+
+  <rect width="800" height="500" class="bg" />
+  
+  <text x="40" y="40" class="text-title">Offline-First Sync with Outbox Pattern</text>
+  <text x="40" y="60" class="text-sub">Decoupling UI responsiveness from network reliability</text>
+
+  <!-- Mobile Device / Client -->
+  <rect x="40" y="100" width="340" height="340" class="box" />
+  <text x="60" y="130" class="text-title">Mobile Client</text>
+
+  <rect x="60" y="150" width="300" height="60" class="box-primary" />
+  <text x="75" y="185" class="text-title">App UI (Fast / Responsive)</text>
+  
+  <rect x="60" y="240" width="140" height="80" class="box" />
+  <text x="75" y="265" class="text-title">Local DB</text>
+  <text x="75" y="295" class="text-code">Immediate Read/Write</text>
+
+  <rect x="220" y="240" width="140" height="80" class="box-highlight" />
+  <text x="235" y="265" class="text-title">Outbox Table</text>
+  <text x="235" y="285" class="text-code">1. PENDING</text>
+  <text x="235" y="305" class="text-code">2. IN_PROGRESS</text>
+
+  <rect x="60" y="340" width="300" height="70" class="box-highlight" />
+  <text x="75" y="365" class="text-title">Background Sync Worker</text>
+  <text x="75" y="390" class="text-code">Monitors Outbox | Exponential Backoff</text>
+
+  <!-- Flow Lines inside Client -->
+  <path d="M 130 210 L 130 240" class="arrow" marker-end="url(#arrowhead)" />
+  <path d="M 290 210 L 290 240" class="arrow" marker-end="url(#arrowhead)" />
+  <path d="M 290 320 L 290 340" class="arrow" marker-end="url(#arrowhead)" />
+
+  <!-- Cloud Infrastructure -->
+  <rect x="500" y="100" width="260" height="340" class="box" />
+  <text x="520" y="130" class="text-title">Cloud Infrastructure</text>
+
+  <rect x="540" y="180" width="180" height="80" class="box-primary" />
+  <text x="560" y="210" class="text-title">API Gateway</text>
+  <text x="560" y="240" class="text-code">Authentication</text>
+
+  <rect x="540" y="300" width="180" height="80" class="box" />
+  <text x="560" y="330" class="text-title">Cloud Database</text>
+  <text x="560" y="360" class="text-code">(Firestore)</text>
+
+  <path d="M 630 260 L 630 300" class="arrow" marker-end="url(#arrowhead)" />
+
+  <!-- Network Connection -->
+  <path d="M 360 375 L 500 375" class="arrow-sync" marker-end="url(#arrowhead-sync)" />
+  <text x="385" y="365" class="text-code">Async Network Call</text>
+  <path d="M 500 220 L 360 220" class="arrow" marker-end="url(#arrowhead)" />
+  <text x="390" y="210" class="text-code">ACK / Sync State</text>
+  
+</svg>

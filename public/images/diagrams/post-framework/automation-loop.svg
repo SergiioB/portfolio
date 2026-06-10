@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Automation feedback loop">
+  <rect width="1200" height="650" fill="#0b1220"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Automation Feedback Loop</text>
+  <circle cx="600" cy="340" r="220" fill="none" stroke="#334155" stroke-width="14"/>
+  <circle cx="600" cy="340" r="220" fill="none" stroke="#22c55e" stroke-width="14" stroke-dasharray="260 1120" transform="rotate(-90 600 340)"/>
+  <rect x="520" y="90" width="160" height="70" rx="12" fill="#1e293b" stroke="#334155"/>
+  <text x="555" y="134" fill="#93c5fd" font-size="24" font-family="Segoe UI, Arial">Plan</text>
+  <rect x="860" y="305" width="160" height="70" rx="12" fill="#1e293b" stroke="#334155"/>
+  <text x="900" y="349" fill="#86efac" font-size="24" font-family="Segoe UI, Arial">Run</text>
+  <rect x="520" y="520" width="160" height="70" rx="12" fill="#1e293b" stroke="#334155"/>
+  <text x="542" y="564" fill="#fde68a" font-size="24" font-family="Segoe UI, Arial">Verify</text>
+  <rect x="180" y="305" width="200" height="70" rx="12" fill="#1e293b" stroke="#334155"/>
+  <text x="205" y="349" fill="#fca5a5" font-size="24" font-family="Segoe UI, Arial">Improve</text>
+  <text x="360" y="340" fill="#cbd5e1" font-size="22" font-family="Segoe UI, Arial">Telemetry + incidents drive next cycle</text>
+</svg>

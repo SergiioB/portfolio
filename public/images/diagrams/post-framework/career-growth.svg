@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Career growth framework">
+  <rect width="1200" height="650" fill="#0f172a"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Career Growth Evidence Framework</text>
+  <rect x="110" y="170" width="280" height="130" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="165" y="245" fill="#93c5fd" font-size="24" font-family="Segoe UI, Arial">Project Scope</text>
+  <rect x="460" y="170" width="280" height="130" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="538" y="245" fill="#86efac" font-size="24" font-family="Segoe UI, Arial">Execution</text>
+  <rect x="810" y="170" width="280" height="130" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="880" y="245" fill="#fde68a" font-size="24" font-family="Segoe UI, Arial">Impact</text>
+  <line x1="390" y1="235" x2="460" y2="235" stroke="#60a5fa" stroke-width="4"/>
+  <line x1="740" y1="235" x2="810" y2="235" stroke="#60a5fa" stroke-width="4"/>
+  <rect x="110" y="370" width="980" height="190" rx="16" fill="#111827" stroke="#334155"/>
+  <text x="150" y="440" fill="#cbd5e1" font-size="24" font-family="Segoe UI, Arial">Evidence: metrics, decisions, tradeoffs, communication quality, and ownership boundaries.</text>
+</svg>
