@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="cmaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="alertGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </linearGradient>
+    
+    <!-- Shadows -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3" flood-color="#000000" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="400" rx="16" fill="url(#bg)" stroke="#334155" stroke-width="2" />
+  
+  <!-- Title -->
+  <text x="300" y="40" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#f8fafc" text-anchor="middle" letter-spacing="1">RK3588 NPU MEMORY MAP</text>
+  <line x1="200" y1="55" x2="400" y2="55" stroke="#334155" stroke-width="2" />
+
+  <!-- CMA Pool Container -->
+  <g transform="translate(50, 80)" filter="url(#shadow)">
+    <rect width="500" height="120" rx="8" fill="#0f172a" stroke="#f59e0b" stroke-width="2" />
+    <path d="M 0 8 h 500 v 24 h -500 z" fill="url(#cmaGrad)" />
+    <text x="250" y="25" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">CMA Pool: ~2.2GB Max Capacity</text>
+    
+    <g transform="translate(20, 50)">
+      <circle cx="10" cy="5" r="4" fill="#34d399" />
+      <text x="25" y="10" font-family="system-ui, sans-serif" font-size="13" fill="#cbd5e1">Model weights must fit ENTIRELY in CMA</text>
+      
+      <circle cx="10" cy="30" r="4" fill="#34d399" />
+      <text x="25" y="35" font-family="system-ui, sans-serif" font-size="13" fill="#cbd5e1">No layer offloading like GPU VRAM</text>
+      
+      <circle cx="10" cy="55" r="4" fill="#34d399" />
+      <text x="25" y="60" font-family="system-ui, sans-serif" font-size="13" fill="#cbd5e1">W8A8 quantization is REQUIRED</text>
+    </g>
+  </g>
+
+  <!-- Implications Container -->
+  <g transform="translate(50, 230)" filter="url(#shadow)">
+    <rect width="500" height="130" rx="8" fill="#0f172a" stroke="#ef4444" stroke-width="2" />
+    <path d="M 0 8 h 500 v 24 h -500 z" fill="url(#alertGrad)" />
+    <text x="250" y="25" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">Architectural Implications</text>
+    
+    <g transform="translate(20, 50)">
+      <path d="M 5 5 l 10 10 M 15 5 l -10 10" stroke="#f87171" stroke-width="2" fill="none" />
+      <text x="25" y="15" font-family="system-ui, sans-serif" font-size="13" fill="#fca5a5">No 4B+ models on NPU (exceeds CMA limit)</text>
+      
+      <path d="M 5 30 l 10 10 M 15 30 l -10 10" stroke="#f87171" stroke-width="2" fill="none" />
+      <text x="25" y="40" font-family="system-ui, sans-serif" font-size="13" fill="#fca5a5">No MoE models (35B+ expert routing too large)</text>
+      
+      <path d="M 5 55 l 10 10 M 15 55 l -10 10" stroke="#fbbf24" stroke-width="2" fill="none" />
+      <text x="25" y="65" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#fde68a">Keepalive pings REQUIRED to prevent idle eviction</text>
+    </g>
+  </g>
+</svg>

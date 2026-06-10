@@ -1,0 +1,73 @@
+<svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#081019"/>
+      <stop offset="100%" stop-color="#111c2b"/>
+    </linearGradient>
+    <filter id="greenGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <marker id="arrowD" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7ad7ff"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="560" rx="24" fill="url(#bgD)"/>
+  <text x="600" y="44" fill="#fff" font-family="Arial" font-size="28" font-weight="bold" text-anchor="middle">Formula E HTAP and Coaching Layers</text>
+  <text x="600" y="72" fill="#adc4df" font-family="Arial" font-size="14" text-anchor="middle">After event transport, Formula E emphasizes live analytical reads and AI coaching close to current race state.</text>
+
+  <g transform="translate(76,178)">
+    <rect width="198" height="150" rx="18" fill="#172231" stroke="#4285F4" stroke-width="2"/>
+    <text x="99" y="34" fill="#fff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">Pub/Sub + Dataflow</text>
+    <text x="99" y="60" fill="#cad9ef" font-family="Arial" font-size="12" text-anchor="middle">clean, ordered event stream</text>
+    <rect x="28" y="92" width="142" height="16" rx="8" fill="#0e1623"/>
+    <rect x="28" y="92" width="108" height="16" rx="8" fill="#6eb3ff">
+      <animate attributeName="width" values="34;138;92;120;108" dur="2.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="28" y="124" width="142" height="16" rx="8" fill="#0e1623"/>
+    <rect x="28" y="124" width="88" height="16" rx="8" fill="#6ef7a5">
+      <animate attributeName="width" values="26;136;76;128;88" dur="2.5s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <g transform="translate(356,126)">
+    <rect width="224" height="96" rx="18" fill="#172231" stroke="#EA4335" stroke-width="2"/>
+    <text x="112" y="34" fill="#fff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">AlloyDB</text>
+    <text x="112" y="58" fill="#ffd0cb" font-family="Arial" font-size="12" text-anchor="middle">Live race state plus columnar reads</text>
+    <text x="112" y="76" fill="#cad9ef" font-family="Courier New" font-size="10" text-anchor="middle">transactional + analytical in one tier</text>
+  </g>
+
+  <g transform="translate(356,256)">
+    <rect width="224" height="96" rx="18" fill="#172231" stroke="#F4B400" stroke-width="2"/>
+    <text x="112" y="34" fill="#fff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">BigQuery</text>
+    <text x="112" y="58" fill="#ffe59a" font-family="Arial" font-size="12" text-anchor="middle">Historical lap and season warehouse</text>
+    <text x="112" y="76" fill="#cad9ef" font-family="Courier New" font-size="10" text-anchor="middle">perfect-lap and baseline datasets</text>
+  </g>
+
+  <g transform="translate(678,154)">
+    <rect width="244" height="170" rx="20" fill="#172231" stroke="#34A853" stroke-width="2" filter="url(#greenGlow)">
+      <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="2.1s" repeatCount="indefinite"/>
+    </rect>
+    <text x="122" y="36" fill="#fff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">Vertex AI</text>
+    <text x="122" y="62" fill="#bbffd3" font-family="Arial" font-size="12" text-anchor="middle">Gemini coaching and race reasoning</text>
+    <rect x="42" y="94" width="160" height="22" rx="11" fill="#0f2b1b" stroke="#34A853"/>
+    <text x="122" y="109" fill="#caffd7" font-family="Courier New" font-size="10" text-anchor="middle">live telemetry context</text>
+    <rect x="42" y="126" width="160" height="22" rx="11" fill="#0f2b1b" stroke="#34A853"/>
+    <text x="122" y="141" fill="#caffd7" font-family="Courier New" font-size="10" text-anchor="middle">track geometry</text>
+    <rect x="42" y="158" width="160" height="22" rx="11" fill="#0f2b1b" stroke="#34A853"/>
+    <text x="122" y="173" fill="#caffd7" font-family="Courier New" font-size="10" text-anchor="middle">historical vectors</text>
+  </g>
+
+  <g transform="translate(984,190)">
+    <rect width="158" height="98" rx="18" fill="#172231" stroke="#34A853" stroke-width="2"/>
+    <text x="79" y="34" fill="#fff" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">Coaching</text>
+    <text x="79" y="58" fill="#bbffd3" font-family="Arial" font-size="12" text-anchor="middle">Engineer-facing output</text>
+    <text x="79" y="78" fill="#caffd7" font-family="Courier New" font-size="10" text-anchor="middle">lift, regen, attack mode</text>
+  </g>
+
+  <path d="M274 254 L356 174" stroke="#7ad7ff" stroke-width="4" marker-end="url(#arrowD)" fill="none"/>
+  <path d="M274 254 L356 304" stroke="#7ad7ff" stroke-width="4" marker-end="url(#arrowD)" fill="none"/>
+  <path d="M580 174 L678 196" stroke="#7ad7ff" stroke-width="4" marker-end="url(#arrowD)" fill="none"/>
+  <path d="M580 304 L678 282" stroke="#7ad7ff" stroke-width="4" marker-end="url(#arrowD)" fill="none"/>
+  <path d="M922 239 L984 239" stroke="#34A853" stroke-width="4" marker-end="url(#arrowD)" fill="none"/>
+</svg>

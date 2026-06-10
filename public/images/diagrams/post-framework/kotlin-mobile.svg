@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-label="Kotlin mobile app architecture">
+  <rect width="1200" height="650" fill="#111827"/>
+  <text x="60" y="70" fill="#e2e8f0" font-size="34" font-family="Segoe UI, Arial">Kotlin Mobile Architecture Slice</text>
+  <rect x="90" y="160" width="300" height="150" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="142" y="245" fill="#a78bfa" font-size="26" font-family="Segoe UI, Arial">UI Layer</text>
+  <rect x="450" y="160" width="300" height="150" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="515" y="245" fill="#60a5fa" font-size="26" font-family="Segoe UI, Arial">Domain</text>
+  <rect x="810" y="160" width="300" height="150" rx="16" fill="#1e293b" stroke="#334155"/>
+  <text x="860" y="245" fill="#34d399" font-size="26" font-family="Segoe UI, Arial">Data</text>
+  <line x1="390" y1="235" x2="450" y2="235" stroke="#94a3b8" stroke-width="4"/>
+  <line x1="750" y1="235" x2="810" y2="235" stroke="#94a3b8" stroke-width="4"/>
+  <rect x="90" y="370" width="1020" height="180" rx="16" fill="#0f172a" stroke="#334155"/>
+  <text x="130" y="438" fill="#cbd5e1" font-size="24" font-family="Segoe UI, Arial">Key concerns: lifecycle safety · performance under high refresh rate · crash-free navigation</text>
+</svg>

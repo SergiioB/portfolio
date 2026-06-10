@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <linearGradient id="androidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3DDC84;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2CA86E;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="firebaseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFCA28;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="securityGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">IntelliFlow Security Architecture</text>
+  
+  <!-- Android App Box -->
+  <rect x="30" y="80" width="200" height="280" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="130" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#166534">Android App</text>
+  
+  <!-- UI Layer -->
+  <rect x="50" y="130" width="160" height="50" rx="8" fill="url(#androidGrad)"/>
+  <text x="130" y="155" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">Jetpack Compose UI</text>
+  <text x="130" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#f0fdf4">Biometric Auth</text>
+  
+  <!-- Local Security -->
+  <rect x="50" y="195" width="160" height="70" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="130" y="220" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#92400e">🔒 SQLCipher</text>
+  <text x="130" y="240" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">AES-256 Encryption</text>
+  <text x="130" y="255" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">Input Sanitization</text>
+  
+  <!-- Room DB -->
+  <rect x="50" y="280" width="160" height="60" rx="8" fill="url(#dbGrad)"/>
+  <text x="130" y="310" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">Room Database</text>
+  <text x="130" y="327" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#bfdbfe">Encrypted Local Storage</text>
+  
+  <!-- Arrow: App to Cloud Functions -->
+  <line x1="230" y1="220" x2="320" y2="220" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="275" y="210" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">HTTPS</text>
+  <text x="275" y="240" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Certificate Pinning</text>
+  
+  <!-- Cloud Functions Box -->
+  <rect x="330" y="80" width="240" height="350" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="450" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#92400e">Firebase Cloud Functions</text>
+  <text x="450" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#b45309">(Security Gateway)</text>
+  
+  <!-- Auth Check -->
+  <rect x="350" y="150" width="200" height="45" rx="8" fill="url(#securityGrad)"/>
+  <text x="450" y="175" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="white">🔐 Authentication</text>
+  <text x="450" y="188" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#fecaca">Verify User Token</text>
+  
+  <!-- Rate Limiting -->
+  <rect x="350" y="205" width="200" height="45" rx="8" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="450" y="230" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#5b21b6">⏱️ Rate Limiter</text>
+  <text x="450" y="243" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#a78bfa">5-10 req/day (Free)</text>
+  
+  <!-- Input Sanitization -->
+  <rect x="350" y="260" width="200" height="55" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="450" y="285" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#92400e">🛡️ Input Sanitizer</text>
+  <text x="450" y="302" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">Strip Control Chars</text>
+  <text x="450" y="315" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#92400e">Regex Injection Detection</text>
+  
+  <!-- Anonymization -->
+  <rect x="350" y="325" width="200" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="450" y="350" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#1e40af">🔒 PII Remover</text>
+  <text x="450" y="367" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Strip Name, Email, Account ID</text>
+  
+  <!-- Arrow: Cloud Functions to LLM -->
+  <line x1="570" y1="300" x2="660" y2="300" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="615" y="290" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Sanitized</text>
+  <text x="615" y="320" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Only</text>
+  
+  <!-- LLM Provider Box -->
+  <rect x="670" y="180" width="200" height="240" rx="10" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="770" y="210" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#5b21b6">LLM Provider</text>
+  <text x="770" y="230" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#7c3aed">(DeepSeek/KIMI/Gemini)</text>
+  
+  <!-- System Prompt -->
+  <rect x="690" y="250" width="160" height="60" rx="8" fill="url(#aiGrad)"/>
+  <text x="770" y="275" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">System Prompt</text>
+  <text x="770" y="292" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#e9d5ff">Role-Locked</text>
+  <text x="770" y="305" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#e9d5ff">Safety Constraints</text>
+  
+  <!-- JSON Output -->
+  <rect x="690" y="325" width="160" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="770" y="350" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#92400e">Structured JSON</text>
+  <text x="770" y="367" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#92400e">Schema Validation</text>
+  
+  <!-- Arrow: LLM back to Cloud Functions -->
+  <line x1="670" y1="370" x2="570" y2="370" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="615" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Validated</text>
+  <text x="615" y="380" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Response</text>
+  
+  <!-- Output Validation -->
+  <rect x="350" y="385" width="200" height="40" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="450" y="410" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✅ Output Validator</text>
+  
+  <!-- Arrow: Cloud Functions to Firestore -->
+  <line x1="450" y1="430" x2="450" y2="480" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Firestore Box -->
+  <rect x="330" y="485" width="240" height="90" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="450" y="515" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#1e40af">Firebase Firestore</text>
+  
+  <!-- Security Rules -->
+  <rect x="350" y="530" width="200" height="35" rx="8" fill="url(#securityGrad)"/>
+  <text x="450" y="553" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="white">🔒 Security Rules: User Isolation Only</text>
+  
+  <!-- Sync Worker -->
+  <rect x="50" y="470" width="200" height="100" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="150" y="495" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#475569">Outbox Sync Worker</text>
+  <text x="150" y="520" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Background Sync</text>
+  <text x="150" y="540" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Exponential Backoff</text>
+  <text x="150" y="560" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Retry Logic</text>
+  
+  <!-- Arrow: Sync to Firestore -->
+  <line x1="250" y1="520" x2="320" y2="520" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Security Layers Legend -->
+  <rect x="670" y="450" width="200" height="120" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="770" y="475" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#334155">Security Layers</text>
+  
+  <circle cx="690" cy="505" r="8" fill="#ef4444"/>
+  <text x="705" y="510" font-family="system-ui, sans-serif" font-size="11" fill="#334155">Auth &amp; Access</text>
+  
+  <circle cx="690" cy="530" r="8" fill="#f59e0b"/>
+  <text x="705" y="535" font-family="system-ui, sans-serif" font-size="11" fill="#334155">Input Validation</text>
+  
+  <circle cx="690" cy="555" r="8" fill="#8b5cf6"/>
+  <text x="705" y="560" font-family="system-ui, sans-serif" font-size="11" fill="#334155">Data Protection</text>
+  
+  <!-- Injection Prevention Note -->
+  <rect x="670" y="580" width="200" height="15" fill="none"/>
+  <text x="770" y="595" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Multi-layer prompt injection prevention</text>
+</svg>

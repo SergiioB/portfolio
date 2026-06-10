@@ -1,0 +1,164 @@
+<svg viewBox="0 0 1200 640" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1020" />
+      <stop offset="100%" stop-color="#161b2f" />
+    </linearGradient>
+    <linearGradient id="amber" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffb347" />
+      <stop offset="100%" stop-color="#ff6b00" />
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8ec5ff" />
+    </marker>
+  </defs>
+  <rect width="1200" height="640" rx="24" fill="url(#bg)"/>
+  <text x="600" y="44" fill="#ffffff" font-family="Arial" font-size="28" font-weight="bold" text-anchor="middle">Formula 1 AWS Telemetry Flow</text>
+  <text x="600" y="72" fill="#9fb7d9" font-family="Arial" font-size="14" text-anchor="middle">Shards, buffering, live state, simulation, and GenAI outputs in one simplified race-day path.</text>
+
+  <g transform="translate(36,124)">
+    <rect width="220" height="188" rx="18" fill="#1d2438" stroke="#4fd1ff" stroke-width="2"/>
+    <text x="110" y="34" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Car Sensor Bus</text>
+    <text x="110" y="58" fill="#c5d8f7" font-family="Arial" font-size="13" text-anchor="middle">ECU, ERS, brakes, GPS, aero</text>
+    <rect x="24" y="82" width="172" height="28" rx="9" fill="#0f1728" stroke="#4fd1ff"/>
+    <text x="110" y="101" fill="#92f0ff" font-family="Courier New" font-size="11" text-anchor="middle">300+ channels / 1.1M pts/sec</text>
+    <rect x="24" y="122" width="172" height="18" rx="9" fill="#0f1728"/>
+    <rect x="24" y="122" width="128" height="18" rx="9" fill="#00e0ff">
+      <animate attributeName="width" values="56;158;104;146;128" dur="2.8s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="24" y="154" width="172" height="20" rx="9" fill="#0f1728" stroke="#ff7f7f"/>
+    <text x="110" y="168" fill="#ffd1d1" font-family="Courier New" font-size="10" text-anchor="middle">MGU-K, brake-by-wire, X/Z mode</text>
+  </g>
+
+  <g transform="translate(300,124)">
+    <rect width="214" height="188" rx="18" fill="#1d2438" stroke="#4fd1ff" stroke-width="2"/>
+    <text x="107" y="34" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Trackside ETC</text>
+    <text x="107" y="58" fill="#c5d8f7" font-family="Arial" font-size="13" text-anchor="middle">RF decode, replay, timing align</text>
+    <rect x="22" y="84" width="170" height="24" rx="8" fill="#0f1728" stroke="#72ffd8"/>
+    <text x="107" y="100" fill="#72ffd8" font-family="Courier New" font-size="10" text-anchor="middle">CRC validation + packet ordering</text>
+    <rect x="22" y="118" width="170" height="24" rx="8" fill="#0f1728" stroke="#72ffd8"/>
+    <text x="107" y="134" fill="#72ffd8" font-family="Courier New" font-size="10" text-anchor="middle">common race clock + uplink prep</text>
+    <rect x="22" y="156" width="170" height="16" rx="8" fill="#11233d"/>
+    <circle cx="38" cy="164" r="5" fill="#00f5a0">
+      <animate attributeName="cx" values="38;176;38" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <path d="M 256 218 L 300 218" stroke="#8ec5ff" stroke-width="4" marker-end="url(#arrow)" fill="none"/>
+  <text x="278" y="202" fill="#8ec5ff" font-family="Arial" font-size="12" text-anchor="middle">RF packets</text>
+
+  <g transform="translate(552,96)">
+    <rect width="612" height="250" rx="22" fill="none" stroke="url(#amber)" stroke-width="3" stroke-dasharray="10 8"/>
+    <text x="306" y="30" fill="#ffbe73" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle">AWS Streaming and Serving Plane</text>
+
+    <g transform="translate(22,60)">
+      <rect width="174" height="164" rx="16" fill="#1b2235" stroke="#ffb347" stroke-width="2"/>
+      <text x="87" y="28" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Kinesis</text>
+      <text x="87" y="50" fill="#c3d2ef" font-family="Arial" font-size="11" text-anchor="middle">Shard-scaled ingest stream</text>
+      <g transform="translate(22,72)">
+        <rect width="130" height="14" rx="7" fill="#0f1728"/>
+        <rect width="100" height="14" rx="7" fill="#ff8b1f">
+          <animate attributeName="width" values="30;126;88;118;100" dur="2.4s" repeatCount="indefinite"/>
+        </rect>
+        <text x="65" y="11" fill="#0f1728" font-family="Courier New" font-size="9" text-anchor="middle">Shard A</text>
+      </g>
+      <g transform="translate(22,100)">
+        <rect width="130" height="14" rx="7" fill="#0f1728"/>
+        <rect width="74" height="14" rx="7" fill="#ff8b1f">
+          <animate attributeName="width" values="24;112;62;126;74" dur="2.1s" repeatCount="indefinite"/>
+        </rect>
+        <text x="65" y="11" fill="#0f1728" font-family="Courier New" font-size="9" text-anchor="middle">Shard B</text>
+      </g>
+      <g transform="translate(22,128)">
+        <rect width="130" height="14" rx="7" fill="#0f1728"/>
+        <rect width="118" height="14" rx="7" fill="#ff8b1f">
+          <animate attributeName="width" values="48;130;92;108;118" dur="2.6s" repeatCount="indefinite"/>
+        </rect>
+        <text x="65" y="11" fill="#0f1728" font-family="Courier New" font-size="9" text-anchor="middle">Shard N</text>
+      </g>
+    </g>
+
+    <g transform="translate(214,60)">
+      <rect width="150" height="164" rx="16" fill="#1b2235" stroke="#ffb347" stroke-width="2"/>
+      <text x="75" y="28" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">SQS</text>
+      <text x="75" y="50" fill="#c3d2ef" font-family="Arial" font-size="11" text-anchor="middle">Async surge buffer</text>
+      <g transform="translate(28,74)">
+        <rect width="94" height="18" rx="9" fill="#0f1728" stroke="#65d6ff"/>
+        <rect y="30" width="94" height="18" rx="9" fill="#0f1728" stroke="#65d6ff"/>
+        <rect y="60" width="94" height="18" rx="9" fill="#0f1728" stroke="#65d6ff"/>
+        <circle cx="12" cy="9" r="4" fill="#65d6ff">
+          <animate attributeName="cx" values="12;82;12" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="82" cy="39" r="4" fill="#65d6ff">
+          <animate attributeName="cx" values="82;12;82" dur="1.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="26" cy="69" r="4" fill="#65d6ff">
+          <animate attributeName="cx" values="26;82;26" dur="1.6s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </g>
+
+    <g transform="translate(384,60)">
+      <rect width="170" height="74" rx="16" fill="#1b2235" stroke="#72ffd8" stroke-width="2"/>
+      <text x="85" y="29" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Lambda</text>
+      <text x="85" y="51" fill="#72ffd8" font-family="Arial" font-size="11" text-anchor="middle">Fast transforms and anomaly rules</text>
+      <rect x="22" y="59" width="126" height="6" rx="3" fill="#72ffd8" opacity="0.3"/>
+      <rect x="22" y="59" width="46" height="6" rx="3" fill="#72ffd8">
+        <animate attributeName="x" values="22;102;22" dur="1.4s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <g transform="translate(384,150)">
+      <rect width="170" height="74" rx="16" fill="#1b2235" stroke="#72ffd8" stroke-width="2"/>
+      <text x="85" y="29" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">ECS Fargate</text>
+      <text x="85" y="51" fill="#72ffd8" font-family="Arial" font-size="11" text-anchor="middle">Strategy and broadcast services</text>
+      <rect x="22" y="59" width="126" height="6" rx="3" fill="#72ffd8" opacity="0.3"/>
+      <rect x="50" y="59" width="52" height="6" rx="3" fill="#72ffd8">
+        <animate attributeName="x" values="22;94;22" dur="1.9s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <g transform="translate(572,60)">
+      <rect width="176" height="74" rx="16" fill="#1b2235" stroke="#4fd1ff" stroke-width="2"/>
+      <text x="88" y="29" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">DynamoDB</text>
+      <text x="88" y="51" fill="#4fd1ff" font-family="Arial" font-size="11" text-anchor="middle">Live race-state cache</text>
+      <text x="88" y="64" fill="#c3d2ef" font-family="Courier New" font-size="10" text-anchor="middle">car + lap + sector -> state</text>
+    </g>
+
+    <g transform="translate(572,150)">
+      <rect width="176" height="74" rx="16" fill="#1b2235" stroke="#4fd1ff" stroke-width="2"/>
+      <text x="88" y="29" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">SageMaker</text>
+      <text x="88" y="51" fill="#4fd1ff" font-family="Arial" font-size="11" text-anchor="middle">Tire, stint, and pace simulation</text>
+    </g>
+
+    <g transform="translate(768,60)">
+      <rect width="168" height="164" rx="16" fill="#1b2235" stroke="#ff4fd8" stroke-width="2" filter="url(#softGlow)">
+        <animate attributeName="stroke-opacity" values="0.45;1;0.45" dur="2.2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="84" y="28" fill="#ffffff" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle">Bedrock</text>
+      <text x="84" y="50" fill="#ff9df1" font-family="Arial" font-size="11" text-anchor="middle">Telemetry + radio + history</text>
+      <rect x="24" y="74" width="120" height="22" rx="11" fill="#2c1433" stroke="#ff4fd8"/>
+      <text x="84" y="89" fill="#ffd4fa" font-family="Courier New" font-size="10" text-anchor="middle">telemetry context</text>
+      <rect x="24" y="106" width="120" height="22" rx="11" fill="#2c1433" stroke="#ff4fd8"/>
+      <text x="84" y="121" fill="#ffd4fa" font-family="Courier New" font-size="10" text-anchor="middle">radio transcript</text>
+      <rect x="24" y="138" width="120" height="22" rx="11" fill="#2c1433" stroke="#ff4fd8"/>
+      <text x="84" y="153" fill="#ffd4fa" font-family="Courier New" font-size="10" text-anchor="middle">historical retrieval</text>
+    </g>
+  </g>
+
+  <path d="M 514 218 L 552 218" stroke="#8ec5ff" stroke-width="4" marker-end="url(#arrow)" fill="none"/>
+  <text x="533" y="202" fill="#8ec5ff" font-family="Arial" font-size="12" text-anchor="middle">fiber</text>
+
+  <path d="M 1104 220 C 1136 220 1136 220 1136 370" stroke="#ff4fd8" stroke-width="4" marker-end="url(#arrow)" fill="none"/>
+  <g transform="translate(848,390)">
+    <rect width="284" height="130" rx="18" fill="#1d2438" stroke="#ff4fd8" stroke-width="2"/>
+    <text x="142" y="32" fill="#ffffff" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle">Human Consumption</text>
+    <text x="142" y="58" fill="#ffd4fa" font-family="Arial" font-size="12" text-anchor="middle">TV graphics, pit-wall prompts, strategy cues</text>
+    <rect x="28" y="76" width="228" height="30" rx="10" fill="#2c1433" stroke="#ff4fd8"/>
+    <text x="142" y="95" fill="#ffd4fa" font-family="Courier New" font-size="10" text-anchor="middle">"ERS deployment drop detected; pace delta rising"</text>
+  </g>
+</svg>

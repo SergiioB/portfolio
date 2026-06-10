@@ -1,0 +1,44 @@
+<svg width="1280" height="320" viewBox="0 0 1280 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="40" y1="20" x2="1240" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0d1117" />
+      <stop offset="0.58" stop-color="#132033" />
+      <stop offset="1" stop-color="#143b2c" />
+    </linearGradient>
+    <filter id="shadow" x="-20" y="-20" width="1320" height="360" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity="0.28" />
+    </filter>
+  </defs>
+  <rect width="1280" height="320" rx="28" fill="url(#bg)" />
+  <g opacity="0.12">
+    <path d="M0 64H1280M0 128H1280M0 192H1280M0 256H1280" stroke="#D6ECFF" />
+    <path d="M160 0V320M320 0V320M480 0V320M640 0V320M800 0V320M960 0V320M1120 0V320" stroke="#D6ECFF" />
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="52" y="42" width="312" height="34" rx="17" fill="#122235" />
+    <text x="74" y="64" fill="#D9F2FF" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">FIELD NOTES / AUTOMATION / LOCAL AI</text>
+
+    <text x="52" y="138" fill="#F7FBFF" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="800">Sergio B. / Technical Portfolio</text>
+    <text x="52" y="176" fill="#BED3E6" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">Case-study driven writing on Linux engineering, infrastructure automation,</text>
+    <text x="52" y="208" fill="#BED3E6" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="500">architecture decisions, and measured local-AI work on real systems.</text>
+
+    <rect x="52" y="238" width="168" height="34" rx="17" fill="#18304b" />
+    <text x="74" y="260" fill="#E7F3FF" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">ASTRO SITE</text>
+
+    <rect x="234" y="238" width="194" height="34" rx="17" fill="#183a2b" />
+    <text x="256" y="260" fill="#EBFFF3" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">CASE-STUDY CONTENT</text>
+
+    <rect x="442" y="238" width="182" height="34" rx="17" fill="#372641" />
+    <text x="464" y="260" fill="#FAEDFF" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">REAL PROJECTS</text>
+
+    <g transform="translate(842 54)">
+      <rect width="370" height="208" rx="22" fill="#0d1722" fill-opacity="0.9" stroke="#75C9FF" stroke-opacity="0.22" />
+      <text x="24" y="38" fill="#D4EEFF" font-family="Consolas, monospace" font-size="18" font-weight="700">content map</text>
+      <text x="24" y="74" fill="#E7FFF1" font-family="Consolas, monospace" font-size="16">linux / rhel / ansible</text>
+      <text x="24" y="102" fill="#E7FFF1" font-family="Consolas, monospace" font-size="16">architecture / delivery / ops</text>
+      <text x="24" y="130" fill="#E7FFF1" font-family="Consolas, monospace" font-size="16">local-ai / llama.cpp / rk3588</text>
+      <text x="24" y="158" fill="#E7FFF1" font-family="Consolas, monospace" font-size="16">cv / cover letter / profile pages</text>
+      <text x="24" y="186" fill="#8DD6FF" font-family="Consolas, monospace" font-size="16">site: sergiiob.dev</text>
+    </g>
+  </g>
+</svg>
