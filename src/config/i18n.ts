@@ -117,10 +117,13 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "AI-powered personal finance app with offline-first architecture.",
     es: "Aplicación de finanzas personales con IA y arquitectura offline-first.",
   },
-  "home.projectAnsibleTitle": { en: "Ansible Playbooks", es: "Playbooks Ansible" },
-  "home.projectAnsibleDesc": {
-    en: "Infrastructure automation for enterprise Linux environments.",
-    es: "Automatización de infraestructura para entornos Linux corporativos.",
+  "home.projectCommandGuidesTitle": {
+    en: "Engineer Command Guides",
+    es: "Guías de Comandos para Ingenieros",
+  },
+  "home.projectCommandGuidesDesc": {
+    en: "Visual reference guides for Linux, networking, storage, and automation commands.",
+    es: "Guías visuales de referencia para comandos de Linux, networking, almacenamiento y automatización.",
   },
 
   /* ── Hero section ── */
