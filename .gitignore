@@ -6,11 +6,18 @@ build/
 .astro/
 .astro.bak-*/
 
-# Local assistant scratchpad
-.gemini/
-.factory
+# AI agent / internal docs — not for public
+AGENTS.md
+.factory/
 .agents/
+.gemini/
 skills-lock.json
+
+# Mailmap is for local use only
+.mailmap
+
+# Maintenance / internal docs
+docs/maintenance/
 
 # Dependencies
 node_modules/
