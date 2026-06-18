@@ -109,21 +109,14 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Local LLM inference workbench for RK3588 and edge devices.",
     es: "Workbench de inferencia local con LLM para RK3588 y dispositivos edge.",
   },
-  "home.projectIntelliAutoDesc": {
-    en: "AI-powered car maintenance app with OCR, AutoMind diagnostics, and affiliate commerce.",
-    es: "App de mantenimiento vehicular con IA, OCR, diagnósticos AutoMind y comercio afiliado.",
-  },
   "home.projectIntelliflowDesc": {
     en: "AI-powered personal finance app with offline-first architecture.",
     es: "Aplicación de finanzas personales con IA y arquitectura offline-first.",
   },
-  "home.projectCommandGuidesTitle": {
-    en: "Engineer Command Guides",
-    es: "Guías de Comandos para Ingenieros",
-  },
-  "home.projectCommandGuidesDesc": {
-    en: "Visual reference guides for Linux, networking, storage, and automation commands.",
-    es: "Guías visuales de referencia para comandos de Linux, networking, almacenamiento y automatización.",
+  "home.projectAnsibleTitle": { en: "Ansible Playbooks", es: "Playbooks Ansible" },
+  "home.projectAnsibleDesc": {
+    en: "Infrastructure automation for enterprise Linux environments.",
+    es: "Automatización de infraestructura para entornos Linux corporativos.",
   },
 
   /* ── Hero section ── */
@@ -242,22 +235,19 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   /* ── Production Spotlight ── */
   "production.title": { en: "Production Spotlight", es: "En Producción" },
   "production.badge": {
-    en: "● Live on Google Play",
-    es: "● Disponible en Google Play",
+    en: "● Live on Google Play & Web",
+    es: "● Disponible en Google Play y Web",
   },
   "production.appTitle": {
-    en: "IntelliAuto: AI Mechanic Assistant",
-    es: "IntelliAuto: Asistente Mecánico con IA",
+    en: "IntelliFlow: AI Budget Tracker",
+    es: "IntelliFlow: Gestor Financiero Inteligente",
   },
   "production.appDesc": {
-    en: "AI-powered car maintenance companion with OCR receipt scanning, AutoMind diagnostics, affiliate commerce, and offline-first architecture. Kotlin + Jetpack Compose, Firebase backend with DeepSeek V4 Flash.",
-    es: "Asistente de mantenimiento vehicular con IA, escaneo OCR de recibos, diagnósticos AutoMind, comercio afiliado y arquitectura offline-first. Kotlin + Jetpack Compose, backend Firebase con DeepSeek V4 Flash.",
+    en: "A production-grade personal finance application serving real users. Features an AI-powered financial coach, offline-first architecture, and cross-platform syncing.",
+    es: "Aplicación de finanzas personales en producción con usuarios reales. Incluye un coach financiero impulsado por IA, arquitectura offline-first y sincronización multiplataforma.",
   },
   "production.playStore": { en: "Get it on Google Play", es: "Descargar en Google Play" },
-  "production.alsoAvailable": {
-    en: "Also: IntelliFlow Finance App",
-    es: "También: IntelliFlow Finanzas",
-  },
+  "production.webApp": { en: "Open Web App", es: "Abrir Web App" },
 
   /* ── Engineer zone teaser ── */
   "engineer.labsTitle": { en: "Engineer Labs", es: "Labs de Ingeniería" },

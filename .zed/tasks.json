@@ -1,0 +1,29 @@
+[
+  {
+    "label": "agentic: doctor current worktree",
+    "command": "powershell",
+    "args": [
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "C:\\Users\\sergi\\.codex\\agentic-coding\\scripts\\agentic_check.ps1",
+      "$ZED_WORKTREE_ROOT"
+    ],
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  },
+  {
+    "label": "agentic: new workpack",
+    "command": "powershell",
+    "args": [
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      "$slug = Read-Host 'Work-pack slug'; python C:\\Users\\sergi\\.codex\\agentic-coding\\scripts\\new_workpack.py '$ZED_WORKTREE_ROOT' $slug"
+    ],
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  }
+]

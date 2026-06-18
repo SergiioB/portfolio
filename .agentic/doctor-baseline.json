@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-05-31T10:51:34",
+  "root": "C:\\Users\\sergi\\Syncthing\\portfolio",
+  "signatures": [
+    "file-too-large|scripts/assets/svg/generate_engineer_posters_v3.py|",
+    "file-too-large|scripts/recreate-command-list.js|",
+    "file-too-large|scripts/tweak-posts-v2.mjs|",
+    "file-too-large|src/components/OpsDeck.astro|",
+    "file-too-large|src/config/i18n.ts|",
+    "file-too-large|src/pages/about.astro|",
+    "file-too-large|src/pages/cover-letter.astro|",
+    "file-too-large|src/pages/index.astro|"
+  ]
+}
