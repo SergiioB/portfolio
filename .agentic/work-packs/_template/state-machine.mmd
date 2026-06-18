@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> ContextLoad
+    ContextLoad --> ScopeLock
+    ScopeLock --> BaselineCheck
+    BaselineCheck --> FeatureWork
+    FeatureWork --> RefactorCleanup
+    RefactorCleanup --> Validation
+    Validation --> Handoff
+    Handoff --> [*]
+    Validation --> FeatureWork: failures / missing coverage

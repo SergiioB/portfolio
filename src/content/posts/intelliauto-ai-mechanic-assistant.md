@@ -4,7 +4,7 @@ description: "Building an intelligent car maintenance companion with LLM-powered
 situation: "Car maintenance apps provide tracking but lack intelligence. Users need predictive insights, personalized recommendations, and trustworthy advice—without exposing sensitive vehicle data or falling for AI manipulation."
 issue: "Existing automotive apps are passive logs. Adding AI creates risks: prompt injection through user input, data privacy concerns, API cost runaway, and potential for incorrect safety-critical advice."
 solution: "Designed IntelliAuto with AutoMind AI assistant featuring backend proxy architecture, multi-layer prompt injection prevention, dynamic affiliate link generation, and strict safety disclaimers for automotive advice."
-usedIn: "IntelliAuto — production Android app live on Google Play Store. AI-powered automotive maintenance with OCR, affiliate commerce, and secure monetization."
+usedIn: "Android automotive maintenance application with AI diagnostics, currently in production deployment."
 impact: "Enables intelligent car care guidance with secure monetization through affiliate commerce while maintaining user trust through privacy-first AI design and injection attack prevention."
 pubDate: 2026-03-03
 category: ["kotlin", "ai"]
@@ -41,23 +41,23 @@ This post covers how I built the AutoMind AI assistant with security and safety 
 
 ### Tech Stack
 
-| Layer                     | Technology                  | Purpose                              |
-| ------------------------- | --------------------------- | ------------------------------------ |
-| **Mobile App**            | Kotlin + Jetpack Compose    | Native Android UI                    |
-| **AI Gateway**            | Firebase Cloud Functions    | Secure LLM proxy                     |
-| **LLM Provider**          | Multiple providers          | Cost-effective inference             |
-| **Vehicle Data**          | Local encrypted database    | User's car info, maintenance history |
-| **Affiliate Integration** | Dynamic link generation     | Automotive retailers                 |
-| **Rate Limiting**         | Server-side atomic counters | Abuse prevention                     |
-| **Secrets Management**    | Cloud secret manager        | API key protection                   |
+| Layer                     | Technology                        | Purpose                              |
+| ------------------------- | --------------------------------- | ------------------------------------ |
+| **Mobile App**            | Kotlin + Jetpack Compose          | Native Android UI                    |
+| **AI Gateway**            | Firebase Cloud Functions          | Secure LLM proxy                     |
+| **LLM Provider**          | Multiple providers via OpenRouter | Cost-effective inference             |
+| **Vehicle Data**          | Local Room database               | User's car info, maintenance history |
+| **Affiliate Integration** | Dynamic link generation           | Amazon, automotive retailers         |
+| **Rate Limiting**         | Firestore atomic counters         | Abuse prevention                     |
+| **Secrets Management**    | Google Secret Manager             | API key protection                   |
 
 ### High-Level Flow
 
 ```
 User Question → Android App → Cloud Function → LLM Provider
      ↑              ↑              ↑               ↑
-  Context       Validates       Sanitizes      Routed to
-  from local    auth & rate    input, adds    best model
+  Context       Validates       Sanitizes      DeepSeek/
+  from local    auth & rate    input, adds    KIMI/Gemini
   database      limits         system prompt
 ```
 
@@ -102,7 +102,11 @@ Multiple layers of input validation before any data reaches the LLM:
 
 **Layer 2: Cloud Function Filtering**
 
-- Regex detection of common injection patterns (instruction override, role-play attempts, obfuscation)
+- Regex detection of common injection patterns:
+  - "Ignore previous instructions"
+  - "You are now in developer mode"
+  - "Bypass safety guidelines"
+  - Various obfuscation attempts (l33t speak, Unicode lookalikes)
 - Allowlist validation where applicable
 - Vehicle data injected separately (not from user input)
 
@@ -252,34 +256,42 @@ AI Response includes:
   "category": "brakes"
 }
 
-App constructs affiliate search URL from query + partner tag
+App constructs:
+https://www.amazon.es/s?k=Pastillas+freno+Seat+Leon+2020&tag=intelliauto-21
 ```
 
 **Benefits:**
 
 - No manual product catalog maintenance
-- Links always current (search results update automatically)
-- Commission on purchased items within cookie window
+- Links always current (Amazon search results)
+- Commission on ANY item purchased within 24 hours (not just the specific product)
 - Works across multiple retailers with same pattern
 
 ### Affiliate Networks
 
-Multiple automotive and general retailers integrated with performance-based commission structures.
+| Platform             | Commission | Cookie Duration |
+| -------------------- | ---------- | --------------- |
+| Amazon Associates    | 1-10%      | 24 hours        |
+| Oscaro (auto parts)  | 5-8%       | 30 days         |
+| Norauto              | 3-7%       | 30 days         |
+| eBay Partner Network | 1-6%       | 24 hours        |
 
 ## Model Selection Strategy
 
 Choosing the right LLM involves balancing intelligence, speed, and cost:
 
-- **Primary model** — Best balance of intelligence and cost for routine diagnostics
-- **Reasoning model** — Complex multi-symptom diagnoses requiring deeper analysis
-- **Budget fallback** — Cost-constrained scenarios
-- **Fast path** — Simple queries that don't need heavy inference
+| Model             | Intelligence | Speed     | Cost/1K calls | Use Case                   |
+| ----------------- | ------------ | --------- | ------------- | -------------------------- |
+| DeepSeek V3.2     | High         | Fast      | ~$5           | **Primary** — best balance |
+| KIMI K2.5         | Very High    | Fast      | ~$17          | Complex diagnostics        |
+| Qwen QwQ-32B      | Medium       | Fast      | ~$3           | Budget fallback            |
+| Gemini Flash-Lite | Lower        | Very Fast | ~$2           | Simple queries             |
 
 **Selection Logic:**
 
-- Default to primary model for best intelligence/cost ratio
-- Escalate to reasoning model for complex multi-symptom diagnoses
-- Fallback to budget option if cost constraints triggered
+- Default to DeepSeek V3.2 for best intelligence/cost ratio
+- Escalate to KIMI for complex multi-symptom diagnoses
+- Fallback to Qwen if budget constraints triggered
 - Cache common queries to reduce API calls
 
 ## UX Design Considerations
