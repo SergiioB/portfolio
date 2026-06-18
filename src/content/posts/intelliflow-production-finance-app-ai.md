@@ -94,7 +94,7 @@ The Android app NEVER calls the LLM API directly. All AI requests go through a F
 - Verifies user authentication
 - Validates and sanitizes input
 - Removes personally identifiable information (PII)
-- Manages API keys securely (via Cloud secret manager)
+- Manages API keys securely (via Google Secret Manager)
 - Enforces rate limits per user
 
 #### 2. Data Anonymization
