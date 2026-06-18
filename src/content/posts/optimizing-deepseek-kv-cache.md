@@ -7,14 +7,11 @@ tags: ["LLM", "DeepSeek", "Firebase", "Optimization", "Architecture"]
 heroImage: "/images/diagrams/post-framework/architecture-placeholder.png"
 ---
 
-<div style="margin: 1.5rem 0; padding: 1rem 1.25rem; background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.06)); border: 1px solid rgba(99,102,241,0.2); border-radius: 0.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-  <span style="font-size: 0.85rem; color: var(--accent); font-weight: 600; letter-spacing: 0.01em;">Get IntelliAuto</span>
-  <a href="https://play.google.com/store/apps/details?id=com.barrysoft.IntelliAuto" target="_blank" rel="noopener noreferrer" style="display: inline-block; transition: transform 0.15s ease, opacity 0.15s ease;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
-    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" style="height: 80px; object-fit: contain; display: block;" />
-  </a>
-</div>
+<a href="https://play.google.com/store/apps/details?id=com.barrysoft.IntelliAuto" target="_blank" rel="noopener noreferrer" style="display: inline-block; transition: transform 0.15s ease;">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" style="height: 68px; object-fit: contain; display: block; margin: 1.5rem 0;" />
+</a>
 
-When running LLMs in production via serverless pipelines (like Firebase Cloud Functions calling the DeepSeek API), input context window sizes can quickly escalate. For [IntelliAuto](/projects/intelliauto), our AI Mechanic Assistant, a typical query sends ~2,800 tokens consisting of system rules, vehicle context, maintenance history, and the user's question.
+When running LLMs in production via serverless pipelines (like Firebase Cloud Functions calling the DeepSeek API), input context window sizes can quickly escalate. For [IntelliAuto](https://play.google.com/store/apps/details?id=com.barrysoft.IntelliAuto), our AI Mechanic Assistant, a typical query sends ~2,800 tokens consisting of system rules, vehicle context, maintenance history, and the user's question.
 
 DeepSeek's API provides automatic disk-based KV caching, which is **50x cheaper** for cache hits ($0.0028/1M tokens) than misses ($0.14/1M tokens).
 
