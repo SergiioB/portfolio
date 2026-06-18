@@ -2,7 +2,7 @@
 title: "Optimizing DeepSeek KV Cache for Serverless AI Pipelines"
 description: "How splitting a monolithic system prompt into static and per-session layers improved KV cache hit rates from 63% to 82% and reduced input costs by 33% on a production Firebase Functions app."
 pubDate: "2026-06-18"
-category: "architecture"
+category: "ai"
 tags: ["LLM", "DeepSeek", "Firebase", "Optimization", "Architecture"]
 heroImage: "/images/diagrams/post-framework/architecture-placeholder.png"
 ---
