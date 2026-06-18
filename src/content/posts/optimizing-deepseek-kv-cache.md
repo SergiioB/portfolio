@@ -2,10 +2,17 @@
 title: "Optimizing DeepSeek KV Cache for Serverless AI Pipelines"
 description: "How splitting a monolithic system prompt into static and per-session layers improved KV cache hit rates from 63% to 82% and reduced input costs by 33% on a production Firebase Functions app."
 pubDate: "2026-06-18"
-category: "ai"
+category: ["ai", "kotlin"]
 tags: ["LLM", "DeepSeek", "Firebase", "Optimization", "Architecture"]
 heroImage: "/images/diagrams/post-framework/architecture-placeholder.png"
 ---
+
+<div style="margin: 2rem 0; padding: 1.5rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 0.75rem; text-align: center;">
+  <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--accent);">Experience the speed of edge AI in your pocket</h3>
+  <a href="https://play.google.com/store/apps/details?id=com.barrysoft.IntelliAuto" target="_blank" rel="noopener noreferrer" style="display: inline-block; transition: transform 0.2s ease;">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" style="height: 60px; object-fit: contain; margin: 0 auto; display: block;" />
+  </a>
+</div>
 
 When running LLMs in production via serverless pipelines (like Firebase Cloud Functions calling the DeepSeek API), input context window sizes can quickly escalate. For [IntelliAuto](/projects/intelliauto), our AI Mechanic Assistant, a typical query sends ~2,800 tokens consisting of system rules, vehicle context, maintenance history, and the user's question.
 
