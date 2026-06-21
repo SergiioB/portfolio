@@ -10,6 +10,7 @@ build/
 AGENTS.md
 .factory/
 .agents/
+agents/
 .gemini/
 skills-lock.json
 
