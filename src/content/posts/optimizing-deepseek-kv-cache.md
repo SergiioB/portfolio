@@ -1,6 +1,6 @@
 ---
 title: "Optimizing DeepSeek KV Cache for Serverless AI Pipelines"
-description: "How splitting a monolithic system prompt into static and per-session layers improved KV cache hit rates from 63% to 82% and reduced input costs by 33% on a production Firebase Functions app."
+description: "How splitting a monolithic system prompt into static and per-session layers improved estimated KV cache hit rates from ~42% to ~76% and reduced input costs by an estimated 57% on a Firebase Functions app running DeepSeek V4 Flash."
 pubDate: "2026-06-18"
 category: ["ai", "kotlin"]
 tags: ["LLM", "DeepSeek", "Firebase", "Optimization", "Architecture"]
@@ -11,83 +11,110 @@ heroImage: "/images/diagrams/post-framework/architecture-placeholder.png"
   <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" style="height: 68px; object-fit: contain; display: block; margin: 1.5rem 0;" />
 </a>
 
-When running LLMs in production via serverless pipelines (like Firebase Cloud Functions calling the DeepSeek API), input context window sizes can quickly escalate. For [IntelliAuto](https://play.google.com/store/apps/details?id=com.barrysoft.IntelliAuto), our AI Mechanic Assistant, a typical query sends ~2,800 tokens consisting of system rules, vehicle context, maintenance history, and the user's question.
+> **Disclaimer:** All numbers in this post are **estimates** derived from static code analysis of the actual production prompts. Token counts use a BPE approximation of ~3.8 chars/token for mixed Spanish/English text. Production metrics will be collected via structured logging (`prompt_cache_hit_tokens` from the DeepSeek API response). Pricing sourced from DeepSeek's official pricing page as of June 2026 for the **V4 Flash** model.
 
-DeepSeek's API provides automatic disk-based KV caching, which is **50x cheaper** for cache hits ($0.0028/1M tokens) than misses ($0.14/1M tokens).
+## The Setup
 
-However, I noticed our cache hit rates were stuck around **63%**, which is good, but far from optimal for a highly structured app. This post details how a simple architectural change—splitting the system prompt into static and session-specific layers—boosted our cache hit rate to **82%** and reduced input costs by **33%** without changing any model behavior.
+[IntelliAuto](https://play.google.com/store/apps/details?id=com.barrysoft.IntelliAuto) is an AI mechanic assistant that runs on Firebase Cloud Functions. Each user query sends a structured prompt to the DeepSeek API (**V4 Flash** model). A typical request contains:
 
-## The Problem: The Monolithic System Prompt
+- System rules (persona, formatting, JSON schema, action definitions)
+- Vehicle context (make, model, VIN, mileage, maintenance history)
+- Conversation history (previous turns)
+- Dynamic context (current date, resolver data, affiliate info)
+- The user's question
 
-Previously, the Firebase backend constructed a single `systemPrompt` string that concatenated everything:
+## How DeepSeek KV Cache Works
 
-1. **Static Rules:** The AI's persona, formatting rules, JSON schema, and constraints.
-2. **Vehicle Data:** The car's make/model, VIN, purchase history, and maintenance records.
-3. **Dynamic Context:** The exact current date/timestamp, active reminders, and precise resolver output for the current question.
+DeepSeek provides automatic disk-based KV caching. When you send a request, the API caches the input as "prefix units." If a subsequent request shares the same prefix (byte-identical from the start), those tokens are served from cache instead of reprocessed.
 
-This created a massive ~2,315-token block that was sent as a single `system` message before the conversation history and user question.
+**DeepSeek V4 Flash pricing:**
 
-### Why this breaks the cache
+| Type               | Cost per 1M tokens |
+| :----------------- | -----------------: |
+| Cache miss (input) |              $0.14 |
+| Cache hit (input)  |            $0.0028 |
+| Output             |              $0.28 |
+| **Cache ratio**    |    **50x cheaper** |
 
-DeepSeek's KV cache works via **prefix matching**. If a subsequent request's prefix fully matches a previously cached "cache prefix unit", it hits the cache.
+Cache hits are **50x cheaper** than misses. This means structuring your prompt so more tokens hit the cache has direct, significant cost impact.
 
-But because **vehicle-specific data** was interleaved with **static rules** inside a single message, the prefix was unique per user.
-Furthermore, even the examples inside the static rules contained interpolated data (e.g., _"A tus 85.000 km, yo revisaría..."_ instead of just _"A tus km..."_).
+## The Problem: Interleaved Data Breaking Prefix Matching
 
-Because of this, the cache could only hit within the exact same conversation, and even then, only partially. The static rules could never be shared across different users.
+The original code built a single `systemPrompt` string concatenating everything — static rules, vehicle data, and dynamic context — into one massive `system` message.
+
+Measured from the actual code:
+
+- The static rules portion alone is **~1,308 tokens** (4,972 chars)
+- Two issues broke prefix caching:
+
+1. **Vehicle data was interleaved with static rules** — User A's Golf and User B's Focus produced different prefixes from the first diverging token. The cache could never be shared across users.
+
+2. **Examples contained interpolated variables** — The static rules section included example phrases with the user's actual mileage injected:
+
+   ```
+   // BEFORE: interpolated mileage broke prefix matching
+   "A tus 85.000 km, yo revisaría..."
+
+   // AFTER: generic placeholder, prefix stays identical
+   "A tus km, yo revisaría..."
+   ```
+
+Because of these two issues, the only cache hits came from repeated requests within the same conversation — and even then, only partial matches on the earliest static portion before the first interpolated variable.
+
+**Estimated cache hit rate before optimization: ~30-55%** (midpoint estimate ~42%, assuming partial prefix matching within a session).
 
 ## The Solution: Layered Context Splitting
 
-The fix involved dissecting the monolithic system prompt into distinct layers to maximize byte-identical prefix sharing.
-
-Here is the revised architecture:
-
-1. **Static System Prompt (~1,791 tokens):** Contains _only_ the role, rules, style, and output format. Every interpolated vehicle variable was replaced with generic placeholders. **This is now 100% identical for all users of the same language.**
-2. **Session Context (~523 tokens):** Contains the vehicle info and history overview. **This is unique per vehicle, but stable across a single conversation.**
-3. **Conversation History (~200 tokens):** The past turns.
-4. **Dynamic Context (~280 tokens):** Time-sensitive data, appended as a new `system` message _after_ history.
-5. **User Question (~15 tokens).**
-
-### Code Example (Conceptual)
-
-Instead of one giant block, the API message array is structured to allow the cache to persist the static prefix cross-user, and the session prefix cross-turn:
+The fix split the monolithic prompt into distinct messages, ordered from most-stable to most-dynamic:
 
 ```javascript
 const apiMessages = [
-  { role: "system", content: staticSystemPrompt }, // Layer 1: STATIC (cross-user cache hit)
-  { role: "system", content: sessionContextPrompt }, // Layer 2: SESSION (per-session cache hit)
-  ...conversationHistory, // Layer 3: HISTORY (miss)
-  { role: "system", content: dynamicContextPrompt }, // Layer 4: DYNAMIC (miss)
-  { role: "user", content: userQuestion }, // Layer 5: QUESTION (miss)
+  { role: "system", content: staticSystemPrompt }, // Layer 1: identical for all users
+  { role: "system", content: sessionContextPrompt }, // Layer 2: stable per conversation
+  ...conversationHistory, // Layer 3: changes per turn
+  { role: "system", content: dynamicContextPrompt }, // Layer 4: changes every request
+  { role: "user", content: userQuestion }, // Layer 5: unique
 ];
 ```
 
-## The Results
+### Measured Token Breakdown (from actual production code)
 
-By simply reordering how the context is provided to the API and generalizing a few example strings:
+| Layer                    | Content                                              | Chars | Est. tokens | Cache behavior                                           |
+| :----------------------- | :--------------------------------------------------- | ----: | ----------: | :------------------------------------------------------- |
+| **Static rules**         | Persona, formatting, JSON schema, action definitions | 4,972 |      ~1,308 | ✅ Hit — identical for all users of same language + tier |
+| **Session context**      | Vehicle info + maintenance history                   |   798 |        ~210 | ✅ Hit — stable within a conversation                    |
+| **Conversation history** | Previous turns (2-turn example)                      |   297 |         ~78 | ❌ Miss — dynamic context injected after breaks prefix   |
+| **Dynamic context**      | Date, resolver data, affiliate info                  |   654 |        ~172 | ❌ Miss — changes every request                          |
+| **User question**        | The query                                            |    53 |         ~14 | ❌ Miss — unique per request                             |
+| **Total**                |                                                      | 6,774 |  **~1,782** |                                                          |
 
-- **Cache Hit Rate:** Increased from ~63% to **82%** per request (at a 4-turn depth).
-- **Cross-User Caching:** The 1,791-token static prompt is now shared across _all_ users, drastically reducing cold-start costs for new sessions.
-- **Input Cost Reduction:** Reduced by **33%** (from ~$0.22 to ~$0.15 per 1,000 requests).
+- **Cacheable tokens:** ~1,518 (static + session)
+- **Non-cacheable tokens:** ~264 (history + dynamic + question)
+- **Theoretical max cache hit rate:** ~85%
 
-### Token Breakdown Analysis
+## Estimated Impact
 
-| Cache Layer         | Behavior    | Tokens | Why it works                                              |
-| :------------------ | :---------- | -----: | :-------------------------------------------------------- |
-| **Static rules**    | ✅ Full Hit | ~1,791 | Separate prefix unit, identical across all users.         |
-| **Session context** | ✅ Full Hit |   ~523 | Separate prefix unit, stable per conversation.            |
-| **History**         | ❌ Miss     |   ~198 | Dynamic context injected after history breaks the prefix. |
-| **Dynamic context** | ❌ Miss     |   ~279 | Changes every single question.                            |
-| **User question**   | ❌ Miss     |    ~15 | Unique per request.                                       |
+Using the token measurements above and DeepSeek V4 Flash pricing:
 
-### Why History Misses
+| Metric                     |             Before |              After | Method                 |
+| :------------------------- | -----------------: | -----------------: | :--------------------- |
+| **Cache hit rate**         | ~30-55% (est. 42%) | ~75-85% (est. 76%) | Static analysis        |
+| **Cost per 1K requests**   |             ~$0.15 |             ~$0.06 | 1,782 tokens × pricing |
+| **Cost reduction**         |                  — |           **~57%** | Calculated             |
+| **Monthly cost (10K req)** |             ~$1.47 |             ~$0.64 | —                      |
 
-You might wonder why the conversation history itself doesn't cache. It's because the **Dynamic Context** (current date, specific API resolver data) must be injected _after_ the history so the model has the most up-to-date context for the immediate question. Because this dynamic block changes every turn, the prefix sequence at the end of the history is never the same twice.
+> **These are estimates.** The actual hit rate depends on DeepSeek's internal cache eviction policy, traffic patterns, and whether concurrent users share cache slots. Production logging (`DEEPSEEK_CACHE_METRICS` event in Firebase) will capture the real `prompt_cache_hit_tokens` / `prompt_cache_miss_tokens` values.
 
-While it might be possible to optimize this further (e.g., placing dynamic context as a suffix in the user message), the current 82% hit rate represents the optimal balance of massive cost savings without altering the application's logic or behavior.
+## Why History Still Misses
+
+The conversation history doesn't cache because the **Dynamic Context** (current date, resolver data) is injected _after_ the history. Since this block changes every turn, the prefix sequence ending at the history is never identical twice.
+
+Moving dynamic context _before_ history would enable history caching, but would mean the model reads dynamic instructions before conversation context — potentially changing response behavior. The current ordering was chosen to preserve existing behavior.
 
 ## Conclusion
 
-When building serverless LLM pipelines, don't just dump all context into a single template literal. Treat your prompt like a compiled binary: **put the static, unchanging data first**, group the session-stable data next, and keep the highly dynamic data at the very end.
+The core insight: **prefix caching is fragile by design.** One interpolated variable in the wrong place poisons the entire prefix chain. The fix isn't about writing better prompts — it's about structuring your API message array so stable data comes first.
 
-With APIs like DeepSeek providing massive discounts for cache hits, structuring your prompt for prefix-matching is one of the highest ROI optimizations you can make.
+The changes were minimal: split one `system` message into three, generalize two example strings, reorder the message array. No model change, no prompt rewrite, no behavioral difference.
+
+Production metrics will be published once the updated Firebase Functions are deployed and traffic flows through.
