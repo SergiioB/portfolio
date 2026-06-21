@@ -219,3 +219,5 @@ temp/
 .zed/settings.json
 .zed/settings.json.bak-*
 .zed/*.bak-*
+.claude/
+AGENTS.sync-conflict*.md
