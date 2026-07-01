@@ -87,9 +87,9 @@
   <text x="580" y="225" class="code-a">Even with -ngl 0 (no GPU layers)</text>
   <text x="580" y="243" class="sub">Points at SYCL backend itself, not VRAM</text>
 
-  <!-- Arrow from checks to failures (above all boxes) -->
-  <path d="M 380 95 L 460 95 L 460 139 L 540 139" class="arr" />
-  <text x="415" y="88" class="sub">but...</text>
+  <!-- Arrow from checks to failures (entirely above ALL boxes) -->
+  <path d="M 210 65 L 480 65 L 480 75 L 720 75" class="arr" />
+  <text x="415" y="58" class="sub">but...</text>
 
   <!-- Arrow to root cause -->
   <path d="M 720 253 L 720 290" class="arr-r" />
