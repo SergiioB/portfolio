@@ -1,101 +1,109 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 580">
   <defs>
     <style>
       .bg { fill: #0f172a; }
-      .title { fill: #f8fafc; font-family: monospace; font-size: 20px; font-weight: bold; }
-      .sub { fill: #94a3b8; font-family: monospace; font-size: 14px; }
-      .code { fill: #cbd5e1; font-family: monospace; font-size: 13px; }
-      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 6; }
-      .box-blue { fill: #1e293b; stroke: #38bdf8; stroke-width: 2; rx: 6; }
-      .box-green { fill: #1e293b; stroke: #4ade80; stroke-width: 2; rx: 6; }
-      .box-amber { fill: #1e293b; stroke: #f59e0b; stroke-width: 2; rx: 6; }
-      .box-purple { fill: #1e293b; stroke: #a78bfa; stroke-width: 2; rx: 6; }
-      .box-red { fill: #1e293b; stroke: #ef4444; stroke-width: 2; rx: 6; stroke-dasharray: 6; }
+      .title { fill: #f8fafc; font-family: monospace; font-size: 18px; font-weight: bold; }
+      .sub { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .code-g { fill: #4ade80; font-family: monospace; font-size: 12px; }
+      .code-a { fill: #f59e0b; font-family: monospace; font-size: 12px; }
+      .code-p { fill: #a78bfa; font-family: monospace; font-size: 12px; }
+      .code-r { fill: #ef4444; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 8; }
+      .box-blue { fill: #1e293b; stroke: #38bdf8; stroke-width: 2; rx: 8; }
+      .box-green { fill: #1e293b; stroke: #4ade80; stroke-width: 2; rx: 8; }
+      .box-amber { fill: #1e293b; stroke: #f59e0b; stroke-width: 2; rx: 8; }
+      .box-purple { fill: #1e293b; stroke: #a78bfa; stroke-width: 2; rx: 8; }
+      .box-red { fill: #1e293b; stroke: #ef4444; stroke-width: 2; rx: 8; stroke-dasharray: 6; }
       .arr { stroke: #38bdf8; stroke-width: 2; fill: none; marker-end: url(#ah); }
-      .arr-g { stroke: #4ade80; stroke-width: 2; fill: none; marker-end: url(#ah-g); }
+      .arr-g { stroke: #4ade80; stroke-width: 2; fill: none; marker-end: url(#ahg); }
+      .label { fill: #94a3b8; font-family: monospace; font-size: 11px; }
     </style>
     <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#38bdf8" />
     </marker>
-    <marker id="ah-g" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <marker id="ahg" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80" />
     </marker>
   </defs>
 
-  <rect width="900" height="520" class="bg" />
+  <rect width="1100" height="580" class="bg" />
   <text x="40" y="38" class="title">Intel Arc Pro B70: SYCL Inference Stack</text>
   <text x="40" y="58" class="sub">llama.cpp SYCL + Level Zero + oneAPI on Ubuntu 26.04</text>
 
-  <!-- Layer 1: Client / API -->
-  <rect x="40" y="90" width="240" height="80" class="box-blue" />
-  <text x="60" y="115" class="title" style="font-size:16px;">OpenAI-Compatible API</text>
-  <text x="60" y="138" class="code">llama-server :8080</text>
-  <text x="60" y="156" class="code">--jinja --slots --metrics</text>
+  <!-- Left column: software stack -->
+  <rect x="40" y="90" width="260" height="80" class="box-blue" />
+  <text x="60" y="114" class="title" style="font-size:15px;">OpenAI-Compatible API</text>
+  <text x="60" y="136" class="code">llama-server :8080</text>
+  <text x="60" y="155" class="code">--jinja --slots --metrics</text>
 
-  <!-- Layer 2: llama.cpp -->
-  <rect x="40" y="210" width="240" height="120" class="box-green" />
-  <text x="60" y="238" class="title" style="font-size:16px;">llama.cpp (SYCL build)</text>
-  <text x="60" y="262" class="code">v9853 · IntelLLVM 2026.0.0</text>
-  <text x="60" y="282" class="code">libggml-sycl.so</text>
-  <text x="60" y="302" class="code">-dev SYCL0 -ngl 99</text>
-  <text x="60" y="318" class="code">--cache-type-k q8_0</text>
+  <rect x="40" y="210" width="260" height="110" class="box-green" />
+  <text x="60" y="236" class="title" style="font-size:15px;">llama.cpp (SYCL build)</text>
+  <text x="60" y="258" class="code">v9853 · IntelLLVM 2026.0.0</text>
+  <text x="60" y="278" class="code">libggml-sycl.so</text>
+  <text x="60" y="298" class="code">-dev SYCL0 -ngl 99</text>
+  <text x="60" y="314" class="code">--cache-type-k q8_0</text>
 
-  <!-- Layer 3: SYCL / Level Zero -->
-  <rect x="40" y="370" width="240" height="80" class="box-purple" />
-  <text x="60" y="398" class="title" style="font-size:16px;">SYCL + Level Zero</text>
-  <text x="60" y="420" class="code">ONEAPI_DEVICE_SELECTOR=level_zero:0</text>
-  <text x="60" y="440" class="code">SYCL_CACHE_PERSISTENT=0</text>
+  <rect x="40" y="370" width="260" height="80" class="box-purple" />
+  <text x="60" y="396" class="title" style="font-size:15px;">SYCL + Level Zero</text>
+  <text x="60" y="418" class="code-p">ONEAPI_DEVICE_SELECTOR=level_zero:0</text>
+  <text x="60" y="438" class="code-p">SYCL_CACHE_PERSISTENT=0</text>
 
-  <!-- Arrows -->
-  <path d="M 160 170 L 160 210" class="arr" />
-  <path d="M 160 330 L 160 370" class="arr" />
+  <!-- Middle column: model + GPU -->
+  <rect x="420" y="90" width="240" height="120" class="box-amber" />
+  <text x="440" y="116" class="title" style="font-size:15px;">Qwen3.6-35B-A3B</text>
+  <text x="440" y="140" class="code">Q4_K_XL GGUF</text>
+  <text x="440" y="160" class="code">20.81 GiB (fits in 32GB)</text>
+  <text x="440" y="180" class="code">34.66B total params</text>
+  <text x="440" y="200" class="code">MoE active subset</text>
 
-  <!-- Right side: Model + GPU -->
-  <!-- Model -->
-  <rect x="380" y="90" width="230" height="120" class="box-amber" />
-  <text x="400" y="118" class="title" style="font-size:16px;">Qwen3.6-35B-A3B</text>
-  <text x="400" y="142" class="code">Q4_K_XL GGUF</text>
-  <text x="400" y="162" class="code">20.81 GiB (fits in 32GB)</text>
-  <text x="400" y="182" class="code">34.66B total params</text>
-  <text x="400" y="200" class="code">MoE active subset</text>
+  <rect x="420" y="260" width="240" height="130" class="box-green" />
+  <text x="440" y="286" class="title" style="font-size:15px;">Intel Arc Pro B70</text>
+  <text x="440" y="308" class="code">Battlemage G31 (0xe223)</text>
+  <text x="440" y="328" class="code">32GB GDDR6 VRAM</text>
+  <text x="440" y="348" class="code">Full 32GB BAR (ReBAR)</text>
+  <text x="440" y="368" class="code">xe driver · Ubuntu 26.04</text>
+  <text x="440" y="384" class="code-g">68.45 tok/s (llama-bench)</text>
 
-  <!-- GPU -->
-  <rect x="380" y="270" width="230" height="140" class="box-green" />
-  <text x="400" y="298" class="title" style="font-size:16px;">Intel Arc Pro B70</text>
-  <text x="400" y="322" class="code">Battlemage G31 (0xe223)</text>
-  <text x="400" y="342" class="code">32GB GDDR6 VRAM</text>
-  <text x="400" y="362" class="code">Full 32GB BAR (ReBAR)</text>
-  <text x="400" y="382" class="code">xe driver · Ubuntu 26.04</text>
-  <text x="400" y="400" class="code">68.45 tok/s (llama-bench)</text>
+  <rect x="420" y="430" width="240" height="42" class="box-red" />
+  <text x="440" y="456" class="code-r">Vulkan: ~39-42 tok/s (fallback)</text>
 
-  <!-- Vulkan (crossed out) -->
-  <rect x="380" y="460" width="230" height="44" class="box-red" />
-  <text x="400" y="488" class="code" style="fill:#ef4444;">Vulkan: ~39-42 tok/s (fallback)</text>
+  <!-- Right column: throughput + oneAPI -->
+  <rect x="810" y="90" width="240" height="140" class="box-blue" />
+  <text x="830" y="116" class="title" style="font-size:14px;">Throughput</text>
+  <text x="830" y="142" class="code-g">pp128: 386.89 t/s</text>
+  <text x="830" y="162" class="code-g">tg32:  68.45 t/s</text>
+  <text x="830" y="186" class="code">API (256 tok):</text>
+  <text x="830" y="206" class="code-a">~60.5 tok/s wall</text>
+  <text x="830" y="224" class="sub">llama.cpp: 66.70 tok/s</text>
 
-  <!-- Connecting arrows -->
-  <path d="M 280 150 L 380 150" class="arr-g" />
-  <text x="310" y="142" class="code">model load</text>
-  <path d="M 280 330 L 380 340" class="arr-g" />
-  <text x="310" y="322" class="code">GPU offload</text>
+  <rect x="810" y="280" width="240" height="110" class="box-purple" />
+  <text x="830" y="306" class="title" style="font-size:14px;">oneAPI Stack</text>
+  <text x="830" y="330" class="code-p">intel-oneapi 2025.3.2</text>
+  <text x="830" y="350" class="code-p">DPC++/C++ Compiler</text>
+  <text x="830" y="370" class="code-p">MKL · OpenCL ICD</text>
 
-  <!-- Benchmark box -->
-  <rect x="690" y="140" width="170" height="140" class="box-blue" />
-  <text x="710" y="168" class="title" style="font-size:14px;">Throughput</text>
-  <text x="710" y="192" class="code" style="fill:#4ade80;">pp128: 386.89 t/s</text>
-  <text x="710" y="214" class="code" style="fill:#4ade80;">tg32:  68.45 t/s</text>
-  <text x="710" y="240" class="code">API (256 tok):</text>
-  <text x="710" y="260" class="code" style="fill:#f59e0b;">~60.5 tok/s wall</text>
+  <!-- Vertical arrows (stack flow) -->
+  <line x1="170" y1="170" x2="170" y2="210" class="arr" />
+  <line x1="170" y1="320" x2="170" y2="370" class="arr" />
 
-  <path d="M 610 340 L 775 210" class="arr" />
-  <text x="690" y="270" class="code">metrics</text>
+  <!-- Horizontal arrow: API → model -->
+  <line x1="300" y1="130" x2="420" y2="130" class="arr-g" />
+  <text x="340" y="122" class="label">model load</text>
 
-  <!-- oneAPI box -->
-  <rect x="690" y="340" width="170" height="100" class="box-purple" />
-  <text x="710" y="368" class="title" style="font-size:14px;">oneAPI Stack</text>
-  <text x="710" y="392" class="code">intel-oneapi 2025.3.2</text>
-  <text x="710" y="412" class="code">DPC++/C++ Compiler</text>
-  <text x="710" y="432" class="code">MKL · OpenCL ICD</text>
+  <!-- Horizontal arrow: llama.cpp → GPU (routed through gap) -->
+  <path d="M 300 280 L 360 280 L 360 325 L 420 325" class="arr-g" />
+  <text x="335" y="295" class="label">GPU offload</text>
 
-  <path d="M 280 410 L 690 390" class="arr" />
-  <text x="480" y="385" class="code">SYCL runtime</text>
+  <!-- Horizontal arrow: model → throughput -->
+  <line x1="660" y1="150" x2="810" y2="150" class="arr" />
+  <text x="710" y="142" class="label">bench</text>
+
+  <!-- Horizontal arrow: GPU → throughput (routed through gap) -->
+  <path d="M 660 325 L 735 325 L 735 180 L 810 180" class="arr" />
+  <text x="680" y="245" class="label">metrics</text>
+
+  <!-- Horizontal arrow: SYCL → oneAPI -->
+  <line x1="300" y1="410" x2="810" y2="335" class="arr" />
+  <text x="530" y="365" class="label">SYCL runtime</text>
 </svg>
