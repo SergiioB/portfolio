@@ -87,7 +87,7 @@
   <text x="580" y="582" class="code-g">68.45 tok/s bench / ~60 tok/s API</text>
   <text x="580" y="599" class="sub">50-59°C under short load (no thermal wall)</text>
 
-  <!-- Flow arrows (routed above, no crossing) -->
-  <path d="M 440 180 L 480 180 L 480 220 L 560 220" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#ah-flow)" />
-  <path d="M 440 390 L 480 390 L 480 430 L 560 430" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#ah-flow)" />
+  <!-- Flow arrows (routed above ALL boxes, no crossing) -->
+  <path d="M 240 60 L 480 60 L 480 110 L 760 110" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#ah-flow)" />
+  <path d="M 240 290 L 500 290 L 500 325 L 760 325" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#ah-flow)" />
 </svg>
