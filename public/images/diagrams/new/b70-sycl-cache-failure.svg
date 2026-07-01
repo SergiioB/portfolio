@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600">
   <defs>
     <style>
       .bg { fill: #0f172a; }
@@ -33,95 +33,97 @@
     </marker>
   </defs>
 
-  <rect width="860" height="600" class="bg" />
+  <rect width="1100" height="600" class="bg" />
   <text x="40" y="38" class="title">SYCL Cache Failure: Debug and Fix</text>
   <text x="40" y="58" class="sub">Misleading green checks led to a narrow root cause</text>
 
   <!-- Column: Checks (all pass) -->
-  <text x="100" y="92" class="sub" style="fill:#4ade80;">ALL CHECKS PASSED</text>
+  <text x="120" y="92" class="sub" style="fill:#4ade80;">ALL CHECKS PASSED</text>
 
   <!-- Check 1 -->
-  <rect x="40" y="105" width="320" height="46" class="box-ok" />
+  <rect x="40" y="105" width="340" height="46" class="box-ok" />
   <text x="55" y="125" class="check">&#10003;</text>
   <text x="80" y="125" class="code">sycl-ls sees B70 via Level Zero</text>
   <text x="80" y="143" class="sub">[level_zero:gpu] Intel Graphics [0xe223]</text>
 
   <!-- Check 2 -->
-  <rect x="40" y="160" width="320" height="46" class="box-ok" />
+  <rect x="40" y="160" width="340" height="46" class="box-ok" />
   <text x="55" y="180" class="check">&#10003;</text>
   <text x="80" y="180" class="code">ReBAR: full 32GB BAR visible</text>
   <text x="80" y="198" class="sub">Region 2: Memory at 1000000000 [size=32G]</text>
 
   <!-- Check 3 -->
-  <rect x="40" y="215" width="320" height="46" class="box-ok" />
+  <rect x="40" y="215" width="340" height="46" class="box-ok" />
   <text x="55" y="235" class="check">&#10003;</text>
   <text x="80" y="235" class="code">Model fits in 32GB VRAM</text>
   <text x="80" y="253" class="sub">Qwen3.6-35B Q4_K_XL = 20.81 GiB</text>
 
   <!-- Check 4 -->
-  <rect x="40" y="270" width="320" height="46" class="box-ok" />
+  <rect x="40" y="270" width="340" height="46" class="box-ok" />
   <text x="55" y="290" class="check">&#10003;</text>
   <text x="80" y="290" class="code">Vulkan loads the model</text>
   <text x="80" y="308" class="sub">~39-42 tok/s (working fallback)</text>
 
   <!-- Check 5 -->
-  <rect x="40" y="325" width="320" height="46" class="box-ok" />
+  <rect x="40" y="325" width="340" height="46" class="box-ok" />
   <text x="55" y="345" class="check">&#10003;</text>
   <text x="80" y="345" class="code">9B sanity model runs on SYCL</text>
   <text x="80" y="363" class="sub">Separates kernel exec from model fit</text>
 
-  <!-- Arrows from checks to failures -->
-  <path d="M 360 200 L 460 200" class="arr" />
-  <text x="380" y="193" class="sub">but...</text>
-
   <!-- Column: Failures -->
-  <text x="520" y="92" class="sub" style="fill:#ef4444;">STILL FAILED</text>
+  <text x="620" y="92" class="sub" style="fill:#ef4444;">STILL FAILED</text>
 
   <!-- Failure 1 -->
-  <rect x="460" y="105" width="360" height="68" class="box-fail" />
-  <text x="475" y="125" class="x-mark">&#10007;</text>
-  <text x="500" y="125" class="code-r">llama-server hangs at load_model</text>
-  <text x="500" y="145" class="code-a">xe bcs engine reset in dmesg</text>
-  <text x="500" y="163" class="sub">GPU offload: -ngl 99 (expected to work)</text>
+  <rect x="540" y="105" width="360" height="68" class="box-fail" />
+  <text x="555" y="125" class="x-mark">&#10007;</text>
+  <text x="580" y="125" class="code-r">llama-server hangs at load_model</text>
+  <text x="580" y="145" class="code-a">xe bcs engine reset in dmesg</text>
+  <text x="580" y="163" class="sub">GPU offload: -ngl 99 (expected to work)</text>
 
   <!-- Failure 2 -->
-  <rect x="460" y="185" width="360" height="68" class="box-fail" />
-  <text x="475" y="205" class="x-mark">&#10007;</text>
-  <text x="500" y="205" class="code-r">SIGSEGV during model load</text>
-  <text x="500" y="225" class="code-a">Even with -ngl 0 (no GPU layers)</text>
-  <text x="500" y="243" class="sub">Points at SYCL backend itself, not VRAM</text>
+  <rect x="540" y="185" width="360" height="68" class="box-fail" />
+  <text x="555" y="205" class="x-mark">&#10007;</text>
+  <text x="580" y="205" class="code-r">SIGSEGV during model load</text>
+  <text x="580" y="225" class="code-a">Even with -ngl 0 (no GPU layers)</text>
+  <text x="580" y="243" class="sub">Points at SYCL backend itself, not VRAM</text>
+
+  <!-- Arrow from checks to failures (above all boxes) -->
+  <path d="M 380 95 L 460 95 L 460 139 L 540 139" class="arr" />
+  <text x="415" y="88" class="sub">but...</text>
 
   <!-- Arrow to root cause -->
-  <path d="M 640 253 L 640 290" class="arr-r" />
-  <text x="648" y="275" class="code-a">root cause?</text>
+  <path d="M 720 253 L 720 290" class="arr-r" />
+  <text x="728" y="275" class="code-a">root cause?</text>
 
   <!-- Root cause box -->
-  <rect x="460" y="296" width="360" height="85" class="box-fix" />
-  <text x="475" y="316" class="title" style="font-size:15px; fill:#22d3ee;">Root Cause</text>
-  <text x="475" y="340" class="code" style="fill:#22d3ee;">intel/llvm#21972</text>
-  <text x="475" y="360" class="code">SYCL persistent cache NULL-deref on</text>
-  <text x="475" y="378" class="code">dynamically-loaded SYCL kernel libraries</text>
+  <rect x="540" y="296" width="360" height="85" class="box-fix" />
+  <text x="555" y="316" class="title" style="font-size:15px; fill:#22d3ee;">Root Cause</text>
+  <text x="555" y="340" class="code" style="fill:#22d3ee;">intel/llvm#21972</text>
+  <text x="555" y="360" class="code">SYCL persistent cache NULL-deref on</text>
+  <text x="555" y="378" class="code">dynamically-loaded SYCL kernel libraries</text>
 
   <!-- Arrow to fix -->
-  <path d="M 640 381 L 640 416" class="arr-c" />
+  <path d="M 720 381 L 720 416" class="arr-c" />
 
-  <!-- Fix -->
-  <rect x="460" y="420" width="360" height="105" class="box-fix" />
-  <text x="475" y="445" class="title" style="font-size:15px; fill:#4ade80;">Fix (single line)</text>
-  <text x="475" y="470" class="code-g">export SYCL_CACHE_PERSISTENT=0</text>
-  <text x="475" y="495" class="sub">+ install libze-dev before build</text>
-  <text x="475" y="513" class="sub">+ ONEAPI_DEVICE_SELECTOR=level_zero:0</text>
+  <!-- Fix (right column) -->
+  <rect x="540" y="420" width="360" height="105" class="box-fix" />
+  <text x="555" y="445" class="title" style="font-size:15px; fill:#4ade80;">Fix (single line)</text>
+  <text x="555" y="470" class="code-g">export SYCL_CACHE_PERSISTENT=0</text>
+  <text x="555" y="495" class="sub">+ install libze-dev before build</text>
+  <text x="555" y="513" class="sub">+ ONEAPI_DEVICE_SELECTOR=level_zero:0</text>
 
-  <!-- Second fix column -->
-  <rect x="40" y="420" width="320" height="105" class="box-fix" />
+  <!-- Second fix column (left) -->
+  <rect x="40" y="420" width="340" height="105" class="box-fix" />
   <text x="55" y="445" class="title" style="font-size:15px; fill:#f59e0b;">Also needed</text>
   <text x="55" y="470" class="code-a">sudo apt install -y libze-dev</text>
   <text x="55" y="495" class="sub">Without it: Level Zero headers not found</text>
   <text x="55" y="513" class="sub">GGML_SYCL_SUPPORT_LEVEL_ZERO_API ON but disabled</text>
 
   <!-- Result -->
-  <rect x="220" y="550" width="420" height="38" class="box-ok" />
-  <text x="430" y="575" class="code-g" style="font-size:14px;" text-anchor="middle">Qwen3.6-35B-A3B Q4_K_XL runs at 68.45 tok/s on SYCL</text>
-  <path d="M 200 525 L 300 555" class="arr-g" />
-  <path d="M 640 525 L 560 555" class="arr-g" />
+  <rect x="240" y="550" width="420" height="38" class="box-ok" />
+  <text x="450" y="575" class="code-g" style="font-size:14px;" text-anchor="middle">Qwen3.6-35B-A3B Q4_K_XL runs at 68.45 tok/s on SYCL</text>
+
+  <!-- Arrows to result (no crossing) -->
+  <path d="M 210 525 L 300 555" class="arr-g" />
+  <path d="M 720 525 L 620 555" class="arr-g" />
 </svg>
