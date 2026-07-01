@@ -91,19 +91,19 @@
   <line x1="300" y1="130" x2="420" y2="130" class="arr-g" />
   <text x="340" y="122" class="label">model load</text>
 
-  <!-- Horizontal arrow: llama.cpp → GPU (routed through gap) -->
+  <!-- Horizontal arrow: llama.cpp → GPU (routed ABOVE to avoid crossing) -->
   <path d="M 300 280 L 360 280 L 360 325 L 420 325" class="arr-g" />
-  <text x="335" y="295" class="label">GPU offload</text>
+  <text x="335" y="270" class="label">GPU offload</text>
 
   <!-- Horizontal arrow: model → throughput -->
   <line x1="660" y1="150" x2="810" y2="150" class="arr" />
   <text x="710" y="142" class="label">bench</text>
 
-  <!-- Horizontal arrow: GPU → throughput (routed through gap) -->
+  <!-- Horizontal arrow: GPU → throughput (routed ABOVE to avoid crossing) -->
   <path d="M 660 325 L 735 325 L 735 180 L 810 180" class="arr" />
-  <text x="680" y="245" class="label">metrics</text>
+  <text x="680" y="315" class="label">metrics</text>
 
-  <!-- Horizontal arrow: SYCL → oneAPI -->
-  <line x1="300" y1="410" x2="810" y2="335" class="arr" />
-  <text x="530" y="365" class="label">SYCL runtime</text>
+  <!-- SYCL runtime arrow: routed BELOW GPU box, no crossing -->
+  <path d="M 300 410 L 750 410 L 750 335 L 810 335" class="arr" />
+  <text x="490" y="400" class="label">SYCL runtime</text>
 </svg>
