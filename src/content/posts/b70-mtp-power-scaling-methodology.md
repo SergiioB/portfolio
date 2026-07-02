@@ -98,6 +98,163 @@ Two things went wrong with the initial benchmarking:
 
 The corrected benchmark script is now the canonical tool for all B70 evaluations. Old scripts that used the single-prompt methodology are deprecated.
 
+## Runtime Flags Handbook
+
+### llama.cpp Version and Build
+
+```text
+Version:     b9851 (7af4279f4)
+Build date:  2026-07-01
+Backend:     SYCL / Level Zero
+Compiler:    IntelLLVM 2026.0.0 for Linux x86_64
+Host OS:     Ubuntu 26.04 LTS
+Driver:      xe kernel module
+GPU:         Intel Arc Pro B70, Battlemage G31 (0xe223), 32GB VRAM
+```
+
+Build configuration for SYCL:
+
+```bash
+cmake -B build-sycl-b70 \
+  -DGGML_SYCL=ON \
+  -DCMAKE_C_COMPILER=icx \
+  -DCMAKE_CXX_COMPILER=icpx \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DGGML_SYCL_F16=ON \
+  -DCMAKE_PREFIX_PATH=/opt/intel/oneapi/mkl/latest/lib/cmake
+```
+
+### Model 1: Qwen 27B MTP-4 (Speculative Decoding, 180W Sweet Spot)
+
+File: `Qwen3.6-27B-A3B-UD-Q5_K_M.gguf` (16.1 GB)
+
+Production server launch with power cap:
+
+```bash
+# Set power cap before launch
+echo 180 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
+
+llama-server \
+  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
+  --host 0.0.0.0 \
+  --port 8080 \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 196608 \
+  --parallel 1 \
+  --cache-type-k q5_0 \
+  --cache-type-v q4_1 \
+  --flash-attn on \
+  --reasoning off \
+  --metrics \
+  --slots \
+  --jinja \
+  --draft-model /models/Qwen2.5-1.5B-Q5_K_M.gguf \
+  --n-predict 512
+```
+
+**MTP-4 specific configuration:**
+
+| Flag            | Value        | Explanation                                                                      |
+| --------------- | ------------ | -------------------------------------------------------------------------------- |
+| `--draft-model` | 1.5B model   | Draft model for speculative decoding. Proposes 4 tokens per forward pass.        |
+| `-c 196608`     | 192K context | Slightly lower than max 200K to account for MTP draft model overhead (~1.2 GB).  |
+| `--parallel 1`  | 1 slot       | MTP increases slot memory usage. Start with 1, test 2-3 for concurrent requests. |
+
+**Power cap rationale:**
+
+| Power | Engine t/s | Temp | Verdict                                                |
+| ----- | ---------- | ---- | ------------------------------------------------------ |
+| 150W  | 21.2       | 48°C | Baseline, but -14% throughput vs sweet spot            |
+| 165W  | 25.3       | 50°C | Good throughput, thermals safe                         |
+| 180W  | 29.1       | 52°C | **Sweet spot**. +35% MTP gain, thermals comfortable.   |
+| 230W  | 30.0       | 61°C | Diminishing returns. Same gain as 180W but 9°C hotter. |
+
+**How to set power cap:**
+
+```bash
+# Find hwmon device (usually hwmon4 on B70)
+ls /sys/class/hwmon/hwmon*/power1_cap
+
+# Set power cap in microwatts (180W = 180000000)
+echo 180000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
+```
+
+### Model 2: Qwen 27B Base (No MTP, Baseline Comparison)
+
+File: `Qwen3.6-27B-A3B-UD-Q5_K_M.gguf` (16.1 GB)
+
+Baseline benchmark launch:
+
+```bash
+llama-server \
+  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
+  --host 0.0.0.0 \
+  --port 8081 \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 196608 \
+  --parallel 1 \
+  --cache-type-k q5_0 \
+  --cache-type-v q4_1 \
+  --flash-attn on \
+  --reasoning off \
+  --metrics \
+  --jinja
+```
+
+**Omitted flag:** `--draft-model` — no speculative decoding, pure base model.
+
+### Model 3: Qwen 27B MTP-4 Vision Testing
+
+File: `Qwen3.6-27B-A3B-UD-Q5_K_M.gguf` (16.1 GB)
+
+Vision benchmark launch (after ffmpeg fix):
+
+```bash
+llama-cli \
+  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
+  --draft-model /models/Qwen2.5-1.5B-Q5_K_M.gguf \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 131072 \
+  -n 512 \
+  --image /path/to/image.jpg \
+  --temp 0.7 \
+  --top-p 0.9
+```
+
+**Vision-specific notes:**
+
+- Requires `ffmpeg` installed on host (`sudo apt install ffmpeg`)
+- Image tokens consume context budget. Lower `-c` for longer image sequences.
+- `--n-predict` in vision mode defaults to 256; bumped to 512 for detailed descriptions.
+
+### Model 4: Gemma 4 26B Vision (Alternative Vision Model)
+
+File: `gemma-3-27b-it-Q5_K_M.gguf` (16.0 GB)
+
+Vision benchmark at 150W power cap:
+
+```bash
+echo 150000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
+
+llama-cli \
+  -m /models/gemma-3-27b-it-Q5_K_M.gguf \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 131072 \
+  -n 512 \
+  --image /path/to/image.jpg \
+  --temp 0.7
+```
+
+**Gemma vs Qwen vision:**
+
+- Gemma 26B at 150W: 59.2 tok/s engine, 4-6% overhead
+- Qwen 27B MTP-4 at 180W: 29.1 tok/s engine, 4-6% overhead
+- Gemma is faster for pure vision workloads, Qwen MTP-4 wins for mixed text/vision at 180W sweet spot.
+
 ## References
 
 Key upstream issues that informed the methodology fix:
