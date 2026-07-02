@@ -117,6 +117,204 @@ llama-server \
 
 Note the context length: 262144 (256K). With q8_0 KV cache, this config would OOM. With q5_0-q4_1, it fits with about 1.2 GB of headroom.
 
+## Runtime Flags Handbook
+
+The following sections document the exact llama.cpp version, build flags, and runtime configuration for each model tested. This is the reproducible baseline for all B70 benchmark results.
+
+### llama.cpp Version and Build
+
+```text
+Version:     b9851 (7af4279f4)
+Build date:  2026-07-01
+Backend:     SYCL / Level Zero
+Compiler:    IntelLLVM 2026.0.0 for Linux x86_64
+Host OS:     Ubuntu 26.04 LTS
+Driver:      xe kernel module
+GPU:         Intel Arc Pro B70, Battlemage G31 (0xe223), 32GB VRAM
+```
+
+Build configuration for SYCL:
+
+```bash
+cmake -B build-sycl-b70 \
+  -DGGML_SYCL=ON \
+  -DCMAKE_C_COMPILER=icx \
+  -DCMAKE_CXX_COMPILER=icpx \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DGGML_SYCL_F16=ON \
+  -DCMAKE_PREFIX_PATH=/opt/intel/oneapi/mkl/latest/lib/cmake
+```
+
+**Why these build flags:**
+
+- `GGML_SYCL=ON` — enables Intel SYCL backend for Arc GPUs
+- `DGGML_SYCL_F16=ON` — enables FP16 support for faster matrix operations
+- `MKL prefix path` — links Intel Math Kernel Library for optimized BLAS operations
+
+### Model 1: Qwen 35B Q5_K_M (MoE, Flagship)
+
+File: `Qwen3.6-35B-A3B-UD-Q5_K_M.gguf` (20.8 GB)
+
+Production server launch:
+
+```bash
+llama-server \
+  -m /models/Qwen3.6-35B-A3B-UD-Q5_K_M.gguf \
+  --host 0.0.0.0 \
+  --port 8080 \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 262144 \
+  --parallel 1 \
+  --cache-type-k q5_0 \
+  --cache-type-v q4_1 \
+  --flash-attn on \
+  --reasoning off \
+  --metrics \
+  --slots \
+  --jinja
+```
+
+**Flag explanations:**
+
+| Flag                  | Value                 | Explanation                                                                                                |
+| --------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `-m`                  | Model path            | Full path to GGUF file. Q5_K_M is the flagship quant for 35B on 32GB.                                      |
+| `--host`              | 0.0.0.0               | Bind to all interfaces for network access via Tailscale.                                                   |
+| `--port`              | 8080                  | Standard OpenAI-compatible API port.                                                                       |
+| `-dev SYCL0`          | Target device         | Explicitly targets the B70 via Level Zero SYCL device selector. Prevents device ambiguity.                 |
+| `-ngl 99`             | 99 layers             | Offloads all possible layers to GPU. `-ngl 99` means "everything that can be offloaded".                   |
+| `-c 262144`           | 256K context          | Maximum context window with q5_0-q4_1 KV cache on 32GB. Would OOM with q8_0.                               |
+| `--parallel 1`        | 1 slot                | Single-slot baseline for testing. Increase to 2-3 for concurrent requests (trades throughput for latency). |
+| `--cache-type-k q5_0` | K quant               | Keys quantized to q5_0 (6.0 effective bits). Protects attention computation quality.                       |
+| `--cache-type-v q4_1` | V quant               | Values quantized to q4_1 (5.0 effective bits). Tolerates more noise, saves VRAM.                           |
+| `--flash-attn on`     | Flash attention       | Enables optimized attention kernel on SYCL. Critical for high-context throughput.                          |
+| `--reasoning off`     | No thinking           | For DeepSeek-style models, keeps response in `message.content` instead of `reasoning_content`.             |
+| `--metrics`           | Metrics endpoint      | Enables `/metrics` endpoint for real-time throughput and temperature monitoring.                           |
+| `--slots`             | Slot-based processing | Enables slot-based processing for better request queuing.                                                  |
+| `--jinja`             | Jinja templates       | Enables Jinja chat templates (required for Qwen chat format).                                              |
+
+### Model 2: Qwen 27B MTP-4 (Dense, Speculative Decoding)
+
+File: `Qwen3.6-27B-A3B-UD-Q5_K_M.gguf` (16.1 GB)
+
+Production server launch with MTP-4:
+
+```bash
+llama-server \
+  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
+  --host 0.0.0.0 \
+  --port 8080 \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 196608 \
+  --parallel 1 \
+  --cache-type-k q5_0 \
+  --cache-type-v q4_1 \
+  --flash-attn on \
+  --reasoning off \
+  --metrics \
+  --slots \
+  --jinja \
+  --draft-model /models/Qwen2.5-1.5B-Q5_K_M.gguf \
+  --n-predict 512
+```
+
+**MTP-specific flags:**
+
+| Flag              | Value        | Explanation                                                                                  |
+| ----------------- | ------------ | -------------------------------------------------------------------------------------------- |
+| `--draft-model`   | Small model  | Path to 1.5B draft model for speculative decoding. Proposes tokens that main model verifies. |
+| `--n-predict 512` | Max tokens   | Reasonable default for interactive chat. Can be adjusted per-request via API.                |
+| `-c 196608`       | 192K context | Lower than 35B due to MTP draft model overhead (~1.2 GB).                                    |
+
+**Why MTP-4:**
+MTP-4 generates 4 draft tokens per forward pass. On B70 at 180W, this delivers a +35% throughput gain over base model at acceptable thermals (52°C). 180W is the power sweet spot; 230W offers no additional gain but runs 9°C hotter.
+
+### Model 3: Ornith 9B Q6_K (Small, High-Context)
+
+File: `ornith-1.0-9b-Q6_K.gguf` (6.8 GB)
+
+Benchmark launch:
+
+```bash
+llama-cli \
+  -m /models/ornith-1.0-9b-Q6_K.gguf \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 524288 \
+  -n 512 \
+  --temp 0.7 \
+  --top-p 0.9 \
+  -p "Your prompt here"
+```
+
+**Flag differences:**
+
+| Flag          | Value            | Explanation                                                                                  |
+| ------------- | ---------------- | -------------------------------------------------------------------------------------------- |
+| `-c 524288`   | 512K context     | 9B has massive VRAM headroom. Can push beyond 512K, but 512K is the tested ceiling.          |
+| `--temp 0.7`  | Temperature      | 0.7 balances creativity and coherence. Adjust per use case (0.0 for code, 1.0 for creative). |
+| `--top-p 0.9` | Nucleus sampling | 0.9 restricts to top 90% probability mass, reducing hallucinations.                          |
+| `-n 512`      | Max tokens       | Generation limit. Can be set higher for long-form content.                                   |
+
+### Model 4: Gemma 4 26B (Vision Testing)
+
+File: `gemma-3-27b-it-Q5_K_M.gguf` (16.0 GB)
+
+Vision benchmark launch (after ffmpeg fix):
+
+```bash
+llama-cli \
+  -m /models/gemma-3-27b-it-Q5_K_M.gguf \
+  -dev SYCL0 \
+  -ngl 99 \
+  -c 131072 \
+  -n 512 \
+  --image /path/to/image.jpg \
+  --temp 0.7
+```
+
+**Vision-specific flags:**
+
+| Flag        | Value        | Explanation                                                                               |
+| ----------- | ------------ | ----------------------------------------------------------------------------------------- |
+| `--image`   | Image path   | Path to input image for vision processing. Requires ffmpeg installed on host.             |
+| `-c 131072` | 128K context | Lower context for vision tests. Image tokens consume context budget.                      |
+| `-n 512`    | Max tokens   | Increased from 128 (initial vision test) to 512 to accommodate longer image descriptions. |
+
+### Benchmark Methodology (b70-verified-bench.sh)
+
+The corrected benchmark script enforces the following methodology:
+
+```bash
+# For each config tested:
+1. Run warmup round (discarded, never counted)
+2. Verify GPU temp < 52°C before measured round
+3. Run 4 diverse prompts (prevents cache bias)
+4. Record wall-clock time AND engine decode rate separately
+5. Enforce cooldown to < 52°C between rounds
+6. Repeat for each power cap (150W, 165W, 180W, 230W)
+```
+
+**Key metrics tracked:**
+
+| Metric                              | Source               | Why it matters                               |
+| ----------------------------------- | -------------------- | -------------------------------------------- |
+| `llamacpp:prompt_tokens_seconds`    | `/metrics` endpoint  | Prefill speed                                |
+| `llamacpp:predicted_tokens_seconds` | `/metrics` endpoint  | Engine decode rate (cleaner than wall-clock) |
+| Wall-clock throughput               | Start/end timestamps | Real-world API latency (includes overhead)   |
+| GPU temperature                     | `sensors` or hwmon   | Thermals, power cap verification             |
+| Draft acceptance rate               | Log output           | MTP speculative decoding efficiency          |
+
+**Deprecated scripts:**
+
+- `b70-mtp-bench.sh` — single-prompt methodology, cache inflation
+- `b70-mtp-power-sweep.sh` — lacked warmup discard
+- `b70-intermediate-sweep.sh` — intermediate checkpoints with same issues
+
+These inflated baseline performance by 4-5% due to prefix caching. Always use `b70-verified-bench.sh` for future B70 benchmarking.
+
 ## References
 
 The VRAM multiplier calculations and quality cliff threshold are based on the **Anbeeld 2026 KV cache benchmark methodology**, which provides measured multipliers per quant type rather than theoretical values. That benchmark documents:
