@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .title { fill: #f8fafc; font-family: monospace; font-size: 20px; font-weight: bold; }
+      .sub { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .code-g { fill: #4ade80; font-family: monospace; font-size: 12px; }
+      .code-a { fill: #f59e0b; font-family: monospace; font-size: 12px; }
+      .code-b { fill: #38bdf8; font-family: monospace; font-size: 12px; }
+      .code-p { fill: #a78bfa; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 8; }
+      .box-blue { fill: #1e293b; stroke: #38bdf8; stroke-width: 2; rx: 8; }
+      .box-green { fill: #1e293b; stroke: #4ade80; stroke-width: 2; rx: 8; }
+      .box-amber { fill: #1e293b; stroke: #f59e0b; stroke-width: 2; rx: 8; }
+      .box-purple { fill: #1e293b; stroke: #a78bfa; stroke-width: 2; rx: 8; }
+      .label { fill: #94a3b8; font-family: monospace; font-size: 11px; }
+    </style>
+  </defs>
+
+  <rect width="960" height="540" class="bg" />
+  <text x="40" y="38" class="title">Context Ceilings on 32GB VRAM (q5_0-q4_1 KV cache)</text>
+  <text x="40" y="58" class="sub">Intel Arc Pro B70 32GB · llama.cpp b9851 · hardware-verified</text>
+
+  <!-- ── Tier 1: 35B Q5 ── -->
+  <rect x="40" y="90" width="280" height="140" class="box-amber" />
+  <text x="60" y="116" class="title" style="font-size:15px;">Tier 1: Qwen 35B Q5</text>
+  <text x="60" y="142" class="code-a">Model weight: 20.8 GB</text>
+  <text x="60" y="162" class="code-a">KV per 128K: 10.0 GB</text>
+  <text x="60" y="186" class="code-g">Max context: 256K</text>
+  <text x="60" y="206" class="code">VRAM at 256K: ~30.8 GB</text>
+  <text x="60" y="222" class="code">Headroom: tight but stable</text>
+
+  <!-- ── Tier 2: 27B MTP ── -->
+  <rect x="360" y="90" width="280" height="140" class="box-blue" />
+  <text x="380" y="116" class="title" style="font-size:15px;">Tier 2: Qwen 27B MTP</text>
+  <text x="380" y="142" class="code-b">Model weight: 16.1 GB</text>
+  <text x="380" y="162" class="code-b">KV per 128K: 8.2 GB</text>
+  <text x="382" y="186" class="code-g">Max context: 200K</text>
+  <text x="380" y="206" class="code">VRAM at 200K: ~28.9 GB</text>
+  <text x="380" y="222" class="code">MTP draft adds ~1.2 GB</text>
+
+  <!-- ── Tier 3: Ornith 9B ── -->
+  <rect x="680" y="90" width="240" height="140" class="box-green" />
+  <text x="700" y="116" class="title" style="font-size:15px;">Tier 3: Ornith 9B</text>
+  <text x="700" y="142" class="code-g">Model weight: 6.8 GB</text>
+  <text x="700" y="162" class="code-g">KV per 128K: 2.1 GB</text>
+  <text x="702" y="186" class="code-g">Max context: 1024K+</text>
+  <text x="700" y="206" class="code">VRAM at 512K: ~15.2 GB</text>
+  <text x="700" y="222" class="code">Plenty of headroom</text>
+
+  <!-- ── Bottom: scaling penalty check ── -->
+  <rect x="40" y="260" width="880" height="80" class="box" />
+  <text x="60" y="286" class="title" style="font-size:14px;">Context Scaling Penalty</text>
+  <text x="60" y="308" class="code-g">Zero penalty observed across all tiers and context lengths (64K to 512K)</text>
+  <text x="60" y="326" class="code">Throughput remains flat regardless of filled context length</text>
+
+  <!-- ── Bottom: VRAM budget visualization ── -->
+  <text x="40" y="370" class="title" style="font-size:15px;">32GB VRAM Budget at Max Context (q5_0-q4_1)</text>
+
+  <!-- 35B at 256K (96% filled) -->
+  <rect x="40" y="390" width="816" height="40" rx="4" fill="#f59e0b" opacity="0.15" stroke="#f59e0b" stroke-width="1" />
+  <rect x="40" y="390" width="783" height="40" rx="4" fill="#f59e0b" opacity="0.45" />
+  <text x="50" y="415" class="code-a">35B Q5 @ 256K: 30.8 GB (96%)</text>
+
+  <!-- 27B at 200K (90% filled) -->
+  <rect x="40" y="440" width="816" height="40" rx="4" fill="#38bdf8" opacity="0.15" stroke="#38bdf8" stroke-width="1" />
+  <rect x="40" y="440" width="734" height="40" rx="4" fill="#38bdf8" opacity="0.45" />
+  <text x="50" y="465" class="code-b">27B MTP @ 200K: 28.9 GB (90%)</text>
+
+  <!-- 9B at 512K (47% filled) -->
+  <rect x="40" y="490" width="816" height="40" rx="4" fill="#4ade80" opacity="0.15" stroke="#4ade80" stroke-width="1" />
+  <rect x="40" y="490" width="383" height="40" rx="4" fill="#4ade80" opacity="0.45" />
+  <text x="50" y="515" class="code-g">9B @ 512K: 15.2 GB (47%)</text>
+</svg>

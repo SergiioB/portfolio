@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .title { fill: #f8fafc; font-family: monospace; font-size: 20px; font-weight: bold; }
+      .sub { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .code-r { fill: #ef4444; font-family: monospace; font-size: 12px; }
+      .code-g { fill: #4ade80; font-family: monospace; font-size: 12px; }
+      .code-a { fill: #f59e0b; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 6; }
+      .box-ok { fill: #1e293b; stroke: #4ade80; stroke-width: 2; rx: 6; }
+      .box-fail { fill: #1e293b; stroke: #ef4444; stroke-width: 2; rx: 6; }
+      .box-fix { fill: #1e293b; stroke: #22d3ee; stroke-width: 2; rx: 6; }
+      .arr { stroke: #334155; stroke-width: 2; fill: none; marker-end: url(#ah2); }
+      .arr-r { stroke: #ef4444; stroke-width: 2; fill: none; marker-end: url(#ah-r); }
+      .arr-g { stroke: #4ade80; stroke-width: 2; fill: none; marker-end: url(#ah-g2); }
+      .arr-c { stroke: #22d3ee; stroke-width: 2; fill: none; marker-end: url(#ah-c); }
+      .check { fill: #4ade80; font-family: monospace; font-size: 16px; font-weight: bold; }
+      .x-mark { fill: #ef4444; font-family: monospace; font-size: 16px; font-weight: bold; }
+    </style>
+    <marker id="ah2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#334155" />
+    </marker>
+    <marker id="ah-r" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444" />
+    </marker>
+    <marker id="ah-g2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80" />
+    </marker>
+    <marker id="ah-c" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#22d3ee" />
+    </marker>
+  </defs>
+
+  <rect width="1100" height="600" class="bg" />
+  <text x="40" y="38" class="title">SYCL Cache Failure: Debug and Fix</text>
+  <text x="40" y="58" class="sub">Misleading green checks led to a narrow root cause</text>
+
+  <!-- Column: Checks (all pass) -->
+  <text x="120" y="92" class="sub" style="fill:#4ade80;">ALL CHECKS PASSED</text>
+
+  <!-- Check 1 -->
+  <rect x="40" y="105" width="400" height="46" class="box-ok" />
+  <text x="55" y="125" class="check">&#10003;</text>
+  <text x="80" y="125" class="code">sycl-ls sees B70 via Level Zero</text>
+  <text x="80" y="143" class="sub">[level_zero:gpu] Intel Graphics [0xe223]</text>
+
+  <!-- Check 2 -->
+  <rect x="40" y="160" width="400" height="46" class="box-ok" />
+  <text x="55" y="180" class="check">&#10003;</text>
+  <text x="80" y="180" class="code">ReBAR: full 32GB BAR visible</text>
+  <text x="80" y="198" class="sub">Region 2: Memory at 1000000000 [size=32G]</text>
+
+  <!-- Check 3 -->
+  <rect x="40" y="215" width="400" height="46" class="box-ok" />
+  <text x="55" y="235" class="check">&#10003;</text>
+  <text x="80" y="235" class="code">Model fits in 32GB VRAM</text>
+  <text x="80" y="253" class="sub">Qwen3.6-35B Q4_K_XL = 20.81 GiB</text>
+
+  <!-- Check 4 -->
+  <rect x="40" y="270" width="400" height="46" class="box-ok" />
+  <text x="55" y="290" class="check">&#10003;</text>
+  <text x="80" y="290" class="code">Vulkan loads the model</text>
+  <text x="80" y="308" class="sub">~39-42 tok/s (working fallback)</text>
+
+  <!-- Check 5 -->
+  <rect x="40" y="325" width="400" height="46" class="box-ok" />
+  <text x="55" y="345" class="check">&#10003;</text>
+  <text x="80" y="345" class="code">9B sanity model runs on SYCL</text>
+  <text x="80" y="363" class="sub">Separates kernel exec from model fit</text>
+
+  <!-- Column: Failures -->
+  <text x="620" y="92" class="sub" style="fill:#ef4444;">STILL FAILED</text>
+
+  <!-- Failure 1 -->
+  <rect x="640" y="105" width="400" height="68" class="box-fail" />
+  <text x="655" y="125" class="x-mark">&#10007;</text>
+  <text x="680" y="125" class="code-r">llama-server hangs at load_model</text>
+  <text x="680" y="145" class="code-a">xe bcs engine reset in dmesg</text>
+  <text x="680" y="163" class="sub">GPU offload: -ngl 99 (expected to work)</text>
+
+  <!-- Failure 2 -->
+  <rect x="640" y="185" width="400" height="68" class="box-fail" />
+  <text x="655" y="205" class="x-mark">&#10007;</text>
+  <text x="680" y="205" class="code-r">SIGSEGV during model load</text>
+  <text x="680" y="225" class="code-a">Even with -ngl 0 (no GPU layers)</text>
+  <text x="680" y="243" class="sub">Points at SYCL backend itself, not VRAM</text>
+
+  <!-- Arrow from checks to failures (entirely above ALL boxes) -->
+  <path d="M 240 65 L 480 65 L 480 75 L 720 75" class="arr" />
+  <text x="415" y="58" class="sub">but...</text>
+
+  <!-- Arrow to root cause -->
+  <path d="M 840 253 L 840 290" class="arr-r" />
+  <text x="848" y="275" class="code-a">root cause?</text>
+
+  <!-- Root cause box -->
+  <rect x="640" y="296" width="400" height="85" class="box-fix" />
+  <text x="655" y="316" class="title" style="font-size:15px; fill:#22d3ee;">Root Cause</text>
+  <text x="655" y="340" class="code" style="fill:#22d3ee;">intel/llvm#21972</text>
+  <text x="655" y="360" class="code">SYCL persistent cache NULL-deref on</text>
+  <text x="655" y="378" class="code">dynamically-loaded SYCL kernel libraries</text>
+
+  <!-- Arrow to fix -->
+  <path d="M 840 381 L 840 416" class="arr-c" />
+
+  <!-- Fix (right column) -->
+  <rect x="640" y="420" width="400" height="105" class="box-fix" />
+  <text x="655" y="445" class="title" style="font-size:15px; fill:#4ade80;">Fix (single line)</text>
+  <text x="655" y="470" class="code-g">export SYCL_CACHE_PERSISTENT=0</text>
+  <text x="655" y="495" class="sub">+ install libze-dev before build</text>
+  <text x="655" y="513" class="sub">+ ONEAPI_DEVICE_SELECTOR=level_zero:0</text>
+
+  <!-- Second fix column (left) -->
+  <rect x="40" y="420" width="400" height="105" class="box-fix" />
+  <text x="55" y="445" class="title" style="font-size:15px; fill:#f59e0b;">Also needed</text>
+  <text x="55" y="470" class="code-a">sudo apt install -y libze-dev</text>
+  <text x="55" y="495" class="sub">Without it: Level Zero headers not found</text>
+  <text x="55" y="513" class="sub">GGML_SYCL_SUPPORT_LEVEL_ZERO_API ON but disabled</text>
+
+  <!-- Result -->
+  <rect x="260" y="550" width="420" height="38" class="box-ok" />
+  <text x="470" y="575" class="code-g" style="font-size:14px;" text-anchor="middle">Qwen3.6-35B-A3B Q4_K_XL runs at 68.45 tok/s on SYCL</text>
+
+  <!-- Arrows to result (no crossing) -->
+  <path d="M 240 525 L 320 555" class="arr-g" />
+  <path d="M 840 525 L 680 555" class="arr-g" />
+</svg>

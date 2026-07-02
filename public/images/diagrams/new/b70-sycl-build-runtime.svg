@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .title { fill: #f8fafc; font-family: monospace; font-size: 20px; font-weight: bold; }
+      .sub { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .code-g { fill: #4ade80; font-family: monospace; font-size: 12px; }
+      .code-a { fill: #f59e0b; font-family: monospace; font-size: 12px; }
+      .code-b { fill: #38bdf8; font-family: monospace; font-size: 12px; }
+      .code-r { fill: #ef4444; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 6; }
+      .box-blue { fill: #1e293b; stroke: #38bdf8; stroke-width: 2; rx: 6; }
+      .box-green { fill: #1e293b; stroke: #4ade80; stroke-width: 2; rx: 6; }
+      .box-amber { fill: #1e293b; stroke: #f59e0b; stroke-width: 2; rx: 6; }
+      .box-red { fill: #1e293b; stroke: #ef4444; stroke-width: 2; rx: 6; }
+    </style>
+    <marker id="ah-flow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#38bdf8" />
+    </marker>
+  </defs>
+
+  <rect width="1100" height="620" class="bg" />
+  <text x="40" y="38" class="title">Build & Runtime: Minimal Working Config</text>
+  <text x="40" y="58" class="sub">Reproducible steps from source to running server</text>
+
+  <!-- Step 1: Packages -->
+  <rect x="40" y="85" width="440" height="190" class="box-blue" />
+  <text x="60" y="110" class="title" style="font-size:15px;">1. Install packages</text>
+  <text x="60" y="135" class="code">intel-opencl-icd</text>
+  <text x="60" y="152" class="code">libze1 · libze-intel-gpu1</text>
+  <text x="60" y="169" class="code-g" style="font-weight:bold;">libze-dev  &lt;-- initially missed</text>
+  <text x="60" y="186" class="code">intel-ocloc</text>
+  <text x="60" y="203" class="code">intel-oneapi-base-toolkit</text>
+  <text x="60" y="220" class="code">cmake · git · build-essential</text>
+  <text x="60" y="245" class="sub">Without libze-dev: Level Zero headers not found</text>
+  <text x="60" y="263" class="sub">CMake detects SYCL but disables L0 API path</text>
+
+  <!-- Step 2: Build -->
+  <rect x="600" y="85" width="440" height="190" class="box-green" />
+  <text x="620" y="110" class="title" style="font-size:15px;">2. Build llama.cpp</text>
+  <text x="620" y="135" class="code-b">cmake -B build-sycl-b70 \</text>
+  <text x="620" y="152" class="code">  -DGGML_SYCL=ON \</text>
+  <text x="620" y="169" class="code">  -DCMAKE_C_COMPILER=icx \</text>
+  <text x="620" y="186" class="code">  -DCMAKE_CXX_COMPILER=icpx \</text>
+  <text x="620" y="203" class="code">  -DCMAKE_BUILD_TYPE=Release \</text>
+  <text x="620" y="220" class="code">  -DGGML_SYCL_F16=ON \</text>
+  <text x="620" y="237" class="code">  -DCMAKE_PREFIX_PATH=.../mkl/latest</text>
+  <text x="620" y="263" class="sub">JIT build (no AOT) for stable baseline</text>
+
+  <!-- Step 3: Environment -->
+  <rect x="40" y="300" width="440" height="175" class="box-amber" />
+  <text x="60" y="325" class="title" style="font-size:15px;">3. Minimal environment</text>
+  <text x="60" y="350" class="code-b">source /opt/intel/oneapi/setvars.sh</text>
+  <text x="60" y="370" class="code-b">export ONEAPI_DEVICE_SELECTOR=level_zero:0</text>
+  <text x="60" y="390" class="code-b">export ZES_ENABLE_SYSMAN=1</text>
+  <text x="60" y="410" class="code-g" style="font-weight:bold;">export SYCL_CACHE_PERSISTENT=0</text>
+  <text x="60" y="435" class="sub">Intentionally small. Several community</text>
+  <text x="60" y="453" class="sub">flags were actively harmful on this stack.</text>
+  <text x="60" y="471" class="sub">Final launcher also unsets:</text>
+
+  <!-- Step 4: Server flags -->
+  <rect x="600" y="300" width="440" height="175" class="box-green" />
+  <text x="620" y="325" class="title" style="font-size:15px;">4. Server flags</text>
+  <text x="620" y="350" class="code-b">llama-server \</text>
+  <text x="620" y="367" class="code">  -m /models/Qwen3.6-35B-...gguf \</text>
+  <text x="620" y="384" class="code">  --host 0.0.0.0 --port 8080 \</text>
+  <text x="620" y="401" class="code">  -dev SYCL0 -ngl 99 \</text>
+  <text x="620" y="418" class="code">  -c 16384 --parallel 1 \</text>
+  <text x="620" y="435" class="code">  --no-mmap --flash-attn off \</text>
+  <text x="620" y="452" class="code">  --cache-type-k q8_0 \</text>
+  <text x="620" y="469" class="code">  --reasoning off --metrics --jinja</text>
+
+  <!-- Harmful vars -->
+  <rect x="40" y="500" width="440" height="105" class="box-red" />
+  <text x="60" y="525" class="title" style="font-size:15px; fill:#ef4444;">Harmful (avoid)</text>
+  <text x="60" y="548" class="code-r">ZEX_NUMBER_OF_CCS=0:4</text>
+  <text x="60" y="565" class="code-r">ZEX_NUMBER_OF_CCS=0:8</text>
+  <text x="60" y="582" class="code-r">SYCL_UR_USE_LEVEL_ZERO_V2=0</text>
+  <text x="60" y="599" class="sub">All caused device enumeration problems</text>
+
+  <!-- Result -->
+  <rect x="600" y="500" width="440" height="105" class="box-green" />
+  <text x="620" y="525" class="title" style="font-size:15px;">Result</text>
+  <text x="620" y="548" class="code-g">systemd: llama-b70.service</text>
+  <text x="620" y="565" class="code">OpenAI API at :8080</text>
+  <text x="620" y="582" class="code-g">68.45 tok/s bench / ~60 tok/s API</text>
+  <text x="620" y="599" class="sub">50-59°C under short load (no thermal wall)</text>
+
+  <!-- Flow arrows (routed above ALL boxes, no crossing) -->
+  <path d="M 260 60 L 520 60 L 520 110 L 820 110" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#ah-flow)" />
+  <path d="M 260 290 L 540 290 L 540 325 L 820 325" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#ah-flow)" />
+</svg>
