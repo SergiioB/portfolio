@@ -22,7 +22,7 @@ C = {
 # ──────────────────────────────────────────────────
 # SVG 1: KV Cache Quantization Comparison
 # ──────────────────────────────────────────────────
-svg_kv = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+svg_kv = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580">
   <defs>
     <style>
       .bg {{ fill: {C["bg"]}; }}
@@ -94,11 +94,11 @@ svg_kv = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
   <text x="380" y="394" class="code-g">free: 20.5 GB (+6.2 GB)</text>
 
   <!-- ── Bottom: engine speed ── -->
-  <rect x="40" y="440" width="880" height="90" class="box-purple" />
-  <text x="60" y="466" class="title" style="font-size:15px;">Engine Decode Rate</text>
-  <text x="60" y="492" class="code-p">q8_0-q8_0 baseline: measured reference</text>
-  <text x="60" y="512" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
-  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense x 2)</text>
+  <rect x="40" y="440" width="880" height="110" class="box-purple" />
+  <text x="60" y="470" class="title" style="font-size:15px;">Engine Decode Rate</text>
+  <text x="60" y="498" class="code-p">q8_0-q8_0 baseline: measured reference</text>
+  <text x="60" y="520" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
+  <text x="60" y="542" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense x 2)</text>
 </svg>'''
 
 with open(f"{OUT}/b70-kv-cache-comparison.svg", "w") as f:
@@ -270,20 +270,20 @@ svg_ctx = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
   <!-- ── Bottom: VRAM budget visualization ── -->
   <text x="40" y="370" class="title" style="font-size:15px;">32GB VRAM Budget at Max Context (q5_0-q4_1)</text>
 
-  <!-- 35B at 256K -->
-  <rect x="40" y="390" width="850" height="40" rx="4" fill="{C["amber"]}" opacity="0.15" stroke="{C["amber"]}" stroke-width="1" />
-  <text x="50" y="412" class="code-a">35B Q5 @ 256K: 30.8 GB (96%)</text>
-  <text x="50" y="424" class="code-a">Context fits tight but stable</text>
+  <!-- 35B at 256K (96% filled) -->
+  <rect x="40" y="390" width="816" height="40" rx="4" fill="{C["amber"]}" opacity="0.15" stroke="{C["amber"]}" stroke-width="1" />
+  <rect x="40" y="390" width="783" height="40" rx="4" fill="{C["amber"]}" opacity="0.45" />
+  <text x="50" y="415" class="code-a">35B Q5 @ 256K: 30.8 GB (96%)</text>
 
-  <!-- 27B at 200K -->
-  <rect x="40" y="440" width="850" height="40" rx="4" fill="{C["blue"]}" opacity="0.15" stroke="{C["blue"]}" stroke-width="1" />
-  <text x="50" y="462" class="code-b">27B MTP @ 200K: 28.9 GB (90%)</text>
-  <text x="50" y="474" class="code-b">MTP draft adds ~1.2 GB overhead</text>
+  <!-- 27B at 200K (90% filled) -->
+  <rect x="40" y="440" width="816" height="40" rx="4" fill="{C["blue"]}" opacity="0.15" stroke="{C["blue"]}" stroke-width="1" />
+  <rect x="40" y="440" width="734" height="40" rx="4" fill="{C["blue"]}" opacity="0.45" />
+  <text x="50" y="465" class="code-b">27B MTP @ 200K: 28.9 GB (90%)</text>
 
-  <!-- 9B at 512K -->
-  <rect x="40" y="490" width="850" height="40" rx="4" fill="{C["green"]}" opacity="0.15" stroke="{C["green"]}" stroke-width="1" />
-  <text x="50" y="512" class="code-g">9B @ 512K: 15.2 GB (47%)</text>
-  <text x="50" y="524" class="code-g">Plenty of headroom for growth</text>
+  <!-- 9B at 512K (47% filled) -->
+  <rect x="40" y="490" width="816" height="40" rx="4" fill="{C["green"]}" opacity="0.15" stroke="{C["green"]}" stroke-width="1" />
+  <rect x="40" y="490" width="383" height="40" rx="4" fill="{C["green"]}" opacity="0.45" />
+  <text x="50" y="515" class="code-g">9B @ 512K: 15.2 GB (47%)</text>
 </svg>'''
 
 with open(f"{OUT}/b70-context-ceilings.svg", "w") as f:

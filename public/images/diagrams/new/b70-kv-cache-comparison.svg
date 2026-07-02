@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580">
   <defs>
     <style>
       .bg { fill: #0f172a; }
@@ -70,9 +70,9 @@
   <text x="380" y="394" class="code-g">free: 20.5 GB (+6.2 GB)</text>
 
   <!-- ── Bottom: engine speed ── -->
-  <rect x="40" y="440" width="880" height="90" class="box-purple" />
-  <text x="60" y="466" class="title" style="font-size:15px;">Engine Decode Rate</text>
-  <text x="60" y="492" class="code-p">q8_0-q8_0 baseline: measured reference</text>
-  <text x="60" y="512" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
-  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense x 2)</text>
+  <rect x="40" y="440" width="880" height="110" class="box-purple" />
+  <text x="60" y="470" class="title" style="font-size:15px;">Engine Decode Rate</text>
+  <text x="60" y="498" class="code-p">q8_0-q8_0 baseline: measured reference</text>
+  <text x="60" y="520" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
+  <text x="60" y="542" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense x 2)</text>
 </svg>
