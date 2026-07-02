@@ -69,7 +69,7 @@ svg_kv = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
   <rect x="620" y="90" width="300" height="160" class="box-green" />
   <text x="640" y="116" class="title" style="font-size:15px;">Optimized: q5_0 K / q4_1 V</text>
   <text x="640" y="142" class="code">Effective bits: 6.0 / 4.5</text>
-  <text x="640" y="162" class="code-g">VRAM multiplier: 0.328 (−38%)</text>
+  <text x="640" y="162" class="code-g">VRAM multiplier: 0.328 (-38%)</text>
   <text x="640" y="186" class="code-g">35B Q5 context ceiling: 256K</text>
   <text x="640" y="206" class="code-g">27B MTP ceiling: 200K</text>
   <text x="640" y="226" class="code-g">Tail precision: 89.84% (safe)</text>
@@ -98,7 +98,7 @@ svg_kv = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
   <text x="60" y="466" class="title" style="font-size:15px;">Engine Decode Rate</text>
   <text x="60" y="492" class="code-p">q8_0-q8_0 baseline: measured reference</text>
   <text x="60" y="512" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
-  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense × 2)</text>
+  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense x 2)</text>
 </svg>'''
 
 with open(f"{OUT}/b70-kv-cache-comparison.svg", "w") as f:
@@ -148,14 +148,14 @@ svg_mtp = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
   <text x="160" y="172" class="code">18.4</text>
   <text x="260" y="172" class="code">21.2</text>
   <text x="370" y="172" class="code-g">+28%</text>
-  <text x="470" y="172" class="code">48°C</text>
+  <text x="470" y="172" class="code">48C</text>
 
   <!-- Row: 165W -->
   <text x="60" y="200" class="code">165W</text>
   <text x="160" y="200" class="code">22.1</text>
   <text x="260" y="200" class="code">25.3</text>
   <text x="370" y="200" class="code-g">+31%</text>
-  <text x="470" y="200" class="code">50°C</text>
+  <text x="470" y="200" class="code">50C</text>
 
   <!-- Row: 180W (sweet spot) -->
   <rect x="50" y="208" width="480" height="28" rx="4" fill="{C["green"]}" opacity="0.1" />
@@ -163,17 +163,17 @@ svg_mtp = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
   <text x="160" y="228" class="code-g">25.8</text>
   <text x="260" y="228" class="code-g">29.1</text>
   <text x="370" y="228" class="code-g">+35%</text>
-  <text x="470" y="228" class="code-g">52°C</text>
+  <text x="470" y="228" class="code-g">52C</text>
 
   <!-- Row: 230W -->
   <text x="60" y="256" class="code">230W</text>
   <text x="160" y="256" class="code">26.9</text>
   <text x="260" y="256" class="code">30.0</text>
   <text x="370" y="256" class="code-a">+35%</text>
-  <text x="470" y="256" class="code-a">61°C</text>
+  <text x="470" y="256" class="code-a">61C</text>
 
-  <text x="60" y="284" class="sub">180W = sweet spot: +35% gain, only 52°C</text>
-  <text x="60" y="304" class="sub">230W = same gain, 9°C hotter, diminishing returns</text>
+  <text x="60" y="284" class="sub">180W = sweet spot: +35% gain, only 52C</text>
+  <text x="60" y="304" class="sub">230W = same gain, 9C hotter, diminishing returns</text>
   <text x="60" y="324" class="sub">Diminishing returns above 180W</text>
 
   <!-- ── Right: methodology fix ── -->
@@ -191,16 +191,16 @@ svg_mtp = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
   <text x="600" y="328" class="sub">b70-verified-bench.sh · 4 diverse prompts</text>
 
   <!-- ── Bottom: key insight ── -->
-  <rect x="40" y="370" width="880" height="60" class="box-amber" />
+  <rect x="40" y="370" width="880" height="80" class="box-amber" />
   <text x="60" y="396" class="title" style="font-size:14px;">Key Insight</text>
-  <text x="60" y="416" class="code-a">MTP-4 speculative decoding at 180W delivers the same throughput as 230W with significantly lower thermals.</text>
-  <text x="60" y="432" class="code-a">Cap at 180W, measure engine rate not wall-clock, always discard warmup.</text>
+  <text x="60" y="418" class="code-a">MTP-4 speculative decoding at 180W delivers the same throughput as 230W</text>
+  <text x="60" y="438" class="code-a">with significantly lower thermals. Cap at 180W, measure engine rate,</text>
+  <text x="60" y="458" class="code-a">not wall-clock, always discard warmup.</text>
 
   <!-- ── Bottom: vision results ── -->
-  <rect x="40" y="460" width="880" height="80" class="box-green" />
-  <text x="60" y="486" class="title" style="font-size:14px;">Vision Benchmark Results (after ffmpeg fix)</text>
-  <text x="60" y="508" class="code-g">Qwen 27B MTP-4 @ 180W: 29.1 tok/s engine · image decode overhead: 4-6%</text>
-  <text x="60" y="528" class="code-g">Gemma 4 26B @ 150W: 59.2 tok/s engine · image decode overhead: 4-6%</text>
+  <rect x="40" y="480" width="880" height="60" class="box-green" />
+  <text x="60" y="506" class="title" style="font-size:14px;">Vision Benchmark Results (after ffmpeg fix)</text>
+  <text x="60" y="528" class="code-g">Qwen 27B MTP-4 @ 180W: 29.1 tok/s engine · overhead: 4-6%</text>
 </svg>'''
 
 with open(f"{OUT}/b70-mtp-power-scaling.svg", "w") as f:
@@ -210,7 +210,7 @@ print("Generated: b70-mtp-power-scaling.svg")
 # ──────────────────────────────────────────────────
 # SVG 3: Context Ceilings Map
 # ──────────────────────────────────────────────────
-svg_ctx = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520">
+svg_ctx = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
   <defs>
     <style>
       .bg {{ fill: {C["bg"]}; }}
@@ -230,7 +230,7 @@ svg_ctx = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520">
     </style>
   </defs>
 
-  <rect width="960" height="520" class="bg" />
+  <rect width="960" height="540" class="bg" />
   <text x="40" y="38" class="title">Context Ceilings on 32GB VRAM (q5_0-q4_1 KV cache)</text>
   <text x="40" y="58" class="sub">Intel Arc Pro B70 32GB · llama.cpp b9851 · hardware-verified</text>
 
@@ -250,7 +250,7 @@ svg_ctx = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520">
   <text x="380" y="162" class="code-b">KV per 128K: 8.2 GB</text>
   <text x="382" y="186" class="code-g">Max context: 200K</text>
   <text x="380" y="206" class="code">VRAM at 200K: ~28.9 GB</text>
-  <text x="380" y="222" class="code">MTP draft model adds ~1.2 GB</text>
+  <text x="380" y="222" class="code">MTP draft adds ~1.2 GB</text>
 
   <!-- ── Tier 3: Ornith 9B ── -->
   <rect x="680" y="90" width="240" height="140" class="box-green" />
@@ -271,23 +271,20 @@ svg_ctx = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520">
   <text x="40" y="370" class="title" style="font-size:15px;">32GB VRAM Budget at Max Context (q5_0-q4_1)</text>
 
   <!-- 35B at 256K -->
-  <rect x="40" y="390" width="850" height="28" rx="4" fill="{C["amber"]}" opacity="0.15" stroke="{C["amber"]}" stroke-width="1" />
-  <text x="50" y="410" class="code-a">35B Q5 @ 256K: ██████████████████████████████████████████████░░░░ 30.8 GB (96%)</text>
+  <rect x="40" y="390" width="850" height="40" rx="4" fill="{C["amber"]}" opacity="0.15" stroke="{C["amber"]}" stroke-width="1" />
+  <text x="50" y="412" class="code-a">35B Q5 @ 256K: 30.8 GB (96%)</text>
+  <text x="50" y="424" class="code-a">Context fits tight but stable</text>
 
   <!-- 27B at 200K -->
-  <rect x="40" y="425" width="850" height="28" rx="4" fill="{C["blue"]}" opacity="0.15" stroke="{C["blue"]}" stroke-width="1" />
-  <text x="50" y="445" class="code-b">27B MTP @ 200K: █████████████████████████████████████░░░░░░░░░░░░░░░░ 28.9 GB (90%)</text>
+  <rect x="40" y="440" width="850" height="40" rx="4" fill="{C["blue"]}" opacity="0.15" stroke="{C["blue"]}" stroke-width="1" />
+  <text x="50" y="462" class="code-b">27B MTP @ 200K: 28.9 GB (90%)</text>
+  <text x="50" y="474" class="code-b">MTP draft adds ~1.2 GB overhead</text>
 
   <!-- 9B at 512K -->
-  <rect x="40" y="460" width="850" height="28" rx="4" fill="{C["green"]}" opacity="35" opacity="0.15" stroke="{C["green"]}" stroke-width="1" />
-  <text x="50" y="480" class="code-g">9B @ 512K:      ███████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 15.2 GB (47%)</text>
-
-  <!-- Full VRAM marker -->
-  <text x="892" y="510" class="sub">32 GB</text>
+  <rect x="40" y="490" width="850" height="40" rx="4" fill="{C["green"]}" opacity="0.15" stroke="{C["green"]}" stroke-width="1" />
+  <text x="50" y="512" class="code-g">9B @ 512K: 15.2 GB (47%)</text>
+  <text x="50" y="524" class="code-g">Plenty of headroom for growth</text>
 </svg>'''
-
-# Fix the duplicated opacity attribute
-svg_ctx = svg_ctx.replace('opacity="35" opacity="0.15"', 'opacity="0.15"')
 
 with open(f"{OUT}/b70-context-ceilings.svg", "w") as f:
     f.write(svg_ctx)
@@ -296,5 +293,5 @@ print("Generated: b70-context-ceilings.svg")
 print(f"\nAll SVGs written to: {OUT}")
 print("Files:")
 for f_name in sorted(os.listdir(OUT)):
-    if "b70-benchmark" in f_name or "b70-kv" in f_name or "b70-mtp" in f_name or "b70-context" in f_name:
+    if "b70-kv-cache-comparison" in f_name or "b70-mtp-power-scaling" in f_name or "b70-context-ceilings" in f_name:
         print(f"  {f_name}")

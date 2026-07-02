@@ -116,3 +116,20 @@ llama-server \
 ```
 
 Note the context length: 262144 (256K). With q8_0 KV cache, this config would OOM. With q5_0-q4_1, it fits with about 1.2 GB of headroom.
+
+## References
+
+The VRAM multiplier calculations and quality cliff threshold are based on the **Anbeeld 2026 KV cache benchmark methodology**, which provides measured multipliers per quant type rather than theoretical values. That benchmark documents:
+
+- Effective bits per quant type (q8_0=8.5, q5_0=6.0, q4_0=4.5, q4_1=5.0)
+- SNR calculations for each quantization level
+- Error propagation through attention mechanisms
+- The 89.84% tail precision quality cliff at q4_0
+
+Primary sources:
+
+- Anbeeld 2026 KV cache benchmarks (Reddit r/LocalLLaMA, methodology post)
+- NVIDIA DGX Spark KV benchmarks (reference for KV cache scaling patterns)
+- llama.cpp PR #21295 (KV cache quantization discussion)
+
+This post validates those multipliers on Intel Arc hardware specifically, confirming the same behavior applies outside the original CUDA context.
