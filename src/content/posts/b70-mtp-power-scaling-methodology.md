@@ -97,3 +97,27 @@ Two things went wrong with the initial benchmarking:
 2. **Missing ffmpeg broke vision silently.** The error messages pointed at model loading, not at a missing system dependency. If vision tests fail with decode errors, check for ffmpeg before debugging model configs.
 
 The corrected benchmark script is now the canonical tool for all B70 evaluations. Old scripts that used the single-prompt methodology are deprecated.
+
+## References
+
+Key upstream issues that informed the methodology fix:
+
+- Prefix caching behavior in llama.cpp (Reddit r/LocalLLaMA, multiple threads on cache inflation)
+- Benchmark methodology for speculative decoding (HuggingFace community discussions on warmup discard)
+- Engine rate vs wall-clock measurement best practices (llama.cpp metrics documentation)
+
+The prefix caching inflation pattern is a known pitfall in llama.cpp benchmarking. When the same prompt runs multiple times, the prefilled tokens hit the cache, making baseline runs artificially fast. This article documents one concrete instance on Intel Arc hardware, but the pattern applies across all backends.
+
+For the power scaling curve itself, the findings are consistent with:
+
+- Intel Arc Battlemage power efficiency curves (Intel documentation)
+- GPU diminishing returns studies (NVIDIA DGX Spark, translated conceptually to Arc)
+
+## Next Steps
+
+The corrected benchmark methodology is now in `b70-verified-bench.sh`. Future benchmark work on B70 will use this as the baseline:
+
+- Always discard warmup
+- Isolate engine rate from wall-clock
+- Enforce thermal cooldowns
+- Use diverse prompts to prevent cache bias

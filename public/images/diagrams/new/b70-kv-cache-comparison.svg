@@ -45,7 +45,7 @@
   <rect x="620" y="90" width="300" height="160" class="box-green" />
   <text x="640" y="116" class="title" style="font-size:15px;">Optimized: q5_0 K / q4_1 V</text>
   <text x="640" y="142" class="code">Effective bits: 6.0 / 4.5</text>
-  <text x="640" y="162" class="code-g">VRAM multiplier: 0.328 (−38%)</text>
+  <text x="640" y="162" class="code-g">VRAM multiplier: 0.328 (-38%)</text>
   <text x="640" y="186" class="code-g">35B Q5 context ceiling: 256K</text>
   <text x="640" y="206" class="code-g">27B MTP ceiling: 200K</text>
   <text x="640" y="226" class="code-g">Tail precision: 89.84% (safe)</text>
@@ -74,5 +74,5 @@
   <text x="60" y="466" class="title" style="font-size:15px;">Engine Decode Rate</text>
   <text x="60" y="492" class="code-p">q8_0-q8_0 baseline: measured reference</text>
   <text x="60" y="512" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
-  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense × 2)</text>
+  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense x 2)</text>
 </svg>

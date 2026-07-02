@@ -38,14 +38,14 @@
   <text x="160" y="172" class="code">18.4</text>
   <text x="260" y="172" class="code">21.2</text>
   <text x="370" y="172" class="code-g">+28%</text>
-  <text x="470" y="172" class="code">48°C</text>
+  <text x="470" y="172" class="code">48C</text>
 
   <!-- Row: 165W -->
   <text x="60" y="200" class="code">165W</text>
   <text x="160" y="200" class="code">22.1</text>
   <text x="260" y="200" class="code">25.3</text>
   <text x="370" y="200" class="code-g">+31%</text>
-  <text x="470" y="200" class="code">50°C</text>
+  <text x="470" y="200" class="code">50C</text>
 
   <!-- Row: 180W (sweet spot) -->
   <rect x="50" y="208" width="480" height="28" rx="4" fill="#4ade80" opacity="0.1" />
@@ -53,17 +53,17 @@
   <text x="160" y="228" class="code-g">25.8</text>
   <text x="260" y="228" class="code-g">29.1</text>
   <text x="370" y="228" class="code-g">+35%</text>
-  <text x="470" y="228" class="code-g">52°C</text>
+  <text x="470" y="228" class="code-g">52C</text>
 
   <!-- Row: 230W -->
   <text x="60" y="256" class="code">230W</text>
   <text x="160" y="256" class="code">26.9</text>
   <text x="260" y="256" class="code">30.0</text>
   <text x="370" y="256" class="code-a">+35%</text>
-  <text x="470" y="256" class="code-a">61°C</text>
+  <text x="470" y="256" class="code-a">61C</text>
 
-  <text x="60" y="284" class="sub">180W = sweet spot: +35% gain, only 52°C</text>
-  <text x="60" y="304" class="sub">230W = same gain, 9°C hotter, diminishing returns</text>
+  <text x="60" y="284" class="sub">180W = sweet spot: +35% gain, only 52C</text>
+  <text x="60" y="304" class="sub">230W = same gain, 9C hotter, diminishing returns</text>
   <text x="60" y="324" class="sub">Diminishing returns above 180W</text>
 
   <!-- ── Right: methodology fix ── -->
@@ -81,14 +81,14 @@
   <text x="600" y="328" class="sub">b70-verified-bench.sh · 4 diverse prompts</text>
 
   <!-- ── Bottom: key insight ── -->
-  <rect x="40" y="370" width="880" height="60" class="box-amber" />
+  <rect x="40" y="370" width="880" height="80" class="box-amber" />
   <text x="60" y="396" class="title" style="font-size:14px;">Key Insight</text>
-  <text x="60" y="416" class="code-a">MTP-4 speculative decoding at 180W delivers the same throughput as 230W with significantly lower thermals.</text>
-  <text x="60" y="432" class="code-a">Cap at 180W, measure engine rate not wall-clock, always discard warmup.</text>
+  <text x="60" y="418" class="code-a">MTP-4 speculative decoding at 180W delivers the same throughput as 230W</text>
+  <text x="60" y="438" class="code-a">with significantly lower thermals. Cap at 180W, measure engine rate,</text>
+  <text x="60" y="458" class="code-a">not wall-clock, always discard warmup.</text>
 
   <!-- ── Bottom: vision results ── -->
-  <rect x="40" y="460" width="880" height="80" class="box-green" />
-  <text x="60" y="486" class="title" style="font-size:14px;">Vision Benchmark Results (after ffmpeg fix)</text>
-  <text x="60" y="508" class="code-g">Qwen 27B MTP-4 @ 180W: 29.1 tok/s engine · image decode overhead: 4-6%</text>
-  <text x="60" y="528" class="code-g">Gemma 4 26B @ 150W: 59.2 tok/s engine · image decode overhead: 4-6%</text>
+  <rect x="40" y="480" width="880" height="60" class="box-green" />
+  <text x="60" y="506" class="title" style="font-size:14px;">Vision Benchmark Results (after ffmpeg fix)</text>
+  <text x="60" y="528" class="code-g">Qwen 27B MTP-4 @ 180W: 29.1 tok/s engine · overhead: 4-6%</text>
 </svg>
