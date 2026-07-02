@@ -1,111 +1,96 @@
-# Social Media Posts — B70 Benchmark Findings
+# Social Media Drafts: B70 Benchmark Series — Round 2
 
-Content derived from hardware-verified benchmark data on Intel Arc Pro B70 32GB.
-Portfolio posts: `b70-kv-cache-quantization-context-ceilings` and `b70-mtp-power-scaling-methodology`.
+**Status:** Ready for approval
+**Portfolio posts referenced:**
+
+- https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
+- https://sergiiob.dev/posts/b70-mtp-power-scaling-methodology
+- https://sergiiob.dev/posts/intel-arc-pro-b70-sycl-llama-cpp-qwen35
+  **Affiliate link:** sergiiob.dev/go/b70 (Cloudflare redirect → Amazon, tag hidden from repo)
 
 ---
 
 ## X (Twitter)
 
-### Thread 1: KV Cache & Context Ceilings (2 tweets)
+### Thread 1: Main thread (2 tweets)
 
 **Tweet 1:**
-Spent yesterday mapping context ceilings on the Intel Arc B70 (32GB). Switched KV cache from symmetric q8_0 to asymmetric q5_0 K / q4_1 V.
+Benchmarked a 35B model at 256K context on a single Intel Arc Pro B70 (32GB). Found that asymmetric KV cache quantization (q5_0 K / q4_1 V) freed enough VRAM to double the context window and was 3.3% faster than the q8_0 baseline.
 
-VRAM multiplier dropped from 0.531 to 0.328. That freed 6.2 GB per 128K context, and the engine decode rate actually went up 3.3%.
+Full build flags, VRAM math, and corrected benchmarks here:
+https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
 
 **Tweet 2:**
-New context ceilings on 32GB with the optimized cache:
+Also had to throw out my initial MTP-4 speculative decoding data. Prefix caching was inflating the baseline by ~5%.
 
-- 35B Q5: fits 256K (was 128K)
-- 27B MTP: fits 200K
-- Ornith 9B: fits 1024K+
+Corrected methodology shows +35% throughput at 180W (not the +41% initially measured). 180W is the sweet spot, same throughput as 230W but 9°C cooler.
 
-Zero scaling penalty across all lengths. Quality stays above the 89.84% tail precision cliff.
-
-Full writeup: https://sergiiob.dev
+Details: https://sergiiob.dev/posts/b70-mtp-power-scaling-methodology
 
 ---
 
-### Thread 2: Benchmark Methodology Fix (2 tweets)
+### Tweet 2: Standalone (for a different day, shorter)
 
-**Tweet 1:**
-Had to bin my initial MTP-4 power sweep data for Qwen 27B. Single-prompt prefix caching was inflating the baseline by ~5%, which made speculative decoding gains look larger than reality.
+Running a 35B MoE model with 256K context on a 32GB Intel Arc Pro B70 for local inference. The key was switching KV cache to asymmetric q5_0/q4_1, which freed 6.2 GB of VRAM per 128K and was faster than q8_0.
 
-**Tweet 2:**
-Rewrote the benchmark script: warmup discard, engine rate isolated from wall-clock, strict cooldown to under 52C between rounds.
+Hardware and GPU (non-affiliate):
+https://sergiiob.dev/go/b70
 
-Corrected MTP-4 gain at 180W: +35% (not the +41% initially measured). 180W is the sweet spot, same throughput as 230W but 9C cooler.
-
----
-
-### Thread 3: Vision Benchmarks (1 tweet)
-
-**Tweet 1:**
-Ran vision benchmarks on the B70 for Qwen 27B (180W) and Gemma 4 26B (150W). First two rounds crashed because ffmpeg was missing on the host.
-
-After the fix: image decode overhead sits at 4-6% over pure text inference. Practically negligible for multimodal workloads.
+Full benchmark writeup:
+https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
 
 ---
 
 ## LinkedIn
 
-### Post 1: KV Cache Quantization (Technical Deep-Dive)
+### Post 1: Technical Deep-Dive (main post)
 
-Been mapping context ceilings on the Intel Arc Pro B70 32GB over the last few days. The default q8_0 KV cache was eating too much VRAM, capping a 35B model at 128K context.
+Been running benchmarks on the Intel Arc Pro B70 (32GB) to map out exactly where the VRAM, context, and power limits sit for local inference.
 
-Switched to asymmetric quantization: q5_0 for K, q4_1 for V.
+Three findings worth sharing:
 
-- VRAM multiplier: 0.531 -> 0.328 (38% reduction)
-- Freed 6.2 GB of VRAM per 128K context
-- Context ceiling on 35B Q5: 128K -> 256K
-- Engine decode rate: 3.3% faster (not slower)
-- Quality: above the 89.84% tail precision cliff
+1. Switching KV cache from symmetric q8_0 to asymmetric q5_0 K / q4_1 V freed 6.2 GB of VRAM per 128K context. That pushed the 35B model from 128K to 256K context. The asymmetric config was also 3.3% faster in engine decode rate, not slower. The rationale: K cache is more sensitive to quantization noise (participates in the attention dot product directly), V only scales, so it tolerates heavier quantization.
 
-The asymmetric approach makes sense. K cache participates directly in the attention dot product, so it is more sensitive to quantization noise. V only scales, so it tolerates the heavier q4_1 quantization without degrading output quality.
+2. Had to bin my initial MTP-4 speculative decoding data. Single-prompt prefix caching was inflating the baseline by ~5%, making the gains look larger. Rewrote the benchmark script with warmup discard and engine-rate isolation. Corrected MTP-4 gain at 180W: +35% (not the +41% initially measured). 180W is the power sweet spot.
 
-Zero context scaling penalty across all tested lengths (64K to 512K). Throughput stays flat regardless of how much context is filled.
+3. Vision benchmarks (Qwen 27B at 180W, Gemma 4 26B at 150W) run with only 4-6% image decode overhead after a missing ffmpeg dependency crashed the first two rounds.
 
-5 API-ready configs documented and submitted. Full VRAM math and methodology on the portfolio.
+All three posts are now live on the portfolio with full flag-by-flag explanations, VRAM budget tables, and reproducible benchmark methodology:
 
-[link to sergiiob.dev]
+KV Cache Quantization and Context Ceilings:
+https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
 
-#LocalAI #llamaCpp #IntelArc #KVCache #Quantization #LocalInference
+MTP-4 Power Scaling and Methodology Fix:
+https://sergiiob.dev/posts/b70-mtp-power-scaling-methodology
 
----
+SYCL Setup and Root Cause (persistent cache crash fix):
+https://sergiiob.dev/posts/intel-arc-pro-b70-sycl-llama-cpp-qwen35
 
-### Post 2: MTP Power Scaling & Methodology (Applied/Methodology)
-
-Ran a power scaling sweep for MTP-4 speculative decoding on Qwen 27B across 150W-230W on the Intel Arc B70. Had to throw out the initial data and rewrite my benchmark script halfway through.
-
-Single-prompt prefix caching was inflating the baseline by about 5%, which made the speculative decoding gains look larger than they were. Initially measured +41% gain.
-
-After fixing the methodology (warmup discard, engine rate vs wall-clock isolation, strict thermal cooldowns):
-
-- Corrected MTP-4 gain at 180W: +35%
-- 180W is the sweet spot: same throughput as 230W, but 52C instead of 61C
-- Above 180W: diminishing returns, just more heat
-
-Also ran vision benchmarks (Qwen 27B at 180W, Gemma 4 26B at 150W). First rounds crashed because ffmpeg was missing on the host. After the fix, image decode overhead is 4-6% over pure text. Negligible for practical multimodal use.
-
-Full corrected data and benchmark methodology on the portfolio.
-
-[link to sergiiob.dev]
-
-#LocalAI #Benchmarking #SpeculativeDecoding #IntelArc #MachineLearning
+#LocalAI #IntelArc #llamaCpp #Benchmarking #LocalInference #EdgeAI
 
 ---
 
-### Post 3: Combined Overview (shorter, for broader reach)
+### Post 2: Shorter combined post (alternative, for wider reach)
 
-Spent a day running 13 hardware-verified benchmark tests on the Intel Arc Pro B70 32GB. Two findings worth sharing:
+Spent the last few days running 13 hardware-verified benchmark tests on the Intel Arc Pro B70 (32GB). Two findings that changed how I configure this card:
 
-1. Asymmetric KV cache quantization (q5_0 K / q4_1 V) freed enough VRAM to push 35B model context from 128K to 256K. It was also 3.3% faster than the q8_0 baseline.
+Asymmetric KV cache (q5_0 K / q4_1 V) freed enough VRAM to push 256K context on a 35B model. It was also 3.3% faster than the q8_0 baseline.
 
-2. My initial MTP-4 speculative decoding benchmarks were inflated by prefix caching. Corrected methodology shows a real +35% throughput gain at 180W (not the +41% initially reported). 180W is the power sweet spot.
+My MTP-4 speculative decoding benchmarks were inflated by prefix caching. Corrected methodology shows a real +35% throughput gain at 180W. 180W is the sweet spot: same throughput as 230W, but 52°C instead of 61°C.
 
-Both findings are now documented with full VRAM budgets, power scaling curves, and corrected benchmark scripts.
+Full VRAM budgets, power scaling curves, and the complete runtime flags handbook (with every flag explained) now on the portfolio:
 
-[link to sergiiob.dev]
+https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
+https://sergiiob.dev/posts/b70-mtp-power-scaling-methodology
 
-#LocalAI #IntelArc #llamaCpp #Benchmarking #EdgeAI
+#LocalAI #IntelArc #llamaCpp #Benchmarking
+
+---
+
+## Notes
+
+- **Affiliate setup:** The sergiiob.dev/go/b70 redirect needs to be created in Cloudflare dashboard → Rules → Redirect Rules. Pattern: `/go/b70`, target: Amazon ES product page with tag=intelliauto-21. This keeps the affiliate tag out of the public GitHub repo entirely.
+
+- **Posting schedule:** Don't post LinkedIn Post 1 and Post 2 on the same day. Space them 3-4 days apart. The X thread can go same day as LinkedIn Post 1.
+
+- **X Article option:** The LinkedIn Post 1 content is also suitable as an X Article if you want to use Premium+ article publishing.
