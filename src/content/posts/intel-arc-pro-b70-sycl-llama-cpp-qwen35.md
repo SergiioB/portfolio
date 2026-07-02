@@ -22,7 +22,7 @@ tags:
     "gguf",
     "benchmark",
   ]
-draft: true
+draft: false
 ---
 
 ## Situation
