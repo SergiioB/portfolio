@@ -46,6 +46,10 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Case-study driven engineering portfolio",
     es: "Portfolio de ingeniería con casos prácticos",
   },
+  "site.affiliateDisclosure": {
+    en: "As an Amazon Associate I earn from qualifying purchases.",
+    es: "Como afiliado de Amazon, obtengo ingresos por compras adscritas.",
+  },
 
   /* ── Navigation ── */
   "nav.home": { en: "Home", es: "Inicio" },

@@ -32,6 +32,8 @@ The question I needed to answer:
 
 > Can asymmetric KV cache quantization extend context ceilings on 32GB without degrading throughput or quality, and where exactly does the quality cliff sit?
 
+Hardware reference: [Intel Arc Pro cards on Amazon](https://sergiiob.dev/go/arc-pro). Regional links: [Spain](https://sergiiob.dev/go/arc-pro-es), [US](https://sergiiob.dev/go/arc-pro-us), [UK](https://sergiiob.dev/go/arc-pro-uk), [Germany](https://sergiiob.dev/go/arc-pro-de), [France](https://sergiiob.dev/go/arc-pro-fr), [Italy](https://sergiiob.dev/go/arc-pro-it).
+
 ## The VRAM Math
 
 With the default `q8_0` for both K and V caches, the VRAM multiplier is **0.531**. For a 35B Q5 model consuming 20.8 GB of weights, the remaining 11.2 GB of VRAM only buys about 128K of context.
