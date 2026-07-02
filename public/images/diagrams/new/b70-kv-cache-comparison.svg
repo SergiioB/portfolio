@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .title { fill: #f8fafc; font-family: monospace; font-size: 20px; font-weight: bold; }
+      .sub { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .code { fill: #cbd5e1; font-family: monospace; font-size: 12px; }
+      .code-g { fill: #4ade80; font-family: monospace; font-size: 12px; }
+      .code-a { fill: #f59e0b; font-family: monospace; font-size: 12px; }
+      .code-r { fill: #ef4444; font-family: monospace; font-size: 12px; }
+      .code-b { fill: #38bdf8; font-family: monospace; font-size: 12px; }
+      .code-p { fill: #a78bfa; font-family: monospace; font-size: 12px; }
+      .box { fill: #1e293b; stroke: #334155; stroke-width: 2; rx: 8; }
+      .box-blue { fill: #1e293b; stroke: #38bdf8; stroke-width: 2; rx: 8; }
+      .box-green { fill: #1e293b; stroke: #4ade80; stroke-width: 2; rx: 8; }
+      .box-amber { fill: #1e293b; stroke: #f59e0b; stroke-width: 2; rx: 8; }
+      .box-purple { fill: #1e293b; stroke: #a78bfa; stroke-width: 2; rx: 8; }
+      .box-red { fill: #1e293b; stroke: #ef4444; stroke-width: 2; rx: 8; }
+      .arr { stroke: #38bdf8; stroke-width: 2; fill: none; marker-end: url(#ah); }
+      .arr-g { stroke: #4ade80; stroke-width: 2; fill: none; marker-end: url(#ahg); }
+      .label { fill: #94a3b8; font-family: monospace; font-size: 11px; }
+    </style>
+    <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#38bdf8" />
+    </marker>
+    <marker id="ahg" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80" />
+    </marker>
+  </defs>
+
+  <rect width="960" height="560" class="bg" />
+  <text x="40" y="38" class="title">KV Cache Quantization: q8_0 vs q5_0-q4_1 on B70 32GB</text>
+  <text x="40" y="58" class="sub">llama.cpp b9851 · Intel Arc Pro B70 · hardware-verified</text>
+
+  <!-- ── Left column: baseline q8_0 ── -->
+  <rect x="40" y="90" width="300" height="160" class="box-blue" />
+  <text x="60" y="116" class="title" style="font-size:15px;">Baseline: q8_0 / q8_0</text>
+  <text x="60" y="142" class="code">Effective bits: 8.5 per type</text>
+  <text x="60" y="162" class="code">VRAM multiplier: 0.531</text>
+  <text x="60" y="186" class="code-a">35B Q5 context ceiling: 128K</text>
+  <text x="60" y="206" class="code-a">27B MTP ceiling: 128K</text>
+  <text x="60" y="226" class="code">Tail precision: safe</text>
+
+  <!-- ── Right column: optimized q5_0-q4_1 ── -->
+  <rect x="620" y="90" width="300" height="160" class="box-green" />
+  <text x="640" y="116" class="title" style="font-size:15px;">Optimized: q5_0 K / q4_1 V</text>
+  <text x="640" y="142" class="code">Effective bits: 6.0 / 4.5</text>
+  <text x="640" y="162" class="code-g">VRAM multiplier: 0.328 (−38%)</text>
+  <text x="640" y="186" class="code-g">35B Q5 context ceiling: 256K</text>
+  <text x="640" y="206" class="code-g">27B MTP ceiling: 200K</text>
+  <text x="640" y="226" class="code-g">Tail precision: 89.84% (safe)</text>
+
+  <!-- Arrow between boxes -->
+  <line x1="340" y1="170" x2="620" y2="170" class="arr-g" />
+  <text x="430" y="160" class="label">switch K/V types</text>
+
+  <!-- ── Bottom: VRAM bar comparison ── -->
+  <text x="40" y="300" class="title" style="font-size:15px;">VRAM Budget per 128K context (35B Q5 model)</text>
+
+  <!-- q8_0 bar -->
+  <rect x="40" y="320" width="531" height="36" rx="4" fill="#f59e0b" opacity="0.25" stroke="#f59e0b" stroke-width="1" />
+  <text x="50" y="344" class="code-a">q8_0: 16.2 GB KV (53.1% of VRAM)</text>
+
+  <!-- q5_0-q4_1 bar -->
+  <rect x="40" y="370" width="328" height="36" rx="4" fill="#4ade80" opacity="0.25" stroke="#4ade80" stroke-width="1" />
+  <text x="50" y="394" class="code-g">q5_0-q4_1: 10.0 GB KV (32.8% of VRAM)</text>
+
+  <!-- Free VRAM marker -->
+  <text x="580" y="344" class="code">free: 14.3 GB</text>
+  <text x="380" y="394" class="code-g">free: 20.5 GB (+6.2 GB)</text>
+
+  <!-- ── Bottom: engine speed ── -->
+  <rect x="40" y="440" width="880" height="90" class="box-purple" />
+  <text x="60" y="466" class="title" style="font-size:15px;">Engine Decode Rate</text>
+  <text x="60" y="492" class="code-p">q8_0-q8_0 baseline: measured reference</text>
+  <text x="60" y="512" class="code-g">q5_0-q4_1 result: +3.3% faster engine decode</text>
+  <text x="60" y="530" class="sub">Measured across 5 hardware-verified tests (control, target, flagship, dense × 2)</text>
+</svg>
