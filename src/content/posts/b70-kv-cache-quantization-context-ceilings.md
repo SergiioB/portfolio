@@ -8,6 +8,7 @@ usedIn: "Production inference server on Intel Arc Pro B70 32GB running Qwen 35B 
 impact: "q5_0-q4_1 reduced the KV cache VRAM multiplier from 0.531 to 0.328 (-38%), was 3.3% faster in engine decode rate, and extended context ceilings from 128K to 256K on the 35B model. Quality remained coherent above the 89.84% tail precision threshold. Zero context scaling penalty documented across all tested lengths."
 pubDate: 2026-07-02
 category: ["local-ai", "infrastructure"]
+amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:
   [
     "local-ai",

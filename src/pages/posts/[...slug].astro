@@ -29,6 +29,7 @@ const {
   solution,
   usedIn,
   impact,
+  amazonUrl,
 } = post.data;
 const readingTime = estimateReadingTime(post.body);
 const primaryCategory = category[0]; // First category is primary for breadcrumb
@@ -136,6 +137,38 @@ const caseItems = [
     <div class="article-content prose-shell">
       <Content />
     </div>
+
+    {
+      amazonUrl && (
+        <div class="amazon-cta">
+          <a
+            href={amazonUrl}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            class="amazon-cta-btn"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+            <span>Buy on Amazon</span>
+          </a>
+          <p class="amazon-cta-disclosure">
+            As an Amazon Associate I earn from qualifying purchases.
+          </p>
+        </div>
+      )
+    }
 
     <footer class="article-footer">
       <a href={withBase("archive/")} class="back-link" data-i18n="nav.browseArchive"

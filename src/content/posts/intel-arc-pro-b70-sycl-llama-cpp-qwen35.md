@@ -8,6 +8,7 @@ usedIn: "Local Intel Arc Pro B70 inference server running llama.cpp with the Ope
 impact: "Qwen3.6-35B-A3B Q4_K_XL now runs on a single Intel Arc Pro B70 via SYCL at 68.45 tok/s in llama-bench and around 60 tok/s through the API. The root cause was narrowed to SYCL persistent cache behavior with dynamically loaded ggml-sycl libraries, plus a missing Level Zero development package during build."
 pubDate: 2026-07-01
 category: ["local-ai", "infrastructure"]
+amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:
   [
     "local-ai",

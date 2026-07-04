@@ -2021,6 +2021,49 @@ li + li {
   padding-bottom: 0.2rem;
 }
 
+.amazon-cta {
+  margin: 2.5rem 0;
+  text-align: center;
+}
+
+.amazon-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ff9900 0%, #e88a00 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(255, 153, 0, 0.3);
+}
+
+.amazon-cta-btn:hover {
+  background: linear-gradient(135deg, #ffaa1e 0%, #f59913 100%);
+  box-shadow: 0 6px 20px rgba(255, 153, 0, 0.45);
+  transform: translateY(-1px);
+}
+
+.amazon-cta-btn:active {
+  transform: translateY(0);
+}
+
+.amazon-cta-btn svg {
+  flex-shrink: 0;
+}
+
+.amazon-cta-disclosure {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0.6rem 0 0;
+}
+
 .prose-shell {
   color: var(--text);
 }

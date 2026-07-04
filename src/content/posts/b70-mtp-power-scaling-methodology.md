@@ -8,6 +8,7 @@ usedIn: "Production benchmark suite for Intel Arc Pro B70 32GB. The corrected sc
 impact: "Corrected MTP-4 gain at 180W is +35% over base (down from the initially reported +41%). 180W identified as the power sweet spot: same throughput as 230W with significantly lower thermals. Vision models tested with 4-6% image decode overhead."
 pubDate: 2026-07-02
 category: ["local-ai", "infrastructure"]
+amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:
   [
     "local-ai",

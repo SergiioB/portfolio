@@ -42,6 +42,7 @@ const postsCollection = defineCollection({
     impact: z.string().optional(),
     draft: z.boolean().default(false),
     slug: z.string().optional(),
+    amazonUrl: z.string().optional(),
   }),
 });
 
