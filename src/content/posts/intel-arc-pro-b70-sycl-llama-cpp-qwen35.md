@@ -422,7 +422,7 @@ OK
 
 ## Benchmarks
 
-### 9B Sanity Test
+### Ornith 35B Sanity Test
 
 ```bash
 source /opt/intel/oneapi/setvars.sh --force
@@ -431,7 +431,7 @@ export ZES_ENABLE_SYSMAN=1
 export SYCL_CACHE_PERSISTENT=0
 
 ./build-sycl-b70/bin/llama-bench \
-  -m /models/ornith-1.0-9b-Q6_K.gguf \
+  -m /models/ornith-1.0-35b-Q5_K_M.gguf \
   -ngl 99 \
   -p 128 \
   -n 32 \
@@ -442,9 +442,9 @@ export SYCL_CACHE_PERSISTENT=0
 Result:
 
 ```text
-qwen35 9B Q6_K, SYCL, -ngl 99
-pp128: 1306.32 t/s
-tg32:    60.73 t/s
+ornith 35B Q5_K_M, SYCL, -ngl 99
+pp128: 441.0 t/s
+tg32:    74.3 t/s
 ```
 
 ### Qwen3.6-35B-A3B

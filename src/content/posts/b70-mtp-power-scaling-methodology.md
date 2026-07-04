@@ -137,12 +137,12 @@ Production server launch with power cap:
 echo 180 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
 
 llama-server \
-  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
+  -m /models/Qwen3.6-27B-MTP-Q5_K_M.gguf \
   --host 0.0.0.0 \
   --port 8080 \
   -dev SYCL0 \
   -ngl 99 \
-  -c 196608 \
+  -c 262144 \
   --parallel 1 \
   --cache-type-k q5_0 \
   --cache-type-v q4_1 \
@@ -151,17 +151,18 @@ llama-server \
   --metrics \
   --slots \
   --jinja \
-  --draft-model /models/Qwen2.5-1.5B-Q5_K_M.gguf \
-  --n-predict 512
+  --spec-type draft-mtp \
+  --spec-draft-n-max 4 \
+  --spec-draft-p-min 0.75
 ```
 
 **MTP-4 specific configuration:**
 
-| Flag            | Value        | Explanation                                                                      |
-| --------------- | ------------ | -------------------------------------------------------------------------------- |
-| `--draft-model` | 1.5B model   | Draft model for speculative decoding. Proposes 4 tokens per forward pass.        |
-| `-c 196608`     | 192K context | Slightly lower than max 200K to account for MTP draft model overhead (~1.2 GB).  |
-| `--parallel 1`  | 1 slot       | MTP increases slot memory usage. Start with 1, test 2-3 for concurrent requests. |
+| Flag                    | Value        | Explanation                                                                      |
+| ----------------------- | ------------ | -------------------------------------------------------------------------------- |
+| `--spec-type draft-mtp` | MTP-4 mode   | Built-in multi-token prediction. No external draft model needed.                 |
+| `-c 262144`             | 256K context | Full 256K with q5_0-q4_1 KV cache. MTP overhead is minimal (~1.2 GB).            |
+| `--parallel 1`          | 1 slot       | MTP increases slot memory usage. Start with 1, test 2-3 for concurrent requests. |
 
 **Power cap rationale:**
 
@@ -184,18 +185,18 @@ echo 180000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
 
 ### Model 2: Qwen 27B Base (No MTP, Baseline Comparison)
 
-File: `Qwen3.6-27B-A3B-UD-Q5_K_M.gguf` (16.1 GB)
+File: `Qwen3.6-27B-MTP-Q5_K_M.gguf` (18.5 GB)
 
 Baseline benchmark launch:
 
 ```bash
 llama-server \
-  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
+  -m /models/Qwen3.6-27B-MTP-Q5_K_M.gguf \
   --host 0.0.0.0 \
   --port 8081 \
   -dev SYCL0 \
   -ngl 99 \
-  -c 196608 \
+  -c 262144 \
   --parallel 1 \
   --cache-type-k q5_0 \
   --cache-type-v q4_1 \
@@ -205,21 +206,24 @@ llama-server \
   --jinja
 ```
 
-**Omitted flag:** `--draft-model` — no speculative decoding, pure base model.
+**Omitted flags:** `--spec-type`, `--spec-draft-*` — no speculative decoding, pure base model.
 
 ### Model 3: Qwen 27B MTP-4 Vision Testing
 
-File: `Qwen3.6-27B-A3B-UD-Q5_K_M.gguf` (16.1 GB)
+File: `Qwen3.6-27B-MTP-Q5_K_M.gguf` (18.5 GB)
 
 Vision benchmark launch (after ffmpeg fix):
 
 ```bash
 llama-cli \
-  -m /models/Qwen3.6-27B-A3B-UD-Q5_K_M.gguf \
-  --draft-model /models/Qwen2.5-1.5B-Q5_K_M.gguf \
+  -m /models/Qwen3.6-27B-MTP-Q5_K_M.gguf \
+  --mmproj /models/mmproj-Qwen3.6-27B-F16.gguf \
+  --spec-type draft-mtp \
+  --spec-draft-n-max 4 \
+  --spec-draft-p-min 0.75 \
   -dev SYCL0 \
   -ngl 99 \
-  -c 131072 \
+  -c 262144 \
   -n 512 \
   --image /path/to/image.jpg \
   --temp 0.7 \
@@ -234,7 +238,7 @@ llama-cli \
 
 ### Model 4: Gemma 4 26B Vision (Alternative Vision Model)
 
-File: `gemma-3-27b-it-Q5_K_M.gguf` (16.0 GB)
+File: `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf` (16.0 GB)
 
 Vision benchmark at 150W power cap:
 

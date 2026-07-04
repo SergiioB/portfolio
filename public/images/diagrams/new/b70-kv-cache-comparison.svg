@@ -47,7 +47,7 @@
   <text x="640" y="142" class="code">Effective bits: 6.0 / 4.5</text>
   <text x="640" y="162" class="code-g">VRAM multiplier: 0.328 (-38%)</text>
   <text x="640" y="186" class="code-g">35B Q5 context ceiling: 256K</text>
-  <text x="640" y="206" class="code-g">27B MTP ceiling: 200K</text>
+  <text x="640" y="206" class="code-g">27B MTP ceiling: 256K</text>
   <text x="640" y="226" class="code-g">Tail precision: 89.84% (safe)</text>
 
   <!-- Arrow between boxes -->
