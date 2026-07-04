@@ -6,7 +6,7 @@
 - https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
 - https://sergiiob.dev/posts/b70-mtp-power-scaling-methodology
 - https://sergiiob.dev/posts/intel-arc-pro-b70-sycl-llama-cpp-qwen35
-  **Affiliate link:** sergiiob.dev/go/b70 (Cloudflare redirect → Amazon, tag hidden from repo)
+  **Affiliate link:** go.sergiiob.dev/arc-pro (Cloudflare redirect → Amazon, tag hidden from repo)
 
 ---
 
@@ -33,7 +33,7 @@ Corrected methodology shows +35% throughput at 180W. 180W is the sweet spot. Det
 
 Running a 35B MoE model at Q5_K_M with 256K context on a 32GB Intel Arc Pro B70 for local inference. The key was switching KV cache from symmetric q8_0 to asymmetric q5_0 K / q4_1 V, which dropped cache size to just 3.6GB!
 Hardware and GPU (non-affiliate):
-https://sergiiob.dev/go/b70
+https://go.sergiiob.dev/arc-pro
 Full benchmark writeup:
 https://sergiiob.dev/posts/b70-kv-cache-quantization-context-ceilings
 

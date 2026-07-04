@@ -45,7 +45,7 @@ The target setup was:
 
 The final result worked, but getting there was not just a matter of installing oneAPI and running the usual flags.
 
-Hardware reference: [Intel Arc Pro cards on Amazon](https://sergiiob.dev/go/arc-pro). Regional links: [Spain](https://sergiiob.dev/go/arc-pro-es), [US](https://sergiiob.dev/go/arc-pro-us), [UK](https://sergiiob.dev/go/arc-pro-uk), [Germany](https://sergiiob.dev/go/arc-pro-de), [France](https://sergiiob.dev/go/arc-pro-fr), [Italy](https://sergiiob.dev/go/arc-pro-it).
+Hardware reference: [Intel Arc Pro B70 on Amazon](https://go.sergiiob.dev/arc-pro).
 
 ## Final Result
 

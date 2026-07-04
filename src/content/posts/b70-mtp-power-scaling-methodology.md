@@ -28,7 +28,7 @@ draft: false
 
 I was running a power scaling sweep for MTP-4 speculative decoding on Qwen 27B. The goal was to map the throughput curve from 150W to 230W and find the optimal power cap for sustained inference.
 
-Hardware reference: [Intel Arc Pro cards on Amazon](https://sergiiob.dev/go/arc-pro). Regional links: [Spain](https://sergiiob.dev/go/arc-pro-es), [US](https://sergiiob.dev/go/arc-pro-us), [UK](https://sergiiob.dev/go/arc-pro-uk), [Germany](https://sergiiob.dev/go/arc-pro-de), [France](https://sergiiob.dev/go/arc-pro-fr), [Italy](https://sergiiob.dev/go/arc-pro-it).
+Hardware reference: [Intel Arc Pro B70 on Amazon](https://go.sergiiob.dev/arc-pro).
 
 The initial results looked good. Too good, actually.
 
