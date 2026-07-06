@@ -69,59 +69,73 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
 
 <style>
   .handbook-content {
-    max-width: var(--max-width-content);
+    max-width: 980px;
     margin: 0 auto;
   }
 
   .article-header {
+    position: relative;
+    overflow: hidden;
     margin-bottom: var(--space-2xl);
+    padding: clamp(1.35rem, 3vw, 2.4rem);
+    border: 1px solid rgba(88, 166, 255, 0.22);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 10% 10%, rgba(88, 166, 255, 0.16), transparent 30%),
+      linear-gradient(135deg, rgba(13, 17, 23, 0.96), var(--surface));
   }
 
   .meta-row {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
     align-items: center;
     margin-bottom: var(--space-lg);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
   }
 
-  .back-link {
-    color: var(--color-text-dim);
+  .back-link,
+  .part-label {
+    color: #58a6ff;
     text-decoration: none;
-    transition: color 0.2s;
   }
 
   .back-link:hover {
-    color: var(--color-primary);
-  }
-
-  .part-label {
-    color: var(--color-primary);
+    color: var(--heading);
   }
 
   .chapter-title {
-    font-size: var(--text-4xl);
-    line-height: 1.2;
-    margin-bottom: var(--space-md);
-    color: var(--color-text);
+    margin: 0 0 var(--space-md);
+    color: var(--heading);
+    font-size: clamp(2rem, 4vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.055em;
   }
 
   .chapter-num {
     display: block;
-    font-size: var(--text-lg);
-    color: var(--color-text-dim);
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
     font-family: var(--font-mono);
-    margin-bottom: var(--space-xs);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .description {
-    font-size: var(--text-xl);
-    color: var(--color-text-dim);
-    line-height: 1.6;
+    max-width: 760px;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    line-height: 1.65;
   }
 
-  /* Assuming 'prose' class relies on existing global typography similar to standard posts */
+  .prose {
+    padding: clamp(1rem, 2vw, 1.4rem);
+    border: 1px solid rgba(48, 54, 61, 0.65);
+    border-radius: var(--radius-lg);
+    background: rgba(13, 17, 23, 0.42);
+  }
 
   .chapter-nav {
     display: grid;
@@ -129,25 +143,28 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
     gap: var(--space-lg);
     margin-top: var(--space-3xl);
     padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--border);
   }
 
   .nav-prev,
   .nav-next {
-    padding: var(--space-lg);
-    text-decoration: none;
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
+    padding: var(--space-lg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    text-decoration: none;
     transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
+      transform var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .nav-prev:hover,
   .nav-next:hover {
-    border-color: var(--color-primary);
     transform: translateY(-2px);
+    border-color: rgba(88, 166, 255, 0.42);
   }
 
   .nav-next {
@@ -155,19 +172,23 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
   }
 
   .nav-label {
+    color: var(--text-muted);
     font-family: var(--font-mono);
     font-size: var(--text-xs);
-    color: var(--color-text-dim);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   .nav-title {
-    color: var(--color-text);
-    font-weight: 500;
+    color: var(--heading);
+    font-weight: 600;
   }
 
   @media (max-width: 640px) {
+    .meta-row {
+      align-items: flex-start;
+      flex-direction: column;
+    }
     .chapter-nav {
       grid-template-columns: 1fr;
     }

@@ -10,6 +10,11 @@ const publishedPosts = posts
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const latestPosts = publishedPosts.slice(0, 15);
+const categoryToClass = (category: string) =>
+  `post-category-${category
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`;
 ---
 
 <BaseLayout
@@ -141,7 +146,7 @@ const latestPosts = publishedPosts.slice(0, 15);
               <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
                 <img
                   class="app-real-icon"
-                  src={withBase("images/apps/intelliauto-icon.png")}
+                  src={withBase("images/apps/intelliauto-icon.webp")}
                   alt="IntelliAuto app icon"
                   loading="lazy"
                   decoding="async"
@@ -313,11 +318,16 @@ const latestPosts = publishedPosts.slice(0, 15);
                     <h3 style="font-size: 1rem; font-weight: 500; color: var(--text-strong); margin: 0; line-height: 1.4;">
                       {post.data.title}
                     </h3>
-                    <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; justify-self: start; background: rgba(255,255,255,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">
-                      {Array.isArray(post.data.category)
-                        ? post.data.category.join(" · ")
-                        : post.data.category}
-                    </span>
+                    <div class="executive-category-pills">
+                      {(Array.isArray(post.data.category)
+                        ? post.data.category
+                        : [post.data.category]
+                      ).map((category) => (
+                        <span class:list={["post-category", categoryToClass(category)]}>
+                          {category}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </a>
               );

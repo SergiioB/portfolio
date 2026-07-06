@@ -14,19 +14,23 @@ By combining Grouped Query Attention (GQA) with a novel mechanism known as Looka
 
 ## Grouped Query Attention (GQA) vs. Multi-Head Attention (MHA)
 
-Traditional Multi-Head Attention (MHA) allocates a unique Key ($K$) and Value ($V$) head for every Query ($Q$) head. While this maximizes expressivity, the memory bandwidth required to load the KV cache during the decoding phase scales linearly with both batch size and sequence length.
+Traditional Multi-Head Attention (MHA) allocates a unique Key (`K`) and Value (`V`) head for every Query (`Q`) head. While this maximizes expressivity, the memory bandwidth required to load the KV cache during the decoding phase scales linearly with both batch size and sequence length.
 
-Mathematically, in MHA with $H$ heads, the attention output for head $i$ is:
-$$ \text{Attention}(Q_i, K_i, V_i) = \text{softmax}\left(\frac{Q_i K_i^T}{\sqrt{d_k}}\right) V_i $$
-For $H$ query heads, you must cache $H$ key and value matrices.
+Mathematically, in MHA with `H` heads, the attention output for head `i` is:
 
-**Grouped Query Attention (GQA)** interpolates between MHA and Multi-Query Attention (MQA). Instead of a 1:1 mapping (MHA) or an $H$:1 mapping (MQA), GQA divides the $H$ query heads into $G$ groups, where each group shares a single KV head.
+```text
+Attention(Q_i, K_i, V_i) = softmax((Q_i · K_i^T) / sqrt(d_k)) · V_i
+```
+
+For `H` query heads, you must cache `H` key and value matrices.
+
+**Grouped Query Attention (GQA)** interpolates between MHA and Multi-Query Attention (MQA). Instead of a 1:1 mapping (MHA) or an `H:1` mapping (MQA), GQA divides the `H` query heads into `G` groups, where each group shares a single KV head.
 
 **DeepSeek-V4's specific GQA implementation:**
 
-- **Query Heads ($H$):** 64
-- **KV Heads ($G$):** 8
-- **Head Dimension ($d_k$):** 128
+- **Query Heads (`H`):** 64
+- **KV Heads (`G`):** 8
+- **Head Dimension (`d_k`):** 128
 
 This configuration means that every 8 query heads share a single KV head. This drastically reduces the size of the KV cache by a factor of 8 compared to standard MHA, alleviating the memory bandwidth bottleneck during the auto-regressive decoding phase while maintaining near-MHA quality.
 

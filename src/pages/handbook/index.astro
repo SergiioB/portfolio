@@ -14,26 +14,35 @@ const description =
 
 <BaseLayout title={title} description={description}>
   <div class="handbook-index">
-    <header class="section-header">
-      <h1 class="page-title">{title}</h1>
-      <p class="page-description">{description}</p>
+    <header class="handbook-hero">
+      <span class="eyebrow">Local AI / Systems Engineering</span>
+      <h1>{title}</h1>
+      <p>{description}</p>
+      <div class="handbook-hero-grid" aria-label="Handbook scope">
+        <span>Transformer internals</span>
+        <span>KV cache economics</span>
+        <span>MoE + routing</span>
+        <span>DeepSeek LSA</span>
+      </div>
     </header>
 
     <div class="handbook-list">
       {
         sortedHandbook.map((entry) => (
-          <article class="handbook-item card">
-            <div class="handbook-meta">
-              <span class="part-label">{entry.data.part}</span>
-              <span class="chapter-label">Chapter {entry.data.chapter}</span>
+          <a href={`/handbook/${entry.slug}/`} class="handbook-item">
+            <div class="chapter-orb">{String(entry.data.chapter).padStart(2, "0")}</div>
+            <div>
+              <div class="handbook-meta">
+                <span class="part-label">{entry.data.part}</span>
+                <span class="chapter-label">Chapter {entry.data.chapter}</span>
+              </div>
+              <h2>{entry.data.title}</h2>
+              <p>{entry.data.description}</p>
             </div>
-            <h2>
-              <a href={`/handbook/${entry.slug}/`} class="item-link">
-                {entry.data.title}
-              </a>
-            </h2>
-            <p class="description">{entry.data.description}</p>
-          </article>
+            <span class="handbook-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
         ))
       }
     </div>
@@ -42,68 +51,171 @@ const description =
 
 <style>
   .handbook-index {
-    max-width: var(--max-width-content);
+    max-width: 1100px;
     margin: 0 auto;
   }
 
-  .section-header {
-    margin-bottom: var(--space-xl);
+  .handbook-hero {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.6rem, 4vw, 3rem);
+    border: 1px solid rgba(88, 166, 255, 0.22);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 15% 15%, rgba(88, 166, 255, 0.18), transparent 28%),
+      radial-gradient(circle at 88% 12%, rgba(86, 211, 100, 0.1), transparent 30%),
+      linear-gradient(135deg, rgba(13, 17, 23, 0.94), var(--surface));
+    box-shadow: var(--shadow-sm);
   }
 
-  .page-title {
-    font-size: var(--text-4xl);
-    color: var(--color-text);
-    margin-bottom: var(--space-sm);
+  .handbook-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(120deg, black, transparent 72%);
   }
 
-  .page-description {
-    color: var(--color-text-dim);
-    font-size: var(--text-lg);
+  .eyebrow,
+  .handbook-meta {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+  }
+
+  .eyebrow {
+    position: relative;
+    z-index: 1;
+    color: #58a6ff;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .handbook-hero h1 {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0.7rem 0 0.75rem;
+    color: var(--heading);
+    font-size: clamp(2.25rem, 5vw, 4.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.07em;
+  }
+
+  .handbook-hero p {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    color: var(--text-soft);
+    font-size: clamp(1rem, 1.5vw, 1.16rem);
+    line-height: 1.65;
+  }
+
+  .handbook-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1.4rem;
+  }
+
+  .handbook-hero-grid span {
+    border: 1px solid rgba(88, 166, 255, 0.22);
+    border-radius: 999px;
+    padding: 0.38rem 0.65rem;
+    color: var(--text-soft);
+    background: rgba(88, 166, 255, 0.07);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
   }
 
   .handbook-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
+    display: grid;
+    gap: 1rem;
   }
 
   .handbook-item {
-    padding: var(--space-lg);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding: clamp(1rem, 2vw, 1.35rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast);
+  }
+
+  .handbook-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(88, 166, 255, 0.42);
+    background: linear-gradient(135deg, rgba(88, 166, 255, 0.08), var(--surface));
+  }
+
+  .chapter-orb {
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 1rem;
+    color: #58a6ff;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid rgba(88, 166, 255, 0.24);
+    font-family: var(--font-mono);
+    font-weight: 800;
   }
 
   .handbook-meta {
     display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-sm);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.68rem;
   }
 
   .part-label {
-    color: var(--color-primary);
+    color: #58a6ff;
   }
-
   .chapter-label {
-    color: var(--color-text-dim);
+    color: var(--text-muted);
   }
 
   .handbook-item h2 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-sm);
+    margin: 0 0 0.45rem;
+    color: var(--heading);
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    line-height: 1.25;
   }
 
-  .item-link {
-    color: var(--color-text);
-    text-decoration: none;
-    transition: color 0.2s ease;
+  .handbook-item p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.55;
   }
 
-  .item-link:hover {
-    color: var(--color-primary);
+  .handbook-arrow {
+    color: #58a6ff;
+    font-size: 1.35rem;
+    line-height: 1;
   }
 
-  .description {
-    color: var(--color-text-dim);
-    line-height: 1.6;
+  @media (max-width: 640px) {
+    .handbook-item {
+      grid-template-columns: 1fr;
+    }
+    .handbook-arrow {
+      display: none;
+    }
   }
 </style>

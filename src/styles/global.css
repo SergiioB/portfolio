@@ -5755,6 +5755,7 @@ h3 {
 .app-real-icon {
   object-fit: cover;
   background: #0b1120;
+  overflow: hidden;
 }
 
 .app-icon-auto {
@@ -5801,4 +5802,17 @@ h3 {
   border-color: rgba(88, 166, 255, 0.45);
   background: rgba(88, 166, 255, 0.08);
   text-decoration: none;
+}
+
+.executive-category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+}
+
+.executive-category-pills .post-category {
+  font-size: 0.63rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.035);
 }
