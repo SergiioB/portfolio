@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="100%" height="100%" style="background-color:#0f172a; font-family:monospace;">
+    <!-- Title -->
+    <text x="400" y="40" fill="#f8fafc" font-size="20" font-family="sans-serif" font-weight="bold" text-anchor="middle">Power Cap Scaling Test (Ornith 35B @ Batch 32)</text>
+    
+    <!-- Table Header -->
+    <rect x="50" y="70" width="700" height="30" fill="#1e293b"/>
+    <text x="100" y="90" fill="#94a3b8" font-weight="bold">Power Cap</text>
+    <text x="250" y="90" fill="#94a3b8" font-weight="bold">Real Draw</text>
+    <text x="400" y="90" fill="#94a3b8" font-weight="bold">Decode tok/s</text>
+    <text x="550" y="90" fill="#94a3b8" font-weight="bold">GPU Temp</text>
+    <text x="680" y="90" fill="#94a3b8" font-weight="bold">Conclusion</text>
+    
+    <!-- Row 1: 165W -->
+    <rect x="50" y="110" width="700" height="40" fill="#10b981" fill-opacity="0.1" stroke="#10b981" stroke-width="1"/>
+    <text x="100" y="135" fill="#f8fafc">165W</text>
+    <text x="250" y="135" fill="#f8fafc">149.5W</text>
+    <text x="400" y="135" fill="#10b981" font-weight="bold">152.9</text>
+    <text x="550" y="135" fill="#f8fafc">69°C</text>
+    <text x="680" y="135" fill="#10b981">Optimal</text>
+    
+    <!-- Row 2: 230W -->
+    <rect x="50" y="160" width="700" height="40" fill="#1e293b"/>
+    <text x="100" y="185" fill="#f8fafc">230W</text>
+    <text x="250" y="185" fill="#f8fafc">147.6W</text>
+    <text x="400" y="185" fill="#f8fafc">150.7</text>
+    <text x="550" y="185" fill="#f8fafc">66°C</text>
+    <text x="680" y="185" fill="#94a3b8">Wasted Cap</text>
+    
+    <!-- Explanation -->
+    <text x="50" y="235" fill="#94a3b8" font-size="14">Result: Unleashing the TDP to 230W does not increase power draw or throughput.</text>
+    <text x="50" y="255" fill="#94a3b8" font-size="14">The GPU hits its Memory Bandwidth bottleneck (~148W physical draw) before it runs out of Power.</text>
+    <text x="50" y="275" fill="#94a3b8" font-size="14">Capping the card at 165W preserves system stability without sacrificing performance.</text>
+    
+</svg>

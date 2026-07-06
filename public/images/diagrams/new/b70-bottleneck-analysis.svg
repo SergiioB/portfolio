@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%" style="background-color:#0f172a; font-family:monospace;">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+        </marker>
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
+        </marker>
+    </defs>
+    
+    <!-- Title -->
+    <text x="400" y="40" fill="#f8fafc" font-size="20" font-family="sans-serif" font-weight="bold" text-anchor="middle">Intel Arc Pro B70: Single-Stream vs High Concurrency (MoE 35B)</text>
+    
+    <!-- Left Column: Single Stream -->
+    <rect x="50" y="80" width="300" height="280" rx="8" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+    <text x="200" y="110" fill="#94a3b8" font-size="16" font-weight="bold" text-anchor="middle">Single Stream (Batch = 1)</text>
+    
+    <rect x="80" y="140" width="240" height="40" rx="4" fill="#0f172a" stroke="#ef4444" stroke-width="1"/>
+    <text x="200" y="165" fill="#f8fafc" font-size="14" text-anchor="middle">GPU Compute (Xe Cores): 30%</text>
+    
+    <rect x="80" y="200" width="240" height="40" rx="4" fill="#0f172a" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+    <text x="200" y="225" fill="#f8fafc" font-size="14" text-anchor="middle">Mem Bandwidth: 100% SATURATED</text>
+    
+    <path d="M 200 240 L 200 270" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-red)"/>
+    
+    <rect x="80" y="275" width="240" height="60" rx="4" fill="#ef4444" fill-opacity="0.2" stroke="#ef4444" stroke-width="2"/>
+    <text x="200" y="305" fill="#ef4444" font-size="18" font-weight="bold" text-anchor="middle">~67 tok/s</text>
+    <text x="200" y="325" fill="#fca5a5" font-size="12" text-anchor="middle">Hard ceiling. Compute wasted.</text>
+    
+    <!-- Right Column: High Concurrency -->
+    <rect x="450" y="80" width="300" height="280" rx="8" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+    <text x="600" y="110" fill="#94a3b8" font-size="16" font-weight="bold" text-anchor="middle">High Concurrency (Batch = 32)</text>
+    
+    <rect x="480" y="140" width="240" height="40" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+    <text x="600" y="165" fill="#f8fafc" font-size="14" text-anchor="middle">GPU Compute (Xe Cores): 95%</text>
+    
+    <rect x="480" y="200" width="240" height="40" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+    <text x="600" y="225" fill="#f8fafc" font-size="14" text-anchor="middle">Mem Bandwidth: 100% EFFICIENT</text>
+    
+    <path d="M 600 240 L 600 270" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-green)"/>
+    
+    <rect x="480" y="275" width="240" height="60" rx="4" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="2"/>
+    <text x="600" y="305" fill="#10b981" font-size="18" font-weight="bold" text-anchor="middle">145.8 tok/s Aggregate</text>
+    <text x="600" y="325" fill="#6ee7b7" font-size="12" text-anchor="middle">+112% yield from same hardware</text>
+    
+</svg>
