@@ -97,3 +97,17 @@ However, the aggregate generation throughput only increased from **152.9 tok/s t
 This proves definitively that the hardware is bound by **Memory Bandwidth**, not compute cycles. Spending 33% more electrical power for an 8% gain in throughput is a terrible trade-off for a 24/7 inference server. The original configuration (2400 MHz capped at 165W) remains the absolute 'sweet spot' for this card.
 
 **Hardware recommended in this build:** [Intel Arc Pro B70](https://go.sergiiob.dev/arc-pro)
+
+## Official Benchmark Runs
+
+The optimizations were successfully verified and submitted to the public Localmaxxing Hardware Leaderboard. You can view the full telemetry and official run cards below:
+
+### High Concurrency (Fleet Simulation)
+
+This run demonstrates the sustained 164.5 tok/s decode performance under heavy parallel load.
+[![LocalMaxxing High Concurrency Card](https://www.localmaxxing.com/api/og?run=cmr90watg00jaqr01jx0foi3r)](https://www.localmaxxing.com/en/runs/cmr90watg00jaqr01jx0foi3r)
+
+### Single-Stream (Peak Prefill)
+
+This run demonstrates the raw 1,242 tok/s prefill capability of the B70 when unhindered by context-switching overhead.
+[![LocalMaxxing Single-Stream Card](https://www.localmaxxing.com/api/og?run=cmr916in500jkqr01hfsj5m38)](https://www.localmaxxing.com/en/runs/cmr916in500jkqr01hfsj5m38)
