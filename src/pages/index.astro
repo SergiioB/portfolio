@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
-import { SITE } from "../config/site";
+import { PUBLIC_LINKS, SITE } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
 
@@ -79,12 +79,23 @@ const latestPosts = publishedPosts.slice(0, 15);
       </nav>
 
       <div style="display: grid; gap: 0.75rem;">
-        <a
-          href="https://linkedin.com/in/sergio-barrientose"
-          target="_blank"
-          class="btn btn-primary"
-          style="text-align: center;">LinkedIn Profile</a
-        >
+        {
+          PUBLIC_LINKS.map((link, index) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class:list={["btn", { "btn-primary": index === 0 }]}
+              style="text-align: center; border: 1px solid var(--border);"
+            >
+              {link.label === "LinkedIn"
+                ? "LinkedIn Profile"
+                : link.label === "GitHub"
+                  ? "GitHub Profile"
+                  : link.label}
+            </a>
+          ))
+        }
         <a
           href={withBase("docs/cv-sergio-barrientos.html")}
           class="btn"

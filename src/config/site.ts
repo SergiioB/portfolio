@@ -25,6 +25,7 @@ export const SITE = {
 
 export const PUBLIC_LINKS: Array<{ label: string; href: string }> = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/sergio-barrientose/" },
+  { label: "GitHub", href: "https://github.com/SergiioB" },
 ];
 
 export const PUBLIC_CV = {
