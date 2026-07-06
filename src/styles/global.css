@@ -5660,15 +5660,18 @@ h3 {
 }
 
 .content-wrapper-executive {
-  max-width: 1380px;
-  margin: 0 auto;
-  padding: clamp(0.75rem, 1.4vw, 1.35rem);
+  width: min(100%, 1480px);
+  max-width: none;
+  margin-left: 0;
+  margin-right: auto;
+  padding: clamp(0.55rem, 1vw, 1rem) clamp(0.75rem, 1.35vw, 1.35rem) clamp(0.75rem, 1.35vw, 1.35rem)
+    clamp(0.35rem, 0.7vw, 0.75rem);
 }
 
 .executive-home {
   display: grid;
-  grid-template-columns: minmax(230px, 286px) minmax(0, 1fr);
-  gap: clamp(1.25rem, 2.1vw, 2.25rem);
+  grid-template-columns: minmax(220px, 278px) minmax(0, 1fr);
+  gap: clamp(1rem, 1.65vw, 1.85rem);
   align-items: start;
 }
 
