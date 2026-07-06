@@ -7,8 +7,8 @@ solution: "Diagnosed hardware bottlenecks and optimized the llama.cpp SYCL stack
 usedIn: "Live fleet-level inference for autonomous agent workflows and concurrent LLM benchmarking."
 impact: "Achieved a 128% increase in aggregate throughput (153 tok/s) under sustained heavy load. Maintained exceptional thermal stability (GPU 69°C / VRAM 70°C at 149.5 Watts), proving the B70's viability for high-density enterprise inference."
 pubDate: 2026-07-06
-category: "infrastructure"
-tags: ["sycl", "llama-cpp", "intel-arc", "hardware-tuning", "machine-learning"]
+category: "local-ai"
+tags: ["sycl", "llama-cpp", "intel-arc", "hardware-tuning", "machine-learning", "ai", "local-ai"]
 draft: false
 amazonUrl: https://go.sergiiob.dev/arc-pro
 ---
