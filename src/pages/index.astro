@@ -114,79 +114,30 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
       </div>
     </div>
   </section>
-
-  <!-- Quick Overview -->
-  <section class="section overview">
+  <!-- Recent Posts (Moved Up) -->
+  <section class="section" style="background: transparent; border: none; padding: 0;">
     <div class="section-header">
-      <h2 class="section-title" data-i18n="home.overviewTitle">At a Glance</h2>
-      <a href={withBase("about/")} class="section-link" data-i18n="home.fullProfile"
-        >Full Profile →</a
-      >
+      <h2 class="section-title" data-i18n="posts.recent">Recent Case Studies</h2>
+      <a href={withBase("archive/")} class="section-link" data-i18n="posts.allPosts">All posts</a>
     </div>
 
-    <div class="overview-content">
-      <p class="overview-summary" data-i18n="site.profileSummary">{SITE.profileSummary}</p>
-
-      <div class="overview-grid">
-        <a href={withBase("infrastructure/")} class="card glance-card glance-card-large">
-          <div class="glance-header">
-            <span class="glance-icon">🐧</span>
-            <span class="glance-count">
-              {categoryCounts.find((c) => c.slug === "infrastructure")?.count || 0}
-              <span data-i18n="home.postsSuffix">posts</span>
-            </span>
-          </div>
-          <h3 class="card-title" data-i18n="home.glanceInfraTitle">Linux Infrastructure</h3>
-          <p class="card-meta" data-i18n="home.glanceInfraDesc">
-            RHEL lifecycle management, kernel tuning, Satellite, enterprise Linux operations
+    <div class="posts-feed">
+      {latestPosts.map((post) => <PostCard post={post} />)}
+      {
+        publishedPosts.length === 0 && (
+          <p class="empty-state" data-i18n="posts.noPosts">
+            No posts published yet.
           </p>
-          <div class="glance-tags">
-            <span class="badge category-infrastructure" data-i18n="cat.infrastructure"
-              >Infrastructure</span
-            >
-            <span class="badge category-automation" data-i18n="cat.automation">Automation</span>
-          </div>
-        </a>
-        <a href={withBase("automation/")} class="card glance-card glance-card-large">
-          <div class="glance-header">
-            <span class="glance-icon">⚡</span>
-            <span class="glance-count">
-              {categoryCounts.find((c) => c.slug === "automation")?.count || 0}
-              <span data-i18n="home.postsSuffix">posts</span>
-            </span>
-          </div>
-          <h3 class="card-title" data-i18n="home.glanceAutomationTitle">Platform Automation</h3>
-          <p class="card-meta" data-i18n="home.glanceAutomationDesc">
-            Ansible playbooks, IaC, Git workflows, CI/CD pipelines, VMware automation
-          </p>
-          <div class="glance-tags">
-            <span class="badge category-automation" data-i18n="cat.automation">Automation</span>
-            <span class="badge category-cloud" data-i18n="cat.cloud">Cloud</span>
-          </div>
-        </a>
-        <a href={withBase("ai/")} class="card glance-card glance-card-large">
-          <div class="glance-header">
-            <span class="glance-icon">🤖</span>
-            <span class="glance-count">
-              {categoryCounts.find((c) => c.slug === "ai")?.count || 0}
-              <span data-i18n="home.postsSuffix">posts</span>
-            </span>
-          </div>
-          <h3 class="card-title" data-i18n="home.glanceAiTitle">Applied AI & Edge</h3>
-          <p class="card-meta" data-i18n="home.glanceAiDesc">
-            Azure AI Foundry, local LLM inference, RK3588 edge deployment, document intelligence
-          </p>
-          <div class="glance-tags">
-            <span class="badge category-ai" data-i18n="cat.ai">AI</span>
-            <span class="badge category-local-ai" data-i18n="cat.local-ai">Local AI</span>
-          </div>
-        </a>
-      </div>
+        )
+      }
     </div>
   </section>
 
   <!-- Production Spotlight -->
-  <section class="section spotlight" style="border-left: 4px solid var(--accent);">
+  <section
+    class="section spotlight"
+    style="border-left: 4px solid var(--accent); margin-top: 2rem;"
+  >
     <div class="section-header">
       <h2 class="section-title" style="color: var(--accent);" data-i18n="production.title">
         Production Spotlight
@@ -297,6 +248,13 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
         <span class="badge badge-accent">Python · JavaScript</span>
       </a>
       <div class="card project-card">
+        <h3 class="card-title">IntelliAuto</h3>
+        <p class="card-meta" data-i18n="home.projectIntelliAutoDesc">
+          Vehicle & mechanic operations platform with AI diagnostics
+        </p>
+        <span class="badge badge-warm">Kotlin · Firebase · Production</span>
+      </div>
+      <div class="card project-card">
         <h3 class="card-title">IntelliFlow</h3>
         <p class="card-meta" data-i18n="home.projectIntelliflowDesc">
           AI-powered personal finance app with offline-first architecture
@@ -310,25 +268,6 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
         </p>
         <span class="badge badge-accent">Ansible · YAML</span>
       </div>
-    </div>
-  </section>
-
-  <!-- Recent Posts -->
-  <section class="section" style="background: transparent; border: none; padding: 0;">
-    <div class="section-header">
-      <h2 class="section-title" data-i18n="posts.recent">Recent Case Studies</h2>
-      <a href={withBase("archive/")} class="section-link" data-i18n="posts.allPosts">All posts</a>
-    </div>
-
-    <div class="posts-feed">
-      {latestPosts.map((post) => <PostCard post={post} />)}
-      {
-        publishedPosts.length === 0 && (
-          <p class="empty-state" data-i18n="posts.noPosts">
-            No posts published yet.
-          </p>
-        )
-      }
     </div>
   </section>
 </BaseLayout>
