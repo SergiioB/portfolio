@@ -5,7 +5,7 @@ situation: "I needed to deploy a high-concurrency LLM inference server capable o
 issue: "Baseline sequential generation hard-capped at ~67 tokens/second due to memory bandwidth starvation. Furthermore, naive scaling with large contexts (131K) and unoptimized batching caused immediate VRAM exhaustion (OOM) and server timeouts under load."
 solution: "Diagnosed hardware bottlenecks and optimized the llama.cpp SYCL stack. Disabled heavy DNN operations (`GGML_SYCL_DISABLE_DNN=1`), quantized the KV Cache (`Q5_0`/`Q4_1`), and saturated the GPU using deep micro-batching (`-b 8192 -ub 4096`) under a 32-parallel request load."
 usedIn: "Live fleet-level inference for autonomous agent workflows and concurrent LLM benchmarking."
-impact: "Achieved a 112% increase in aggregate throughput (145.8 tok/s) under sustained heavy load. Maintained exceptional thermal stability (GPU 69°C / VRAM 70°C at 149.5 Watts), proving the B70's viability for high-density enterprise inference."
+impact: "Achieved a 128% increase in aggregate throughput (153 tok/s) under sustained heavy load. Maintained exceptional thermal stability (GPU 69°C / VRAM 70°C at 149.5 Watts), proving the B70's viability for high-density enterprise inference."
 pubDate: 2026-07-06
 category: "infrastructure"
 tags: ["sycl", "llama-cpp", "intel-arc", "hardware-tuning", "machine-learning"]
@@ -60,42 +60,40 @@ To relieve the memory bandwidth pressure of 32 concurrent requests, the KV cache
 -ctk q5_0 -ctv q4_1
 ```
 
-This trade-off (slightly lower precision for significantly smaller memory footprint) allowed the GPU to move cache data faster, directly translating to higher generation throughput.
+## Benchmark Results: A Fair Comparison
 
-## Benchmark Results & Telemetry
+It is crucial to distinguish between high-concurrency throughput and single-stream burst speeds. Mixing the two paints an inaccurate picture of hardware capability. Context switching between 32 parallel requests naturally throttles prefill efficiency.
 
-With these optimizations, the server was hit with 32 concurrent requests requesting 300 tokens each. The results were dramatic:
+### Scenario A: High Concurrency (Fleet Simulation)
 
-- **Baseline (Single-Stream):** 67.6 tok/s
-- **Optimized (Aggregate):** **145.86 tok/s** (+112% improvement)
+Under a sustained attack of 32 concurrent clients generating text simultaneously (capped at 165W, 2400MHz):
 
-During the sustained 32-thread attack, real-time telemetry was monitored using sysfs data:
+- **Aggregate Decode Throughput:** **152.9 tok/s** (+128% over single-stream)
+- **Aggregate Prefill Throughput:** **~500.1 tok/s** (Constrained by context switching between 32 different KV caches)
+- **Hardware Telemetry:** 149.5 Watts, GPU 69°C, VRAM 70°C
 
-```text
-Power Draw: 149.5 Watts (Max Cap: 165W)
-GPU Package Temp: 69.0 °C
-VRAM Temp: 70.0 °C
-```
+### Scenario B: Single-Stream Peak Prefill
 
-## Conclusion
+To measure the raw memory bandwidth capacity for prompt ingestion, a continuous 3,000-token prompt block was fed to the GPU without concurrency (`batch=1`):
 
-By understanding the difference between compute-bound and memory-bound workloads, the Intel Arc Pro B70 was transformed from a fast single-user workstation card into a high-density inference server capable of driving a fleet of autonomous agents.
+- **Peak Prefill Speed:** **1,242.3 tok/s**
+- **Single-Stream Decode:** **~67.6 tok/s** (The hard ceiling for sequential generation)
 
-The optimized baseline (`145.86 tok/s`) was successfully verified and submitted to the public [Localmaxxing Hardware Leaderboard](https://localmaxxing.com/en/models/deepreinforce-ai/Ornith-1.0-35B?run=cmr8zxrsj00iqqr01eyxn90w6) under the `SergiioB` identity.
+![B70 Bottleneck Analysis](/images/diagrams/new/b70-bottleneck-analysis.svg)
 
 ## The Frequency & Power Fallacy
 
-A common assumption in hardware tuning is that higher clock speeds and relaxed power limits equate to higher throughput. To test this, the B70's factory frequency limits were unlocked:
+We tested unlocking the B70's factory frequency limits:
 
-1. **Clock Unlocked:** `max_freq` increased from 2400 MHz to 2800 MHz.
-2. **Power Unlocked:** `power1_cap` increased from 165W to 230W.
+- `max_freq` increased from 2400 MHz to 2800 MHz.
+- `power1_cap` increased from 165W to 230W.
 
 Under the same 32-concurrent-client load, telemetry showed the GPU instantly consumed the extra headroom, jumping to **196W** sustained draw and hitting **73°C**.
 
 However, the aggregate generation throughput only increased from **152.9 tok/s to 164.5 tok/s (+8%)**.
 
-This proved definitively that the hardware was bound by **Memory Bandwidth**, not compute cycles (TeraFLOPS). Spending 33% more electrical power for an 8% gain in throughput is a terrible trade-off for a server running 24/7.
+![Power Scaling Graph](/images/diagrams/new/b70-power-scaling.svg)
 
-The original configuration (2400 MHz capped at 165W) remains the absolute "sweet spot" for this card when running massive MoE models—yielding 92% of the maximum possible performance while keeping thermals and power costs exceptionally low.
+This proves definitively that the hardware is bound by **Memory Bandwidth**, not compute cycles. Spending 33% more electrical power for an 8% gain in throughput is a terrible trade-off for a 24/7 inference server. The original configuration (2400 MHz capped at 165W) remains the absolute 'sweet spot' for this card.
 
 **Hardware recommended in this build:** [Intel Arc Pro B70](https://go.sergiiob.dev/arc-pro)
