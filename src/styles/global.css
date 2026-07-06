@@ -5646,3 +5646,43 @@ h3 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.site-shell-flexible {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+@media (max-width: 850px) {
+  .site-shell-flexible {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+}
+.floating-sidebar {
+  flex: 1;
+  min-width: 280px;
+  max-width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  position: sticky;
+  top: 2rem;
+}
+@media (max-width: 850px) {
+  .floating-sidebar {
+    position: static;
+    max-width: 100%;
+  }
+}
+.main-column {
+  flex: 3;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}

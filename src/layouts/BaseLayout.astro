@@ -2,7 +2,6 @@
 import "../styles/global.css";
 import { ViewTransitions } from "astro:transitions";
 
-import Sidebar from "../components/Sidebar.astro";
 import { dictionary } from "../config/i18n";
 import { SITE } from "../config/site";
 import { withBase } from "../utils/paths";
@@ -207,9 +206,7 @@ const csp = [
 
     <a class="skip-link" href="#main-content" data-i18n="nav.skipToContent">Skip to content</a>
 
-    <div class="site-shell">
-      <Sidebar />
-
+    <div class="site-shell-flexible">
       <main class="main-content" id="main-content">
         <div class="content-wrapper">
           <slot />
