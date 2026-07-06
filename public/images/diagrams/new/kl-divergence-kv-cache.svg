@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%" style="background-color:#0f172a; font-family:monospace;">
+    <defs>
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+        </marker>
+    </defs>
+    
+    <text x="400" y="40" fill="#f8fafc" font-size="20" font-family="sans-serif" font-weight="bold" text-anchor="middle">Asymmetric KV Cache Sensitivity (KL Divergence)</text>
+    
+    <!-- Key Cache Branch -->
+    <rect x="50" y="80" width="220" height="60" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+    <text x="160" y="105" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle">Key (K) Cache</text>
+    <text x="160" y="125" fill="#94a3b8" font-size="12" text-anchor="middle">Used for Attention Matching</text>
+    
+    <path d="M 160 140 L 160 180" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    
+    <rect x="50" y="180" width="220" height="40" rx="4" fill="#0f172a" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+    <text x="160" y="205" fill="#fca5a5" font-size="14" text-anchor="middle">Dot Product &amp; Softmax</text>
+    
+    <path d="M 160 220 L 160 260" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-red)"/>
+    
+    <rect x="50" y="260" width="220" height="80" rx="6" fill="#7f1d1d" fill-opacity="0.3" stroke="#ef4444" stroke-width="2"/>
+    <text x="160" y="285" fill="#ef4444" font-size="16" font-weight="bold" text-anchor="middle">HIGH SENSITIVITY</text>
+    <text x="160" y="305" fill="#fca5a5" font-size="12" text-anchor="middle">Errors exponentially</text>
+    <text x="160" y="325" fill="#fca5a5" font-size="12" text-anchor="middle">magnified. Keep at Q8_0.</text>
+
+    <!-- Value Cache Branch -->
+    <rect x="530" y="80" width="220" height="60" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+    <text x="640" y="105" fill="#f8fafc" font-size="16" font-weight="bold" text-anchor="middle">Value (V) Cache</text>
+    <text x="640" y="125" fill="#94a3b8" font-size="12" text-anchor="middle">Holds Semantic Meaning</text>
+    
+    <path d="M 640 140 L 640 180" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    
+    <rect x="530" y="180" width="220" height="40" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+    <text x="640" y="205" fill="#6ee7b7" font-size="14" text-anchor="middle">Linear Summation</text>
+    
+    <path d="M 640 220 L 640 260" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    
+    <rect x="530" y="260" width="220" height="80" rx="6" fill="#064e3b" fill-opacity="0.3" stroke="#10b981" stroke-width="2"/>
+    <text x="640" y="285" fill="#10b981" font-size="16" font-weight="bold" text-anchor="middle">ROBUST / FORGIVING</text>
+    <text x="640" y="305" fill="#6ee7b7" font-size="12" text-anchor="middle">Linear math absorbs errors.</text>
+    <text x="640" y="325" fill="#6ee7b7" font-size="12" text-anchor="middle">Safe to crush to Q4_1.</text>
+
+    <!-- Center Connection -->
+    <path d="M 270 200 L 380 200" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+    <path d="M 420 200 L 530 200" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+    <circle cx="400" cy="200" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+    <text x="400" y="205" fill="#3b82f6" font-size="16" font-weight="bold" text-anchor="middle">x</text>
+
+</svg>
