@@ -1477,7 +1477,6 @@ li + li {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--category-infrastructure);
   border-radius: var(--radius-lg);
   transition:
     transform var(--transition-fluid),
@@ -1492,38 +1491,6 @@ li + li {
   box-shadow:
     0 16px 32px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.post-card.category-infrastructure {
-  border-left-color: var(--category-infrastructure);
-}
-
-.post-card.category-automation {
-  border-left-color: var(--category-automation);
-}
-
-.post-card.category-ai {
-  border-left-color: var(--category-ai);
-}
-
-.post-card.category-cloud {
-  border-left-color: var(--category-cloud);
-}
-
-.post-card.category-local-ai {
-  border-left-color: var(--category-local-ai);
-}
-
-.post-card.category-kotlin {
-  border-left-color: var(--category-kotlin);
-}
-
-.post-card.category-snippets {
-  border-left-color: var(--category-snippets);
-}
-
-.post-card.category-career {
-  border-left-color: var(--category-career);
 }
 
 .post-meta {
@@ -5067,8 +5034,8 @@ h3 {
 .post-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
   transition: all var(--transition-base);
 }
 
@@ -5125,10 +5092,11 @@ h3 {
 .post-card-details {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin-bottom: 1rem;
-  padding: 0.75rem;
-  background: var(--surface-muted);
+  padding: 0.85rem;
+  background: rgba(1, 4, 9, 0.6);
+  border: 1px solid rgba(48, 54, 61, 0.5);
   border-radius: var(--radius-sm);
 }
 
@@ -5149,13 +5117,15 @@ h3 {
 }
 
 .detail-label-issue {
-  background: rgba(255, 123, 114, 0.15);
+  background: transparent;
   color: var(--accent-danger);
+  border: 1px solid rgba(255, 123, 114, 0.2);
 }
 
 .detail-label-solution {
-  background: rgba(76, 175, 80, 0.15);
+  background: transparent;
   color: var(--accent);
+  border: 1px solid rgba(76, 175, 80, 0.2);
 }
 
 .detail-value {
