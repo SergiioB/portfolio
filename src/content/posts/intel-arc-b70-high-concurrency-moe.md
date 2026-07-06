@@ -69,7 +69,7 @@ It is crucial to distinguish between high-concurrency throughput and single-stre
 Under a sustained attack of 32 concurrent clients generating text simultaneously (capped at 165W, 2400MHz):
 
 - **Aggregate Decode Throughput:** **152.9 tok/s** (+128% over single-stream)
-- **Aggregate Prefill Throughput:** **~500.1 tok/s**
+- **Aggregate Prefill Throughput:** **~383.4 tok/s**
 
 _(Note on Prefill Degradation: Why does prefill drop so sharply under load? In single-stream, the GPU digests a contiguous block of tokens via a single massive matrix multiplication, writing linearly to one KV cache. In batch=32 concurrency, the GPU's memory controller is forced to perform scattered "random writes" across 32 separate KV caches located in different segments of VRAM. This destroys sequential memory bandwidth efficiency, causing the aggregate prefill speed to plummet compared to its peak capability)._
 
