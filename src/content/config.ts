@@ -46,6 +46,18 @@ const postsCollection = defineCollection({
   }),
 });
 
+const handbookCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    chapter: z.number(),
+    part: z.string(),
+    pubDate: z.coerce.date(),
+  }),
+});
+
 export const collections = {
   posts: postsCollection,
+  handbook: handbookCollection,
 };

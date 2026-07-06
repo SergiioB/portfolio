@@ -1,15 +1,9 @@
 ---
 title: "LLM Handbook Part 2: Dissecting Modern Architectures (MoE, MTP, GLM)"
 description: "Exploring the cutting-edge architectural quirks that power modern LLMs: Mixture of Experts (MoE), Multi-Token Prediction (MTP), and GLM's bidirectional attention."
-situation: "Standard dense Transformer architectures hit a scaling wall. Training and inferencing a 1-Trillion parameter dense model requires absurd amounts of compute and memory bandwidth."
-issue: "Engineers deploying local AI must navigate an increasingly fractured landscape of model architectures, each requiring different optimization strategies and hardware considerations."
-solution: "A breakdown of the three most impactful architectural shifts in modern LLMs: Mixture of Experts (DeepSeek, Mixtral), Multi-Token Prediction (Qwen, LLaMA), and General Language Model topologies (GLM)."
-usedIn: "Hardware selection and inference parameter tuning for advanced local AI deployments."
-impact: "Enables infrastructure engineers to select the right backend flags (e.g., disabling DNN for MoE, configuring speculative draft layers for MTP) to maximize throughput."
+chapter: 2
+part: "Advanced Architectures"
 pubDate: 2026-07-06
-category: "ai"
-tags: ["llm-handbook", "moe", "architecture", "deepseek", "qwen", "glm"]
-draft: false
 ---
 
 ## The Death of Dense Scaling

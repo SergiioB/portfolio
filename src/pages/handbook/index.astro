@@ -1,0 +1,109 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allHandbookEntries = await getCollection("handbook");
+// Sort by chapter number
+const sortedHandbook = allHandbookEntries.sort((a, b) => a.data.chapter - b.data.chapter);
+
+const title = "LLM Handbook";
+const description =
+  "A complete engineering guide to understanding and deploying Large Language Models.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="handbook-index">
+    <header class="section-header">
+      <h1 class="page-title">{title}</h1>
+      <p class="page-description">{description}</p>
+    </header>
+
+    <div class="handbook-list">
+      {
+        sortedHandbook.map((entry) => (
+          <article class="handbook-item card">
+            <div class="handbook-meta">
+              <span class="part-label">{entry.data.part}</span>
+              <span class="chapter-label">Chapter {entry.data.chapter}</span>
+            </div>
+            <h2>
+              <a href={`/handbook/${entry.slug}/`} class="item-link">
+                {entry.data.title}
+              </a>
+            </h2>
+            <p class="description">{entry.data.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .handbook-index {
+    max-width: var(--max-width-content);
+    margin: 0 auto;
+  }
+
+  .section-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+  }
+
+  .page-description {
+    color: var(--color-text-dim);
+    font-size: var(--text-lg);
+  }
+
+  .handbook-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .handbook-item {
+    padding: var(--space-lg);
+  }
+
+  .handbook-meta {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .part-label {
+    color: var(--color-primary);
+  }
+
+  .chapter-label {
+    color: var(--color-text-dim);
+  }
+
+  .handbook-item h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-sm);
+  }
+
+  .item-link {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .item-link:hover {
+    color: var(--color-primary);
+  }
+
+  .description {
+    color: var(--color-text-dim);
+    line-height: 1.6;
+  }
+</style>

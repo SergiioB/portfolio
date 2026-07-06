@@ -1,0 +1,178 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const handbookEntries = await getCollection("handbook");
+
+  // Sort entries to determine prev/next
+  const sorted = handbookEntries.sort((a, b) => a.data.chapter - b.data.chapter);
+
+  return sorted.map((entry, index) => {
+    const prev = index > 0 ? sorted[index - 1] : null;
+    const next = index < sorted.length - 1 ? sorted[index + 1] : null;
+
+    return {
+      params: { slug: entry.slug },
+      props: { entry, prev, next },
+    };
+  });
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await entry.render();
+
+const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
+---
+
+<BaseLayout title={title} description={entry.data.description}>
+  <article class="handbook-content">
+    <header class="article-header">
+      <div class="meta-row">
+        <a href="/handbook/" class="back-link">← Back to Handbook</a>
+        <span class="part-label">{entry.data.part}</span>
+      </div>
+      <h1 class="chapter-title">
+        <span class="chapter-num">Chapter {entry.data.chapter}</span>
+        {entry.data.title}
+      </h1>
+      <p class="description">{entry.data.description}</p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="chapter-nav">
+      {
+        prev && (
+          <a href={`/handbook/${prev.slug}/`} class="nav-prev card">
+            <span class="nav-label">← Previous Chapter</span>
+            <span class="nav-title">{prev.data.title}</span>
+          </a>
+        )
+      }
+      {!prev && <div />}
+
+      {
+        next && (
+          <a href={`/handbook/${next.slug}/`} class="nav-next card">
+            <span class="nav-label">Next Chapter →</span>
+            <span class="nav-title">{next.data.title}</span>
+          </a>
+        )
+      }
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .handbook-content {
+    max-width: var(--max-width-content);
+    margin: 0 auto;
+  }
+
+  .article-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .back-link {
+    color: var(--color-text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: var(--color-primary);
+  }
+
+  .part-label {
+    color: var(--color-primary);
+  }
+
+  .chapter-title {
+    font-size: var(--text-4xl);
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+  }
+
+  .chapter-num {
+    display: block;
+    font-size: var(--text-lg);
+    color: var(--color-text-dim);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-xs);
+  }
+
+  .description {
+    font-size: var(--text-xl);
+    color: var(--color-text-dim);
+    line-height: 1.6;
+  }
+
+  /* Assuming 'prose' class relies on existing global typography similar to standard posts */
+
+  .chapter-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .nav-prev,
+  .nav-next {
+    padding: var(--space-lg);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .nav-prev:hover,
+  .nav-next:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  .nav-next {
+    text-align: right;
+  }
+
+  .nav-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-title {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .chapter-nav {
+      grid-template-columns: 1fr;
+    }
+    .nav-next {
+      text-align: left;
+    }
+  }
+</style>

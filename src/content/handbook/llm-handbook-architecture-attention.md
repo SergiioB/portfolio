@@ -1,15 +1,9 @@
 ---
 title: "LLM Handbook Part 1: Architecture, Attention Heads & Flash Attention"
 description: "An engineer's guide to the core mechanics of Large Language Models. Demystifying the Transformer architecture, KV Cache, and how Flash Attention changed the game."
-situation: "As local AI inference becomes standard engineering practice, treating LLMs as 'black boxes' leads to inefficient deployments, OOM crashes, and poor hardware utilization."
-issue: "Many engineers struggle to optimize inference parameters (context size, batching, threading) because they lack a mental model of how the underlying Transformer architecture actually processes data."
-solution: "A foundational breakdown of Transformer mechanics, focusing on the components that directly impact infrastructure: Attention Mechanisms, KV Cache accumulation, and memory bandwidth."
-usedIn: "Reference guide for AI infrastructure tuning and local LLM deployment optimization."
-impact: "Provides the theoretical foundation needed to understand why KV Cache quantization works, why context size scales quadratically, and how to pick the right hardware for inference."
+chapter: 1
+part: "Fundamentals"
 pubDate: 2026-07-06
-category: "ai"
-tags: ["llm-handbook", "transformer", "flash-attention", "architecture", "machine-learning"]
-draft: false
 ---
 
 ## The Transformer Foundation

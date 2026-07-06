@@ -91,6 +91,12 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
             data-i18n="nav.about">About + CV</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            href={withBase("handbook/")}
+            class:list={["nav-link", { active: isActive(withBase("handbook/")) }]}>LLM Handbook</a
+          >
+        </li>
       </ul>
     </div>
 
