@@ -25,11 +25,13 @@ const latestPosts = publishedPosts.slice(0, 15);
       <p
         style="margin: 0 0 1rem; color: #58a6ff; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600;"
       >
-        Linux & Virtualization Engineer
+        <span data-i18n="site.role">Linux & Virtualization Engineer</span>
       </p>
       <p style="color: var(--text-soft); font-size: 0.9rem; line-height: 1.6; margin: 0 0 1.4rem;">
-        Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production
-        apps by night.
+        <span data-i18n="exec.summary"
+          >Building enterprise infrastructure by day; deploying local AI and shipping Kotlin
+          production apps by night.</span
+        >
       </p>
 
       <div class="sidebar-language-switcher" style="margin-bottom: 1.4rem;">
@@ -64,17 +66,23 @@ const latestPosts = publishedPosts.slice(0, 15);
       <nav
         style="display: grid; gap: 0.75rem; padding: 1.2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.3rem;"
       >
-        <a href={withBase()} style="color: var(--heading); text-decoration: none; font-weight: 600;"
-          >Home</a
+        <a
+          href={withBase()}
+          style="color: var(--heading); text-decoration: none; font-weight: 600;"
+        >
+          <span data-i18n="nav.home">Home</span></a
         >
         <a
           href={withBase("archive/")}
           style="color: var(--text-muted); text-decoration: none; font-weight: 500;"
-          >Field Notes Archive</a
+        >
+          <span data-i18n="exec.archive">Field Notes Archive</span></a
         >
         <a
           href={withBase("handbook/")}
-          style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LLM Handbook</a
+          style="color: var(--text-muted); text-decoration: none; font-weight: 500;"
+        >
+          <span data-i18n="exec.handbook">LLM Handbook</span></a
         >
       </nav>
 
@@ -86,20 +94,34 @@ const latestPosts = publishedPosts.slice(0, 15);
               target="_blank"
               rel="noopener noreferrer"
               class:list={["btn", { "btn-primary": index === 0 }]}
-              style="text-align: center; border: 1px solid var(--border);"
+              style="display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; text-align: center; border: 1px solid var(--border);"
             >
-              {link.label === "LinkedIn"
-                ? "LinkedIn Profile"
-                : link.label === "GitHub"
-                  ? "GitHub Profile"
-                  : link.label}
+              <span aria-hidden="true">
+                {link.label === "LinkedIn" ? "in" : link.label === "GitHub" ? "{}" : "↗"}
+              </span>
+              <span
+                data-i18n={
+                  link.label === "LinkedIn"
+                    ? "exec.linkedin"
+                    : link.label === "GitHub"
+                      ? "exec.github"
+                      : undefined
+                }
+              >
+                {link.label === "LinkedIn"
+                  ? "LinkedIn Profile"
+                  : link.label === "GitHub"
+                    ? "GitHub Profile"
+                    : link.label}
+              </span>
             </a>
           ))
         }
         <a
           href={withBase("docs/cv-sergio-barrientos.html")}
           class="btn"
-          style="text-align: center; border: 1px solid var(--border);">Curriculum Vitae</a
+          style="display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; text-align: center; border: 1px solid var(--border);"
+          ><span aria-hidden="true">▣</span><span data-i18n="exec.cv">Curriculum Vitae</span></a
         >
       </div>
     </aside>
@@ -109,24 +131,31 @@ const latestPosts = publishedPosts.slice(0, 15);
         <h2
           style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.55rem; margin: 0 0 1.25rem;"
         >
-          Production Apps
+          <span data-i18n="exec.productionApps">Production Apps</span>
         </h2>
         <div class="executive-app-grid">
           <article class="executive-card" style="display: flex; flex-direction: column; gap: 1rem;">
             <div
-              style="display: flex; justify-content: space-between; gap: 1rem; align-items: start;"
+              style="display: flex; justify-content: space-between; gap: 0.9rem; align-items: start; flex-wrap: wrap;"
             >
-              <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading);">
-                IntelliAuto
-              </h3>
+              <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
+                <div class="app-icon-mark app-icon-auto" aria-hidden="true">IA</div><h3
+                  style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading); white-space: nowrap;"
+                >
+                  IntelliAuto
+                </h3>
+              </div>
               <span
                 style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(126,231,135,0.1); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2); white-space: nowrap;"
-                >Live on Play Store</span
+              >
+                <span data-i18n="exec.livePlay">Live on Play Store</span></span
               >
             </div>
             <p style="color: var(--text-soft); font-size: 0.92rem; margin: 0; line-height: 1.5;">
-              Vehicle operations platform. Local-first architecture featuring an AI Mechanic
-              (AutoMind), ML Kit OCR, and offline encrypted storage.
+              <span data-i18n="exec.intelliautoDesc"
+                >Vehicle operations platform. Local-first architecture featuring an AI Mechanic
+                (AutoMind), ML Kit OCR, and offline encrypted storage.</span
+              >
             </p>
             <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
               <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
@@ -143,14 +172,13 @@ const latestPosts = publishedPosts.slice(0, 15);
               <a
                 href="https://play.google.com/store/apps/details?id=com.barrysoft.intelliauto"
                 target="_blank"
-                style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
-                >Play Store ↗</a
+                class="app-action-link app-action-primary"
+              >
+                <span aria-hidden="true">▶</span>
+                <span data-i18n="exec.playStore">Play Store</span> ↗</a
               >
               <span style="color: var(--border);">|</span>
-              <a
-                href="https://intelliauto.app"
-                target="_blank"
-                style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+              <a href="https://intelliauto.app" target="_blank" class="app-action-link"
                 >intelliauto.app</a
               >
             </div>
@@ -158,19 +186,26 @@ const latestPosts = publishedPosts.slice(0, 15);
 
           <article class="executive-card" style="display: flex; flex-direction: column; gap: 1rem;">
             <div
-              style="display: flex; justify-content: space-between; gap: 1rem; align-items: start;"
+              style="display: flex; justify-content: space-between; gap: 0.9rem; align-items: start; flex-wrap: wrap;"
             >
-              <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading);">
-                IntelliFlow
-              </h3>
+              <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
+                <div class="app-icon-mark app-icon-flow" aria-hidden="true">IF</div><h3
+                  style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading); white-space: nowrap;"
+                >
+                  IntelliFlow
+                </h3>
+              </div>
               <span
                 style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(126,231,135,0.1); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2); white-space: nowrap;"
-                >Live on Play Store</span
+              >
+                <span data-i18n="exec.livePlay">Live on Play Store</span></span
               >
             </div>
             <p style="color: var(--text-soft); font-size: 0.92rem; margin: 0; line-height: 1.5;">
-              Privacy-first personal finance tracker. Offline-first design with best-effort cloud
-              sync, budget projections, and automated DeepSeek insight generation.
+              <span data-i18n="exec.intelliflowDesc"
+                >Privacy-first personal finance tracker. Offline-first design with best-effort cloud
+                sync, budget projections, and automated DeepSeek insight generation.</span
+              >
             </p>
             <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
               <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
@@ -187,14 +222,13 @@ const latestPosts = publishedPosts.slice(0, 15);
               <a
                 href="https://play.google.com/store/apps/details?id=com.intelliflow.finances"
                 target="_blank"
-                style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
-                >Play Store ↗</a
+                class="app-action-link app-action-primary"
+              >
+                <span aria-hidden="true">▶</span>
+                <span data-i18n="exec.playStore">Play Store</span> ↗</a
               >
               <span style="color: var(--border);">|</span>
-              <a
-                href="https://barrysoft-intelliflow.org"
-                target="_blank"
-                style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+              <a href="https://barrysoft-intelliflow.org" target="_blank" class="app-action-link"
                 >intelliflow.org</a
               >
             </div>
@@ -210,21 +244,24 @@ const latestPosts = publishedPosts.slice(0, 15);
           >
             <span
               style="font-family: var(--font-mono); font-size: 0.75rem; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.1em;"
-              >Educational Series</span
+            >
+              <span data-i18n="exec.educationalSeries">Educational Series</span></span
             >
             <h2
               style="font-size: 1.7rem; font-weight: 700; color: var(--heading); margin: 0.45rem 0;"
             >
-              The LLM Infrastructure Handbook
+              <span data-i18n="exec.handbookTitle">The LLM Infrastructure Handbook</span>
             </h2>
             <p
               style="color: var(--text-soft); font-size: 1rem; max-width: 640px; margin: 0; line-height: 1.55;"
             >
-              An engineer's guide to Local AI. Demystifying Transformer architectures, DeepSeek's
-              Lookahead Sparse Attention, KV Cache quantization, and MoE routing.
+              <span data-i18n="exec.handbookDesc"
+                >An engineer's guide to Local AI. Demystifying Transformer architectures, DeepSeek's
+                Lookahead Sparse Attention, KV Cache quantization, and MoE routing.</span
+              >
             </p>
             <div style="margin-top: 1.25rem; color: #58a6ff; font-weight: 600; font-size: 0.9rem;">
-              Read the Handbook →
+              <span data-i18n="exec.readHandbook">Read the Handbook</span> →
             </div>
           </div>
         </a>
@@ -237,12 +274,13 @@ const latestPosts = publishedPosts.slice(0, 15);
           <h2
             style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 0;"
           >
-            Recent Field Notes
+            <span data-i18n="exec.recentNotes">Recent Field Notes</span>
           </h2>
           <a
             href={withBase("archive/")}
             style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none; white-space: nowrap;"
-            >View Full Archive →</a
+          >
+            <span data-i18n="exec.viewArchive">View Full Archive</span> →</a
           >
         </div>
         <div style="display: flex; flex-direction: column;">

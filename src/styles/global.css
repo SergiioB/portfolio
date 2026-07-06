@@ -5729,3 +5729,67 @@ h3 {
     gap: 0.35rem;
   }
 }
+
+/* Executive homepage polish */
+.app-icon-mark {
+  width: 2.65rem;
+  height: 2.65rem;
+  flex: 0 0 2.65rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.85rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: -0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 28px rgba(0, 0, 0, 0.26);
+}
+
+.app-icon-auto {
+  color: #7ee787;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(126, 231, 135, 0.24), transparent 36%),
+    linear-gradient(135deg, #0f2a1c, #111827);
+}
+
+.app-icon-flow {
+  color: #58a6ff;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(88, 166, 255, 0.26), transparent 36%),
+    linear-gradient(135deg, #0b2140, #111827);
+}
+
+.app-action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2.05rem;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.app-action-primary {
+  color: var(--heading);
+  border-color: rgba(88, 166, 255, 0.35);
+  background: rgba(88, 166, 255, 0.08);
+}
+
+.app-action-link:hover {
+  color: var(--heading);
+  border-color: rgba(88, 166, 255, 0.45);
+  background: rgba(88, 166, 255, 0.08);
+  text-decoration: none;
+}

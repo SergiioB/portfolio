@@ -123,6 +123,40 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Automatización de infraestructura para entornos Linux corporativos.",
   },
 
+  /* ── Executive homepage ── */
+  "exec.summary": {
+    en: "Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production apps by night.",
+    es: "Construyo infraestructura empresarial de día; despliego IA local y publico apps Kotlin en producción de noche.",
+  },
+  "exec.archive": { en: "Field Notes Archive", es: "Archivo de notas técnicas" },
+  "exec.handbook": { en: "LLM Handbook", es: "Manual LLM" },
+  "exec.linkedin": { en: "LinkedIn Profile", es: "Perfil de LinkedIn" },
+  "exec.github": { en: "GitHub Profile", es: "Perfil de GitHub" },
+  "exec.cv": { en: "Curriculum Vitae", es: "Currículum Vitae" },
+  "exec.productionApps": { en: "Production Apps", es: "Apps en producción" },
+  "exec.livePlay": { en: "Live on Play Store", es: "Publicada en Play Store" },
+  "exec.intelliautoDesc": {
+    en: "Vehicle operations platform. Local-first architecture featuring an AI Mechanic (AutoMind), ML Kit OCR, and offline encrypted storage.",
+    es: "Plataforma operativa para vehículos. Arquitectura local-first con mecánico IA (AutoMind), OCR con ML Kit y almacenamiento cifrado offline.",
+  },
+  "exec.intelliflowDesc": {
+    en: "Privacy-first personal finance tracker. Offline-first design with best-effort cloud sync, budget projections, and automated DeepSeek insight generation.",
+    es: "Gestor de finanzas personales privacy-first. Diseño offline-first con sincronización cloud best-effort, proyecciones de presupuesto e insights generados con DeepSeek.",
+  },
+  "exec.playStore": { en: "Play Store", es: "Play Store" },
+  "exec.educationalSeries": { en: "Educational Series", es: "Serie educativa" },
+  "exec.handbookTitle": {
+    en: "The LLM Infrastructure Handbook",
+    es: "Manual de infraestructura LLM",
+  },
+  "exec.handbookDesc": {
+    en: "An engineer's guide to Local AI. Demystifying Transformer architectures, DeepSeek's Lookahead Sparse Attention, KV Cache quantization, and MoE routing.",
+    es: "Una guía de IA local para ingenieros. Arquitecturas Transformer, Lookahead Sparse Attention de DeepSeek, cuantización de KV Cache y enrutamiento MoE sin humo.",
+  },
+  "exec.readHandbook": { en: "Read the Handbook", es: "Leer el manual" },
+  "exec.recentNotes": { en: "Recent Field Notes", es: "Notas recientes" },
+  "exec.viewArchive": { en: "View Full Archive", es: "Ver archivo completo" },
+
   /* ── Hero section ── */
   "hero.kicker": { en: "sergio@portfolio:~$ whoami", es: "sergio@portfolio:~$ whoami" },
   "hero.typewriter": {
