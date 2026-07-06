@@ -5660,15 +5660,15 @@ h3 {
 }
 
 .content-wrapper-executive {
-  max-width: 1180px;
+  max-width: 1380px;
   margin: 0 auto;
-  padding: clamp(1rem, 2vw, 2rem);
+  padding: clamp(0.75rem, 1.4vw, 1.35rem);
 }
 
 .executive-home {
   display: grid;
-  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
-  gap: clamp(1.5rem, 3vw, 3rem);
+  grid-template-columns: minmax(230px, 286px) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.1vw, 2.25rem);
   align-items: start;
 }
 
@@ -5731,21 +5731,30 @@ h3 {
 }
 
 /* Executive homepage polish */
-.app-icon-mark {
-  width: 2.65rem;
-  height: 2.65rem;
-  flex: 0 0 2.65rem;
+.app-icon-mark,
+.app-real-icon {
+  width: 2.9rem;
+  height: 2.9rem;
+  flex: 0 0 2.9rem;
   display: grid;
   place-items: center;
-  border-radius: 0.85rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: -0.04em;
+  border-radius: 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 12px 28px rgba(0, 0, 0, 0.26);
+}
+
+.app-icon-mark {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: -0.04em;
+}
+
+.app-real-icon {
+  object-fit: cover;
+  background: #0b1120;
 }
 
 .app-icon-auto {
