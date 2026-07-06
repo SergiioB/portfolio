@@ -84,7 +84,7 @@ body {
 }
 
 ::selection {
-  background: rgba(121, 192, 255, 0.28);
+  background: var(--surface);
   color: var(--text-strong);
 }
 
@@ -173,7 +173,7 @@ body.booting .site-shell {
   width: min(700px, 100%);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(121, 192, 255, 0.3);
-  background: rgba(13, 17, 23, 0.92);
+  background: var(--surface);
   box-shadow:
     0 0 32px rgba(13, 17, 23, 0.9),
     inset 0 0 0 1px rgba(126, 231, 135, 0.12);
@@ -196,7 +196,7 @@ body.booting .site-shell {
   gap: 0.6rem;
   padding: 0.38rem 0.74rem 0.42rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(13, 17, 23, 0.76);
+  background: var(--surface);
 }
 
 .boot-percent,
@@ -240,13 +240,13 @@ body.booting .site-shell {
   font-size: 0.77rem;
   line-height: 1.45;
   color: var(--text-code);
-  background: rgba(1, 4, 9, 0.9);
+  background: var(--surface);
 }
 
 .boot-gate {
   border-top: 1px solid var(--border);
   padding: 0.58rem 0.74rem;
-  background: rgba(8, 12, 17, 0.88);
+  background: var(--surface);
 }
 
 .boot-gate-label {
@@ -275,7 +275,7 @@ body.booting .site-shell {
 .boot-gate-input {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(13, 17, 23, 0.9);
+  background: var(--surface);
   color: var(--text-code);
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -310,7 +310,7 @@ body.booting .site-shell {
 .command-palette-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(1, 4, 9, 0.65);
+  background: rgba(22, 27, 34, 0.6);
   backdrop-filter: blur(4px);
 }
 
@@ -319,7 +319,7 @@ body.booting .site-shell {
   width: min(700px, 100%);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(121, 192, 255, 0.38);
-  background: rgba(13, 17, 23, 0.95);
+  background: var(--surface);
   box-shadow:
     0 0 30px rgba(13, 17, 23, 0.82),
     inset 0 0 0 1px rgba(88, 166, 255, 0.12);
@@ -375,7 +375,7 @@ body.booting .site-shell {
 .command-palette-close {
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(22, 27, 34, 0.84);
+  background: var(--surface);
   color: var(--text-soft);
   font-family: var(--font-mono);
   font-size: 0.64rem;
@@ -396,7 +396,7 @@ body.booting .site-shell {
   margin: 0 0.6rem 0.6rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(1, 4, 9, 0.78);
+  background: var(--surface);
   color: var(--text-strong);
   font-family: var(--font-mono);
   font-size: 0.79rem;
@@ -421,7 +421,7 @@ body.booting .site-shell {
   width: 100%;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(22, 27, 34, 0.78);
+  background: var(--surface);
   color: var(--text-soft);
   font-family: var(--font-mono);
   font-size: 0.74rem;
@@ -438,7 +438,7 @@ body.booting .site-shell {
 .command-item:hover {
   color: var(--text-strong);
   border-color: rgba(121, 192, 255, 0.55);
-  background: rgba(33, 38, 45, 0.92);
+  background: var(--surface);
   box-shadow: 0 0 12px rgba(88, 166, 255, 0.2);
 }
 
@@ -470,7 +470,7 @@ body.booting .site-shell {
 .boot-progress {
   height: 5px;
   border-top: 1px solid var(--border);
-  background: rgba(13, 17, 23, 0.95);
+  background: var(--surface);
 }
 
 .boot-progress span {
@@ -495,7 +495,7 @@ pre {
   box-shadow:
     0 8px 16px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  background: rgba(13, 17, 23, 0.95);
+  background: var(--surface);
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.5;
@@ -608,7 +608,7 @@ li + li {
   position: fixed;
   inset: 0 auto 0 0;
   width: var(--sidebar-width);
-  background: rgba(13, 17, 23, 0.45);
+  background: rgba(22, 27, 34, 0.6);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
@@ -681,7 +681,7 @@ li + li {
   padding: 0.3rem;
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.45);
+  background: var(--surface);
 }
 
 .lang-option-btn {
@@ -808,7 +808,7 @@ li + li {
 
 .sidebar-search-submit:hover {
   border-color: var(--accent);
-  background: rgba(35, 134, 54, 0.15);
+  background: var(--surface);
   color: var(--accent);
   box-shadow: 0 0 12px rgba(35, 134, 54, 0.4);
 }
@@ -1117,7 +1117,7 @@ li + li {
   align-items: center;
   gap: 0.75rem;
   padding: 0 0.85rem;
-  background: rgba(13, 17, 23, 0.85);
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(8px);
 }
@@ -1152,7 +1152,7 @@ li + li {
   z-index: 108;
   pointer-events: none;
   opacity: 0;
-  background: rgba(24, 29, 33, 0.35);
+  background: rgba(22, 27, 34, 0.6);
   backdrop-filter: blur(1px);
   transition: opacity var(--transition-base);
 }
@@ -1487,7 +1487,7 @@ li + li {
 
 .post-card:hover {
   transform: translateY(-4px);
-  background: rgba(30, 36, 44, 0.65);
+  background: var(--surface);
   box-shadow:
     0 16px 32px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -1594,7 +1594,7 @@ li + li {
 }
 
 .post-tags-inline .tag {
-  background: rgba(13, 17, 23, 0.6);
+  background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-muted);
 }
@@ -1634,56 +1634,56 @@ li + li {
 .post-category.post-category-infrastructure,
 .category-badge.infrastructure {
   color: var(--category-infrastructure);
-  background: rgba(15, 122, 145, 0.1);
+  background: var(--surface);
   border-color: rgba(15, 122, 145, 0.22);
 }
 
 .post-category.post-category-automation,
 .category-badge.automation {
   color: var(--category-automation);
-  background: rgba(138, 92, 31, 0.12);
+  background: var(--surface);
   border-color: rgba(138, 92, 31, 0.24);
 }
 
 .post-category.post-category-ai,
 .category-badge.ai {
   color: var(--category-ai);
-  background: rgba(21, 84, 133, 0.12);
+  background: var(--surface);
   border-color: rgba(21, 84, 133, 0.24);
 }
 
 .post-category.post-category-cloud,
 .category-badge.cloud {
   color: var(--category-cloud);
-  background: rgba(42, 93, 176, 0.11);
+  background: var(--surface);
   border-color: rgba(42, 93, 176, 0.22);
 }
 
 .post-category.post-category-local-ai,
 .category-badge.local-ai {
   color: var(--category-local-ai);
-  background: rgba(44, 122, 75, 0.11);
+  background: var(--surface);
   border-color: rgba(44, 122, 75, 0.24);
 }
 
 .post-category.post-category-kotlin,
 .category-badge.kotlin {
   color: var(--category-kotlin);
-  background: rgba(142, 45, 105, 0.12);
+  background: var(--surface);
   border-color: rgba(142, 45, 105, 0.24);
 }
 
 .post-category.post-category-snippets,
 .category-badge.snippets {
   color: var(--category-snippets);
-  background: rgba(123, 107, 34, 0.15);
+  background: var(--surface);
   border-color: rgba(123, 107, 34, 0.25);
 }
 
 .post-category.post-category-career,
 .category-badge.career {
   color: var(--category-career);
-  background: rgba(196, 94, 40, 0.1);
+  background: var(--surface);
   border-color: rgba(196, 94, 40, 0.22);
 }
 
@@ -2093,7 +2093,7 @@ li + li {
   font-family: var(--font-mono);
   font-size: 0.85em;
   border-radius: 6px;
-  background: rgba(152, 245, 181, 0.12);
+  background: var(--surface);
   color: var(--text-code);
   padding: 0.09rem 0.28rem;
 }
@@ -2430,7 +2430,7 @@ li + li {
 .engineer-lab-shell {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  background: rgba(1, 4, 9, 0.88);
+  background: var(--surface);
   box-shadow:
     inset 0 0 0 1px rgba(88, 166, 255, 0.12),
     0 0 24px rgba(13, 17, 23, 0.8);
@@ -2449,7 +2449,7 @@ li + li {
 .lab-tab {
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(22, 27, 34, 0.8);
+  background: var(--surface);
   color: var(--text-soft);
   padding: 0.28rem 0.62rem;
   text-transform: uppercase;
@@ -2516,14 +2516,14 @@ li + li {
   gap: 0.62rem;
   border-top: 1px solid var(--border);
   padding: 0.66rem;
-  background: rgba(22, 27, 34, 0.82);
+  background: var(--surface);
 }
 
 .metric-card {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 0.5rem;
-  background: rgba(13, 17, 23, 0.7);
+  background: var(--surface);
 }
 
 .metric-label {
@@ -2564,7 +2564,7 @@ li + li {
 .mode-toggle {
   border-radius: 999px;
   border: 1px solid rgba(126, 231, 135, 0.35);
-  background: rgba(35, 134, 54, 0.16);
+  background: var(--surface);
   color: #9be9a8;
   font-family: var(--font-mono);
   font-size: 0.66rem;
@@ -2787,7 +2787,7 @@ body.audience-recruiter .glitch {
 
 .mode-toggle[aria-pressed="true"] {
   border-color: rgba(255, 123, 114, 0.5);
-  background: rgba(255, 123, 114, 0.16);
+  background: var(--surface);
   color: #ffb2ac;
 }
 
@@ -2799,7 +2799,7 @@ body.audience-recruiter .glitch {
   font-family: var(--font-mono);
   font-size: 0.71rem;
   color: #9fcbff;
-  background: rgba(13, 17, 23, 0.7);
+  background: var(--surface);
 }
 
 .ops-kpis {
@@ -2834,7 +2834,7 @@ body.audience-recruiter .glitch {
   margin-top: 0.44rem;
   height: 6px;
   border-radius: 999px;
-  background: rgba(13, 17, 23, 0.8);
+  background: var(--surface);
   border: 1px solid var(--border);
   overflow: hidden;
 }
@@ -2885,7 +2885,7 @@ body.audience-recruiter .glitch {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: auto;
-  background: rgba(13, 17, 23, 0.88);
+  background: var(--surface);
 }
 
 .ops-top-table {
@@ -2947,13 +2947,13 @@ body.audience-recruiter .glitch {
 .proc-state.state-run {
   color: #7ee787;
   border-color: rgba(126, 231, 135, 0.45);
-  background: rgba(35, 134, 54, 0.16);
+  background: var(--surface);
 }
 
 .proc-state.state-sleep {
   color: #79c0ff;
   border-color: rgba(121, 192, 255, 0.45);
-  background: rgba(33, 88, 145, 0.16);
+  background: var(--surface);
 }
 
 .ops-cli-output {
@@ -2963,7 +2963,7 @@ body.audience-recruiter .glitch {
   overflow: auto;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(1, 4, 9, 0.95);
+  background: var(--surface);
   padding: 0.62rem;
   font-family: var(--font-mono);
   font-size: 0.77rem;
@@ -3026,7 +3026,7 @@ body.audience-recruiter .glitch {
 .ops-cli-form input {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(13, 17, 23, 0.88);
+  background: var(--surface);
   color: var(--text-code);
   font-family: var(--font-mono);
   font-size: 0.79rem;
@@ -3042,7 +3042,7 @@ body.audience-recruiter .glitch {
 .ops-chip {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(33, 38, 45, 0.82);
+  background: var(--surface);
   color: var(--text-soft);
   font-family: var(--font-mono);
   font-size: 0.69rem;
@@ -3087,7 +3087,7 @@ body.audience-recruiter .glitch {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 0.62rem;
-  background: rgba(8, 12, 17, 0.86);
+  background: var(--surface);
   display: grid;
   grid-template-columns: 1.35fr 1fr;
   gap: 0.62rem;
@@ -3149,7 +3149,7 @@ body.audience-recruiter .glitch {
   gap: 0.6rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: rgba(13, 17, 23, 0.78);
+  background: var(--surface);
   padding: 0.44rem 0.54rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -3290,7 +3290,7 @@ body.hardcore-mode .panel {
 
 /* ── Post cards — Tech grid feeling ────────────────────────────────────── */
 body.hardcore-mode .post-card {
-  background: rgba(2, 12, 4, 0.7);
+  background: var(--surface);
   border-color: rgba(0, 255, 65, 0.15);
   border-left-color: var(--accent);
   position: relative;
@@ -3298,7 +3298,7 @@ body.hardcore-mode .post-card {
 }
 
 body.hardcore-mode .post-card:hover {
-  background: rgba(5, 20, 8, 0.85);
+  background: var(--surface);
   box-shadow:
     0 16px 32px rgba(0, 10, 2, 0.9),
     0 0 20px rgba(0, 255, 65, 0.15),
@@ -3314,7 +3314,7 @@ body.hardcore-mode .post-card-title {
 /* ── Engineer terminals — Real phosphor green ──────────────────────────── */
 body.hardcore-mode .engineer-terminal,
 body.hardcore-mode .ops-cli-output {
-  background: rgba(1, 4, 1, 0.98);
+  background: var(--surface);
   box-shadow:
     inset 0 0 60px rgba(0, 255, 65, 0.06),
     0 0 20px rgba(0, 255, 65, 0.08);
@@ -3333,7 +3333,7 @@ body.hardcore-mode .ops-line {
 body.hardcore-mode .ops-alert-stream {
   border-color: rgba(0, 255, 65, 0.3);
   color: #5aff85;
-  background: rgba(2, 10, 4, 0.7);
+  background: var(--surface);
   box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.06);
 }
 
@@ -3351,7 +3351,7 @@ body.hardcore-mode a:not(.action-link):hover {
 
 /* ── Action buttons — Terminal accept ──────────────────────────────────── */
 body.hardcore-mode .action-link {
-  background: rgba(0, 255, 65, 0.08);
+  background: var(--surface);
   border-color: rgba(0, 255, 65, 0.3);
   color: #00ff41;
   box-shadow:
@@ -3361,7 +3361,7 @@ body.hardcore-mode .action-link {
 }
 
 body.hardcore-mode .action-link:hover {
-  background: rgba(0, 255, 65, 0.2);
+  background: var(--surface);
   color: #fff;
   border-color: #00ff41;
   box-shadow:
@@ -3399,15 +3399,15 @@ body.hardcore-mode .sidebar .nav-link:hover {
 
 /* ── Scrollbar — Hacker Green ──────────────────────────────────────────── */
 body.hardcore-mode ::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 65, 0.25);
+  background: var(--surface);
 }
 
 body.hardcore-mode ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 255, 65, 0.5);
+  background: var(--surface);
 }
 
 body.hardcore-mode ::-webkit-scrollbar-track {
-  background: rgba(2, 8, 4, 0.8);
+  background: var(--surface);
 }
 
 /* ── Code blocks — Deep mainframe style ────────────────────────────────── */
@@ -3440,7 +3440,7 @@ body.hardcore-mode pre {
 
 /* ── Selection colour override ─────────────────────────────────────────── */
 body.hardcore-mode ::selection {
-  background: rgba(0, 255, 65, 0.35);
+  background: var(--surface);
   color: #fff;
   text-shadow: none;
 }
@@ -4115,7 +4115,7 @@ body.hardcore-mode ::selection {
   font-family: var(--font-mono);
   font-size: 0.76rem;
   color: var(--text-strong);
-  background: rgba(22, 27, 34, 0.94);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-left: 3px solid var(--heading-2);
   border-radius: var(--radius-sm);
@@ -4285,7 +4285,7 @@ body.hardcore-mode ::selection {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--heading-2);
-  background: rgba(88, 166, 255, 0.1);
+  background: var(--surface);
   border: 1px solid rgba(88, 166, 255, 0.25);
   border-radius: 999px;
   padding: 0.18rem 0.6rem;
@@ -4297,7 +4297,7 @@ body.hardcore-mode ::selection {
   padding: 0.82rem 1rem;
   border: 1px solid rgba(88, 166, 255, 0.3);
   border-radius: var(--radius-sm);
-  background: rgba(88, 166, 255, 0.06);
+  background: var(--surface);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4326,7 +4326,7 @@ body.hardcore-mode ::selection {
   text-transform: uppercase;
   text-decoration: none;
   color: var(--accent);
-  background: rgba(56, 139, 253, 0.08);
+  background: var(--surface);
   border: 1px solid var(--accent);
   border-radius: var(--radius-sm);
   transition:
@@ -4335,7 +4335,7 @@ body.hardcore-mode ::selection {
 }
 
 .sidebar-cv-btn:hover {
-  background: rgba(56, 139, 253, 0.18);
+  background: var(--surface);
   color: var(--text);
 }
 
@@ -4396,7 +4396,7 @@ body.hardcore-mode ::selection {
   border: 1px solid var(--border);
   border-radius: 3px;
   padding: 0.05rem 0.28rem;
-  background: rgba(22, 27, 34, 0.7);
+  background: var(--surface);
   color: var(--text-soft);
 }
 
@@ -4776,13 +4776,13 @@ h3 {
 }
 
 .badge-accent {
-  background: rgba(88, 166, 255, 0.1);
+  background: var(--surface);
   color: var(--heading-2);
   border: 1px solid rgba(88, 166, 255, 0.2);
 }
 
 .badge-warm {
-  background: rgba(238, 184, 104, 0.1);
+  background: var(--surface);
   color: var(--accent-warm);
   border: 1px solid rgba(238, 184, 104, 0.2);
 }
@@ -5095,7 +5095,7 @@ h3 {
   gap: 0.6rem;
   margin-bottom: 1rem;
   padding: 0.85rem;
-  background: rgba(1, 4, 9, 0.6);
+  background: var(--surface);
   border: 1px solid rgba(48, 54, 61, 0.5);
   border-radius: var(--radius-sm);
 }
@@ -5186,35 +5186,35 @@ h3 {
 
 /* Badge category colors */
 .badge.category-infrastructure {
-  background: rgba(76, 175, 80, 0.15);
+  background: var(--surface);
   color: var(--category-infrastructure);
 }
 .badge.category-automation {
-  background: rgba(210, 153, 34, 0.15);
+  background: var(--surface);
   color: var(--category-automation);
 }
 .badge.category-ai {
-  background: rgba(88, 166, 255, 0.15);
+  background: var(--surface);
   color: var(--category-ai);
 }
 .badge.category-cloud {
-  background: rgba(188, 140, 255, 0.15);
+  background: var(--surface);
   color: var(--category-cloud);
 }
 .badge.category-local-ai {
-  background: rgba(86, 211, 100, 0.15);
+  background: var(--surface);
   color: var(--category-local-ai);
 }
 .badge.category-kotlin {
-  background: rgba(247, 140, 108, 0.15);
+  background: var(--surface);
   color: var(--category-kotlin);
 }
 .badge.category-snippets {
-  background: rgba(126, 231, 135, 0.15);
+  background: var(--surface);
   color: var(--category-snippets);
 }
 .badge.category-career {
-  background: rgba(255, 215, 97, 0.15);
+  background: var(--surface);
   color: var(--category-career);
 }
 
@@ -5278,7 +5278,7 @@ h3 {
 
 /* Badge warm variant */
 .badge-warm {
-  background: rgba(238, 184, 104, 0.15);
+  background: var(--surface);
   color: var(--accent-warm);
   border: 1px solid rgba(238, 184, 104, 0.3);
 }

@@ -1,8 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
-import PostCard from "../components/PostCard.astro";
-import { PUBLIC_CV, SITE } from "../config/site";
+import { SITE } from "../config/site";
 import { CATEGORY_META, CATEGORY_ORDER, categoryMatches } from "../content/categories";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
@@ -19,219 +18,242 @@ const categoryCounts = CATEGORY_ORDER.map((category) => ({
   description: CATEGORY_META[category].description,
   count: publishedPosts.filter((post) => categoryMatches(post.data.category, category)).length,
 })).filter((c) => c.count > 0);
-
-const latestDate = publishedPosts[0]?.data.pubDate;
-const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
-const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
 ---
 
 <BaseLayout
-  title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`}
+  title=`${SITE.author} | Linux & Virtualization Engineering Portfolio`
   description={SITE.description}
 >
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1 class="hero-title" data-i18n="home.heroTitle">Structured Engineering Case Studies</h1>
-    <p class="hero-description" data-i18n="home.heroDescription">
-      Linux & Virtualization Engineering Portfolio
+  <!-- 1. HERO SECTION -->
+  <section class="hero" style="margin-bottom: 2rem;">
+    <h1
+      class="hero-title"
+      style="font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; color: var(--heading);"
+    >
+      Sergio Barrientos
+    </h1>
+    <p
+      class="hero-description"
+      style="font-size: 1.1rem; color: var(--text-soft); max-width: 600px; line-height: 1.6;"
+    >
+      Linux & Virtualization Engineer at Deutsche Pfandbriefbank AG.<br />
+      Building enterprise infrastructure by day; developing local AI architectures and Kotlin production
+      apps by night.
     </p>
-
-    <div class="hero-actions">
-      {
-        PUBLIC_CV.enabled && (
-          <a
-            href={publicCvHref}
-            data-href-en={publicCvHref}
-            data-href-es={publicCvHrefEs}
-            class="btn btn-primary"
-            target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
-            rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
-            data-i18n="about.cvLabel"
-          >
-            {PUBLIC_CV.label}
-          </a>
-        )
-      }
-      <div class="social-links">
-        <a
-          href="https://github.com/SergiioB"
-          class="social-icon"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub Profile"
-          data-i18n-label="home.githubProfile"
-        >
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path
-              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-            ></path>
-          </svg>
-        </a>
-        <a
-          href="https://www.linkedin.com/in/sergio-barrientose/"
-          class="social-icon"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn Profile"
-          data-i18n-label="home.linkedinProfile"
-        >
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-            <path
-              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
-            ></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-label" data-i18n="hero.currentRole">Current role</span>
-        <span class="stat-value" data-i18n="hero.roleTitle">{SITE.role}</span>
-        <span class="stat-meta" data-i18n="home.roleMeta">Deutsche Pfandbriefbank AG · Madrid</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label" data-i18n="hero.publishedPosts">Published posts</span>
-        <span class="stat-value">{publishedPosts.length}</span>
-        <span class="stat-meta" data-i18n="hero.postsMeta">Case-study driven technical notes</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label" data-i18n="hero.lastUpdate">Last update</span>
-        {
-          latestDate ? (
-            <time class="stat-value" datetime={latestDate.toISOString()} data-localize-date="long">
-              {latestDate.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </time>
-          ) : (
-            <span class="stat-value">—</span>
-          )
-        }
-        <span class="stat-meta" data-i18n="hero.archiveFirst">Archive-first publishing flow</span>
-      </div>
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+      <a
+        href="https://www.linkedin.com/in/sergio-barrientose/"
+        target="_blank"
+        class="btn btn-primary"
+        style="padding: 0.5rem 1rem; font-size: 0.9rem;">LinkedIn Profile</a
+      >
+      <a
+        href="/docs/cv-sergio-barrientos.html"
+        target="_blank"
+        class="btn"
+        style="padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid var(--border);"
+        >Curriculum Vitae</a
+      >
     </div>
   </section>
 
-  <!-- Production Apps (Live) -->
-  <section
-    class="section production-section"
-    style="margin-top: 2rem; margin-bottom: 2rem; padding: 0; background: transparent; border: none;"
-  >
-    <div class="section-header">
-      <h2 class="section-title">Production Apps</h2>
-    </div>
-
-    <div
-      class="domains-grid"
-      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;"
+  <!-- 2. PRODUCTION APPS -->
+  <section style="margin-bottom: 3rem;">
+    <h2
+      style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;"
     >
-      <!-- IntelliAuto Card -->
+      Apps in Production
+    </h2>
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;"
+    >
       <div
-        class="card"
-        style="padding: 1.5rem; background: rgba(1, 4, 9, 0.5); border: 1px solid var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 1rem;"
+        style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column;"
       >
-        <div>
-          <span class="badge badge-accent" style="margin-bottom: 0.5rem; display: inline-block;"
-            >● Live on Google Play</span
-          >
-          <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading);">
-            🚗 IntelliAuto
+        <div
+          style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;"
+        >
+          <h3 style="font-size: 1.3rem; font-weight: 600; margin: 0; color: var(--heading);">
+            IntelliAuto
           </h3>
+          <span
+            style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--surface); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2);"
+            >Live on Google Play</span
+          >
         </div>
-        <p style="color: var(--text-soft); font-size: 0.95rem; margin: 0; flex-grow: 1;">
-          Garage & maintenance operations platform. Features an AI Mechanic (AutoMind), ML Kit OCR
-          for vehicle documents, PDF reporting, and offline-first encrypted storage.
+        <p
+          style="color: var(--text-soft); font-size: 0.9rem; flex-grow: 1; margin: 0 0 1rem 0; line-height: 1.5;"
+        >
+          Vehicle & garage operations platform. Local-first architecture featuring an AI Mechanic
+          (AutoMind), ML Kit OCR for documents, and offline encrypted storage.
         </p>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <span class="badge" style="background: rgba(88, 166, 255, 0.1); color: #58a6ff;"
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+          <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
             >Kotlin</span
           >
-          <span class="badge" style="background: rgba(255, 162, 14, 0.1); color: #ffa20e;"
+          <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
             >Firebase</span
           >
-          <span class="badge" style="background: rgba(126, 231, 135, 0.1); color: #7ee787;"
-            >Android Native</span
-          >
-        </div>
-        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-          <a
-            href="https://play.google.com/store/apps/details?id=com.barrysoft.intelliauto"
-            target="_blank"
-            class="btn btn-primary"
-            style="flex: 1; text-align: center;">Google Play</a
-          >
-          <a
-            href="https://intelliauto.app"
-            target="_blank"
-            class="btn"
-            style="flex: 1; text-align: center; border: 1px solid var(--border);">intelliauto.app</a
-          >
-        </div>
-      </div>
-
-      <!-- IntelliFlow Card -->
-      <div
-        class="card"
-        style="padding: 1.5rem; background: rgba(1, 4, 9, 0.5); border: 1px solid var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 1rem;"
-      >
-        <div>
-          <span class="badge badge-accent" style="margin-bottom: 0.5rem; display: inline-block;"
-            >● Live on Google Play</span
-          >
-          <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading);">
-            📈 IntelliFlow
-          </h3>
-        </div>
-        <p style="color: var(--text-soft); font-size: 0.95rem; margin: 0; flex-grow: 1;">
-          Privacy-first personal finance tracker. Features offline-first architecture with
-          best-effort sync, budget projections, and an AI financial copilot.
-        </p>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <span class="badge" style="background: rgba(88, 166, 255, 0.1); color: #58a6ff;"
-            >Kotlin</span
-          >
-          <span class="badge" style="background: rgba(255, 162, 14, 0.1); color: #ffa20e;"
-            >Firebase</span
-          >
-          <span class="badge" style="background: rgba(126, 231, 135, 0.1); color: #7ee787;"
+          <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
             >DeepSeek AI</span
           >
         </div>
-        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+        <div style="display: flex; gap: 0.5rem;">
+          <a
+            href="https://play.google.com/store/apps/details?id=com.barrysoft.intelliauto"
+            target="_blank"
+            style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
+            >Google Play ↗</a
+          >
+          <span style="color: var(--border);">|</span>
+          <a
+            href="https://intelliauto.app"
+            target="_blank"
+            style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+            >intelliauto.app</a
+          >
+        </div>
+      </div>
+
+      <div
+        style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column;"
+      >
+        <div
+          style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;"
+        >
+          <h3 style="font-size: 1.3rem; font-weight: 600; margin: 0; color: var(--heading);">
+            IntelliFlow
+          </h3>
+          <span
+            style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--surface); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2);"
+            >Live on Google Play</span
+          >
+        </div>
+        <p
+          style="color: var(--text-soft); font-size: 0.9rem; flex-grow: 1; margin: 0 0 1rem 0; line-height: 1.5;"
+        >
+          Privacy-first personal finance tracker. Offline-first design with best-effort cloud sync,
+          budget projections, and an automated AI financial copilot.
+        </p>
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+          <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
+            >Kotlin</span
+          >
+          <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
+            >Firebase</span
+          >
+          <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
+            >DeepSeek AI</span
+          >
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
           <a
             href="https://play.google.com/store/apps/details?id=com.intelliflow.finances"
             target="_blank"
-            class="btn btn-primary"
-            style="flex: 1; text-align: center;">Google Play</a
+            style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
+            >Google Play ↗</a
           >
+          <span style="color: var(--border);">|</span>
           <a
             href="https://barrysoft-intelliflow.org"
             target="_blank"
-            class="btn"
-            style="flex: 1; text-align: center; border: 1px solid var(--border);">intelliflow.org</a
+            style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+            >barrysoft-intelliflow.org</a
           >
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" style="background: transparent; border: none; padding: 0;">
-    <div class="section-header">
-      <h2 class="section-title" data-i18n="posts.recent">Recent Case Studies</h2>
-      <a href={withBase("archive/")} class="section-link" data-i18n="posts.allPosts">All posts</a>
+  <!-- 3. THE LLM HANDBOOK BANNER -->
+  <section style="margin-bottom: 3rem;">
+    <a href="/handbook" style="display: block; text-decoration: none;">
+      <div
+        style="background: var(--surface); border: 1px solid rgba(88,166,255,0.3); border-radius: var(--radius-lg); padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.3s ease;"
+      >
+        <span
+          style="font-family: var(--font-mono); font-size: 0.75rem; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.1em;"
+          >Educational Series</span
+        >
+        <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--heading); margin: 0.5rem 0;">
+          The LLM Infrastructure Handbook
+        </h2>
+        <p style="color: var(--text-soft); font-size: 1rem; max-width: 500px; margin: 0;">
+          A systems engineer's guide to Local AI. Demystifying Transformer architectures, KV Cache
+          quantization, Flash Attention, and MoE routing.
+        </p>
+        <div
+          style="margin-top: 1.5rem; display: inline-flex; align-items: center; gap: 0.5rem; color: #58a6ff; font-weight: 600; font-size: 0.9rem;"
+        >
+          Read the Handbook <span style="font-family: var(--font-mono);">→</span>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- 4. FIELD NOTES (DENSE LIST) & FILTERS -->
+  <section>
+    <div
+      style="display: flex; justify-content: space-between; align-items: end; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;"
+    >
+      <h2
+        style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 0;"
+      >
+        Recent Field Notes
+      </h2>
+      <a
+        href="/archive"
+        style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+        >View Archive →</a
+      >
     </div>
 
-    <div class="posts-feed">
-      {latestPosts.map((post) => <PostCard post={post} />)}
+    <!-- Category Pills -->
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
       {
-        publishedPosts.length === 0 && (
-          <p class="empty-state" data-i18n="posts.noPosts">
-            No posts published yet.
-          </p>
-        )
+        categoryCounts.map((cat) => (
+          <a
+            href={withBase(`${cat.slug}/`)}
+            style={`padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; text-decoration: none; border: 1px solid var(--border); background: var(--surface); color: var(--category-${cat.slug}); transition: all 0.2s ease;`}
+          >
+            {cat.label}{" "}
+            <span style="opacity: 0.5; font-size: 0.7rem; margin-left: 0.2rem;">{cat.count}</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <!-- Dense List -->
+    <div style="display: flex; flex-direction: column;">
+      {
+        latestPosts.map((post) => {
+          const url = withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
+          const date = post.data.pubDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "2-digit",
+          });
+          return (
+            <a
+              href={url}
+              style="display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); text-decoration: none; transition: background 0.2s ease;"
+              class="dense-post-row"
+            >
+              <time style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); min-width: 50px; padding-top: 0.15rem;">
+                {date}
+              </time>
+              <div style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; flex: 1;">
+                <h3 style="font-size: 1rem; font-weight: 500; color: var(--text-strong); margin: 0; line-height: 1.4; word-wrap: break-word;">
+                  {post.data.title}
+                </h3>
+                <span
+                  style={`font-family: var(--font-mono); font-size: 0.65rem; color: var(--category-${post.data.category}); text-transform: uppercase; letter-spacing: 0.05em; align-self: flex-start;`}
+                >
+                  {post.data.category}
+                </span>
+              </div>
+            </a>
+          );
+        })
       }
     </div>
   </section>

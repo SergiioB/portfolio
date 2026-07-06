@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
-import { PUBLIC_CV, PUBLIC_LINKS, SITE } from "../config/site";
+import { SITE } from "../config/site";
 import { CATEGORY_META, CATEGORY_ORDER, categoryMatches } from "../content/categories";
 import { withBase } from "../utils/paths";
 
@@ -24,9 +24,6 @@ function isActive(path: string): boolean {
   }
   return currentPath.startsWith(path);
 }
-
-const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
-const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
 ---
 
 <aside class="sidebar" id="site-sidebar" data-sidebar>
@@ -118,39 +115,6 @@ const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_C
       </ul>
     </div>
   </nav>
-
-  <div class="sidebar-footer">
-    {
-      PUBLIC_CV.enabled && (
-        <a
-          href={publicCvHref}
-          data-href-en={publicCvHref}
-          data-href-es={publicCvHrefEs}
-          class="btn btn-primary"
-          target={PUBLIC_CV.openInNewTab ? "_blank" : undefined}
-          rel={PUBLIC_CV.openInNewTab ? "noopener noreferrer" : undefined}
-          data-i18n="about.cvLabel"
-        >
-          {PUBLIC_CV.label}
-        </a>
-      )
-    }
-    <div class="sidebar-links">
-      {
-        PUBLIC_LINKS.map((link) => (
-          <a
-            href={link.href}
-            class="sidebar-link"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-i18n={link.label === "LinkedIn" ? "link.linkedin" : undefined}
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </div>
-  </div>
 </aside>
 
 <header class="mobile-header">
