@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { ViewTransitions } from "astro:transitions";
 
+import Sidebar from "../components/Sidebar.astro";
 import { dictionary } from "../config/i18n";
 import { SITE } from "../config/site";
 import { withBase } from "../utils/paths";
@@ -9,9 +10,10 @@ import { withBase } from "../utils/paths";
 interface Props {
   title: string;
   description: string;
+  layoutMode?: "default" | "executive";
 }
 
-const { title, description } = Astro.props;
+const { title, description, layoutMode = "default" } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 const csp = [
   "default-src 'self'",
@@ -206,9 +208,18 @@ const csp = [
 
     <a class="skip-link" href="#main-content" data-i18n="nav.skipToContent">Skip to content</a>
 
-    <div class="site-shell-flexible">
-      <main class="main-content" id="main-content">
-        <div class="content-wrapper">
+    <div class:list={["site-shell", { "site-shell-executive": layoutMode === "executive" }]}>
+      {layoutMode !== "executive" && <Sidebar />}
+      <main
+        class:list={["main-content", { "main-content-executive": layoutMode === "executive" }]}
+        id="main-content"
+      >
+        <div
+          class:list={[
+            "content-wrapper",
+            { "content-wrapper-executive": layoutMode === "executive" },
+          ]}
+        >
           <slot />
         </div>
 

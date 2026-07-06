@@ -5647,42 +5647,85 @@ h3 {
   }
 }
 
-.site-shell-flexible {
-  max-width: 1200px;
+/* Executive homepage layout */
+.site-shell-executive {
+  display: block;
+  min-height: 100vh;
+}
+
+.main-content-executive {
+  margin-left: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.content-wrapper-executive {
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 2rem;
-  display: flex;
-  gap: 3rem;
-  align-items: flex-start;
+  padding: clamp(1rem, 2vw, 2rem);
 }
-@media (max-width: 850px) {
-  .site-shell-flexible {
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1.5rem;
-  }
+
+.executive-home {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
 }
-.floating-sidebar {
-  flex: 1;
-  min-width: 280px;
-  max-width: 320px;
+
+.executive-profile {
+  position: sticky;
+  top: 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 2rem;
-  position: sticky;
-  top: 2rem;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  box-shadow: var(--shadow-sm);
 }
-@media (max-width: 850px) {
-  .floating-sidebar {
-    position: static;
-    max-width: 100%;
-  }
-}
-.main-column {
-  flex: 3;
-  min-width: 300px;
+
+.executive-main {
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  gap: 3rem;
+  gap: 2.25rem;
+}
+
+.executive-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.executive-app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.executive-post-row {
+  display: grid;
+  grid-template-columns: 6.25rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  text-decoration: none;
+}
+
+.executive-post-row h3 {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 850px) {
+  .executive-home {
+    grid-template-columns: 1fr;
+  }
+
+  .executive-profile {
+    position: static;
+  }
+
+  .executive-post-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
 }

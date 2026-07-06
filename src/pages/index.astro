@@ -15,240 +15,255 @@ const latestPosts = publishedPosts.slice(0, 15);
 <BaseLayout
   title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`}
   description={SITE.description}
+  layoutMode="executive"
 >
-  <!-- ONE AND ONLY ONE SIDEBAR -->
-  <aside class="floating-sidebar">
-    <h1 style="font-size: 1.8rem; font-weight: 700; margin: 0 0 0.5rem 0; color: var(--heading);">
-      Sergio Barrientos
-    </h1>
-    <h2 style="font-size: 1rem; color: #58a6ff; margin: 0 0 1rem 0;">
-      Linux & Virtualization Engineer
-    </h2>
-    <p style="color: var(--text-soft); font-size: 0.9rem; line-height: 1.6; margin-bottom: 2rem;">
-      Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production
-      apps by night.
-    </p>
+  <div class="executive-home">
+    <aside class="executive-profile">
+      <h1 style="font-size: 1.65rem; font-weight: 700; margin: 0 0 0.5rem; color: var(--heading);">
+        Sergio Barrientos
+      </h1>
+      <p
+        style="margin: 0 0 1rem; color: #58a6ff; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600;"
+      >
+        Linux & Virtualization Engineer
+      </p>
+      <p style="color: var(--text-soft); font-size: 0.9rem; line-height: 1.6; margin: 0 0 1.4rem;">
+        Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production
+        apps by night.
+      </p>
 
-    <nav
-      style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.5rem 0;"
-    >
-      <a
-        href="/"
-        style="color: var(--heading); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;"
-        >Home</a
-      >
-      <a
-        href="/archive"
-        style="color: var(--text-muted); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;"
-        >Field Notes Archive</a
-      >
-      <a
-        href="/handbook"
-        style="color: var(--text-muted); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;"
-        >LLM Handbook</a
-      >
-    </nav>
-
-    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-      <a
-        href="https://linkedin.com/in/sergio-barrientose"
-        target="_blank"
-        class="btn btn-primary"
-        style="text-align: center;">LinkedIn Profile</a
-      >
-      <a
-        href="/docs/cv-sergio-barrientos.html"
-        class="btn"
-        style="text-align: center; border: 1px solid var(--border);">Curriculum Vitae</a
-      >
-    </div>
-  </aside>
-
-  <!-- THE MAIN CONTENT COLUMN -->
-  <main class="main-column">
-    <!-- PRODUCTION APPS -->
-    <section>
-      <h2
-        style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;"
-      >
-        Production Apps
-      </h2>
-      <div
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;"
-      >
+      <div class="sidebar-language-switcher" style="margin-bottom: 1.4rem;">
+        <span class="sidebar-language-label" data-i18n="lang.label">Language</span>
         <div
-          style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column;"
+          class="lang-switcher-pill"
+          role="group"
+          aria-label="Language"
+          data-i18n-label="lang.label"
         >
-          <div
-            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;"
+          <button
+            type="button"
+            class="lang-option-btn"
+            data-lang-option="en"
+            data-i18n-label="lang.english"
+            aria-pressed="true"
           >
-            <h3 style="font-size: 1.3rem; font-weight: 600; margin: 0; color: var(--heading);">
-              IntelliAuto
-            </h3>
-            <span
-              style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(126,231,135,0.1); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2);"
-              >Live on Play Store</span
-            >
-          </div>
-          <p
-            style="color: var(--text-soft); font-size: 0.9rem; flex-grow: 1; margin: 0 0 1rem 0; line-height: 1.5;"
+            EN
+          </button>
+          <button
+            type="button"
+            class="lang-option-btn"
+            data-lang-option="es"
+            data-i18n-label="lang.spanish"
+            aria-pressed="false"
           >
-            Vehicle operations platform. Local-first architecture featuring an AI Mechanic
-            (AutoMind), ML Kit OCR, and offline encrypted storage.
-          </p>
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-            <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
-              >Kotlin</span
-            >
-            <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
-              >Firebase</span
-            >
-            <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
-              >DeepSeek</span
-            >
-          </div>
-          <div style="display: flex; gap: 0.5rem;">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.barrysoft.intelliauto"
-              target="_blank"
-              style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
-              >Play Store ↗</a
-            >
-            <span style="color: var(--border);">|</span>
-            <a
-              href="https://intelliauto.app"
-              target="_blank"
-              style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
-              >intelliauto.app</a
-            >
-          </div>
-        </div>
-
-        <div
-          style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column;"
-        >
-          <div
-            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;"
-          >
-            <h3 style="font-size: 1.3rem; font-weight: 600; margin: 0; color: var(--heading);">
-              IntelliFlow
-            </h3>
-            <span
-              style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(126,231,135,0.1); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2);"
-              >Live on Play Store</span
-            >
-          </div>
-          <p
-            style="color: var(--text-soft); font-size: 0.9rem; flex-grow: 1; margin: 0 0 1rem 0; line-height: 1.5;"
-          >
-            Privacy-first personal finance tracker. Offline-first design with best-effort cloud sync
-            and an automated AI financial copilot.
-          </p>
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-            <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
-              >Kotlin</span
-            >
-            <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
-              >Firebase</span
-            >
-            <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
-              >DeepSeek</span
-            >
-          </div>
-          <div style="display: flex; gap: 0.5rem;">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.intelliflow.finances"
-              target="_blank"
-              style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
-              >Play Store ↗</a
-            >
-            <span style="color: var(--border);">|</span>
-            <a
-              href="https://barrysoft-intelliflow.org"
-              target="_blank"
-              style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
-              >intelliflow.org</a
-            >
-          </div>
+            ES
+          </button>
         </div>
       </div>
-    </section>
 
-    <!-- HANDBOOK BANNER -->
-    <section>
-      <a href="/handbook" style="display: block; text-decoration: none;">
-        <div
-          style="background: linear-gradient(135deg, rgba(88,166,255,0.05) 0%, var(--surface) 100%); border: 1px solid rgba(88,166,255,0.2); border-radius: var(--radius-lg); padding: 2rem; transition: border-color 0.3s ease;"
-        >
-          <span
-            style="font-family: var(--font-mono); font-size: 0.75rem; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.1em;"
-            >Educational Series</span
-          >
-          <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--heading); margin: 0.5rem 0;">
-            The LLM Infrastructure Handbook
-          </h2>
-          <p style="color: var(--text-soft); font-size: 1rem; max-width: 600px; margin: 0;">
-            An engineer's guide to Local AI. Demystifying Transformer architectures, DeepSeek's
-            Lookahead Sparse Attention, KV Cache quantization, and MoE routing.
-          </p>
-          <div
-            style="margin-top: 1.5rem; display: inline-flex; align-items: center; gap: 0.5rem; color: #58a6ff; font-weight: 600; font-size: 0.9rem;"
-          >
-            Read the Handbook <span style="font-family: var(--font-mono);">→</span>
-          </div>
-        </div>
-      </a>
-    </section>
-
-    <!-- FIELD NOTES (DENSE ROW) -->
-    <section>
-      <div
-        style="display: flex; justify-content: space-between; align-items: end; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;"
+      <nav
+        style="display: grid; gap: 0.75rem; padding: 1.2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.3rem;"
       >
-        <h2
-          style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 0;"
+        <a href={withBase()} style="color: var(--heading); text-decoration: none; font-weight: 600;"
+          >Home</a
         >
-          Recent Field Notes
-        </h2>
         <a
-          href="/archive"
-          style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
-          >View Full Archive →</a
+          href={withBase("archive/")}
+          style="color: var(--text-muted); text-decoration: none; font-weight: 500;"
+          >Field Notes Archive</a
+        >
+        <a
+          href={withBase("handbook/")}
+          style="color: var(--text-muted); text-decoration: none; font-weight: 500;">LLM Handbook</a
+        >
+      </nav>
+
+      <div style="display: grid; gap: 0.75rem;">
+        <a
+          href="https://linkedin.com/in/sergio-barrientose"
+          target="_blank"
+          class="btn btn-primary"
+          style="text-align: center;">LinkedIn Profile</a
+        >
+        <a
+          href={withBase("docs/cv-sergio-barrientos.html")}
+          class="btn"
+          style="text-align: center; border: 1px solid var(--border);">Curriculum Vitae</a
         >
       </div>
-      <div style="display: flex; flex-direction: column;">
-        {
-          latestPosts.map((post) => {
-            const url = withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
-            const date = post.data.pubDate.toLocaleDateString("en-US", {
-              month: "short",
-              day: "2-digit",
-              year: "numeric",
-            });
-            return (
-              <a
-                href={url}
-                style="display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(48,54,61,0.5); text-decoration: none; transition: background 0.2s ease;"
-                class="dense-post-row"
+    </aside>
+
+    <main class="executive-main">
+      <section>
+        <h2
+          style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.55rem; margin: 0 0 1.25rem;"
+        >
+          Production Apps
+        </h2>
+        <div class="executive-app-grid">
+          <article class="executive-card" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div
+              style="display: flex; justify-content: space-between; gap: 1rem; align-items: start;"
+            >
+              <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading);">
+                IntelliAuto
+              </h3>
+              <span
+                style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(126,231,135,0.1); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2); white-space: nowrap;"
+                >Live on Play Store</span
               >
-                <time style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); min-width: 85px; padding-top: 0.15rem;">
-                  {date}
-                </time>
-                <div style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; flex: 1;">
-                  <h3 style="font-size: 1rem; font-weight: 500; color: var(--text-strong); margin: 0; line-height: 1.4; word-wrap: break-word;">
-                    {post.data.title}
-                  </h3>
-                  <span
-                    style={`font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; align-self: flex-start; background: rgba(255,255,255,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;`}
-                  >
-                    {post.data.category}
-                  </span>
-                </div>
-              </a>
-            );
-          })
-        }
-      </div>
-    </section>
-  </main>
+            </div>
+            <p style="color: var(--text-soft); font-size: 0.92rem; margin: 0; line-height: 1.5;">
+              Vehicle operations platform. Local-first architecture featuring an AI Mechanic
+              (AutoMind), ML Kit OCR, and offline encrypted storage.
+            </p>
+            <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
+                >Kotlin</span
+              >
+              <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
+                >Firebase</span
+              >
+              <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
+                >DeepSeek</span
+              >
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+              <a
+                href="https://play.google.com/store/apps/details?id=com.barrysoft.intelliauto"
+                target="_blank"
+                style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
+                >Play Store ↗</a
+              >
+              <span style="color: var(--border);">|</span>
+              <a
+                href="https://intelliauto.app"
+                target="_blank"
+                style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+                >intelliauto.app</a
+              >
+            </div>
+          </article>
+
+          <article class="executive-card" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div
+              style="display: flex; justify-content: space-between; gap: 1rem; align-items: start;"
+            >
+              <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading);">
+                IntelliFlow
+              </h3>
+              <span
+                style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(126,231,135,0.1); color: #7ee787; border-radius: 4px; border: 1px solid rgba(126,231,135,0.2); white-space: nowrap;"
+                >Live on Play Store</span
+              >
+            </div>
+            <p style="color: var(--text-soft); font-size: 0.92rem; margin: 0; line-height: 1.5;">
+              Privacy-first personal finance tracker. Offline-first design with best-effort cloud
+              sync, budget projections, and automated DeepSeek insight generation.
+            </p>
+            <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
+                >Kotlin</span
+              >
+              <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
+                >Firebase</span
+              >
+              <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
+                >DeepSeek</span
+              >
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+              <a
+                href="https://play.google.com/store/apps/details?id=com.intelliflow.finances"
+                target="_blank"
+                style="font-size: 0.85rem; color: var(--heading); text-decoration: underline; text-underline-offset: 4px;"
+                >Play Store ↗</a
+              >
+              <span style="color: var(--border);">|</span>
+              <a
+                href="https://barrysoft-intelliflow.org"
+                target="_blank"
+                style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;"
+                >intelliflow.org</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <a href={withBase("handbook/")} style="display: block; text-decoration: none;">
+          <div
+            class="executive-card"
+            style="background: linear-gradient(135deg, rgba(88,166,255,0.05), var(--surface)); border-color: rgba(88,166,255,0.22);"
+          >
+            <span
+              style="font-family: var(--font-mono); font-size: 0.75rem; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.1em;"
+              >Educational Series</span
+            >
+            <h2
+              style="font-size: 1.7rem; font-weight: 700; color: var(--heading); margin: 0.45rem 0;"
+            >
+              The LLM Infrastructure Handbook
+            </h2>
+            <p
+              style="color: var(--text-soft); font-size: 1rem; max-width: 640px; margin: 0; line-height: 1.55;"
+            >
+              An engineer's guide to Local AI. Demystifying Transformer architectures, DeepSeek's
+              Lookahead Sparse Attention, KV Cache quantization, and MoE routing.
+            </p>
+            <div style="margin-top: 1.25rem; color: #58a6ff; font-weight: 600; font-size: 0.9rem;">
+              Read the Handbook →
+            </div>
+          </div>
+        </a>
+      </section>
+
+      <section>
+        <div
+          style="display: flex; justify-content: space-between; gap: 1rem; align-items: end; border-bottom: 1px solid var(--border); padding-bottom: 0.55rem; margin-bottom: 1rem;"
+        >
+          <h2
+            style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 0;"
+          >
+            Recent Field Notes
+          </h2>
+          <a
+            href={withBase("archive/")}
+            style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none; white-space: nowrap;"
+            >View Full Archive →</a
+          >
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          {
+            latestPosts.map((post) => {
+              const url = withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
+              const date = post.data.pubDate.toLocaleDateString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              });
+              return (
+                <a href={url} class="executive-post-row">
+                  <time style="font-family: var(--font-mono); font-size: 0.83rem; color: var(--text-muted); padding-top: 0.15rem;">
+                    {date}
+                  </time>
+                  <div style="display: grid; gap: 0.38rem; min-width: 0;">
+                    <h3 style="font-size: 1rem; font-weight: 500; color: var(--text-strong); margin: 0; line-height: 1.4;">
+                      {post.data.title}
+                    </h3>
+                    <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; justify-self: start; background: rgba(255,255,255,0.05); padding: 0.2rem 0.5rem; border-radius: 4px;">
+                      {Array.isArray(post.data.category)
+                        ? post.data.category.join(" · ")
+                        : post.data.category}
+                    </span>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+      </section>
+    </main>
+  </div>
 </BaseLayout>
