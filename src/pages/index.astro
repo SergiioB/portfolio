@@ -311,14 +311,14 @@ const categoryToClass = (category: string) =>
               });
               return (
                 <a href={url} class="executive-post-row">
-                  <time style="font-family: var(--font-mono); font-size: 0.83rem; color: var(--text-muted); padding-top: 0.15rem;">
+                  <time style="font-family: var(--font-mono); font-size: 0.83rem; color: var(--text-soft); padding-top: 0.15rem;">
                     {date}
                   </time>
                   <div style="display: grid; gap: 0.38rem; min-width: 0;">
                     <h3 style="font-size: 1rem; font-weight: 500; color: var(--text-strong); margin: 0; line-height: 1.4;">
                       {post.data.title}
                     </h3>
-                    <div class="executive-category-pills">
+                    <div class="executive-category-pills" style="margin-top: 0.15rem;">
                       {(Array.isArray(post.data.category)
                         ? post.data.category
                         : [post.data.category]
