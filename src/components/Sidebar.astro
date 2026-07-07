@@ -43,21 +43,54 @@ function isActive(path: string): boolean {
       >
         <button
           type="button"
-          class="lang-option-btn"
-          data-lang-option="en"
-          data-i18n-label="lang.english"
+          class="lang-btn active"
+          data-lang="en"
           aria-pressed="true"
+          title="English"
         >
           EN
         </button>
+        <button type="button" class="lang-btn" data-lang="es" aria-pressed="false" title="Español">
+          ES
+        </button>
+      </div>
+      <div class="theme-toggle-container" style="margin-left: 1rem;">
         <button
           type="button"
-          class="lang-option-btn"
-          data-lang-option="es"
-          data-i18n-label="lang.spanish"
-          aria-pressed="false"
+          class="theme-toggle-btn"
+          aria-label="Toggle theme"
+          title="Toggle Light/Dark Mode"
         >
-          ES
+          <svg
+            class="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="display: none;"
+            ><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"
+            ></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"
+            ></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path
+              d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg
+          >
+          <svg
+            class="moon-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="display: block;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
+          >
         </button>
       </div>
     </div>
@@ -116,6 +149,61 @@ function isActive(path: string): boolean {
     </div>
   </nav>
 </aside>
+
+<style>
+  .theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .theme-toggle-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  html[data-theme="dark"] .moon-icon {
+    display: none !important;
+  }
+
+  html[data-theme="dark"] .sun-icon {
+    display: block !important;
+  }
+</style>
+
+<script is:inline>
+  function setupThemeToggle() {
+    const themeBtns = document.querySelectorAll(".theme-toggle-btn");
+
+    themeBtns.forEach((btn) => {
+      // Remove old listeners by cloning
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener("click", () => {
+        const root = document.documentElement;
+        const currentTheme = root.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        root.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+    });
+  }
+
+  // Run on first load
+  setupThemeToggle();
+
+  // Run on view transitions
+  document.addEventListener("astro:page-load", setupThemeToggle);
+</script>
 
 <header class="mobile-header">
   <button

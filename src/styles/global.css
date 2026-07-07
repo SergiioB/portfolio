@@ -1,31 +1,31 @@
 :root {
-  --bg: #0a0e17;
-  --bg-alt: #010409;
-  --surface: #161b22;
-  --surface-muted: #21262d;
-  --surface-strong: #30363d;
-  --border: #30363d;
-  --border-strong: #484f58;
-  --ring: rgba(88, 166, 255, 0.4);
-  --text: #c9d1d9;
-  --text-strong: #f7fbff;
-  --text-code: #98f5b5;
-  --text-soft: #8b949e;
-  --text-muted: #6e7681;
-  --heading: #f0f6fc;
-  --heading-2: #79c0ff;
+  --bg: #ffffff;
+  --bg-alt: #f3f4f6;
+  --surface: #ffffff;
+  --surface-muted: #f9fafb;
+  --surface-strong: #e5e7eb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --ring: rgba(41, 121, 255, 0.4);
+  --text: #374151;
+  --text-strong: #111827;
+  --text-code: #047857;
+  --text-soft: #6b7280;
+  --text-muted: #9ca3af;
+  --heading: #111827;
+  --heading-2: #2563eb;
   /* Light blue */
-  --heading-3: #e2c1ff;
+  --heading-3: #7e22ce;
   /* Brightened Purple */
-  --heading-4: #ff9f96;
+  --heading-4: #dc2626;
   /* Brightened Red/Orange */
-  --link: #58a6ff;
-  --link-hover: #79c0ff;
-  --accent: #4caf50;
-  --accent-warm: #eeb868;
-  --accent-danger: #ff7b72;
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --link: #2563eb;
+  --link-hover: #1d4ed8;
+  --accent: #10b981;
+  --accent-warm: #f59e0b;
+  --accent-danger: #ef4444;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
 
   --font-body: "Inter", "Segoe UI", Tahoma, sans-serif;
   --font-display: "Fira Code", "JetBrains Mono", "IBM Plex Mono", monospace;
@@ -34,9 +34,9 @@
   --sidebar-width: 320px;
   --content-width: 980px;
 
-  --radius-lg: 12px;
-  --radius-md: 8px;
-  --radius-sm: 6px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
 
   --transition-fast: 160ms ease;
   --transition-base: 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -50,6 +50,33 @@
   --category-kotlin: #f778ba;
   --category-snippets: #eeb868;
   --category-career: #ff7b72;
+}
+
+[data-theme="dark"] {
+  --bg: #0b1120;
+  --bg-alt: #010409;
+  --surface: #111827;
+  --surface-muted: #1e293b;
+  --surface-strong: #334155;
+  --border: #1e293b;
+  --border-strong: #334155;
+  --ring: rgba(88, 166, 255, 0.4);
+  --text: #cbd5e1;
+  --text-strong: #f8fafc;
+  --text-code: #98f5b5;
+  --text-soft: #94a3b8;
+  --text-muted: #64748b;
+  --heading: #f8fafc;
+  --heading-2: #79c0ff;
+  --heading-3: #e2c1ff;
+  --heading-4: #ff9f96;
+  --link: #58a6ff;
+  --link-hover: #79c0ff;
+  --accent: #4caf50;
+  --accent-warm: #eeb868;
+  --accent-danger: #ff7b72;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 * {
@@ -75,9 +102,7 @@ body {
   font-size: 16px;
   line-height: 1.65;
   color: var(--text);
-  background:
-    radial-gradient(circle at 84% -14%, rgba(88, 166, 255, 0.2), transparent 36%),
-    radial-gradient(circle at 12% 115%, rgba(35, 134, 54, 0.15), transparent 40%), var(--bg);
+  background: var(--bg);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -86,43 +111,6 @@ body {
 ::selection {
   background: var(--surface);
   color: var(--text-strong);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(88, 166, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(88, 166, 255, 0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(
-    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    black 0%,
-    transparent 70%
-  );
-  -webkit-mask-image: radial-gradient(
-    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    black 0%,
-    transparent 70%
-  );
-  z-index: -1;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  background-size:
-    100% 4px,
-    150px 150px;
-  z-index: 9999;
-  opacity: 0.08;
 }
 
 body.menu-open {

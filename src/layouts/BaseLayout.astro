@@ -133,6 +133,14 @@ const csp = [
       })}
     />
 
+    <!-- Theme Setup Script (Anti-FOUC) -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark =
+        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", initialTheme);
+    </script>
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
     <ViewTransitions />
