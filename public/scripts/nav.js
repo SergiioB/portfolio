@@ -685,6 +685,12 @@
         run: () => spaNavigate(base + 'about/'),
       },
       {
+        id: 'nav-handbook', group: T('cmd.groupNav'), icon: '📖',
+        label: T('cmd.goHandbook'),
+        tags: 'navigation handbook llm guide manual',
+        run: () => spaNavigate(base + 'handbook/'),
+      },
+      {
         id: 'nav-recruiter', group: T('cmd.groupNav'), icon: '★',
         label: T('cmd.goRecruiter'),
         tags: 'navigation recruiter hiring summary reclutador',
@@ -744,6 +750,19 @@
           const nextLang = currentLang === 'en' ? 'es' : 'en';
           setLang(nextLang);
           showToast(T('toast.langSwitched'));
+        },
+      },
+      {
+        id: 'theme-toggle', group: T('cmd.groupTheme'), icon: '🌓',
+        label: T('cmd.toggleTheme'),
+        tags: 'theme dark light toggle tema claro oscuro',
+        run: () => {
+          const root = document.documentElement;
+          const current = root.getAttribute('data-theme');
+          const next = current === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { window.localStorage.setItem('theme', next); } catch (e) {}
+          showToast(next === 'dark' ? T('toast.themeDark') : T('toast.themeLight'));
         },
       },
       {

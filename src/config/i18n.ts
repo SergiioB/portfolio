@@ -696,11 +696,14 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "cmd.bootReplay": { en: "Replay Boot Sequence", es: "Repetir Secuencia de Arranque" },
   "cmd.bootGate": { en: "Toggle Boot Unlock Gate", es: "Alternar Puerta de Desbloqueo" },
   "cmd.switchLang": { en: "Switch to Español", es: "Switch to English" },
+  "cmd.toggleTheme": { en: "Toggle Light/Dark Theme", es: "Cambiar Tema Claro/Oscuro" },
+  "cmd.goHandbook": { en: "Go to LLM Handbook", es: "Ir al Manual LLM" },
   "cmd.groupNav": { en: "Navigation", es: "Navegación" },
   "cmd.groupMode": { en: "Mode", es: "Modo" },
   "cmd.groupAudience": { en: "Audience", es: "Audiencia" },
   "cmd.groupSystem": { en: "System", es: "Sistema" },
   "cmd.groupLang": { en: "Language", es: "Idioma" },
+  "cmd.groupTheme": { en: "Theme", es: "Tema" },
 
   /* ── Toasts ── */
   "toast.hardcoreEnabled": { en: "Hardcore mode enabled", es: "Modo hardcore activado" },
@@ -710,6 +713,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "toast.bootGateEnabled": { en: "Boot gate enabled", es: "Puerta de arranque activada" },
   "toast.bootGateDisabled": { en: "Boot gate disabled", es: "Puerta de arranque desactivada" },
   "toast.langSwitched": { en: "Switched to English", es: "Cambiado a Español" },
+  "toast.themeLight": { en: "Light theme active", es: "Tema claro activado" },
+  "toast.themeDark": { en: "Dark theme active", es: "Tema oscuro activado" },
 
   /* ── Metrics labels ── */
   "metric.host": { en: "host", es: "host" },
