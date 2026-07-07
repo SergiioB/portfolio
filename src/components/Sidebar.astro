@@ -153,20 +153,24 @@ function isActive(path: string): boolean {
 <style>
   .theme-toggle-btn {
     background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
+    border: none;
+    color: var(--text-soft);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
   }
 
   .theme-toggle-btn:hover {
-    color: var(--primary);
-    border-color: var(--primary);
+    color: var(--heading);
+    background: var(--surface-muted);
   }
 
   html[data-theme="dark"] .moon-icon {
