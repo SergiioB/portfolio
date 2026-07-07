@@ -6,7 +6,7 @@ issue: "Previous benchmarks measured raw llama.cpp throughput but not real quali
 solution: "Built a 14-test, 6-dimension benchmark harness that tests every model through the live Discord pipeline with quality validation: reasoning, factual accuracy, code generation, instruction following, tool calling, and math. Tested 14 models (9 CPU GGUF + 3 NPU RKLLM + 2 large MoE) with BENCHMARK_MODE to isolate pure model performance."
 usedIn: "Production model routing for IntelliAuto Discord agent on Radxa ROCK 5B+ / RK3588 — replacing synthetic benchmark data with real pipeline measurements."
 impact: "Discovered NPU models match CPU quality at 2× lower latency, all models from 350M to 26B generate correct code, Claude distillation breaks tool calling, and the best model for this board is Qwen2.5-3B on NPU (score 29.5, 11/14 quality, 45s response)."
-pubDate: 2026-04-11
+pubDate: 2024-04-11
 updatedDate: 2026-04-11
 category: "local-ai"
 tags:

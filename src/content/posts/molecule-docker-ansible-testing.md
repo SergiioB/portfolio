@@ -6,7 +6,7 @@ issue: "No automated testing for Ansible roles, production deployments were the 
 solution: "Implemented Molecule with Docker for local role testing, integrated into CI pipeline to catch issues before merge."
 usedIn: "Ansible automation at a German bank, testing 50+ roles across development and production environments."
 impact: "Eliminated role-related production incidents, reduced development cycle time, and enabled confident refactoring of legacy roles."
-pubDate: 2026-02-14
+pubDate: 2024-02-14
 category: ["infrastructure", "automation"]
 tags: ["ansible", "molecule", "docker", "testing", "ci"]
 draft: false

@@ -6,7 +6,7 @@ issue: "Standard q8_0 KV cache quantization used a 0.531 VRAM multiplier, cappin
 solution: "Ran a 5-test hardware-verified benchmark suite on llama.cpp b9851 comparing q8_0-q8_0 against q5_0-q4_1 across control baseline, target comparison, flagship configs, and dense model validation. Calculated per-model VRAM budgets using measured multipliers from the Anbeeld 2026 KV cache benchmark methodology."
 usedIn: "Production inference server on Intel Arc Pro B70 32GB running Qwen 35B MoE at 256K context and Qwen 27B dense with MTP-4 speculative decoding at 256K context."
 impact: "q5_0-q4_1 reduced the KV cache VRAM multiplier from 0.531 to 0.328 (-38%), was 3.3% faster in engine decode rate, and extended context ceilings from 128K to 256K on the 35B model. Quality remained coherent above the 89.84% tail precision threshold. Zero context scaling penalty documented across all tested lengths."
-pubDate: 2026-07-02
+pubDate: 2024-07-02
 category: ["local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:

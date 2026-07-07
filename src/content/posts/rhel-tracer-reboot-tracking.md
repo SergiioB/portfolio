@@ -6,7 +6,7 @@ issue: "No visibility into which services had pending restarts, leading to eithe
 solution: "Implemented tracer integration to identify pending restarts, combined with a tiered reboot strategy based on application criticality."
 usedIn: "Monthly patching cycle for 200+ RHEL servers at a German bank, reducing unnecessary reboots by 60%."
 impact: "Reduced unplanned reboots by 60%, improved application stability post-patch, and enabled informed reboot scheduling."
-pubDate: 2026-02-01
+pubDate: 2024-02-01
 category: "infrastructure"
 tags: ["rhel", "tracer", "patching", "lifecycle"]
 draft: false

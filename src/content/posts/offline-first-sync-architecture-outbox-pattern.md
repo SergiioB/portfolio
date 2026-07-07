@@ -6,7 +6,7 @@ issue: "Direct-to-cloud write operations failed silently during poor network con
 solution: "Adopted the Outbox Pattern for all write operations, separated local execution from cloud sync workers, and implemented comprehensive state tracking with retry logic."
 usedIn: "Used in a mobile application architecture requiring robust offline capabilities and reliable eventual consistency."
 impact: "Prevented silent data loss scenarios, enabled full offline functionality with eventual consistency, and provided real-time sync state visibility to the user."
-pubDate: 2026-02-05
+pubDate: 2024-02-05
 category: "kotlin"
 tags: ["android", "room", "firebase", "offline-first"]
 draft: false

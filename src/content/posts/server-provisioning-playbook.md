@@ -6,7 +6,7 @@ issue: "Server provisioning was inconsistent across team members. Some skipped s
 solution: "Developed a standardized provisioning checklist and Ansible playbook structure that covers the complete lifecycle from VM deployment to application-ready state."
 usedIn: "Linux platform engineering for SAP, PostgreSQL, and custom application servers in a regulated enterprise environment."
 impact: "Reduced provisioning time from days to hours, eliminated missing configuration steps, and created clear handoff documentation for application teams."
-pubDate: 2026-03-03
+pubDate: 2024-03-03
 category: "infrastructure"
 tags: ["provisioning", "ansible", "rhel", "active-directory", "sysadmin"]
 draft: false

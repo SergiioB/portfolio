@@ -6,7 +6,7 @@ issue: "CPU-only inference on small models was too slow for interactive UX, and 
 solution: "Benchmarked CPU (Ollama) vs NPU (RKLLM), applied system and inference parameter optimizations, and documented failure modes to distinguish model-file issues from NPU/runtime issues."
 usedIn: "Used in Engram AI (local-first Discord bot) running on RK3588."
 impact: "Validated that NPU-accelerated models deliver ~26x to ~53x higher throughput than CPU-only runs for comparable prompts, making real-time Discord interaction feasible."
-pubDate: 2026-02-28
+pubDate: 2024-02-28
 category: "local-ai"
 tags: ["rk3588", "npu", "rkllm", "ollama", "benchmarks", "discord"]
 draft: false

@@ -6,7 +6,7 @@ issue: "Several paths technically loaded but were not practically usable. Large 
 solution: "Benchmarked llama.cpp and RKLLM on RK3588, identified the winning CPU configs for Qwen 3.5 4B and 9B, clarified where the NPU helps, documented KV cache and quantization choices, and reframed the architecture as llama.cpp-first with NPU used selectively."
 usedIn: "Engram AI, a local collaborative engineering runtime designed for private on-device development workflows."
 impact: "Established Qwen3.5-4B-Q4_K_M as the practical interactive default, Qwen3.5-9B-Q4_K_M as the quality step-up, proved 27B is not practical on RK3588 CPU, and documented exact commands and deployment tradeoffs for real operators."
-pubDate: 2026-03-22
+pubDate: 2024-03-22
 category: "local-ai"
 tags: ["rk3588", "npu", "llama.cpp", "rkllm", "gguf", "benchmarks", "local-ai"]
 draft: false

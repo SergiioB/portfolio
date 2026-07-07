@@ -6,7 +6,7 @@ issue: "Most local model UIs either abstract away the runtime details that actua
 solution: "Built and published `llamacpp-workbench`, a remote llama.cpp workbench with explicit runtime controls, model presets, markdown chat rendering, streaming responses, and benchmark-backed defaults for REAP and dense GGUF models."
 usedIn: "Local-first AI serving on a Radxa ROCK 5B+ / RK3588 using source-built llama.cpp and GGUF models, including GLM-4.7-Flash-REAP-23B-A3B."
 impact: "Turned a board-class ARM64 deployment into a usable remote LLM workstation: one-click model switching, stable high-context serving, and documented RK3588 tuning guidance backed by real measurements rather than generic local-AI advice."
-pubDate: 2026-03-30
+pubDate: 2024-03-30
 category: "local-ai"
 tags:
   [

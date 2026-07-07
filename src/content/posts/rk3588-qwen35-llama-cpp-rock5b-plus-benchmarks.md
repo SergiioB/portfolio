@@ -6,7 +6,7 @@ issue: "The usual local-AI advice overemphasizes parameter count and underexplai
 solution: "I ran a corrected Qwen3.5 sweep on RK3588 using source-built llama.cpp, quantized KV cache, and task-pass validation. Then I compared prefill, decode, stable context, average latency, and tool-calling behavior to determine the right model for each workload."
 usedIn: "Local-first Discord agent runtime on Radxa ROCK 5B+ / RK3588, built around raw llama.cpp rather than Ollama or LM Studio."
 impact: "Showed that Qwen3.5-2B is the best overall default on RK3588, Qwen3.5-9B is the best practical quality tier, and Qwen3.5-27B is not viable interactively on this board. Also established a benchmark-backed way to talk about context fit and KV cache tradeoffs credibly."
-pubDate: 2026-03-28
+pubDate: 2024-03-28
 updatedDate: 2026-04-11
 category: "local-ai"
 tags:

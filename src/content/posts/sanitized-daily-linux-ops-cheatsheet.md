@@ -6,7 +6,7 @@ issue: "The knowledge existed, but it was fragmented across storage work, accoun
 solution: "Consolidated the most reused Linux and admin commands into a snippets-first cheatsheet, grouped them by task, added flag guidance, and replaced every real identifier with placeholders."
 usedIn: "Daily Linux platform work on RHEL-like systems, automation repositories, and quick operational troubleshooting."
 impact: "Turned scattered command notes into a reusable reference that is faster to scan, safer to share, and easier to reuse under pressure."
-pubDate: 2026-03-09
+pubDate: 2024-03-09
 category: ["snippets", "infrastructure"]
 tags: ["linux", "rhel", "bash", "git", "ansible", "python", "vim", "operations"]
 draft: false

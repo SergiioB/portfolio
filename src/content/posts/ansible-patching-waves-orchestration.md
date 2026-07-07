@@ -6,7 +6,7 @@ issue: "Big-bang patching caused widespread outages with no rollback strategy, a
 solution: "Implemented wave-based patching with health gates between waves, automatic rollback triggers, and per-wave ownership documentation."
 usedIn: "Monthly patching cycle for 200+ RHEL servers at a German bank, supporting SAP, PostgreSQL, and middleware workloads."
 impact: "Reduced patching incidents by 90%, rollback time from hours to minutes, and enabled selective patching by application tier."
-pubDate: 2026-02-15
+pubDate: 2024-02-15
 category: ["infrastructure", "automation"]
 tags: ["ansible", "patching", "rhel", "lifecycle"]
 draft: false

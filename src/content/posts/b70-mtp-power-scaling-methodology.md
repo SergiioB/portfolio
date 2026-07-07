@@ -6,7 +6,7 @@ issue: "The initial power sweep data was inflated. Single-prompt prefix caching 
 solution: "Rewrote the benchmark script to enforce warmup discards, isolate engine decode rate from wall-clock time, and maintain strict thermal cooldowns between test rounds. Re-ran the entire power sweep with the corrected methodology."
 usedIn: "Production benchmark suite for Intel Arc Pro B70 32GB. The corrected script (b70-verified-bench.sh) is now the canonical benchmark for all B70 model evaluations."
 impact: "Corrected MTP-4 gain at 180W is +35% over base (down from the initially reported +41%). 180W identified as the power sweet spot: same throughput as 230W with significantly lower thermals. Vision models tested with 4-6% image decode overhead."
-pubDate: 2026-07-02
+pubDate: 2024-07-02
 category: ["local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:

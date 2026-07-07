@@ -6,7 +6,7 @@ issue: "No centralized user management for local accounts, UID/GID inconsistenci
 solution: "Implemented Ansible-based user management with host_vars for server-specific accounts, standardized UID/GID ranges, and templated sudoers configurations."
 usedIn: "Linux platform at a German bank, managing 50+ service accounts and 200+ servers with consistent user configurations."
 impact: "Reduced user provisioning time from hours to minutes, eliminated UID/GID conflicts, and enabled audit-compliant sudo access management."
-pubDate: 2026-02-10
+pubDate: 2024-02-10
 category: ["infrastructure", "automation"]
 tags: ["ansible", "linux", "user-management", "sudo"]
 draft: false

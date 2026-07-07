@@ -6,7 +6,7 @@ issue: "NFS configuration was inconsistent across servers. Some used hostnames, 
 solution: "Implemented automated NFS management using Ansible roles for export configuration, client mounting with proper network selection, and troubleshooting runbooks for common failure scenarios."
 usedIn: "Enterprise storage infrastructure supporting Oracle databases, SAP applications, and administrative home directories across RHEL 8/9 servers."
 impact: "Reduced NFS-related incidents by 80%, standardized mount configurations with proper options, and enabled rapid troubleshooting of stuck mounts without server reboots."
-pubDate: 2026-03-03
+pubDate: 2024-03-03
 category: "infrastructure"
 tags: ["nfs", "storage", "ansible", "linux", "automation"]
 draft: false

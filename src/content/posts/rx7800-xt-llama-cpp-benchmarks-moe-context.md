@@ -6,7 +6,7 @@ issue: "Consumer GPUs have hard VRAM ceilings. Running 23-35B parameter models o
 solution: "Systematically benchmarked 8+ models across 5 quantization levels, swept GPU power caps from 30W to 190W, tested 3 KV cache configurations, and pushed context limits to 256K. Documented the exact llama.cpp build flags and runtime parameters that make 128K inference on 16GB VRAM stable and fast."
 usedIn: "Dedicated AI inference node (Ryzen 7 3800X + RX 7800 XT) running llama.cpp with HIPBLAS + rocWMMA FlashAttention. Models served via systemd services, accessed remotely through Tailscale."
 impact: "IQ quants outperform K-quants by 3x on RDNA3. Power cap can be reduced by >50% with no throughput loss on MoE models. 256K context proven on 16GB with MoE + IQ2_M. Established a repeatable configuration for 128K always-on inference."
-pubDate: 2026-06-10
+pubDate: 2024-06-10
 category: ["local-ai", "infrastructure"]
 tags:
   [

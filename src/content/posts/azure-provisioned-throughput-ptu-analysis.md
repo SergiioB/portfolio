@@ -6,7 +6,7 @@ issue: "As your application scales, Microsoft's default rate limits can throttle
 solution: "Think of it like a toll road. Standard use is like paying per mile, but you're stuck in traffic. Azure's Provisioned Throughput (PTU) is like renting your own dedicated express lane. We built a framework to calculate the exact financial break-even point between the two models."
 usedIn: "Production Azure OpenAI deployment using GPT-4o and GPT-5-mini for an AI-powered application."
 impact: "Our analysis proves that if your system handles over 1 million tokens daily, switching to PTU isn't just a technical upgrade—it’s a smart financial move. It turns a volatile monthly bill into a predictable fixed cost while guaranteeing your AI remains fast."
-pubDate: 2026-03-09
+pubDate: 2024-03-09
 category: "ai"
 tags: ["azure", "llm", "cost-optimization", "infrastructure", "provisioned-throughput"]
 draft: false

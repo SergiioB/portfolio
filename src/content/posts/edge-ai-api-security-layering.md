@@ -6,7 +6,7 @@ issue: "Without explicit controls, an AI API is vulnerable to abuse (burst traff
 solution: "Implemented five security modules: encryption at rest, enhanced rate limiting, advanced input validation, security monitoring + alerts, and vulnerability scanning with report generation."
 usedIn: "Used in the RADXA AI Suite TypeScript backend security package (`backend-ts`)."
 impact: "Created a reusable, production-oriented security baseline that can be integrated as middleware and audited via generated reports and event logs."
-pubDate: 2026-02-28
+pubDate: 2024-02-28
 category: "infrastructure"
 tags: ["security", "nodejs", "typescript", "rate-limiting", "encryption"]
 draft: false

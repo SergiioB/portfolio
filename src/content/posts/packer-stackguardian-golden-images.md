@@ -6,7 +6,7 @@ issue: "No standardized golden images, manual image building was error-prone, an
 solution: "Implemented Packer with StackGuardian for automated golden image pipelines, creating standardized RHEL images with consistent configurations."
 usedIn: "VMware environment at a German bank, creating standardized RHEL 8/9 images for SAP and middleware workloads."
 impact: "Reduced image build time from days to hours, eliminated configuration drift, and enabled consistent VM provisioning across all teams."
-pubDate: 2026-02-18
+pubDate: 2024-02-18
 category: ["infrastructure", "automation"]
 tags: ["packer", "vmware", "golden-image", "automation"]
 draft: false

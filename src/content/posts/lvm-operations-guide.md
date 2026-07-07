@@ -6,7 +6,7 @@ issue: "Storage operations were handled inconsistently across the team. Some adm
 solution: "Documented a standardized LVM playbook covering the three core operations—expansion, shrinking, and migration—with clear pre-flight checks, execution steps, and rollback procedures."
 usedIn: "Used in Linux platform engineering for SAP deployments, PostgreSQL database servers, and application server fleets managed via Ansible."
 impact: "Reduced storage-related incidents by establishing consistent procedures. Expansion operations now happen without reboots, migrations complete within predictable maintenance windows, and shrink operations have clear safety gates."
-pubDate: 2026-03-03
+pubDate: 2024-03-03
 category: "infrastructure"
 tags: ["lvm", "storage", "sysadmin", "rhel"]
 draft: false

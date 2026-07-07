@@ -6,7 +6,7 @@ issue: "No consistent reverse proxy pattern, manual SSL certificate management, 
 solution: "Developed an Ansible role for Apache reverse proxy with automated SSL deployment, health check endpoints, and standardized load balancer configurations."
 usedIn: "Internal application platform at a German bank, supporting 20+ applications with standardized reverse proxy setups."
 impact: "Reduced reverse proxy deployment time from days to hours, eliminated SSL configuration errors, and standardized security posture across all applications."
-pubDate: 2026-02-20
+pubDate: 2024-02-20
 category: ["infrastructure", "automation"]
 tags: ["ansible", "apache", "reverse-proxy", "ssl"]
 draft: false

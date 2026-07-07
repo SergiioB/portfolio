@@ -6,7 +6,7 @@ issue: "The app was locked to standard 60Hz rendering, causing sub-optimal scrol
 solution: "Detected 90Hz+ display modes and configured window post-processing preferences for smoother rendering, then implemented static XML-based app shortcuts routed via deep links."
 usedIn: "Used in IntelliFlow—an Android personal finance app built with Jetpack Compose."
 impact: "Significantly improved perceived performance and fluidity, while reducing friction for core user journeys like adding transactions."
-pubDate: 2026-02-26
+pubDate: 2024-02-26
 updatedDate: 2026-03-03
 category: ["kotlin", "ai"]
 tags: ["android", "ux", "performance", "kotlin", "intelliflow"]

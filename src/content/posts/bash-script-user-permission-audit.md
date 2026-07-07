@@ -6,7 +6,7 @@ issue: "No automated way to gather user permission data, manual auditing was err
 solution: "Developed a bash script that collects user accounts, sudo access, and group memberships, outputting a standardized report that could be consolidated across all servers."
 usedIn: "Compliance audits at a German bank, covering 200+ Linux servers for SOX and internal security requirements."
 impact: "Reduced audit preparation time from weeks to hours, eliminated manual errors, and enabled real-time permission visibility."
-pubDate: 2026-02-08
+pubDate: 2024-02-08
 category: "infrastructure"
 tags: ["bash", "linux", "audit", "compliance", "scripting"]
 draft: false

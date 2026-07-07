@@ -6,7 +6,7 @@ issue: "Personal finance apps either had weak security practices, unclear data p
 solution: "Built IntelliFlow from scratch with infrastructure-grade security: encrypted local storage, strict Firebase security rules, biometric auth, and AI features with privacy-preserving design and prompt injection safeguards."
 usedIn: "Production Android application deployed on Google Play Store with active users and continuous development."
 impact: "Successfully launched on Play Store with positive reviews, high AI categorization accuracy, and zero security incidents since launch."
-pubDate: 2026-03-03
+pubDate: 2024-03-03
 category: "kotlin"
 tags: ["android", "kotlin", "firebase", "ai", "security"]
 draft: false

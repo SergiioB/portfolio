@@ -6,7 +6,7 @@ issue: "Directly exposing LLMs to users risks massive API costs through spam or 
 solution: "Implemented a multi-tier model routing strategy (chat vs reasoning), robust context truncation, regex-based jailbreak detection, and strict timestamp-based rate limiting."
 usedIn: "Used in the Node.js Firebase backend of IntelliAuto—an AI-powered automotive maintenance application."
 impact: "Prevented malicious prompt injections, stabilized costs via bounded context, and ensured predictable backend performance through enforced rate limits and quotas."
-pubDate: 2026-02-18
+pubDate: 2024-02-18
 updatedDate: 2026-03-03
 category: ["ai", "kotlin"]
 tags: ["llm", "security", "nodejs", "architecture", "intelliauto"]

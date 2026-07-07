@@ -6,7 +6,7 @@ issue: "Off-the-shelf OCR solutions couldn't handle the complexity of insurance 
 solution: "Implemented a custom document intelligence solution using Azure AI Document Intelligence, training models on labeled examples to extract and normalize fields across multiple insurers and languages."
 usedIn: "Document processing pipeline for insurance policies, claims processing, and compliance verification in a regulated financial environment."
 impact: "Reduced manual processing time by 90%, achieved 95%+ field extraction accuracy, and enabled automated policy validation against business rules."
-pubDate: 2026-03-03
+pubDate: 2024-03-03
 category: "ai"
 tags: ["azure-ai", "document-intelligence", "machine-learning", "automation", "multilingual"]
 draft: false

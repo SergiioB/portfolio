@@ -6,7 +6,7 @@ issue: "Needed a repeatable way to resolve git merge conflicts using git stash t
 solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
 usedIn: "Used in daily engineering operations to reduce mistakes and speed up safe execution."
 impact: "Reduced failure rate in recurring engineering tasks and improved recovery speed."
-pubDate: 2026-01-27
+pubDate: 2024-01-27
 category: "snippets"
 tags: ["git", "workflow", "development", "version-control"]
 draft: false

@@ -6,7 +6,7 @@ issue: "No WAL archiving configured, SELinux contexts incorrect for archive dire
 solution: "Configured PostgreSQL WAL archiving with proper SELinux file contexts, tested restore procedures, and documented the end-to-end recovery process."
 usedIn: "PostgreSQL deployment at a German bank, supporting SAP and custom applications with 99.9% uptime requirements."
 impact: "Enabled point-in-time recovery with <15 minute RPO, resolved SELinux blockers, and passed disaster recovery testing."
-pubDate: 2026-02-22
+pubDate: 2024-02-22
 category: "infrastructure"
 tags: ["postgresql", "backup", "selinux", "database", "wal"]
 draft: false
