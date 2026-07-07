@@ -128,7 +128,8 @@
       const targetLang = btn.getAttribute('data-lang-option');
       const isActive = targetLang === currentLang;
       btn.setAttribute('aria-pressed', String(isActive));
-      btn.classList.toggle('is-active', isActive);
+      btn.classList.toggle("is-active", isActive);
+      btn.classList.toggle("active", isActive);
     });
 
     document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {

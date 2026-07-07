@@ -250,6 +250,28 @@ const csp = [
     </script>
     <script src={withBase("scripts/nav.js")} defer></script>
     <script is:inline>
+      // ── Theme toggle (works on every page) ──
+      function setupThemeToggle() {
+        document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
+          if (btn.dataset.bound === "1") return;
+          btn.dataset.bound = "1";
+          btn.addEventListener("click", () => {
+            const root = document.documentElement;
+            const current = root.getAttribute("data-theme");
+            const next = current === "dark" ? "light" : "dark";
+            root.setAttribute("data-theme", next);
+            try {
+              localStorage.setItem("theme", next);
+            } catch (_e) {
+              /* storage may be blocked */
+            }
+          });
+        });
+      }
+      setupThemeToggle();
+      document.addEventListener("astro:page-load", setupThemeToggle);
+    </script>
+    <script is:inline>
       // Interactive background grid mask
       document.addEventListener("mousemove", (e) => {
         const x = (e.clientX / window.innerWidth) * 100;
