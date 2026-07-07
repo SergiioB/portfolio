@@ -27,6 +27,13 @@
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
 
+  --overlay-bg: rgba(243, 244, 246, 0.6);
+  --surface-translucent: rgba(255, 255, 255, 0.7);
+  --surface-glass: rgba(255, 255, 255, 0.55);
+  --hover-overlay: rgba(0, 0, 0, 0.02);
+  --pre-bg: #f6f8fa;
+  --app-icon-tint: #0f2a1c;
+
   --font-body: "Inter", "Segoe UI", Tahoma, sans-serif;
   --font-display: "Fira Code", "JetBrains Mono", "IBM Plex Mono", monospace;
   --font-mono: "Fira Code", "JetBrains Mono", "IBM Plex Mono", monospace;
@@ -77,6 +84,13 @@
   --accent-danger: #ff7b72;
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+
+  --overlay-bg: rgba(22, 27, 34, 0.6);
+  --surface-translucent: rgba(17, 24, 39, 0.7);
+  --surface-glass: rgba(22, 27, 34, 0.55);
+  --hover-overlay: rgba(255, 255, 255, 0.02);
+  --pre-bg: #0d1117;
+  --app-icon-tint: #0f2a1c;
 }
 
 * {
@@ -163,7 +177,7 @@ body.booting .site-shell {
   border: 1px solid rgba(121, 192, 255, 0.3);
   background: var(--surface);
   box-shadow:
-    0 0 32px rgba(13, 17, 23, 0.9),
+    0 0 32px var(--shadow-lg),
     inset 0 0 0 1px rgba(126, 231, 135, 0.12);
   overflow: hidden;
 }
@@ -174,7 +188,7 @@ body.booting .site-shell {
   gap: 0.6rem;
   padding: 0.62rem 0.74rem;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(33, 38, 45, 0.85), rgba(13, 17, 23, 0.65));
+  background: linear-gradient(180deg, var(--surface-strong), var(--surface-muted));
 }
 
 .boot-meta {
@@ -298,7 +312,7 @@ body.booting .site-shell {
 .command-palette-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(22, 27, 34, 0.6);
+  background: var(--overlay-bg);
   backdrop-filter: blur(4px);
 }
 
@@ -309,7 +323,7 @@ body.booting .site-shell {
   border: 1px solid rgba(121, 192, 255, 0.38);
   background: var(--surface);
   box-shadow:
-    0 0 30px rgba(13, 17, 23, 0.82),
+    0 0 30px var(--shadow-lg),
     inset 0 0 0 1px rgba(88, 166, 255, 0.12);
   overflow: hidden;
   animation: modal-spring-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
@@ -596,11 +610,11 @@ li + li {
   position: fixed;
   inset: 0 auto 0 0;
   width: var(--sidebar-width);
-  background: rgba(22, 27, 34, 0.6);
+  background: var(--surface-glass);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.6);
+  border-right: 1px solid var(--border);
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   z-index: 120;
@@ -945,7 +959,7 @@ li + li {
   right: 0;
   bottom: 0;
   width: 24px;
-  background: linear-gradient(to right, transparent, var(--surface-soft, rgba(13, 17, 23, 0.8)));
+  background: linear-gradient(to right, transparent, var(--surface-strong));
   pointer-events: none;
 }
 
@@ -1132,7 +1146,7 @@ li + li {
   z-index: 108;
   pointer-events: none;
   opacity: 0;
-  background: rgba(22, 27, 34, 0.6);
+  background: var(--overlay-bg);
   backdrop-filter: blur(1px);
   transition: opacity var(--transition-base);
 }
@@ -1163,7 +1177,7 @@ li + li {
 
 .panel {
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(33, 38, 45, 0.85), rgba(22, 27, 34, 0.94));
+  background: linear-gradient(180deg, var(--surface-strong), var(--surface));
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   transition:
@@ -1173,7 +1187,7 @@ li + li {
 }
 
 .panel-soft {
-  background: linear-gradient(180deg, rgba(48, 54, 61, 0.25), rgba(33, 38, 45, 0.88));
+  background: linear-gradient(180deg, var(--surface-muted), var(--surface-strong));
   border-radius: var(--radius-md);
 }
 
@@ -1453,7 +1467,7 @@ li + li {
 
 .post-card {
   padding: 1.25rem;
-  background: rgba(22, 27, 34, 0.6);
+  background: var(--surface-muted);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
@@ -1469,7 +1483,7 @@ li + li {
   transform: translateY(-4px);
   background: var(--surface);
   box-shadow:
-    0 16px 32px rgba(0, 0, 0, 0.6),
+    var(--shadow-lg),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -2085,12 +2099,12 @@ li + li {
 .prose-shell pre {
   margin: 1.2rem 0;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #0d1117;
+  border: 1px solid var(--border);
+  background: var(--pre-bg);
   padding: 2.8rem 1rem 1rem;
   overflow: auto;
   box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.5),
+    var(--shadow-lg),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
 }
@@ -2417,7 +2431,7 @@ li + li {
   background: var(--surface);
   box-shadow:
     inset 0 0 0 1px rgba(88, 166, 255, 0.12),
-    0 0 24px rgba(13, 17, 23, 0.8);
+    var(--shadow-lg);
   overflow: hidden;
 }
 
@@ -2427,7 +2441,7 @@ li + li {
   gap: 0.4rem;
   padding: 0.64rem;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(33, 38, 45, 0.7), rgba(13, 17, 23, 0.55));
+  background: linear-gradient(180deg, var(--surface-strong), var(--surface-muted));
 }
 
 .lab-tab {
@@ -2888,7 +2902,7 @@ body.audience-recruiter .glitch {
 .ops-top-table th,
 .ops-top-table td {
   padding: 0.42rem 0.5rem;
-  border-bottom: 1px solid rgba(48, 54, 61, 0.8);
+  border-bottom: 1px solid var(--border-strong);
   text-align: left;
 }
 
@@ -4144,7 +4158,7 @@ body.hardcore-mode ::selection {
   letter-spacing: 0.1em;
   color: var(--text-muted);
   padding: 0.5rem 0.58rem 0.18rem;
-  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  border-bottom: 1px solid var(--border);
   margin-bottom: 0.12rem;
 }
 
@@ -5076,7 +5090,7 @@ h3 {
   margin-bottom: 1rem;
   padding: 0.85rem;
   background: var(--surface);
-  border: 1px solid rgba(48, 54, 61, 0.5);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
 
@@ -5691,7 +5705,7 @@ h3 {
   grid-template-columns: 7.5rem minmax(0, 1fr);
   gap: 1.25rem;
   padding: 1.25rem 0.5rem;
-  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  border-bottom: 1px solid var(--border);
   text-decoration: none;
   transition:
     background var(--transition-fast),
@@ -5699,7 +5713,7 @@ h3 {
 }
 
 .executive-post-row:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--hover-overlay);
   border-bottom-color: var(--border-strong);
 }
 
@@ -5746,7 +5760,7 @@ h3 {
 
 .app-real-icon {
   object-fit: cover;
-  background: #0b1120;
+  background: var(--bg);
   overflow: hidden;
 }
 
@@ -5754,7 +5768,7 @@ h3 {
   color: #7ee787;
   background:
     radial-gradient(circle at 30% 20%, rgba(126, 231, 135, 0.24), transparent 36%),
-    linear-gradient(135deg, #0f2a1c, #111827);
+    linear-gradient(135deg, var(--app-icon-tint), var(--surface));
 }
 
 .app-icon-flow {
