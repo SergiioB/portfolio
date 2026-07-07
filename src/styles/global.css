@@ -710,6 +710,47 @@ li + li {
   outline-offset: 2px;
 }
 
+/* ── Theme toggle button (inside pill, clean) ── */
+.theme-toggle-container {
+  margin-left: 0.5rem !important;
+}
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--border);
+  color: var(--heading);
+}
+
+.theme-toggle-btn svg {
+  display: block;
+}
+
+/* ── Live on Play Store badge (theme-aware) ── */
+.live-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent);
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  white-space: nowrap;
+}
+
 .brand-tagline {
   font-family: var(--font-mono);
   font-size: 0.73rem;
