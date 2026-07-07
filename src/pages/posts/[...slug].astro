@@ -44,7 +44,12 @@ const caseItems = [
 ---
 
 <BaseLayout title={`${title} | ${SITE.author}`} description={description}>
-  <a href={withBase()} class="back-link" data-i18n="nav.backToPosts">← Back to posts</a>
+  <a
+    href={withBase()}
+    class="btn btn-secondary"
+    style="margin-bottom: 2rem; border-radius: 999px; font-size: 0.8rem; padding: 0.45rem 1rem;"
+    data-i18n="nav.backToPosts">← Back to posts</a
+  >
 
   <article class="article-shell">
     <header class="article-header">
