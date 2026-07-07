@@ -221,3 +221,4 @@ temp/
 .zed/settings.json.bak-*
 .zed/*.bak-*
 public/.well-known/security.txt
+public/images/screenshot*.png
