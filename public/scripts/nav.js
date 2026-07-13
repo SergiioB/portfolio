@@ -691,16 +691,10 @@
         run: () => spaNavigate(base + 'handbook/'),
       },
       {
-        id: 'nav-recruiter', group: T('cmd.groupNav'), icon: '★',
-        label: T('cmd.goRecruiter'),
-        tags: 'navigation recruiter hiring summary reclutador',
-        run: () => scrollOrNav('recruiter-view'),
-      },
-      {
-        id: 'nav-topology', group: T('cmd.groupNav'), icon: '◈',
-        label: T('cmd.goTopology'),
-        tags: 'navigation network topology latency topologia',
-        run: () => scrollOrNav('network-topology'),
+        id: 'nav-cv', group: T('cmd.groupNav'), icon: '📄',
+        label: T('cmd.goCv'),
+        tags: 'navigation cv resume curriculum',
+        run: () => window.open(base + 'docs/cv-sergio-barrientos.html', '_blank'),
       },
       {
         id: 'mode-hardcore', group: T('cmd.groupMode'), icon: '⚡',

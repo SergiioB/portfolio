@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import ExecutiveSidebar from "../components/ExecutiveSidebar.astro";
 import PostSearch from "../components/PostSearch.astro";
 import { SITE } from "../config/site";
 import { CATEGORY_META } from "../content/categories";
@@ -30,96 +31,109 @@ const years = Object.keys(postsByYear)
 <BaseLayout
   title={`Archive | ${SITE.author}`}
   description="Chronological archive of technical case studies."
+  layoutMode="executive"
 >
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href={withBase()} data-i18n="nav.breadcrumbHome">Home</a>
-    <span>/</span>
-    <span data-i18n="archive.eyebrow">Archive</span>
-  </nav>
-
-  <header class="page-header page-header-tight">
-    <p class="eyebrow" data-i18n="archive.eyebrow">Archive</p>
-    <h1 data-i18n="archive.title">All Case Studies</h1>
-    <p class="page-description">
-      {sortedPosts.length}
-      <span data-i18n="archive.description"
-        >posts grouped by year, each with clear issue and solution framing.</span
-      >
-    </p>
-  </header>
-
-  <PostSearch
-    itemSelector="[data-search-item]"
-    sectionSelector=".archive-year"
-    placeholder="Search all posts (title, issue, solution, tags)..."
-  />
-
-  <div class="archive-content">
-    {
-      years.map((year) => (
-        <section class="archive-year" aria-labelledby={`year-heading-${year}`} id={`year-${year}`}>
-          <h2 id={`year-heading-${year}`} class="archive-year-header">
-            {year}
-          </h2>
-          <div class="archive-posts">
-            {postsByYear[year].map((post) => (
-              <article
-                class="archive-post panel panel-soft"
-                data-search-item
-                data-search={`${post.data.title} ${post.data.description} ${post.data.issue ?? ""} ${post.data.solution ?? ""} ${post.data.usedIn ?? ""} ${(post.data.tags ?? []).join(" ")} ${post.data.category.join(" ")}`}
-              >
-                <time
-                  class="archive-post-date"
-                  datetime={post.data.pubDate.toISOString()}
-                  data-localize-date="short"
-                >
-                  {post.data.pubDate.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </time>
-
-                <div>
-                  <a
-                    href={withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`)}
-                    class="archive-post-title"
-                  >
-                    {post.data.title}
-                  </a>
-                  <p class="archive-post-summary">
-                    <strong data-i18n="posts.issue">Issue:</strong>{" "}
-                    {post.data.issue ?? post.data.description}
-                  </p>
-                  {post.data.solution && (
-                    <p class="archive-post-summary">
-                      <strong data-i18n="posts.solution">Solution:</strong> {post.data.solution}
-                    </p>
-                  )}
-                </div>
-
-                <div class="archive-post-categories">
-                  {post.data.category.map((cat, _i) => (
-                    <span
-                      class={`category-badge archive-post-badge ${cat}`}
-                      data-i18n={`cat.${cat}`}
-                    >
-                      {CATEGORY_META[cat]?.label ?? cat}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      ))
-    }
-
-    {
-      years.length === 0 && (
-        <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">
-          No posts published yet.
+  <div class="executive-home">
+    <ExecutiveSidebar currentPath={Astro.url.pathname} />
+    <main class="executive-main">
+      <section>
+        <h2
+          style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.55rem; margin: 0 0 1.25rem;"
+        >
+          <span data-i18n="archive.eyebrow">Archive</span>
+        </h2>
+        <h1
+          style="font-size: 1.5rem; font-weight: 700; color: var(--heading); margin: 0 0 0.5rem;"
+          data-i18n="archive.title"
+        >
+          All Case Studies
+        </h1>
+        <p style="color: var(--text-soft); font-size: 0.9rem; margin: 0 0 1.5rem;">
+          {sortedPosts.length}
+          <span data-i18n="archive.description"
+            >posts grouped by year, each with clear issue and solution framing.</span
+          >
         </p>
-      )
-    }
+      </section>
+
+      <PostSearch
+        itemSelector="[data-search-item]"
+        sectionSelector=".archive-year"
+        placeholder="Search all posts (title, issue, solution, tags)..."
+      />
+
+      <div class="archive-content">
+        {
+          years.map((year) => (
+            <section
+              class="archive-year"
+              aria-labelledby={`year-heading-${year}`}
+              id={`year-${year}`}
+            >
+              <h2 id={`year-heading-${year}`} class="archive-year-header">
+                {year}
+              </h2>
+              <div class="archive-posts">
+                {postsByYear[year].map((post) => (
+                  <article
+                    class="archive-post panel panel-soft"
+                    data-search-item
+                    data-search={`${post.data.title} ${post.data.description} ${post.data.issue ?? ""} ${post.data.solution ?? ""} ${post.data.usedIn ?? ""} ${(post.data.tags ?? []).join(" ")} ${post.data.category.join(" ")}`}
+                  >
+                    <time
+                      class="archive-post-date"
+                      datetime={post.data.pubDate.toISOString()}
+                      data-localize-date="short"
+                    >
+                      {post.data.pubDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+
+                    <div>
+                      <a
+                        href={withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`)}
+                        class="archive-post-title"
+                      >
+                        {post.data.title}
+                      </a>
+                      <p class="archive-post-summary">
+                        <strong data-i18n="posts.issue">Issue:</strong>{" "}
+                        {post.data.issue ?? post.data.description}
+                      </p>
+                      {post.data.solution && (
+                        <p class="archive-post-summary">
+                          <strong data-i18n="posts.solution">Solution:</strong> {post.data.solution}
+                        </p>
+                      )}
+                    </div>
+
+                    <div class="archive-post-categories">
+                      {post.data.category.map((cat, _i) => (
+                        <span
+                          class={`category-badge archive-post-badge ${cat}`}
+                          data-i18n={`cat.${cat}`}
+                        >
+                          {CATEGORY_META[cat]?.label ?? cat}
+                        </span>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))
+        }
+
+        {
+          years.length === 0 && (
+            <p class="empty-state panel panel-soft" data-i18n="posts.noPosts">
+              No posts published yet.
+            </p>
+          )
+        }
+      </div>
+    </main>
   </div>
 </BaseLayout>

@@ -1,0 +1,182 @@
+---
+const nodes = [
+  {
+    id: "platform",
+    label: "RHEL",
+    eyebrow: "PLATFORM",
+    titleEn: "Enterprise Linux",
+    titleEs: "Linux empresarial",
+    detailEn:
+      "Lifecycle, automation, hardening, HA and the operational work that keeps platforms predictable.",
+    detailEs:
+      "Ciclo de vida, automatización, hardening, HA y el trabajo operativo que mantiene las plataformas predecibles.",
+  },
+  {
+    id: "edge",
+    label: "RK3588",
+    eyebrow: "EDGE",
+    titleEn: "Local inference",
+    titleEs: "Inferencia local",
+    detailEn:
+      "Small ARM systems, llama.cpp experiments and practical limits measured on real hardware.",
+    detailEs:
+      "Sistemas ARM compactos, experimentos con llama.cpp y límites prácticos medidos en hardware real.",
+  },
+  {
+    id: "gpu",
+    label: "B70",
+    eyebrow: "ACCELERATOR",
+    titleEn: "AI infrastructure",
+    titleEs: "Infraestructura de IA",
+    detailEn:
+      "Memory layout, KV cache, quantization and throughput tested as one complete serving system.",
+    detailEs:
+      "Memoria, KV cache, cuantización y throughput probados como un sistema completo de serving.",
+  },
+  {
+    id: "apps",
+    label: "KOTLIN",
+    eyebrow: "PRODUCT",
+    titleEn: "Production apps",
+    titleEs: "Apps en producción",
+    detailEn:
+      "Local-first Android products that turn engineering decisions into something people can use.",
+    detailEs:
+      "Productos Android local-first que convierten decisiones de ingeniería en herramientas que la gente puede usar.",
+  },
+];
+---
+
+<section class="ascii-console" data-ascii-console aria-labelledby="ascii-console-title">
+  <div class="ascii-console-bar">
+    <div class="ascii-console-lights" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <p id="ascii-console-title">system_map://sergiiob.dev</p>
+    <span class="ascii-console-status"
+      ><i></i> <span data-i18n="exec.mapLive">interactive</span></span
+    >
+  </div>
+
+  <div class="ascii-stage" data-ascii-stage>
+    <pre
+      class="ascii-wiring"
+      aria-hidden="true">
+       ┌──────────────────────────────┐
+       │       ENGINEERING CORE       │
+       └──────┬──────────────┬────────┘
+              │              │
+      ┌───────┘              └────────┐
+      │                               │
+  ┌───┴────┐      · · · ·       ┌────┴────┐
+  │  EDGE  │  · ·           · · │   GPU   │
+  └───┬────┘      · · · ·       └────┬────┘
+      │                               │
+      └──────────────┬────────────────┘
+                     │
+               ┌─────┴─────┐
+               │  PRODUCTS │
+               └───────────┘</pre>
+
+    <div class="ascii-node-layer">
+      {
+        nodes.map((node) => (
+          <button
+            type="button"
+            class:list={[
+              "ascii-node",
+              `ascii-node-${node.id}`,
+              { "is-active": node.id === "platform" },
+            ]}
+            data-ascii-node={node.id}
+            data-eyebrow={node.eyebrow}
+            data-title-en={node.titleEn}
+            data-title-es={node.titleEs}
+            data-detail-en={node.detailEn}
+            data-detail-es={node.detailEs}
+            aria-pressed={node.id === "platform" ? "true" : "false"}
+          >
+            <span aria-hidden="true">[</span>
+            {node.label}
+            <span aria-hidden="true">]</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="ascii-readout" aria-live="polite">
+    <div>
+      <span class="ascii-readout-index">01 / 04</span>
+      <span class="ascii-readout-eyebrow">PLATFORM</span>
+    </div>
+    <strong class="ascii-readout-title">Enterprise Linux</strong>
+    <p class="ascii-readout-detail">
+      Lifecycle, automation, hardening, HA and the operational work that keeps platforms
+      predictable.
+    </p>
+  </div>
+
+  <div class="ascii-console-hint">
+    <span data-i18n="exec.mapHint">Select a node to inspect the system</span>
+    <span aria-hidden="true">↗ pointer-reactive</span>
+  </div>
+</section>
+
+<script>
+  const bindAsciiConsoles = () => {
+    document.querySelectorAll<HTMLElement>("[data-ascii-console]").forEach((consoleEl) => {
+      if (consoleEl.dataset.bound === "1") return;
+      consoleEl.dataset.bound = "1";
+
+      const nodes = Array.from(consoleEl.querySelectorAll<HTMLButtonElement>("[data-ascii-node]"));
+      const index = consoleEl.querySelector<HTMLElement>(".ascii-readout-index");
+      const eyebrow = consoleEl.querySelector<HTMLElement>(".ascii-readout-eyebrow");
+      const title = consoleEl.querySelector<HTMLElement>(".ascii-readout-title");
+      const detail = consoleEl.querySelector<HTMLElement>(".ascii-readout-detail");
+      const stage = consoleEl.querySelector<HTMLElement>("[data-ascii-stage]");
+
+      const currentLang = () => (localStorage.getItem("portfolio.lang") === "es" ? "es" : "en");
+
+      const activate = (node: HTMLButtonElement, nodeIndex: number) => {
+        nodes.forEach((candidate) => {
+          const active = candidate === node;
+          candidate.classList.toggle("is-active", active);
+          candidate.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        const lang = currentLang();
+        if (index) index.textContent = `${String(nodeIndex + 1).padStart(2, "0")} / 04`;
+        if (eyebrow) eyebrow.textContent = node.dataset.eyebrow ?? "SYSTEM";
+        if (title)
+          title.textContent =
+            lang === "es" ? (node.dataset.titleEs ?? "") : (node.dataset.titleEn ?? "");
+        if (detail)
+          detail.textContent =
+            lang === "es" ? (node.dataset.detailEs ?? "") : (node.dataset.detailEn ?? "");
+      };
+
+      nodes.forEach((node, nodeIndex) => {
+        node.addEventListener("click", () => activate(node, nodeIndex));
+        node.addEventListener("pointerenter", () => activate(node, nodeIndex));
+      });
+
+      stage?.addEventListener("pointermove", (event) => {
+        const rect = stage.getBoundingClientRect();
+        stage.style.setProperty("--pointer-x", `${event.clientX - rect.left}px`);
+        stage.style.setProperty("--pointer-y", `${event.clientY - rect.top}px`);
+      });
+
+      window.addEventListener("portfolio-lang-change", () => {
+        const activeIndex = Math.max(
+          0,
+          nodes.findIndex((node) => node.classList.contains("is-active"))
+        );
+        if (nodes[activeIndex]) activate(nodes[activeIndex], activeIndex);
+      });
+    });
+  };
+
+  bindAsciiConsoles();
+  document.addEventListener("astro:page-load", bindAsciiConsoles);
+</script>

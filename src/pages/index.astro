@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 
-import { PUBLIC_LINKS, SITE } from "../config/site";
+import AsciiTopology from "../components/AsciiTopology.astro";
+import ExecutiveSidebar from "../components/ExecutiveSidebar.astro";
+import { SITE } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
 
@@ -9,7 +11,12 @@ const posts = await getCollection("posts");
 const publishedPosts = posts
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const latestPosts = publishedPosts.slice(0, 15);
+const selectedPosts = publishedPosts.slice(0, 6);
+const featuredPost = selectedPosts[0];
+const supportingPosts = selectedPosts.slice(1);
+
+const postUrl = (post: (typeof publishedPosts)[number]) =>
+  withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
 const categoryToClass = (category: string) =>
   `post-category-${category
     .toLowerCase()
@@ -18,359 +25,251 @@ const categoryToClass = (category: string) =>
 ---
 
 <BaseLayout
-  title={`${SITE.author} | Linux & Virtualization Engineering Portfolio`}
+  title={`${SITE.author} | Linux, AI Infrastructure & Product Engineering`}
   description={SITE.description}
   layoutMode="executive"
 >
   <div class="executive-home">
-    <aside class="executive-profile">
-      <h1 style="font-size: 1.65rem; font-weight: 700; margin: 0 0 0.5rem; color: var(--heading);">
-        Sergio Barrientos
-      </h1>
-      <p
-        style="margin: 0 0 1rem; color: #58a6ff; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600;"
-      >
-        <span data-i18n="site.role">Linux & Virtualization Engineer</span>
-      </p>
-      <p style="color: var(--text-soft); font-size: 0.9rem; line-height: 1.6; margin: 0 0 1.4rem;">
-        <span data-i18n="exec.summary"
-          >Building enterprise infrastructure by day; deploying local AI and shipping Kotlin
-          production apps by night.</span
-        >
-      </p>
+    <ExecutiveSidebar currentPath={Astro.url.pathname} />
 
-      <div class="sidebar-language-switcher" style="margin-bottom: 1.4rem;">
-        <span class="sidebar-language-label" data-i18n="lang.label">Language</span>
-        <div
-          class="lang-switcher-pill"
-          role="group"
-          aria-label="Language"
-          data-i18n-label="lang.label"
-        >
-          <button
-            type="button"
-            class="lang-btn active"
-            data-lang="en"
-            data-lang-option="en"
-            aria-pressed="true"
-            title="English"
-          >
-            EN
-          </button>
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang="es"
-            data-lang-option="es"
-            aria-pressed="false"
-            title="Español"
-          >
-            ES
-          </button>
-        </div>
-        <div class="theme-toggle-container" style="margin-left: 1rem;">
-          <button
-            type="button"
-            class="theme-toggle-btn"
-            aria-label="Toggle theme"
-            title="Toggle Light/Dark Mode"
-          >
-            <svg
-              class="sun-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              style="display: none;"
-              ><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"
-              ></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"
-              ></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path
-                d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg
-            >
-            <svg
-              class="moon-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              style="display: block;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
-            >
-          </button>
-        </div>
-      </div>
-
-      <nav
-        style="display: grid; gap: 0.75rem; padding: 1.2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.3rem;"
-      >
-        <a
-          href={withBase()}
-          style="color: var(--heading); text-decoration: none; font-weight: 600;"
-        >
-          <span data-i18n="nav.home">Home</span></a
-        >
-        <a
-          href={withBase("archive/")}
-          style="color: var(--text-muted); text-decoration: none; font-weight: 500;"
-        >
-          <span data-i18n="exec.archive">Field Notes Archive</span></a
-        >
-        <a
-          href={withBase("handbook/")}
-          style="color: var(--text-muted); text-decoration: none; font-weight: 500;"
-        >
-          <span data-i18n="exec.handbook">LLM Handbook</span></a
-        >
-      </nav>
-
-      <div style="display: grid; gap: 0.75rem;">
-        {
-          PUBLIC_LINKS.map((link, index) => (
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class:list={["btn", { "btn-primary": index === 0 }]}
-              style="display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; text-align: center; border: 1px solid var(--border);"
-            >
-              <span aria-hidden="true">
-                {link.label === "LinkedIn" ? "in" : link.label === "GitHub" ? "{}" : "↗"}
-              </span>
-              <span
-                data-i18n={
-                  link.label === "LinkedIn"
-                    ? "exec.linkedin"
-                    : link.label === "GitHub"
-                      ? "exec.github"
-                      : undefined
-                }
+    <main class="executive-main home-fieldbook">
+      <section class="field-hero" aria-labelledby="home-heading">
+        <div class="field-hero-copy">
+          <p class="field-kicker">
+            <span>SYS.01</span>
+            <span data-i18n="exec.heroKicker">Systems engineering · local AI · product</span>
+          </p>
+          <h1 id="home-heading" data-i18n="exec.heroTitle">
+            I build systems that stay understandable under pressure.
+          </h1>
+          <p class="field-hero-lede" data-i18n="exec.heroLede">
+            Enterprise Linux operations, local inference experiments and production Android apps,
+            documented with the trade-offs left in.
+          </p>
+          <div class="field-hero-actions">
+            <a class="field-button field-button-primary" href={withBase("archive/")}>
+              <span data-i18n="exec.exploreNotes">Explore field notes</span><span aria-hidden="true"
+                >↗</span
               >
-                {link.label === "LinkedIn"
-                  ? "LinkedIn Profile"
-                  : link.label === "GitHub"
-                    ? "GitHub Profile"
-                    : link.label}
-              </span>
             </a>
-          ))
-        }
-        <a
-          href={withBase("docs/cv-sergio-barrientos.html")}
-          class="btn"
-          style="display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; text-align: center; border: 1px solid var(--border);"
-          ><span aria-hidden="true">▣</span><span data-i18n="exec.cv">Curriculum Vitae</span></a
-        >
-      </div>
-    </aside>
-
-    <main class="executive-main">
-      <section>
-        <h2
-          style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.55rem; margin: 0 0 1.25rem;"
-        >
-          <span data-i18n="exec.productionApps">Production Apps</span>
-        </h2>
-        <div class="executive-app-grid">
-          <article class="executive-card" style="display: flex; flex-direction: column; gap: 1rem;">
-            <div
-              style="display: flex; justify-content: space-between; gap: 0.9rem; align-items: start; flex-wrap: wrap;"
+            <a class="field-button" href={withBase("about/")}>
+              <span data-i18n="exec.viewProfile">Profile + CV</span><span aria-hidden="true">→</span
+              >
+            </a>
+          </div>
+          <div class="field-proof" aria-label="Areas of work">
+            <span
+              ><i></i><strong data-i18n="exec.proofEnterprise">Enterprise operations</strong></span
             >
-              <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
-                <img
-                  class="app-real-icon"
-                  src={withBase("images/apps/intelliauto-icon.webp")}
-                  alt="IntelliAuto app icon"
-                  loading="lazy"
-                  decoding="async"
-                /><h3
-                  style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading); white-space: nowrap;"
-                >
-                  IntelliAuto
-                </h3>
+            <span><i></i><strong data-i18n="exec.proofLocal">Local AI lab</strong></span>
+            <span><i></i><strong data-i18n="exec.proofProducts">Shipped software</strong></span>
+          </div>
+        </div>
+
+        <AsciiTopology />
+      </section>
+
+      <section class="field-section" aria-labelledby="apps-heading">
+        <header class="field-section-header">
+          <div>
+            <span class="field-section-index">01</span>
+            <div>
+              <p data-i18n="exec.productionApps">Production Apps</p>
+              <h2 id="apps-heading" data-i18n="exec.appsHeading">
+                Useful software, not AI wrappers.
+              </h2>
+            </div>
+          </div>
+          <p data-i18n="exec.appsIntro">
+            Two privacy-minded Android products built around local-first value and resilient cloud
+            boundaries.
+          </p>
+        </header>
+
+        <div class="product-grid">
+          <article class="product-card product-card-auto">
+            <div class="product-card-topline">
+              <span>ANDROID / VEHICLE OPS</span>
+              <span class="product-status"
+                ><i></i><span data-i18n="exec.livePlay">Live on Play Store</span></span
+              >
+            </div>
+            <div class="product-card-body">
+              <img
+                class="product-icon"
+                src={withBase("images/apps/intelliauto-icon.webp")}
+                alt="IntelliAuto app icon"
+                decoding="async"
+              />
+              <div>
+                <h3>IntelliAuto</h3>
+                <p data-i18n="exec.intelliautoDesc">
+                  Vehicle operations platform. Local-first architecture featuring an AI Mechanic
+                  (AutoMind), ML Kit OCR, and offline encrypted storage.
+                </p>
               </div>
-              <span class="live-badge" title="Live on Play Store">
-                <span data-i18n="exec.livePlay">Live on Play Store</span></span
-              >
             </div>
-            <p style="color: var(--text-soft); font-size: 0.92rem; margin: 0; line-height: 1.5;">
-              <span data-i18n="exec.intelliautoDesc"
-                >Vehicle operations platform. Local-first architecture featuring an AI Mechanic
-                (AutoMind), ML Kit OCR, and offline encrypted storage.</span
-              >
-            </p>
-            <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
-              <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
-                >Kotlin</span
-              >
-              <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
-                >Firebase</span
-              >
-              <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
-                >DeepSeek</span
-              >
+            <div class="product-stack" aria-label="Technology stack">
+              <span>Kotlin</span><span>Firebase</span><span>Offline-first</span><span>ML Kit</span>
             </div>
-            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+            <div class="product-card-actions">
               <a
                 href="https://play.google.com/store/apps/details?id=com.barrysoft.intelliauto"
                 target="_blank"
-                class="app-action-link app-action-primary"
+                rel="noopener noreferrer"
+                ><span data-i18n="exec.playStore">Play Store</span><span aria-hidden="true">↗</span
+                ></a
               >
-                <span aria-hidden="true">▶</span>
-                <span data-i18n="exec.playStore">Play Store</span> ↗</a
-              >
-              <span style="color: var(--border);">|</span>
-              <a href="https://intelliauto.app" target="_blank" class="app-action-link"
-                >intelliauto.app</a
+              <a href="https://intelliauto.app" target="_blank" rel="noopener noreferrer"
+                >intelliauto.app<span aria-hidden="true">↗</span></a
               >
             </div>
+            <span class="product-ascii" aria-hidden="true">AUTO::01</span>
           </article>
 
-          <article class="executive-card" style="display: flex; flex-direction: column; gap: 1rem;">
-            <div
-              style="display: flex; justify-content: space-between; gap: 0.9rem; align-items: start; flex-wrap: wrap;"
-            >
-              <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
-                <img
-                  class="app-real-icon"
-                  src={withBase("images/apps/intelliflow-icon.png")}
-                  alt="IntelliFlow app icon"
-                  loading="lazy"
-                  decoding="async"
-                /><h3
-                  style="font-size: 1.25rem; font-weight: 600; margin: 0; color: var(--heading); white-space: nowrap;"
-                >
-                  IntelliFlow
-                </h3>
+          <article class="product-card product-card-flow">
+            <div class="product-card-topline">
+              <span>ANDROID / FINANCE OPS</span>
+              <span class="product-status"
+                ><i></i><span data-i18n="exec.livePlay">Live on Play Store</span></span
+              >
+            </div>
+            <div class="product-card-body">
+              <img
+                class="product-icon"
+                src={withBase("images/apps/intelliflow-icon.png")}
+                alt="IntelliFlow app icon"
+                decoding="async"
+              />
+              <div>
+                <h3>IntelliFlow</h3>
+                <p data-i18n="exec.intelliflowDesc">
+                  Privacy-first personal finance tracker. Offline-first design with best-effort
+                  cloud sync, budget projections, and automated insight generation.
+                </p>
               </div>
-              <span class="live-badge" title="Live on Play Store">
-                <span data-i18n="exec.livePlay">Live on Play Store</span></span
+            </div>
+            <div class="product-stack" aria-label="Technology stack">
+              <span>Kotlin</span><span>Firebase</span><span>Privacy-first</span><span
+                >Forecasting</span
               >
             </div>
-            <p style="color: var(--text-soft); font-size: 0.92rem; margin: 0; line-height: 1.5;">
-              <span data-i18n="exec.intelliflowDesc"
-                >Privacy-first personal finance tracker. Offline-first design with best-effort cloud
-                sync, budget projections, and automated DeepSeek insight generation.</span
-              >
-            </p>
-            <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
-              <span style="font-size: 0.75rem; color: #58a6ff; font-family: var(--font-mono);"
-                >Kotlin</span
-              >
-              <span style="font-size: 0.75rem; color: #ffa20e; font-family: var(--font-mono);"
-                >Firebase</span
-              >
-              <span style="font-size: 0.75rem; color: #d2a8ff; font-family: var(--font-mono);"
-                >DeepSeek</span
-              >
-            </div>
-            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+            <div class="product-card-actions">
               <a
                 href="https://play.google.com/store/apps/details?id=com.intelliflow.finances"
                 target="_blank"
-                class="app-action-link app-action-primary"
+                rel="noopener noreferrer"
+                ><span data-i18n="exec.playStore">Play Store</span><span aria-hidden="true">↗</span
+                ></a
               >
-                <span aria-hidden="true">▶</span>
-                <span data-i18n="exec.playStore">Play Store</span> ↗</a
-              >
-              <span style="color: var(--border);">|</span>
-              <a href="https://barrysoft-intelliflow.work" target="_blank" class="app-action-link"
-                >intelliflow.work</a
+              <a href="https://barrysoft-intelliflow.work" target="_blank" rel="noopener noreferrer"
+                >intelliflow.work<span aria-hidden="true">↗</span></a
               >
             </div>
+            <span class="product-ascii" aria-hidden="true">FLOW::02</span>
           </article>
         </div>
       </section>
 
-      <section>
-        <a href={withBase("handbook/")} style="display: block; text-decoration: none;">
-          <div
-            class="executive-card"
-            style="background: linear-gradient(135deg, rgba(88,166,255,0.05), var(--surface)); border-color: rgba(88,166,255,0.22);"
-          >
-            <span
-              style="font-family: var(--font-mono); font-size: 0.75rem; color: #58a6ff; text-transform: uppercase; letter-spacing: 0.1em;"
-            >
-              <span data-i18n="exec.educationalSeries">Educational Series</span></span
-            >
-            <h2
-              style="font-size: 1.7rem; font-weight: 700; color: var(--heading); margin: 0.45rem 0;"
-            >
-              <span data-i18n="exec.handbookTitle">The LLM Infrastructure Handbook</span>
-            </h2>
-            <p
-              style="color: var(--text-soft); font-size: 1rem; max-width: 640px; margin: 0; line-height: 1.55;"
-            >
-              <span data-i18n="exec.handbookDesc"
-                >An engineer's guide to Local AI. Demystifying Transformer architectures, DeepSeek's
-                Lookahead Sparse Attention, KV Cache quantization, and MoE routing.</span
-              >
-            </p>
-            <div style="margin-top: 1.25rem; color: #58a6ff; font-weight: 600; font-size: 0.9rem;">
-              <span data-i18n="exec.readHandbook">Read the Handbook</span> →
-            </div>
-          </div>
+      <section class="handbook-feature" aria-labelledby="handbook-heading">
+        <div class="handbook-mark" aria-hidden="true">
+          <span>┌──────┐</span>
+          <span>│ LLM │</span>
+          <span>└──┬───┘</span>
+          <span> └─ read()</span>
+        </div>
+        <div class="handbook-copy">
+          <p><span>02</span> <span data-i18n="exec.educationalSeries">Educational Series</span></p>
+          <h2 id="handbook-heading" data-i18n="exec.handbookTitle">
+            The LLM Infrastructure Handbook
+          </h2>
+          <p data-i18n="exec.handbookDesc">
+            An engineer's guide to Local AI. Demystifying Transformer architectures, KV cache
+            quantization, modern attention and MoE routing.
+          </p>
+        </div>
+        <a class="handbook-link" href={withBase("handbook/")}>
+          <span data-i18n="exec.readHandbook">Read the Handbook</span>
+          <span aria-hidden="true">↗</span>
         </a>
       </section>
 
-      <section>
-        <div
-          style="display: flex; justify-content: space-between; gap: 1rem; align-items: end; border-bottom: 1px solid var(--border); padding-bottom: 0.55rem; margin-bottom: 1rem;"
-        >
-          <h2
-            style="font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 0;"
-          >
-            <span data-i18n="exec.recentNotes">Recent Field Notes</span>
-          </h2>
-          <a
-            href={withBase("archive/")}
-            style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none; white-space: nowrap;"
-          >
-            <span data-i18n="exec.viewArchive">View Full Archive</span> →</a
-          >
-        </div>
-        <div style="display: flex; flex-direction: column;">
-          {
-            latestPosts.map((post) => {
-              const url = withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
-              const date = post.data.pubDate.toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              });
-              return (
-                <a href={url} class="executive-post-row">
-                  <time style="font-family: var(--font-mono); font-size: 0.83rem; color: var(--text-soft); padding-top: 0.15rem;">
-                    {date}
+      <section class="field-section notes-section" aria-labelledby="notes-heading">
+        <header class="field-section-header notes-heading-row">
+          <div>
+            <span class="field-section-index">03</span>
+            <div>
+              <p data-i18n="exec.recentNotes">Recent Field Notes</p>
+              <h2 id="notes-heading" data-i18n="exec.notesHeading">
+                Measured, failed, fixed, documented.
+              </h2>
+            </div>
+          </div>
+          <a class="field-text-link" href={withBase("archive/")}>
+            <span>{publishedPosts.length}</span>
+            <span data-i18n="exec.viewArchive">View Full Archive</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </header>
+
+        {
+          featuredPost && (
+            <div class="notes-layout">
+              <a href={postUrl(featuredPost)} class="featured-note">
+                <div class="featured-note-meta">
+                  <span data-i18n="exec.latestSignal">Latest signal</span>
+                  <time
+                    datetime={featuredPost.data.pubDate.toISOString()}
+                    data-localize-date="long"
+                  >
+                    {featuredPost.data.pubDate.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </time>
-                  <div style="display: grid; gap: 0.38rem; min-width: 0;">
-                    <h3 style="font-size: 1rem; font-weight: 500; color: var(--text-strong); margin: 0; line-height: 1.4;">
-                      {post.data.title}
-                    </h3>
-                    <div class="executive-category-pills" style="margin-top: 0.15rem;">
-                      {(Array.isArray(post.data.category)
-                        ? post.data.category
-                        : [post.data.category]
-                      ).map((category) => (
-                        <span class:list={["post-category", categoryToClass(category)]}>
-                          {category}
-                        </span>
-                      ))}
-                    </div>
+                </div>
+                <h3>{featuredPost.data.title}</h3>
+                <p>{featuredPost.data.description}</p>
+                <div class="featured-note-footer">
+                  <div class="executive-category-pills">
+                    {featuredPost.data.category.map((category) => (
+                      <span class:list={["post-category", categoryToClass(category)]}>
+                        {category}
+                      </span>
+                    ))}
                   </div>
-                </a>
-              );
-            })
-          }
-        </div>
+                  <span aria-hidden="true">READ ↗</span>
+                </div>
+              </a>
+
+              <div class="note-list">
+                {supportingPosts.map((post, index) => (
+                  <a href={postUrl(post)} class="note-row">
+                    <span class="note-row-index">{String(index + 2).padStart(2, "0")}</span>
+                    <div>
+                      <time datetime={post.data.pubDate.toISOString()} data-localize-date="short">
+                        {post.data.pubDate.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </time>
+                      <h3>{post.data.title}</h3>
+                      <div class="executive-category-pills">
+                        {post.data.category.map((category) => (
+                          <span class:list={["post-category", categoryToClass(category)]}>
+                            {category}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
       </section>
     </main>
   </div>

@@ -1,0 +1,170 @@
+---
+import { PUBLIC_LINKS } from "../config/site";
+import { withBase } from "../utils/paths";
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = "" } = Astro.props;
+const normalize = (path: string) => (path ?? "").replace(/\/+$/, "");
+const current = normalize(currentPath);
+const activePath = (path: string) => current === normalize(withBase(path));
+const homeActive = current === "" || activePath("") || activePath("/");
+
+const navigation = [
+  { index: "01", href: "", key: "nav.home", label: "Home", active: homeActive },
+  {
+    index: "02",
+    href: "archive/",
+    key: "exec.archive",
+    label: "Field Notes Archive",
+    active: activePath("archive/"),
+  },
+  {
+    index: "03",
+    href: "about/",
+    key: "nav.about",
+    label: "About + CV",
+    active: activePath("about/"),
+  },
+  {
+    index: "04",
+    href: "handbook/",
+    key: "exec.handbook",
+    label: "LLM Handbook",
+    active: activePath("handbook/"),
+  },
+];
+---
+
+<aside class="executive-profile">
+  <a class="site-brand executive-identity" href={withBase()} aria-label="Sergio Barrientos — Home">
+    <span class="executive-monogram" aria-hidden="true">SB<span></span></span>
+    <span>
+      <strong>Sergio Barrientos</strong>
+      <small data-i18n="site.role">Linux & Virtualization Engineer</small>
+    </span>
+  </a>
+
+  <p class="executive-summary" data-i18n="exec.summary">
+    Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production
+    apps by night.
+  </p>
+
+  <div class="executive-status">
+    <span><i></i><span data-i18n="exec.status">Madrid · systems online</span></span>
+    <span>CEST</span>
+  </div>
+
+  <div class="executive-controls">
+    <div class="lang-switcher-pill" role="group" aria-label="Language" data-i18n-label="lang.label">
+      <button
+        type="button"
+        class="lang-btn active"
+        data-lang="en"
+        data-lang-option="en"
+        aria-pressed="true"
+        title="English">EN</button
+      >
+      <button
+        type="button"
+        class="lang-btn"
+        data-lang="es"
+        data-lang-option="es"
+        aria-pressed="false"
+        title="Español">ES</button
+      >
+    </div>
+    <button
+      type="button"
+      class="theme-toggle-btn"
+      aria-label="Toggle theme"
+      title="Toggle Light/Dark Mode"
+    >
+      <svg
+        class="sun-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"
+        ></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path
+          d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path
+          d="m19.07 4.93-1.41 1.41"></path></svg
+      >
+      <svg
+        class="moon-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
+      >
+    </button>
+    <button type="button" class="command-trigger" data-command-palette-trigger>
+      <span data-i18n="exec.command">Navigate</span><kbd>⌘K</kbd>
+    </button>
+  </div>
+
+  <nav class="executive-nav" aria-label="Primary navigation">
+    {
+      navigation.map((item) => (
+        <a href={withBase(item.href)} class:list={["executive-nav-link", { active: item.active }]}>
+          <span>{item.index}</span>
+          <strong data-i18n={item.key}>{item.label}</strong>
+          <i aria-hidden="true">↗</i>
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="executive-links">
+    {
+      PUBLIC_LINKS.map((link) => (
+        <a href={link.href} target="_blank" rel="noopener noreferrer">
+          <span aria-hidden="true">{link.label === "LinkedIn" ? "in" : "{}"}</span>
+          <strong data-i18n={link.label === "LinkedIn" ? "exec.linkedin" : "exec.github"}>
+            {link.label}
+          </strong>
+          <i aria-hidden="true">↗</i>
+        </a>
+      ))
+    }
+    <a href={withBase("docs/cv-sergio-barrientos.html")} class="executive-cv-link">
+      <span aria-hidden="true">CV</span>
+      <strong data-i18n="exec.cv">Curriculum Vitae</strong>
+      <i aria-hidden="true">↓</i>
+    </a>
+  </div>
+
+  <p class="executive-signoff" aria-hidden="true">sergio@field-notes:~$ <span>_</span></p>
+</aside>
+
+<script>
+  const bindCommandTriggers = () => {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-command-palette-trigger]")
+      .forEach((button) => {
+        if (button.dataset.bound === "1") return;
+        button.dataset.bound = "1";
+        button.addEventListener("click", () => {
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true })
+          );
+        });
+      });
+  };
+
+  bindCommandTriggers();
+  document.addEventListener("astro:page-load", bindCommandTriggers);
+</script>
