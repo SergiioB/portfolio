@@ -163,17 +163,17 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Software útil, no simples wrappers de IA.",
   },
   "exec.appsIntro": {
-    en: "Two Android apps that work offline first, keep sensitive data local, and use cloud sync only where it helps.",
-    es: "Dos apps Android que funcionan offline primero, mantienen datos sensibles locales y solo sincronizan en la nube cuando es útil.",
+    en: "Two Android apps that work offline first and keep data local.",
+    es: "Dos apps Android que funcionan offline primero y guardan datos en local.",
   },
   "exec.livePlay": { en: "Live on Play Store", es: "Publicada en Play Store" },
   "exec.intelliautoDesc": {
-    en: "Vehicle management app. Local-first architecture with AutoMind AI, ML Kit OCR, and offline encrypted storage.",
-    es: "App para gestionar vehículos con datos cifrados en el dispositivo, OCR con ML Kit y funciones disponibles sin conexión.",
+    en: "Vehicle management. AutoMind AI, ML Kit OCR, offline encrypted storage.",
+    es: "Gestión de vehículos. AutoMind IA, OCR con ML Kit, almacenamiento cifrado offline.",
   },
   "exec.intelliflowDesc": {
-    en: "Privacy-first personal finance tracker. Offline-first design with best-effort cloud sync, budget projections, and spending summaries.",
-    es: "Finanzas personales con la privacidad como prioridad. Funciona sin conexión, sincroniza con la nube cuando hace falta e incluye proyecciones de presupuesto y resúmenes de gasto.",
+    en: "Finance tracker. Offline-first, cloud sync, budget projections, spending summaries.",
+    es: "Gestor de finanzas. Offline primero, sincronización en la nube, proyecciones y resúmenes.",
   },
   "exec.playStore": { en: "Play Store", es: "Play Store" },
   "exec.educationalSeries": { en: "Educational Series", es: "Serie educativa" },
