@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import ExecutiveSidebar from "../../components/ExecutiveSidebar.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
@@ -26,45 +27,50 @@ const { Content } = await entry.render();
 const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
 ---
 
-<BaseLayout title={title} description={entry.data.description}>
-  <article class="handbook-content">
-    <header class="article-header">
-      <div class="meta-row">
-        <a href="/handbook/" class="back-link">← Back to Handbook</a>
-        <span class="part-label">{entry.data.part}</span>
-      </div>
-      <h1 class="chapter-title">
-        <span class="chapter-num">Chapter {entry.data.chapter}</span>
-        {entry.data.title}
-      </h1>
-      <p class="description">{entry.data.description}</p>
-    </header>
+<BaseLayout title={title} description={entry.data.description} layoutMode="executive">
+  <div class="executive-home">
+    <ExecutiveSidebar currentPath={Astro.url.pathname} />
+    <main class="executive-main">
+      <article class="handbook-content">
+        <header class="article-header">
+          <div class="meta-row">
+            <a href="/handbook/" class="back-link">← Back to Handbook</a>
+            <span class="part-label">{entry.data.part}</span>
+          </div>
+          <h1 class="chapter-title">
+            <span class="chapter-num">Chapter {entry.data.chapter}</span>
+            {entry.data.title}
+          </h1>
+          <p class="description">{entry.data.description}</p>
+        </header>
 
-    <div class="prose">
-      <Content />
-    </div>
+        <div class="prose">
+          <Content />
+        </div>
 
-    <footer class="chapter-nav">
-      {
-        prev && (
-          <a href={`/handbook/${prev.slug}/`} class="nav-prev card">
-            <span class="nav-label">← Previous Chapter</span>
-            <span class="nav-title">{prev.data.title}</span>
-          </a>
-        )
-      }
-      {!prev && <div />}
+        <footer class="chapter-nav">
+          {
+            prev && (
+              <a href={`/handbook/${prev.slug}/`} class="nav-prev card">
+                <span class="nav-label">← Previous Chapter</span>
+                <span class="nav-title">{prev.data.title}</span>
+              </a>
+            )
+          }
+          {!prev && <div />}
 
-      {
-        next && (
-          <a href={`/handbook/${next.slug}/`} class="nav-next card">
-            <span class="nav-label">Next Chapter →</span>
-            <span class="nav-title">{next.data.title}</span>
-          </a>
-        )
-      }
-    </footer>
-  </article>
+          {
+            next && (
+              <a href={`/handbook/${next.slug}/`} class="nav-next card">
+                <span class="nav-label">Next Chapter →</span>
+                <span class="nav-title">{next.data.title}</span>
+              </a>
+            )
+          }
+        </footer>
+      </article>
+    </main>
+  </div>
 </BaseLayout>
 
 <style>

@@ -6977,6 +6977,21 @@ h3 {
 }
 
 @media (max-width: 720px) {
+  .field-hero {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    min-height: auto;
+    padding-top: 1rem;
+  }
+
+  .field-hero-copy {
+    order: 1;
+  }
+
+  .topology-console {
+    order: 2;
+  }
+
   .executive-main {
     gap: 4.5rem;
   }
@@ -7005,7 +7020,7 @@ h3 {
   }
 
   .product-card {
-    min-height: 20rem;
+    min-height: auto;
   }
 
   .product-grid {
@@ -7013,9 +7028,14 @@ h3 {
   }
 
   .product-card-body {
-    flex-direction: row;
-    align-items: center;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
     gap: 0.8rem;
+    margin-top: 2.5rem;
+  }
+
+  .product-icon {
+    width: 3.5rem;
+    height: 3.5rem;
   }
 
   .product-card h3 {
@@ -7023,7 +7043,8 @@ h3 {
   }
 
   .product-card-body p {
-    display: none;
+    font-size: 0.76rem;
+    margin-top: 0.3rem;
   }
 
   .product-ascii {

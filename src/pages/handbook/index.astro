@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import ExecutiveSidebar from "../../components/ExecutiveSidebar.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const allHandbookEntries = await getCollection("handbook");
@@ -12,40 +13,45 @@ const description =
   "A complete engineering guide to understanding and deploying Large Language Models.";
 ---
 
-<BaseLayout title={title} description={description}>
-  <div class="handbook-index">
-    <header class="handbook-hero">
-      <span class="eyebrow">Local AI / Systems Engineering</span>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <div class="handbook-hero-grid" aria-label="Handbook scope">
-        <span>Transformer internals</span>
-        <span>KV cache economics</span>
-        <span>MoE + routing</span>
-        <span>DeepSeek LSA</span>
-      </div>
-    </header>
+<BaseLayout title={title} description={description} layoutMode="executive">
+  <div class="executive-home">
+    <ExecutiveSidebar currentPath={Astro.url.pathname} />
+    <main class="executive-main">
+      <div class="handbook-index">
+        <header class="handbook-hero">
+          <span class="eyebrow">Local AI / Systems Engineering</span>
+          <h1>{title}</h1>
+          <p>{description}</p>
+          <div class="handbook-hero-grid" aria-label="Handbook scope">
+            <span>Transformer internals</span>
+            <span>KV cache economics</span>
+            <span>MoE + routing</span>
+            <span>DeepSeek LSA</span>
+          </div>
+        </header>
 
-    <div class="handbook-list">
-      {
-        sortedHandbook.map((entry) => (
-          <a href={`/handbook/${entry.slug}/`} class="handbook-item">
-            <div class="chapter-orb">{String(entry.data.chapter).padStart(2, "0")}</div>
-            <div>
-              <div class="handbook-meta">
-                <span class="part-label">{entry.data.part}</span>
-                <span class="chapter-label">Chapter {entry.data.chapter}</span>
-              </div>
-              <h2>{entry.data.title}</h2>
-              <p>{entry.data.description}</p>
-            </div>
-            <span class="handbook-arrow" aria-hidden="true">
-              →
-            </span>
-          </a>
-        ))
-      }
-    </div>
+        <div class="handbook-list">
+          {
+            sortedHandbook.map((entry) => (
+              <a href={`/handbook/${entry.slug}/`} class="handbook-item">
+                <div class="chapter-orb">{String(entry.data.chapter).padStart(2, "0")}</div>
+                <div>
+                  <div class="handbook-meta">
+                    <span class="part-label">{entry.data.part}</span>
+                    <span class="chapter-label">Chapter {entry.data.chapter}</span>
+                  </div>
+                  <h2>{entry.data.title}</h2>
+                  <p>{entry.data.description}</p>
+                </div>
+                <span class="handbook-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </main>
   </div>
 </BaseLayout>
 
