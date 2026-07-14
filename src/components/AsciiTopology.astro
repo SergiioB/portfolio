@@ -10,6 +10,7 @@ const nodes = [
       "Lifecycle, automation, hardening, HA and the operational work that keeps platforms predictable.",
     detailEs:
       "Ciclo de vida, automatización, hardening, HA y el trabajo operativo que mantiene las plataformas predecibles.",
+    color: "#3B82F6",
   },
   {
     id: "edge",
@@ -21,6 +22,7 @@ const nodes = [
       "Small ARM systems, llama.cpp experiments and practical limits measured on real hardware.",
     detailEs:
       "Sistemas ARM compactos, experimentos con llama.cpp y límites prácticos medidos en hardware real.",
+    color: "#8B5CF6",
   },
   {
     id: "gpu",
@@ -32,6 +34,7 @@ const nodes = [
       "Memory layout, KV cache, quantization and throughput tested as one complete serving system.",
     detailEs:
       "Memoria, KV cache, cuantización y throughput probados como un sistema completo de serving.",
+    color: "#EC4899",
   },
   {
     id: "apps",
@@ -43,116 +46,365 @@ const nodes = [
       "Local-first Android products that turn engineering decisions into something people can use.",
     detailEs:
       "Productos Android local-first que convierten decisiones de ingeniería en herramientas que la gente puede usar.",
+    color: "#10B981",
   },
 ];
 ---
 
-<section class="ascii-console" data-ascii-console aria-labelledby="ascii-console-title">
-  <div class="ascii-console-bar">
-    <div class="ascii-console-lights" aria-hidden="true">
+<section class="topology-console" data-topology-console aria-labelledby="topology-console-title">
+  <div class="topology-console-bar">
+    <div class="topology-console-lights" aria-hidden="true">
       <span></span><span></span><span></span>
     </div>
-    <p id="ascii-console-title">system_map://sergiiob.dev</p>
-    <span class="ascii-console-status"
+    <p id="topology-console-title">system_map://sergiiob.dev</p>
+    <span class="topology-console-status"
       ><i></i> <span data-i18n="exec.mapLive">interactive</span></span
     >
   </div>
 
-  <div class="ascii-stage" data-ascii-stage>
-    <pre
-      class="ascii-wiring"
-      aria-hidden="true">        ┌───────────────────────────────┐
-        │      ENGINEERING CORE         │
-        │   sergio@field-notes:~$       │
-        └──────┬────────────────┬────────┘
-               │                │
-      ┌────────┘                └─────────┐
-      │                                 │
-  ┌───┴───┐                     ┌───────┴───────┐
-  │ RK3588│  ─────────────────  │     B70       │
-  │  EDGE │  ·  ·  ·  ·  ·  ·   │  ACCELERATOR  │
-  └───┬───┘  ─────────────────  └───────┬───────┘
-      │                                 │
-      └──────────────┬──────────────────┘
-                     │
-              ┌──────┴──────┐
-              │   KOTLIN    │
-              │   PRODUCT   │
-              └─────────────┘</pre>
+  <div class="topology-stage" data-topology-stage>
+    <svg class="topology-svg" viewBox="0 0 800 600" aria-hidden="true">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"></feGaussianBlur>
+          <feMerge>
+            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+        <linearGradient id="platformGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.8"></stop>
+          <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:0.9"></stop>
+        </linearGradient>
+        <linearGradient id="edgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.8"></stop>
+          <stop offset="100%" style="stop-color:#6D28D9;stop-opacity:0.9"></stop>
+        </linearGradient>
+        <linearGradient id="gpuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#EC4899;stop-opacity:0.8"></stop>
+          <stop offset="100%" style="stop-color:#BE185D;stop-opacity:0.9"></stop>
+        </linearGradient>
+        <linearGradient id="appsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.8"></stop>
+          <stop offset="100%" style="stop-color:#059669;stop-opacity:0.9"></stop>
+        </linearGradient>
+      </defs>
 
-    <div class="ascii-node-layer">
-      {
-        nodes.map((node) => (
-          <button
-            type="button"
-            class:list={[
-              "ascii-node",
-              `ascii-node-${node.id}`,
-              { "is-active": node.id === "platform" },
-            ]}
-            data-ascii-node={node.id}
-            data-eyebrow={node.eyebrow}
-            data-title-en={node.titleEn}
-            data-title-es={node.titleEs}
-            data-detail-en={node.detailEn}
-            data-detail-es={node.detailEs}
-            aria-pressed={node.id === "platform" ? "true" : "false"}
+      <!-- Background grid -->
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path
+          d="M 40 0 L 0 0 0 40"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="0.5"
+          opacity="0.1"></path>
+      </pattern>
+      <rect width="800" height="600" fill="url(#grid)"></rect>
+
+      <!-- Connection lines -->
+      <g class="topology-connections">
+        <!-- Platform to Edge -->
+        <line
+          class="topology-line topology-line-platform-edge"
+          x1="400"
+          y1="150"
+          x2="200"
+          y2="300"
+          stroke="url(#platformGradient)"
+          stroke-width="2"
+          opacity="0.6"></line>
+        <!-- Platform to GPU -->
+        <line
+          class="topology-line topology-line-platform-gpu"
+          x1="400"
+          y1="150"
+          x2="600"
+          y2="300"
+          stroke="url(#platformGradient)"
+          stroke-width="2"
+          opacity="0.6"></line>
+        <!-- Edge to Apps -->
+        <line
+          class="topology-line topology-line-edge-apps"
+          x1="200"
+          y1="300"
+          x2="400"
+          y2="480"
+          stroke="url(#edgeGradient)"
+          stroke-width="2"
+          opacity="0.6"></line>
+        <!-- GPU to Apps -->
+        <line
+          class="topology-line topology-line-gpu-apps"
+          x1="600"
+          y1="300"
+          x2="400"
+          y2="480"
+          stroke="url(#gpuGradient)"
+          stroke-width="2"
+          opacity="0.6"></line>
+
+        <!-- Animated particles on lines -->
+        <circle class="particle particle-platform-edge" r="3" fill="#3B82F6">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M 400 150 L 200 300"
+          ></animateMotion>
+        </circle>
+        <circle class="particle particle-platform-gpu" r="3" fill="#3B82F6">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M 400 150 L 600 300"
+          ></animateMotion>
+        </circle>
+        <circle class="particle particle-edge-apps" r="3" fill="#8B5CF6">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M 200 300 L 400 480"
+          ></animateMotion>
+        </circle>
+        <circle class="particle particle-gpu-apps" r="3" fill="#EC4899">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M 600 300 L 400 480"
+          ></animateMotion>
+        </circle>
+      </g>
+
+      <!-- Node groups -->
+      <g class="topology-nodes">
+        <!-- Platform node (ENGINEERING CORE) -->
+        <g
+          class="topology-node topology-node-platform"
+          data-topology-node="platform"
+          data-eyebrow={nodes[0].eyebrow}
+          data-title-en={nodes[0].titleEn}
+          data-title-es={nodes[0].titleEs}
+          data-detail-en={nodes[0].detailEn}
+          data-detail-es={nodes[0].detailEs}
+          data-color={nodes[0].color}
+          role="button"
+          tabindex="0"
+          aria-pressed="true"
+        >
+          <rect
+            x="300"
+            y="100"
+            width="200"
+            height="100"
+            rx="12"
+            fill="url(#platformGradient)"
+            filter="url(#glow)"></rect>
+          <circle cx="310" cy="115" r="4" fill="#22C55E" class="status-dot">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"
+            ></animate>
+          </circle>
+          <text
+            x="400"
+            y="135"
+            text-anchor="middle"
+            fill="white"
+            font-size="11"
+            font-weight="600"
+            font-family="monospace">ENGINEERING CORE</text
           >
-            <span aria-hidden="true">[</span>
-            {node.label}
-            <span aria-hidden="true">]</span>
-          </button>
-        ))
-      }
-    </div>
-  </div>
+          <text
+            x="400"
+            y="155"
+            text-anchor="middle"
+            fill="white"
+            font-size="10"
+            font-family="monospace"
+            opacity="0.9">sergio@field-notes</text
+          >
+          <circle cx="400" cy="175" r="6" fill="white" opacity="0.8">
+            <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"></animate>
+            <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"
+            ></animate>
+          </circle>
+        </g>
 
-  <div class="ascii-readout" aria-live="polite">
-    <div>
-      <span class="ascii-readout-index">01 / 04</span>
-      <span class="ascii-readout-eyebrow">PLATFORM</span>
-    </div>
-    <strong class="ascii-readout-title">Enterprise Linux</strong>
-    <p class="ascii-readout-detail">
-      Lifecycle, automation, hardening, HA and the operational work that keeps platforms
-      predictable.
-    </p>
-  </div>
+        <!-- Edge node -->
+        <g
+          class="topology-node topology-node-edge"
+          data-topology-node="edge"
+          data-eyebrow={nodes[1].eyebrow}
+          data-title-en={nodes[1].titleEn}
+          data-title-es={nodes[1].titleEs}
+          data-detail-en={nodes[1].detailEn}
+          data-detail-es={nodes[1].detailEs}
+          data-color={nodes[1].color}
+          role="button"
+          tabindex="0"
+          aria-pressed="false"
+        >
+          <rect
+            x="120"
+            y="250"
+            width="160"
+            height="100"
+            rx="12"
+            fill="url(#edgeGradient)"
+            filter="url(#glow)"></rect>
+          <text
+            x="200"
+            y="280"
+            text-anchor="middle"
+            fill="white"
+            font-size="14"
+            font-weight="700"
+            font-family="monospace">RK3588</text
+          >
+          <text
+            x="200"
+            y="300"
+            text-anchor="middle"
+            fill="white"
+            font-size="10"
+            font-family="monospace"
+            opacity="0.9">EDGE</text
+          >
+          <circle cx="200" cy="325" r="5" fill="white" opacity="0.8">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"
+            ></animate>
+          </circle>
+        </g>
 
-  <div class="ascii-console-hint">
-    <span data-i18n="exec.mapHint">Select a node to inspect the system</span>
-    <span aria-hidden="true">↗ pointer-reactive</span>
+        <!-- GPU node -->
+        <g
+          class="topology-node topology-node-gpu"
+          data-topology-node="gpu"
+          data-eyebrow={nodes[2].eyebrow}
+          data-title-en={nodes[2].titleEn}
+          data-title-es={nodes[2].titleEs}
+          data-detail-en={nodes[2].detailEn}
+          data-detail-es={nodes[2].detailEs}
+          data-color={nodes[2].color}
+          role="button"
+          tabindex="0"
+          aria-pressed="false"
+        >
+          <rect
+            x="520"
+            y="250"
+            width="160"
+            height="100"
+            rx="12"
+            fill="url(#gpuGradient)"
+            filter="url(#glow)"></rect>
+          <text
+            x="600"
+            y="280"
+            text-anchor="middle"
+            fill="white"
+            font-size="14"
+            font-weight="700"
+            font-family="monospace">B70</text
+          >
+          <text
+            x="600"
+            y="300"
+            text-anchor="middle"
+            fill="white"
+            font-size="10"
+            font-family="monospace"
+            opacity="0.9">ACCELERATOR</text
+          >
+          <circle cx="600" cy="325" r="5" fill="white" opacity="0.8">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"
+            ></animate>
+          </circle>
+        </g>
+
+        <!-- Apps node -->
+        <g
+          class="topology-node topology-node-apps"
+          data-topology-node="apps"
+          data-eyebrow={nodes[3].eyebrow}
+          data-title-en={nodes[3].titleEn}
+          data-title-es={nodes[3].titleEs}
+          data-detail-en={nodes[3].detailEn}
+          data-detail-es={nodes[3].detailEs}
+          data-color={nodes[3].color}
+          role="button"
+          tabindex="0"
+          aria-pressed="false"
+        >
+          <rect
+            x="320"
+            y="430"
+            width="160"
+            height="100"
+            rx="12"
+            fill="url(#appsGradient)"
+            filter="url(#glow)"></rect>
+          <text
+            x="400"
+            y="460"
+            text-anchor="middle"
+            fill="white"
+            font-size="14"
+            font-weight="700"
+            font-family="monospace">KOTLIN</text
+          >
+          <text
+            x="400"
+            y="480"
+            text-anchor="middle"
+            fill="white"
+            font-size="10"
+            font-family="monospace"
+            opacity="0.9">PRODUCT</text
+          >
+          <circle cx="400" cy="505" r="5" fill="white" opacity="0.8">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"
+            ></animate>
+          </circle>
+        </g>
+      </g>
+    </svg>
+
+    <div class="topology-readout" aria-live="polite">
+      <div>
+        <span class="topology-readout-index">01 / 04</span>
+        <span class="topology-readout-eyebrow">PLATFORM</span>
+      </div>
+      <strong class="topology-readout-title">Enterprise Linux</strong>
+      <p class="topology-readout-detail">
+        Lifecycle, automation, hardening, HA and the operational work that keeps platforms
+        predictable.
+      </p>
+    </div>
+
+    <div class="topology-console-hint">
+      <span data-i18n="exec.mapHint">Select a node to inspect the system</span>
+      <span aria-hidden="true">↗ pointer-reactive</span>
+    </div>
   </div>
 </section>
 
-<style>
-  /* Inline styles for immediate feedback */
-  .ascii-wiring {
-    line-height: 1.05 !important;
-    font-size: clamp(0.48rem, 0.8vw, 0.68rem) !important;
-  }
-</style>
-
 <script>
-  const bindAsciiConsoles = () => {
-    document.querySelectorAll<HTMLElement>("[data-ascii-console]").forEach((consoleEl) => {
+  const bindTopologyConsoles = () => {
+    document.querySelectorAll<HTMLElement>("[data-topology-console]").forEach((consoleEl) => {
       if (consoleEl.dataset.bound === "1") return;
       consoleEl.dataset.bound = "1";
 
-      const nodes = Array.from(consoleEl.querySelectorAll<HTMLButtonElement>("[data-ascii-node]"));
-      const index = consoleEl.querySelector<HTMLElement>(".ascii-readout-index");
-      const eyebrow = consoleEl.querySelector<HTMLElement>(".ascii-readout-eyebrow");
-      const title = consoleEl.querySelector<HTMLElement>(".ascii-readout-title");
-      const detail = consoleEl.querySelector<HTMLElement>(".ascii-readout-detail");
-      const stage = consoleEl.querySelector<HTMLElement>("[data-ascii-stage]");
+      const nodes = Array.from(consoleEl.querySelectorAll<HTMLElement>("[data-topology-node]"));
+      const index = consoleEl.querySelector<HTMLElement>(".topology-readout-index");
+      const eyebrow = consoleEl.querySelector<HTMLElement>(".topology-readout-eyebrow");
+      const title = consoleEl.querySelector<HTMLElement>(".topology-readout-title");
+      const detail = consoleEl.querySelector<HTMLElement>(".topology-readout-detail");
 
       const currentLang = () => (localStorage.getItem("portfolio.lang") === "es" ? "es" : "en");
 
-      const activate = (node: HTMLButtonElement, nodeIndex: number) => {
+      const activate = (node: HTMLElement, nodeIndex: number) => {
         nodes.forEach((candidate) => {
           const active = candidate === node;
           candidate.classList.toggle("is-active", active);
           candidate.setAttribute("aria-pressed", active ? "true" : "false");
+
+          // Animate node scale on activation
+          const nodeGroup = candidate.querySelector("rect");
+          if (nodeGroup && active) {
+            nodeGroup.style.transform = "scale(1.05)";
+            nodeGroup.style.transformBox = "fill-box";
+            nodeGroup.style.transformOrigin = "center";
+            setTimeout(() => {
+              nodeGroup.style.transform = "scale(1)";
+            }, 300);
+          }
         });
 
         const lang = currentLang();
@@ -169,12 +421,14 @@ const nodes = [
       nodes.forEach((node, nodeIndex) => {
         node.addEventListener("click", () => activate(node, nodeIndex));
         node.addEventListener("pointerenter", () => activate(node, nodeIndex));
-      });
 
-      stage?.addEventListener("pointermove", (event) => {
-        const rect = stage.getBoundingClientRect();
-        stage.style.setProperty("--pointer-x", `${event.clientX - rect.left}px`);
-        stage.style.setProperty("--pointer-y", `${event.clientY - rect.top}px`);
+        // Keyboard navigation
+        node.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activate(node, nodeIndex);
+          }
+        });
       });
 
       // Auto-cycle through nodes on desktop
@@ -213,8 +467,8 @@ const nodes = [
     });
   };
 
-  bindAsciiConsoles();
-  document.addEventListener("astro:page-load", bindAsciiConsoles);
+  bindTopologyConsoles();
+  document.addEventListener("astro:page-load", bindTopologyConsoles);
 
   // Product card expand functionality
   const bindProductCards = () => {
@@ -237,3 +491,211 @@ const nodes = [
   bindProductCards();
   document.addEventListener("astro:page-load", bindProductCards);
 </script>
+
+<style>
+  /* Animated topology console */
+  .topology-console {
+    border: 1px solid var(--field-line-strong);
+    border-radius: 1rem;
+    background: var(--field-paper);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  [data-theme="dark"] .topology-console {
+    box-shadow:
+      0 30px 90px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .topology-console-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--field-line);
+    background: var(--field-paper-strong);
+  }
+
+  .topology-console-bar p,
+  .topology-console-status {
+    margin: 0;
+    color: var(--field-muted);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
+  }
+
+  .topology-console-status {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .topology-console-lights {
+    display: flex;
+    gap: 0.28rem;
+  }
+
+  .topology-console-lights span {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--field-line-strong);
+  }
+
+  .topology-console-lights span:first-child {
+    background: #e1725e;
+  }
+  .topology-console-lights span:nth-child(2) {
+    background: #d5a542;
+  }
+  .topology-console-lights span:last-child {
+    background: var(--field-green);
+  }
+
+  .topology-stage {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--field-paper-strong);
+    overflow: hidden;
+  }
+
+  .topology-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .topology-line {
+    transition:
+      stroke-width 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  .topology-line:hover {
+    stroke-width: 4;
+    opacity: 1;
+  }
+
+  .topology-node {
+    cursor: pointer;
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+  }
+
+  .topology-node rect {
+    transition:
+      fill-opacity 0.3s ease,
+      stroke-width 0.3s ease;
+  }
+
+  .topology-node:hover rect {
+    fill-opacity: 1;
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 2;
+  }
+
+  .topology-node.is-active rect {
+    stroke: white;
+    stroke-width: 3;
+  }
+
+  .status-dot {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .particle {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+
+  .topology-readout {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+    align-items: start;
+    min-height: 8.2rem;
+    padding: 1.1rem 1.2rem;
+    border-top: 1px solid var(--field-line);
+    background: var(--field-paper-strong);
+  }
+
+  .topology-readout > div {
+    display: grid;
+    gap: 0.28rem;
+    grid-row: 1 / span 2;
+  }
+
+  .topology-readout-index,
+  .topology-readout-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .topology-readout-index {
+    color: var(--field-accent);
+  }
+  .topology-readout-eyebrow {
+    color: var(--field-muted);
+  }
+
+  .topology-readout-title {
+    color: var(--field-ink);
+    font-size: 0.98rem;
+    letter-spacing: -0.02em;
+  }
+
+  .topology-readout-detail {
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.55;
+  }
+
+  .topology-console-hint {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 0.8rem;
+    border-top: 1px solid var(--field-line);
+    color: var(--field-muted);
+    font-family: var(--font-mono);
+    font-size: 0.51rem;
+    text-transform: uppercase;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .topology-readout {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .topology-readout > div {
+      grid-row: auto;
+    }
+
+    .topology-readout-title {
+      font-size: 0.85rem;
+    }
+
+    .topology-readout-detail {
+      font-size: 0.7rem;
+    }
+  }
+</style>
