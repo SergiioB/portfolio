@@ -61,22 +61,24 @@ const nodes = [
   <div class="ascii-stage" data-ascii-stage>
     <pre
       class="ascii-wiring"
-      aria-hidden="true">
-       ┌──────────────────────────────┐
-       │       ENGINEERING CORE       │
-       └──────┬──────────────┬────────┘
-              │              │
-      ┌───────┘              └────────┐
-      │                               │
-  ┌───┴────┐      · · · ·       ┌────┴────┐
-  │  EDGE  │  · ·           · · │   GPU   │
-  └───┬────┘      · · · ·       └────┬────┘
-      │                               │
-      └──────────────┬────────────────┘
+      aria-hidden="true">        ┌───────────────────────────────┐
+        │      ENGINEERING CORE         │
+        │   sergio@field-notes:~$       │
+        └──────┬────────────────┬────────┘
+               │                │
+      ┌────────┘                └─────────┐
+      │                                 │
+  ┌───┴───┐                     ┌───────┴───────┐
+  │ RK3588│  ─────────────────  │     B70       │
+  │  EDGE │  ·  ·  ·  ·  ·  ·   │  ACCELERATOR  │
+  └───┬───┘  ─────────────────  └───────┬───────┘
+      │                                 │
+      └──────────────┬──────────────────┘
                      │
-               ┌─────┴─────┐
-               │  PRODUCTS │
-               └───────────┘</pre>
+              ┌──────┴──────┐
+              │   KOTLIN    │
+              │   PRODUCT   │
+              └─────────────┘</pre>
 
     <div class="ascii-node-layer">
       {
@@ -123,6 +125,14 @@ const nodes = [
   </div>
 </section>
 
+<style>
+  /* Inline styles for immediate feedback */
+  .ascii-wiring {
+    line-height: 1.05 !important;
+    font-size: clamp(0.48rem, 0.8vw, 0.68rem) !important;
+  }
+</style>
+
 <script>
   const bindAsciiConsoles = () => {
     document.querySelectorAll<HTMLElement>("[data-ascii-console]").forEach((consoleEl) => {
@@ -167,6 +177,32 @@ const nodes = [
         stage.style.setProperty("--pointer-y", `${event.clientY - rect.top}px`);
       });
 
+      // Auto-cycle through nodes on desktop
+      let autoCycle: number | null = null;
+      let cycleIndex = 0;
+      const startAutoCycle = () => {
+        if (autoCycle) return;
+        autoCycle = window.setInterval(() => {
+          cycleIndex = (cycleIndex + 1) % nodes.length;
+          activate(nodes[cycleIndex], cycleIndex);
+        }, 3500);
+      };
+      const stopAutoCycle = () => {
+        if (autoCycle) {
+          clearInterval(autoCycle);
+          autoCycle = null;
+        }
+      };
+
+      // Only auto-cycle on desktop (no touch)
+      if (window.matchMedia("(hover: hover)").matches) {
+        setTimeout(startAutoCycle, 1500);
+      }
+
+      // Stop auto-cycle on interaction
+      consoleEl.addEventListener("pointerenter", stopAutoCycle, { once: true });
+      consoleEl.addEventListener("click", stopAutoCycle, { once: true });
+
       window.addEventListener("portfolio-lang-change", () => {
         const activeIndex = Math.max(
           0,
@@ -179,4 +215,25 @@ const nodes = [
 
   bindAsciiConsoles();
   document.addEventListener("astro:page-load", bindAsciiConsoles);
+
+  // Product card expand functionality
+  const bindProductCards = () => {
+    document.querySelectorAll<HTMLElement>(".product-card").forEach((card) => {
+      const isAlreadyBound = card.dataset.productBound === "1";
+      if (isAlreadyBound) return;
+      card.dataset.productBound = "1";
+
+      card.addEventListener("click", (e) => {
+        const isLink = (e.target as HTMLElement).closest("a");
+        const isButton = (e.target as HTMLElement).closest("button");
+
+        if (!isLink && !isButton) {
+          card.classList.toggle("is-expanded");
+        }
+      });
+    });
+  };
+
+  bindProductCards();
+  document.addEventListener("astro:page-load", bindProductCards);
 </script>
