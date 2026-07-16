@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" role="img">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#334155" stroke-width="0.5" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="920" height="480" fill="#0f172a"/>
+  <rect width="920" height="480" fill="url(#grid)"/>
+<text x="40" y="40" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" font-weight="700">B70 local inference path</text>
+<rect x="40" y="80" width="200" height="70" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="56" y="112" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">Grok Build CLI</text>
+<text x="56" y="136" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">tools ON · agent</text>
+<rect x="280" y="80" width="200" height="70" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="296" y="112" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">llama-server</text>
+<text x="296" y="136" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">OpenAI /v1 :8765</text>
+<rect x="520" y="80" width="200" height="70" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="536" y="112" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">SYCL + Level Zero</text>
+<text x="536" y="136" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">Arc Pro B70 32GB</text>
+<rect x="760" y="80" width="120" height="70" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="776" y="112" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">GGUF</text>
+<text x="776" y="136" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">MoE / dense</text>
+<rect x="40" y="220" width="260" height="90" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="56" y="252" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">profiles.json</text>
+<text x="56" y="276" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">powerWatts + serverArgs</text>
+<rect x="340" y="220" width="260" height="90" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="356" y="252" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">systemd user</text>
+<text x="356" y="276" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">llama-profile.service</text>
+<rect x="640" y="220" width="240" height="90" rx="10" fill="#1e293b" stroke="#22d3ee"/>
+<text x="656" y="252" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="600">switch-profile</text>
+<text x="656" y="276" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">idle / model load</text>
+<line x1="240" y1="115" x2="280" y2="115" stroke="#22d3ee" stroke-width="2"/>
+<line x1="480" y1="115" x2="520" y2="115" stroke="#22d3ee" stroke-width="2"/>
+<line x1="720" y1="115" x2="760" y2="115" stroke="#22d3ee" stroke-width="2"/>
+<text x="40" y="370" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">MoE (Ornith/Qwen35): high prefill + decode · Dense (Gemma31/Qwen27): needs MTP-4 for usable decode</text>
+<text x="40" y="400" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">KV reuse: multi-turn cache_n ~470-489 after system-sized prefix</text>
+<text x="40" y="440" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">Do not mix batch=32 aggregate fleet numbers into single-stream charts.</text>
+</svg>

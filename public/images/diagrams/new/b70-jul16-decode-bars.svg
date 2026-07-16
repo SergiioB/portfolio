@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#334155" stroke-width="0.5" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="520" fill="#0f172a"/>
+  <rect width="900" height="520" fill="url(#grid)"/>
+<text x="40" y="42" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" font-weight="700">Single-stream decode (engine t/s)</text>
+<text x="40" y="68" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Intel Arc Pro B70 32GB · llama.cpp SYCL · 2026-07-16 clean suite</text>
+<text x="40" y="118" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Ornith 35B MoE Q5</text>
+<rect x="280" y="100" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="100" width="623" height="28" rx="6" fill="#34d399" opacity="0.35" stroke="#34d399"/>
+<text x="913" y="119" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">69.3</text>
+<text x="40" y="170" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen35 Q4 MoE</text>
+<rect x="280" y="152" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="152" width="564" height="28" rx="6" fill="#22d3ee" opacity="0.35" stroke="#22d3ee"/>
+<text x="854" y="171" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">62.8</text>
+<text x="40" y="222" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen35 Q5 MoE</text>
+<rect x="280" y="204" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="204" width="553" height="28" rx="6" fill="#60a5fa" opacity="0.35" stroke="#60a5fa"/>
+<text x="843" y="223" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">61.5</text>
+<text x="40" y="274" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 MTP@180W</text>
+<rect x="280" y="256" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="256" width="239" height="28" rx="6" fill="#a78bfa" opacity="0.35" stroke="#a78bfa"/>
+<text x="529" y="275" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">26.6</text>
+<text x="40" y="326" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen27 MTP dense</text>
+<rect x="280" y="308" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="308" width="225" height="28" rx="6" fill="#fbbf24" opacity="0.35" stroke="#fbbf24"/>
+<text x="515" y="327" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">25.1</text>
+<text x="40" y="378" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 MTP@165W</text>
+<rect x="280" y="360" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="360" width="223" height="28" rx="6" fill="#a78bfa" opacity="0.35" stroke="#a78bfa"/>
+<text x="513" y="379" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">24.8</text>
+<text x="40" y="430" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 base@150W</text>
+<rect x="280" y="412" width="720" height="28" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="412" width="147" height="28" rx="6" fill="#f87171" opacity="0.35" stroke="#f87171"/>
+<text x="437" y="431" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">16.4</text>
+<text x="40" y="500" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">Source: timings.predicted_per_second · batch=1 · not concurrent aggregate</text>
+</svg>

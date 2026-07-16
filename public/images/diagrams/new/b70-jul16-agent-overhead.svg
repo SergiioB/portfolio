@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#334155" stroke-width="0.5" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="420" fill="#0f172a"/>
+  <rect width="900" height="420" fill="url(#grid)"/>
+<text x="40" y="42" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" font-weight="700">Agent wall time vs engine (quicksort task)</text>
+<text x="40" y="68" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Grok Build CLI with tools enabled · always-approve · local base_url</text>
+<text x="40" y="118" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen35 direct qs</text>
+<rect x="280" y="100" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="100" width="82" height="26" rx="6" fill="#60a5fa" opacity="0.35" stroke="#60a5fa"/>
+<text x="372" y="118" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">11.8s</text>
+<text x="40" y="166" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Ornith Grok tools qs</text>
+<rect x="280" y="148" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="148" width="296" height="26" rx="6" fill="#34d399" opacity="0.35" stroke="#34d399"/>
+<text x="586" y="166" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">42.4s</text>
+<text x="40" y="214" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen35 Grok tools qs</text>
+<rect x="280" y="196" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="196" width="368" height="26" rx="6" fill="#22d3ee" opacity="0.35" stroke="#22d3ee"/>
+<text x="658" y="214" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">52.6s</text>
+<text x="40" y="262" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen27 Grok tools qs</text>
+<rect x="280" y="244" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="244" width="373" height="26" rx="6" fill="#fbbf24" opacity="0.35" stroke="#fbbf24"/>
+<text x="663" y="262" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">53.4s</text>
+<text x="40" y="310" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 Grok tools qs</text>
+<rect x="280" y="292" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="280" y="292" width="582" height="26" rx="6" fill="#a78bfa" opacity="0.35" stroke="#a78bfa"/>
+<text x="872" y="310" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">83.2s</text>
+<text x="40" y="390" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">Tools add re-prefills + tool rounds; engine decode is not the whole story.</text>
+</svg>

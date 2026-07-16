@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" role="img">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#334155" stroke-width="0.5" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="880" height="420" fill="#0f172a"/>
+  <rect width="880" height="420" fill="url(#grid)"/>
+<text x="40" y="42" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" font-weight="700">Gemma 4 31B dense: MTP-4 effect</text>
+<text x="40" y="68" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Same GGUF · Unsloth mtp draft · draft-mtp n-max=4 · single-stream</text>
+<rect x="60" y="110" width="320" height="220" rx="12" fill="#1e293b" stroke="#334155"/>
+<text x="80" y="150" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="14">BASE · 150W · no MTP</text>
+<text x="80" y="210" fill="#f87171" font-family="ui-sans-serif,system-ui,sans-serif" font-size="48" font-weight="700">16.4</text>
+<text x="80" y="245" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="14">decode t/s</text>
+<text x="80" y="290" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">4k prefill 333 t/s</text>
+<rect x="460" y="110" width="360" height="220" rx="12" fill="#1e293b" stroke="#34d399"/>
+<text x="480" y="150" fill="#34d399" font-family="ui-monospace,monospace" font-size="14">MTP-4 · 165W</text>
+<text x="480" y="210" fill="#34d399" font-family="ui-sans-serif,system-ui,sans-serif" font-size="48" font-weight="700">24.8</text>
+<text x="480" y="245" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="14">decode t/s  (+51%)</text>
+<text x="480" y="290" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">4k prefill 361 t/s · draft accept ~0.71</text>
+<text x="40" y="380" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">180W MTP-4 peak in suite: 26.6 decode / 385 prefill (4k). ubatch=256 hurts prefill badly.</text>
+</svg>

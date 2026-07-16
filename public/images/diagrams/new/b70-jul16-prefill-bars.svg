@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#334155" stroke-width="0.5" opacity="0.35"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="560" fill="#0f172a"/>
+  <rect width="900" height="560" fill="url(#grid)"/>
+<text x="40" y="42" fill="#e2e8f0" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" font-weight="700">Prefill throughput (engine t/s)</text>
+<text x="40" y="68" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Long prompts only · short prompts are overhead-dominated and not charted as peaks</text>
+<text x="40" y="118" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Ornith ~4k pp</text>
+<rect x="250" y="100" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="100" width="671" height="26" rx="6" fill="#34d399" opacity="0.35" stroke="#34d399"/>
+<text x="931" y="118" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">1726</text>
+<text x="40" y="166" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen35-Q5 ~4k pp</text>
+<rect x="250" y="148" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="148" width="657" height="26" rx="6" fill="#22d3ee" opacity="0.35" stroke="#22d3ee"/>
+<text x="917" y="166" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">1690</text>
+<text x="40" y="214" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen35-Q4 ~4k pp</text>
+<rect x="250" y="196" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="196" width="654" height="26" rx="6" fill="#60a5fa" opacity="0.35" stroke="#60a5fa"/>
+<text x="914" y="214" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">1682</text>
+<text x="40" y="262" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Ornith Grok-sys pp</text>
+<rect x="250" y="244" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="244" width="505" height="26" rx="6" fill="#34d399" opacity="0.35" stroke="#34d399"/>
+<text x="765" y="262" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">1300</text>
+<text x="40" y="310" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Qwen27 MTP ~4k</text>
+<rect x="250" y="292" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="292" width="238" height="26" rx="6" fill="#fbbf24" opacity="0.35" stroke="#fbbf24"/>
+<text x="498" y="310" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">613</text>
+<text x="40" y="358" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 MTP ~2k</text>
+<rect x="250" y="340" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="340" width="180" height="26" rx="6" fill="#a78bfa" opacity="0.35" stroke="#a78bfa"/>
+<text x="440" y="358" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">465</text>
+<text x="40" y="406" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 MTP ~4k</text>
+<rect x="250" y="388" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="388" width="140" height="26" rx="6" fill="#a78bfa" opacity="0.35" stroke="#a78bfa"/>
+<text x="400" y="406" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">361</text>
+<text x="40" y="454" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="13">Gemma31 base ~4k</text>
+<rect x="250" y="436" width="700" height="26" rx="6" fill="#1e293b" stroke="#334155"/>
+<rect x="250" y="436" width="129" height="26" rx="6" fill="#f87171" opacity="0.35" stroke="#f87171"/>
+<text x="389" y="454" fill="#e2e8f0" font-family="ui-monospace,monospace" font-size="13">333</text>
+<text x="40" y="540" fill="#94a3b8" font-family="ui-monospace,monospace" font-size="12">MoE hits ~1.7k t/s long prefill; dense 31B stays ~330-500 t/s on this SYCL stack</text>
+</svg>
