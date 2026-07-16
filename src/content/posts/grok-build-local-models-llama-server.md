@@ -49,7 +49,7 @@ Grok is the **agent**. `llama-server` is the **engine**. Do not mix their metric
 1. Working `llama-server` with OpenAI routes:
    - `GET /v1/models`
    - `POST /v1/chat/completions`
-2. An API key accepted by the server (use your own; never publish it).
+2. An API key accepted by the server (choose your own; never publish it).
 3. Enough VRAM for your GGUF (B70 = 32 GB).
 4. Optional but recommended: profile switcher / systemd unit so you can hot-swap models.
 
