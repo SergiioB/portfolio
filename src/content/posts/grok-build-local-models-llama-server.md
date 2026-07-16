@@ -77,10 +77,10 @@ Docs: https://docs.x.ai/build/overview · Source: https://github.com/xai-org/gro
 ## 2) Confirm the local engine
 
 ```bash
-curl -sS -H "Authorization: Bearer <LOCAL_API_KEY> \
+curl -sS -H "Authorization: Bearer <LOCAL_API_KEY>" \
   http://127.0.0.1:8765/v1/models | jq .
 
-curl -sS -H "Authorization: Bearer <LOCAL_API_KEY> \
+curl -sS -H "Authorization: Bearer <LOCAL_API_KEY>" \
   -H "Content-Type: application/json" \
   http://127.0.0.1:8765/v1/chat/completions \
   -d '{
