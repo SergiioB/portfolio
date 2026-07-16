@@ -77,10 +77,10 @@ Docs: https://docs.x.ai/build/overview · Source: https://github.com/xai-org/gro
 ## 2) Confirm the local engine
 
 ```bash
-curl -sS -H "Authorization: Bearer <LOCAL_API_KEY>" \
+curl -sS -H "Authorization: Bearer YOUR_LOCAL_SERVER_API_KEY" \
   http://127.0.0.1:8765/v1/models | jq .
 
-curl -sS -H "Authorization: Bearer <LOCAL_API_KEY>" \
+curl -sS -H "Authorization: Bearer YOUR_LOCAL_SERVER_API_KEY" \
   -H "Content-Type: application/json" \
   http://127.0.0.1:8765/v1/chat/completions \
   -d '{
@@ -99,7 +99,7 @@ You want a healthy response and `timings.prompt_per_second` / `timings.predicted
 llama-server \
   --model /path/to/model.gguf \
   --host 0.0.0.0 --port 8765 \
-  --api-key <LOCAL_API_KEY> \
+  --api-key YOUR_LOCAL_SERVER_API_KEY \
   -a active \
   -dev SYCL0 --no-mmap --metrics --slots --jinja \
   --parallel 1 --n-gpu-layers 99 -ncmoe 0 \
@@ -166,7 +166,7 @@ Shell:
 
 ```bash
 export PATH="$HOME/.grok/bin:$PATH"
-export XAI_API_KEY="<LOCAL_API_KEY>"   # must match llama-server --api-key
+export XAI_API_KEY="YOUR_LOCAL_SERVER_API_KEY"   # must match llama-server --api-key
 ```
 
 Because every entry uses `model = "active"`, **switching intelligence means switching the server profile**, not inventing new remote model names:
@@ -273,7 +273,7 @@ switch-profile qwen35-q5-256k
 
 # 2) agent env
 export PATH="$HOME/.grok/bin:$PATH"
-export XAI_API_KEY="<LOCAL_API_KEY>"
+export XAI_API_KEY="YOUR_LOCAL_SERVER_API_KEY"
 
 # 3) work
 cd ~/code/my-app
