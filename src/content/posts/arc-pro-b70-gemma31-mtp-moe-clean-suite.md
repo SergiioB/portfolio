@@ -19,6 +19,7 @@ issue: "Short-prompt prefill looked terrible, dense Gemma needed a path that was
 solution: "Re-measure with engine timings at long prompt sizes, replace Gemma 26B with Gemma 4 31B + Unsloth MTP draft + vision mmproj, keep MoE profiles for speed, and run Grok Build with tools on."
 usedIn: "B70 profiles.json, llama-profile.service, Grok Build local models, LocalMaxxing submissions."
 impact: "MoE long prefill ~1.7k t/s and decode ~61-69 t/s; Gemma31 MTP-4 decode 16.4→24.8 t/s at 165W (+51%); agent wall times documented separately."
+amazonUrl: https://go.sergiiob.dev/arc-pro
 draft: false
 ---
 
@@ -28,12 +29,31 @@ This is a field note from **2026-07-16**, not a marketing roundup. Every number 
 
 **Hardware / stack**
 
-- GPU: Intel Arc Pro B70, 32 GB
+- GPU: Intel Arc Pro B70, 32 GB — [Amazon buy link](https://go.sergiiob.dev/arc-pro)
 - Backend: llama.cpp SYCL (`build-sycl-latest-l0`, b9853-class control)
 - API: `llama-server` on `:8765`, alias `active`
 - Batch: **1** (single-stream). Do not read these as concurrent fleet aggregates.
+- Public benchmarks: [LocalMaxxing @ SergiioB](https://www.localmaxxing.com/en/user/SergiioB)
+- Companion setup guide: [Grok Build with local models](/posts/grok-build-local-models-llama-server/)
+
+Hardware reference: [Intel Arc Pro B70 on Amazon](https://go.sergiiob.dev/arc-pro).
 
 ![B70 inference stack](/images/diagrams/new/b70-jul16-inference-stack.svg)
+
+## Master TG / PP table (engine, single-stream)
+
+**TG** = decode t/s · **PP** = prefill t/s · shared flags: `-b 8192 -ub 4096`, FA on, `ctk q8_0` / `ctv q4_1`, `-ngl 99`, `-ncmoe 0`, `--parallel 1`.
+
+| Profile                            | Arch        |   W |    **TG** | PP short | PP ~2k | **PP ~4k** | PP Grok-sys | p_n GS |
+| ---------------------------------- | ----------- | --: | --------: | -------: | -----: | ---------: | ----------: | -----: |
+| ornith35-q5-256k                   | MoE         | 150 | **69.27** |     23.2 |   1282 |   **1726** |        1300 |   1943 |
+| qwen35-q5-256k                     | MoE         | 150 | **61.54** |     58.7 |   1236 |   **1690** |        1264 |   1943 |
+| qwen35-q4-256k                     | MoE         | 150 | **62.76** |     20.9 |   1224 |   **1682** |        1246 |   1943 |
+| qwen27-mtp-q5-256k-165w            | Dense+MTP   | 165 | **25.07** |     14.5 |    646 |    **613** |         599 |   1943 |
+| gemma4-31b-mtp-q4-128k-165w        | Dense+MTP   | 165 | **24.08** |     15.6 |    466 |    **363** |         420 |   2003 |
+| gemma4-31b-mtp-q4-128k-vision-165w | Dense+MTP+V | 165 | **24.56** |     16.2 |    465 |    **362** |         419 |   2003 |
+
+Grok-sys uses the same ~8k-char system string; tokenizers differ (1943 vs 2003 tokens). Prefer **PP ~4k** for peak claims. LocalMaxxing `tokSPrefill` rows use the ~4k column.
 
 ## What changed on disk
 
