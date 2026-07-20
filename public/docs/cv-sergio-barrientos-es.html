@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sergio Barrientos - Ingeniero de Infraestructura AI</title>
+  <title>Sergio Barrientos - Ingeniero de Plataforma Linux</title>
   <style>
     :root {
       --text: #1a1a1a;
@@ -22,7 +22,30 @@
 
     @media print {
       body {
-        font-size: 9pt;
+        padding: 0 !important;
+        font-size: 8.7pt !important;
+        line-height: 1.32 !important;
+      }
+
+      :root {
+        --section-gap: 0.42rem;
+      }
+
+      .job {
+        margin-bottom: 0.34rem !important;
+      }
+
+      .job li,
+      .skills-grid,
+      .edu-row,
+      .language-row {
+        font-size: 8.1pt !important;
+      }
+
+      .job-meta,
+      .job-period,
+      .edu-detail {
+        font-size: 7.8pt !important;
       }
 
       .no-print {
@@ -232,7 +255,7 @@
 <body>
   <header class="header">
     <h1>SERGIO BARRIENTOS</h1>
-    <div class="subtitle">Ingeniero de Infraestructura AI</div>
+    <div class="subtitle">Ingeniero de Plataforma Linux | LLM locales y Edge AI</div>
     <div class="contact-row">
       <span>Madrid, España</span>
       <span>|</span>
@@ -247,14 +270,12 @@
   <section class="section">
     <h2>Perfil Profesional</h2>
     <p class="summary">
-      Ingeniero de Infraestructura Linux y AI con más de 3 años operando más de 300 servidores RHEL en
-      un entorno bancario regulado por BaFin/BCE. Especializado en modernización RHEL, automatización con
-      Ansible y operaciones empresariales de plataforma sobre VMware vSphere. Experiencia práctica profunda
-      desplegando y ajustando sistemas de IA generativa local — llama.cpp, optimización de runtime GGUF,
-      compute GPU con ROCm e inferencia edge en RK3588. Capacidad probada para comunicar conceptos técnicos
-      complejos de infraestructura y AI entre stakeholders técnicos y no técnicos, incluyendo PMs y líderes
-      de negocio. Combina operaciones Linux de nivel producción con prototipado y diseño de soluciones AI
-      hands-on.
+      Ingeniero de plataforma Linux con experiencia dando soporte a sistemas empresariales en banca y en el
+      sector ferroviario. Actualmente formo parte del equipo responsable de un parque de más de 300 servidores
+      RHEL en un banco supervisado por BaFin/BCE, trabajando en ciclo de vida, parcheo, automatización, VMware,
+      monitorización y alta disponibilidad. Fuera del puesto principal ejecuto y evalúo LLM locales sobre hardware
+      Intel, AMD y RK3588, además de desarrollar aplicaciones con funciones de IA. Combino operaciones Linux en
+      producción con experimentación práctica en inferencia local e IA aplicada.
     </p>
   </section>
 
@@ -266,50 +287,28 @@
         <div class="job-title">Ingeniero Linux y Virtualización <span class="job-company">| Deutsche Pfandbriefbank AG</span></div>
         <div class="job-period">Jul 2025 - Actualidad</div>
       </div>
-      <div class="job-meta">Jornada completa | Híbrido | Madrid, España | Banco supervisado por BaFin/BCE | más de 300 servidores Linux</div>
+      <div class="job-meta">Jornada completa | Híbrido | Madrid, España | Banco supervisado por BaFin/BCE | parque de más de 300 servidores</div>
       <ul>
-        <li><strong>Operación de plataforma:</strong> Parte del equipo de infraestructura Linux responsable de más de 300 servidores RHEL distribuidos en varios centros de datos para cargas críticas bancarias. Punto de referencia técnica para preguntas de infraestructura, conectando operaciones Linux con preocupaciones de capa de aplicación.</li>
-        <li><strong>Modernización RHEL:</strong> Liderando la migración escalonada de RHEL 7/8 a 9 con aprovisionamiento, parcheo y controles de cumplimiento basados en Satellite, manteniendo la continuidad del servicio — gestión del ciclo de vida end-to-end desde evaluación hasta producción.</li>
-        <li><strong>Automatización:</strong> Diseñé flujos con Ansible y Git para aprovisionamiento, parcheo y corrección de deriva de configuración, sustituyendo runbooks manuales por cambios auditables, revisados entre pares, e infraestructura como código.</li>
-        <li><strong>Operaciones:</strong> Gestión de actividades HA y DR sobre VMware vSphere y plataformas de aplicaciones como Nginx, Apache, Tomcat, JBoss y PostgreSQL. Resolución de problemas hands-on en el stack completo.</li>
-        <li><strong>Entrega GenAI:</strong> Desarrollo de casos de uso con Azure AI Foundry para extracción documental y automatización de procesos internos empresariales. Diseño de arquitecturas listas para producción para soluciones basadas en LLM, desde prompt engineering hasta integración API y monitoring.</li>
-        <li><strong>Colaboración cross-functional:</strong> Reconocido por PMs de proyecto como el traductor técnico capaz de explicar decisiones complejas de infraestructura a stakeholders no técnicos, facilitando gobernanza de proyecto más fluida y toma de decisiones más rápida.</li>
+        <li><strong>Operación de plataforma Linux:</strong> Trabajo dentro del equipo de infraestructura que da soporte a un parque de más de 300 servidores RHEL distribuidos entre varios centros de datos y cargas críticas bancarias.</li>
+        <li><strong>Ciclo de vida RHEL:</strong> Participo en trabajos de migración de RHEL 7/8 a 9 y utilizo Red Hat Satellite para aprovisionamiento centralizado, distribución de software, parcheo y gestión del ciclo de vida.</li>
+        <li><strong>Automatización:</strong> Desarrollo y mantengo playbooks de Ansible y flujos basados en Git para despliegues, cambios controlados de infraestructura y configuraciones reproducibles.</li>
+        <li><strong>Fiabilidad y seguridad:</strong> Doy soporte a ciclos de hardening y parcheo, monitorización con CheckMK, clústeres de alta disponibilidad, actividades de recuperación ante desastres y operaciones en VMware vSphere.</li>
+        <li><strong>Soporte de aplicaciones:</strong> Colaboro con responsables de aplicaciones para resolver requisitos Linux y problemas en servicios como Nginx, Apache, Tomcat, JBoss y PostgreSQL.</li>
+        <li><strong>GenAI aplicada:</strong> Participo en exploración interna y prototipos con Azure AI Foundry y Document Intelligence para casos de procesamiento documental y automatización.</li>
       </ul>
     </article>
 
     <article class="job">
       <div class="job-header">
-        <div class="job-title">Especialista Linux Red Hat / IT Application Specialist <span class="job-company">| Sopra Steria</span></div>
-        <div class="job-period">Nov 2023 - Jul 2025</div>
+        <div class="job-title">IT Application Specialist / Administrador de Sistemas Linux <span class="job-company">| Sopra Steria</span></div>
+        <div class="job-period">Abr 2023 - Jul 2025</div>
       </div>
-      <div class="job-meta">Jornada completa | Híbrido | Madrid, España | Sector ferroviario | más de 100 servidores</div>
+      <div class="job-meta">Prácticas seguidas de puesto a jornada completa | Híbrido | Madrid, España | Cliente del sector ferroviario noruego</div>
       <ul>
-        <li><strong>Coordinación técnica:</strong> Coordiné un equipo de 5 personas para el mantenimiento, parcheo y soporte de una aplicación crítica en más de 100 servidores Linux y Windows de Bane NOR, el operador ferroviario nacional de Noruega, cumpliendo consistentemente los objetivos de SLA.</li>
-        <li><strong>Automatización de sistemas:</strong> Mantuve el cumplimiento RHEL con Satellite y desarrollé automatizaciones Ansible que redujeron despliegues de horas a minutos — mejoras medibles de eficiencia entregadas en un sector regulado.</li>
-        <li><strong>Virtualización:</strong> Gestioné operaciones en VMware vSphere y vCenter, ciclo de vida de VMs y optimización de recursos en entornos cloud y on-prem.</li>
-        <li><strong>Operación empresarial:</strong> Gestioné incidencias y cambios en ServiceNow, además de integración de Active Directory y Kerberos para sistemas Linux. Disciplina operativa ITIL completa.</li>
-      </ul>
-    </article>
-
-    <article class="job">
-      <div class="job-header">
-        <div class="job-title">IT Application Specialist <span class="job-company">| Sopra Steria</span></div>
-        <div class="job-period">Abr 2023 - Ene 2025</div>
-      </div>
-      <div class="job-meta">Jornada completa | Madrid, España | Soporte empresarial multitecnología</div>
-      <ul>
-        <li>Di soporte a entornos Linux, Windows y cloud, consolidando la base operativa que después apliqué en funciones de ingeniería de plataforma Linux e infraestructura AI.</li>
-      </ul>
-    </article>
-
-    <article class="job">
-      <div class="job-header">
-        <div class="job-title">Becario de prácticas <span class="job-company">| Sopra Steria</span></div>
-        <div class="job-period">Abr 2023 - Jun 2023</div>
-      </div>
-      <div class="job-meta">Prácticas | Madrid, España</div>
-      <ul>
-        <li>Adquirí experiencia inicial en gestión de incidencias, servicios de directorio y flujos de soporte empresarial orientados a ITIL.</li>
+        <li><strong>Soporte Linux:</strong> Pasé de unas prácticas a un puesto a jornada completa y posteriormente a una función centrada en Linux, resolviendo problemas en entornos Red Hat Linux, Windows y Azure.</li>
+        <li><strong>Automatización:</strong> Utilicé Ansible para automatizar tareas repetibles de administración y despliegue, y di soporte a actividades del ciclo de vida RHEL con Red Hat Satellite.</li>
+        <li><strong>Operación empresarial:</strong> Gestioné incidencias, peticiones y cambios controlados mediante ServiceNow dentro de un modelo de soporte alineado con ITIL.</li>
+        <li><strong>Identidad y colaboración:</strong> Di soporte a Active Directory, Kerberos, Entra ID, Intune y Exchange, trabajando en inglés con un cliente noruego.</li>
       </ul>
     </article>
   </section>
@@ -321,41 +320,28 @@
       <span class="skill-value">RHEL 7/8/9, Red Hat Satellite, LVM, systemd, SELinux, Kickstart, HA/DR, ajuste de rendimiento</span>
 
       <span class="skill-label">Automatización / IaC</span>
-      <span class="skill-value">Ansible, scripting Bash, flujos Git, pipelines CI/CD, infraestructura como código</span>
+      <span class="skill-value">Ansible, scripting Bash, flujos basados en Git, configuración reproducible de infraestructura</span>
 
       <span class="skill-label">Infraestructura AI</span>
-      <span class="skill-value">llama.cpp, cuantización GGUF, compute GPU ROCm, inferencia edge RK3588, ajuste KV-cache, benchmarking LLM locales, flujos RAG, Azure AI Foundry</span>
+      <span class="skill-value">llama.cpp, cuantización GGUF, Intel SYCL, AMD ROCm, inferencia en RK3588, ajuste de KV cache, pruebas de concurrencia y benchmarks de LLM locales</span>
 
       <span class="skill-label">Plataformas / Servicios</span>
       <span class="skill-value">VMware vSphere/vCenter, Nginx, Apache HTTP Server, Tomcat, JBoss Web Server, PostgreSQL, SSL/TLS</span>
 
       <span class="skill-label">Cloud / GenAI</span>
-      <span class="skill-value">Microsoft Azure, Azure AI Foundry, Document Intelligence, prototipado LLM, arquitectura de soluciones</span>
+      <span class="skill-value">Microsoft Azure, Azure AI Foundry, Document Intelligence, prototipado con LLM y Firebase</span>
 
       <span class="skill-label">Operaciones</span>
       <span class="skill-value">CheckMK, ServiceNow, Active Directory, integración Kerberos, ITIL, gestión de cambios</span>
     </div>
   </section>
 
-  <section class="section">
-    <h2>Proyectos de IA Destacados</h2>
-    <div class="job">
-      <ul>
-        <li><strong>llamacpp-workbench:</strong> Diseñé y publiqué una interfaz remota para <code>llama.cpp</code> y modelos GGUF con gestión de modelos, ajuste de runtime y KV-cache, chat en streaming y perfiles RK3588 respaldados por benchmarks.</li>
-        <li><strong>Portfolio de IA aplicada:</strong> Documento trabajo real sobre Azure AI Foundry, inteligencia documental, inferencia local y ajuste de rendimiento en hardware limitado — 40+ case studies en sergiiob.dev.</li>
-      </ul>
-    </div>
-  </section>
 
   <section class="section">
     <h2>Certificaciones y Formación</h2>
     <div class="edu-row">
       <span class="edu-title">RHCSA - Red Hat Certified System Administrator</span>
       <span class="edu-detail">Sep 2024</span>
-    </div>
-    <div class="edu-row">
-      <span class="edu-title">RHCE - Red Hat Certified Engineer</span>
-      <span class="edu-detail">En progreso — objetivo 2026</span>
     </div>
     <div class="edu-row">
       <span class="edu-title">Técnico Superior en Administración de Sistemas Informáticos en Red</span>
@@ -368,18 +354,9 @@
     <div class="language-row">
       <span><strong>Español:</strong> Nativo</span>
       <span><strong>Inglés:</strong> Nivel profesional</span>
-      <span><strong>Francés:</strong> Básico</span>
     </div>
   </section>
 
-  <section class="section">
-    <h2>Portfolio</h2>
-    <p class="portfolio-copy">
-      <a href="https://sergiiob.dev/">sergiiob.dev</a> - Portfolio de ingeniería con más de 40 casos prácticos
-      estructurados sobre automatización de infraestructura, ciclo de vida RHEL, operaciones de plataforma,
-      ingeniería de IA local e integración de IA aplicada.
-    </p>
-  </section>
 
   <div class="print-bar no-print">
     <button class="print-btn" onclick="window.print()">Guardar como PDF</button>
