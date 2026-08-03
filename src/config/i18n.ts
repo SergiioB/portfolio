@@ -140,12 +140,12 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Ingeniería de sistemas · IA local · producto",
   },
   "exec.heroTitle": {
-    en: "I build production systems that are meant to be maintained.",
-    es: "Construyo sistemas de producción diseñados para mantenerse.",
+    en: "Linux infra, local AI, shipped apps.",
+    es: "Infra Linux, IA local, apps publicadas.",
   },
   "exec.heroLede": {
-    en: "Enterprise Linux operations, local inference experiments and production Android apps, documented with the trade-offs left in.",
-    es: "Operaciones Linux corporativas, experimentos de inferencia local y apps Android en producción, documentados sin ocultar las decisiones difíciles.",
+    en: "Enterprise Linux operations, LLM inference on Intel Arc Pro B70, and production Android apps — documented with the trade-offs left in.",
+    es: "Operaciones Linux corporativas, inferencia LLM en Intel Arc Pro B70 y apps Android en producción — documentados sin ocultar las decisiones difíciles.",
   },
   "exec.exploreNotes": { en: "Explore field notes", es: "Explorar notas técnicas" },
   "exec.viewProfile": { en: "Profile + CV", es: "Perfil + CV" },
