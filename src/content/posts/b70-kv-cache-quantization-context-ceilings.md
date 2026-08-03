@@ -25,6 +25,12 @@ tags:
 draft: false
 ---
 
+> **Superseded (2026-08-04):** This post champions `q5_0 K + q4_1 V` KV cache, which has been
+> **upgraded to `q8_0 K + q4_1 V`** — the current fleet standard. The q8_0 K config halves the
+> KL-divergence (~0.003 vs ~0.008) at only ~6% more VRAM. The "would OOM with q8_0" claim below
+> is no longer accurate. For the current config with measured VRAM boundaries, see
+> [Intel Arc Pro B70: The Complete Local LLM Recipe](/posts/intel-arc-pro-b70-full-recipe-llama-cpp-sycl).
+
 ## Situation
 
 The Intel Arc Pro B70 has 32GB of GDDR6 VRAM. That is a generous budget for local inference, but once you start pushing high-context windows, the KV cache becomes the dominant memory consumer.

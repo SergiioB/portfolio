@@ -26,6 +26,12 @@ tags:
 draft: false
 ---
 
+> **Update (2026-08-04):** This post documents the original SYCL crash fix from build b9853.
+> The KV config has since been upgraded to **q8_0 K + q4_1 V** and the build advanced to **b10222**
+> (+6-13% improvement). For the current full recipe, see
+> [Intel Arc Pro B70: The Complete Local LLM Recipe](/posts/intel-arc-pro-b70-full-recipe-llama-cpp-sycl).
+> The SYCL_CACHE_PERSISTENT fix and libze-dev requirement below are still valid.
+
 ## Situation
 
 I wanted a clean answer to a very specific question:

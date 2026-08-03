@@ -25,6 +25,12 @@ tags:
 draft: false
 ---
 
+> **Updated (2026-08-04):** The numbers below are from build b9851 with `q5_0-q4_1` KV cache on
+> `Qwen3.6-27B-MTP`. The current production model is **ThinkingCap-Qwen3.6-27B** on build **b10222**
+> with **q8_0 K + q4_1 V** KV. MTP-4 gain is now measured at **+35-50%** (93-94% acceptance, not
+> 95.35%). The methodology corrections (warmup discard, diverse prompts) are still valid.
+> For current numbers, see [Qwen3 27B on B70: Full Recipe](/posts/qwen3-27b-thinkingcap-b70-full-recipe).
+
 ## Situation
 
 I was running a power scaling sweep for MTP-4 speculative decoding on Qwen 27B. The goal was to map the throughput curve from 150W to 230W and find the optimal power cap for sustained inference.
