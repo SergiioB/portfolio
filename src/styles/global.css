@@ -59,17 +59,17 @@
 [data-theme="dark"] {
   --bg: #0b1120;
   --bg-alt: #010409;
-  --surface: #111827;
-  --surface-muted: #1e293b;
+  --surface: #141d2f;
+  --surface-muted: #1c2840;
   --surface-strong: #334155;
-  --border: #1e293b;
-  --border-strong: #334155;
+  --border: #2a3a55;
+  --border-strong: #3d5070;
   --ring: rgba(88, 166, 255, 0.4);
   --text: #cbd5e1;
   --text-strong: #f8fafc;
   --text-code: #98f5b5;
   --text-soft: #94a3b8;
-  --text-muted: #64748b;
+  --text-muted: #8b9bb5;
   --heading: #f8fafc;
   --heading-2: #79c0ff;
   --heading-3: #e2c1ff;
@@ -1645,11 +1645,12 @@ li + li {
 .tag {
   border-radius: 999px;
   border: 1px solid var(--border);
-  padding: 0.15rem 0.48rem;
-  background: var(--surface-muted);
+  padding: 0.18rem 0.52rem;
+  background: var(--surface);
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: var(--text);
+  opacity: 0.85;
 }
 
 .post-date {
@@ -1996,18 +1997,18 @@ li + li {
 
 .case-card h3 {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
+  color: var(--link);
   margin: 0;
 }
 
 .case-card p {
   margin: 0.4rem 0 0;
   color: var(--text);
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .article-content {
