@@ -1,0 +1,200 @@
+---
+// Layout variant B: Compact hero, 3-pillar structure, no topology in hero
+import { getCollection } from "astro:content";
+
+import ExecutiveSidebar from "../components/ExecutiveSidebar.astro";
+import { SITE } from "../config/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../utils/paths";
+
+const posts = await getCollection("posts");
+const publishedPosts = posts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const selectedPosts = publishedPosts.slice(0, 6);
+const featuredPost = selectedPosts[0];
+const supportingPosts = selectedPosts.slice(1);
+const postUrl = (post) => withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
+const categoryToClass = (category) =>
+  `post-category-${category
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`;
+---
+
+<BaseLayout
+  title={`${SITE.author} | Linux, AI Infrastructure & Product Engineering`}
+  description={SITE.description}
+  layoutMode="executive"
+>
+  <div class="executive-home">
+    <ExecutiveSidebar currentPath={Astro.url.pathname} />
+    <main class="executive-main home-fieldbook">
+      {/* HERO — compact, no topology, 3 pillars inline */}
+      <section class="field-hero variant-hero" aria-labelledby="home-heading">
+        <div class="field-hero-copy">
+          <p class="field-kicker">
+            <span>SYS.01</span>
+            <span>Systems engineering · local AI · product</span>
+          </p>
+          <h1 id="home-heading">Linux infra, local AI, shipped apps.</h1>
+          <p class="field-hero-lede">
+            Enterprise operations, LLM inference on Intel Arc, and production Android apps —
+            documented with the trade-offs left in.
+          </p>
+          <div class="field-hero-actions">
+            <a class="field-button field-button-primary" href={withBase("archive/")}>
+              <span>Explore field notes</span><span aria-hidden="true">↗</span>
+            </a>
+            <a class="field-button" href={withBase("about/")}>
+              <span>Profile + CV</span><span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 3 PILLARS */}
+      <section class="variant-pillars" aria-label="Core domains">
+        <a class="variant-pillar" href={withBase("category/infrastructure/")}>
+          <span class="variant-pillar-icon">⌘</span>
+          <h3>Enterprise Linux</h3>
+          <p>Hardened servers, automated deployments, observability stacks.</p>
+        </a>
+        <a class="variant-pillar" href={withBase("category/local-ai/")}>
+          <span class="variant-pillar-icon">◆</span>
+          <h3>Local AI Lab</h3>
+          <p>Intel Arc Pro B70 inference, KV cache tuning, llama.cpp SYCL benchmarks.</p>
+        </a>
+        <a class="variant-pillar" href={withBase("category/automation/")}>
+          <span class="variant-pillar-icon">▶</span>
+          <h3>Production Apps</h3>
+          <p>Kotlin Android apps on Play Store. Offline-first, privacy-respecting.</p>
+        </a>
+      </section>
+
+      {/* RECENT NOTES */}
+      <section class="field-section notes-section" aria-labelledby="notes-heading">
+        <header class="field-section-header notes-heading-row">
+          <div>
+            <span class="field-section-index">02</span>
+            <div>
+              <p>Recent Field Notes</p>
+              <h2 id="notes-heading">Measured, failed, fixed, documented.</h2>
+            </div>
+          </div>
+          <a class="field-text-link" href={withBase("archive/")}>
+            <span>{publishedPosts.length}</span>
+            <span>View Full Archive</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </header>
+        <div class="notes-layout">
+          {
+            featuredPost && (
+              <a href={postUrl(featuredPost)} class="featured-note">
+                <div class="featured-note-meta">
+                  <span>Latest signal</span>
+                  <time datetime={featuredPost.data.pubDate.toISOString()}>
+                    {featuredPost.data.pubDate.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </time>
+                </div>
+                <h3>{featuredPost.data.title}</h3>
+                <p>{featuredPost.data.description}</p>
+                <div class="featured-note-footer">
+                  <div class="executive-category-pills">
+                    {featuredPost.data.category.map((category) => (
+                      <span class:list={["post-category", categoryToClass(category)]}>
+                        {category}
+                      </span>
+                    ))}
+                  </div>
+                  <span aria-hidden="true">READ ↗</span>
+                </div>
+              </a>
+            )
+          }
+          <div class="note-list">
+            {
+              supportingPosts.map((post, index) => (
+                <a href={postUrl(post)} class="note-row">
+                  <span class="note-row-index">{String(index + 2).padStart(2, "0")}</span>
+                  <div>
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {post.data.pubDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <h3>{post.data.title}</h3>
+                  </div>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <style is:global>
+    .variant-hero {
+      display: block !important;
+      min-height: auto !important;
+      padding: 1rem 0 !important;
+    }
+    .variant-hero .field-hero-copy {
+      max-width: 680px;
+    }
+    .variant-hero h1 {
+      max-width: none !important;
+      font-size: clamp(2rem, 3.2vw, 3rem) !important;
+    }
+    .variant-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    .variant-pillar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      text-decoration: none;
+      color: inherit;
+      transition:
+        border-color 0.2s,
+        transform 0.2s;
+    }
+    .variant-pillar:hover {
+      border-color: var(--link);
+      transform: translateY(-2px);
+    }
+    .variant-pillar-icon {
+      font-size: 1.4rem;
+      color: var(--link);
+    }
+    .variant-pillar h3 {
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .variant-pillar p {
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: var(--text-soft);
+      margin: 0;
+    }
+    @media (max-width: 768px) {
+      .variant-pillars {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</BaseLayout>

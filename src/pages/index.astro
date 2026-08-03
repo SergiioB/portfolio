@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 
-import AsciiTopology from "../components/AsciiTopology.astro";
 import ExecutiveSidebar from "../components/ExecutiveSidebar.astro";
 import { SITE } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -39,12 +38,10 @@ const categoryToClass = (category: string) =>
             <span>SYS.01</span>
             <span data-i18n="exec.heroKicker">Systems engineering · local AI · product</span>
           </p>
-          <h1 id="home-heading" data-i18n="exec.heroTitle">
-            I build systems that stay understandable under pressure.
-          </h1>
+          <h1 id="home-heading" data-i18n="exec.heroTitle">Linux infra, local AI, shipped apps.</h1>
           <p class="field-hero-lede" data-i18n="exec.heroLede">
-            Enterprise Linux operations, local inference experiments and production Android apps,
-            documented with the trade-offs left in.
+            Enterprise Linux operations, LLM inference on Intel Arc Pro B70, and production Android
+            apps — documented with the trade-offs left in.
           </p>
           <div class="field-hero-actions">
             <a class="field-button field-button-primary" href={withBase("archive/")}>
@@ -52,21 +49,26 @@ const categoryToClass = (category: string) =>
                 >↗</span
               >
             </a>
-            <a class="field-button" href={withBase("about/")}>
-              <span data-i18n="exec.viewProfile">Profile + CV</span><span aria-hidden="true">→</span
-              >
-            </a>
-          </div>
-          <div class="field-proof" aria-label="Areas of work">
-            <span
-              ><i></i><strong data-i18n="exec.proofEnterprise">Enterprise operations</strong></span
-            >
-            <span><i></i><strong data-i18n="exec.proofLocal">Local AI lab</strong></span>
-            <span><i></i><strong data-i18n="exec.proofProducts">Shipped software</strong></span>
           </div>
         </div>
 
-        <AsciiTopology />
+        <div class="field-hero-pillars" aria-label="Core domains">
+          <a class="hero-pillar" href={withBase("category/infrastructure/")}>
+            <span class="hero-pillar-icon">⌘</span>
+            <h3>Enterprise Linux</h3>
+            <p>Hardened servers, automated deployments, observability stacks.</p>
+          </a>
+          <a class="hero-pillar" href={withBase("category/local-ai/")}>
+            <span class="hero-pillar-icon">◆</span>
+            <h3>Local AI Lab</h3>
+            <p>Intel Arc Pro B70 inference, KV cache tuning, llama.cpp SYCL benchmarks.</p>
+          </a>
+          <a class="hero-pillar" href={withBase("category/automation/")}>
+            <span class="hero-pillar-icon">▶</span>
+            <h3>Production Apps</h3>
+            <p>Kotlin Android apps on Play Store. Offline-first, privacy-respecting.</p>
+          </a>
+        </div>
       </section>
 
       <section class="field-section" aria-labelledby="apps-heading">

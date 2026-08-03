@@ -6278,11 +6278,55 @@ h3 {
 /* Hero */
 .field-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.75fr) minmax(460px, 1.25fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
   gap: clamp(1.5rem, 2.5vw, 2.5rem);
   align-items: center;
-  min-height: min(480px, calc(100vh - 8rem));
+  min-height: min(400px, calc(100vh - 10rem));
   padding: clamp(0.5rem, 1.5vw, 1.5rem) 0;
+}
+
+.field-hero-pillars {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.hero-pillar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.hero-pillar:hover {
+  border-color: var(--link);
+  transform: translateY(-2px);
+}
+
+.hero-pillar-icon {
+  font-size: 1.2rem;
+  color: var(--link);
+  line-height: 1;
+}
+
+.hero-pillar h3 {
+  font-size: 0.92rem;
+  margin: 0;
+  color: var(--text-strong);
+}
+
+.hero-pillar p {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-soft);
+  margin: 0;
 }
 
 .field-kicker {
@@ -6305,11 +6349,11 @@ h3 {
 }
 
 .field-hero h1 {
-  max-width: 13ch;
-  font-size: clamp(2.65rem, 4.4vw, 4.6rem);
+  max-width: 18ch;
+  font-size: clamp(2.2rem, 3.8vw, 3.8rem);
   font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   overflow-wrap: normal;
   word-break: normal;
   text-wrap: balance;
