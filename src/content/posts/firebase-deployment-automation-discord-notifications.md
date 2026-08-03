@@ -6,7 +6,7 @@ issue: "Manual Firebase deployments are easy to mis-target (wrong project/hostin
 solution: "Centralized deployment configuration into an `accounts.json` profile, added API endpoints for account switching, and integrated Discord webhooks for start/success/failure notifications with log snippets."
 usedIn: "Used in RADXA AI Suite deployment automation documentation and tooling."
 impact: "Reduced human error risk during deploys and made deployments observable via structured configuration and Discord notifications."
-pubDate: 2024-02-28
+pubDate: 2026-02-28
 category: "cloud"
 tags: ["firebase", "devops", "automation", "discord", "deployments"]
 draft: false

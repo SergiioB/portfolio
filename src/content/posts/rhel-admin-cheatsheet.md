@@ -6,7 +6,7 @@ issue: "No single source of truth for common RHEL administration commands, leadi
 solution: "Created a living cheatsheet covering systemd, LVM, networking, user management, and troubleshooting - the commands used daily in our environment."
 usedIn: "RHEL platform administration at a German bank, covering 200+ servers running SAP, PostgreSQL, and middleware."
 impact: "Reduced onboarding time for new engineers by 50% and became the go-to reference for the entire Linux team."
-pubDate: 2024-01-30
+pubDate: 2026-01-30
 category: "infrastructure"
 tags: ["Linux", "RHEL", "SystemAdmin", "CLI"]
 draft: false

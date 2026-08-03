@@ -6,7 +6,7 @@ issue: "I was using an aggressive `Q5_0` quantization for the Key (K) cache and 
 solution: "Researched the Kullback-Leibler (KL) divergence of various KV cache quantization formats in llama.cpp. Discovered that the Key cache is highly sensitive to precision loss due to dot-product attention mechanics. Shifted to a hybrid `K=Q8_0 / V=Q4_1` profile."
 usedIn: "Production inference configuration for massive context lengths on 32GB GPUs."
 impact: "Restored near-FP16 reasoning quality (KL divergence of ~0.004) while maintaining a small enough memory footprint to keep the 256K context window viable."
-pubDate: 2024-07-06
+pubDate: 2026-07-06
 category: "local-ai"
 tags: ["llama-cpp", "hardware-tuning", "machine-learning", "ai", "local-ai", "quantization"]
 draft: false

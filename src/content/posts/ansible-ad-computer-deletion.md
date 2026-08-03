@@ -6,7 +6,7 @@ issue: "Needed a repeatable way to use Ansible and adcli to safely remove a Linu
 solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
 usedIn: "Used in Ansible playbook pipelines for provisioning, patching, and decommissioning with audit requirements."
 impact: "Reduced manual steps and change variance while improving deployment consistency."
-pubDate: 2024-02-27
+pubDate: 2026-02-27
 category: "automation"
 tags: ["ansible", "active-directory", "decommission", "linux"]
 draft: false

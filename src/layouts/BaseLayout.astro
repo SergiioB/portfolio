@@ -133,13 +133,19 @@ const csp = [
       })}
     />
 
-    <!-- Theme Setup Script (Anti-FOUC) -->
+    <!-- Theme Setup Script (Anti-FOUC + persists across view transitions/back-nav) -->
     <script is:inline>
-      const savedTheme = localStorage.getItem("theme");
-      const prefersDark =
-        window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-      document.documentElement.setAttribute("data-theme", initialTheme);
+      const applySavedTheme = () => {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark =
+          window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = savedTheme || (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      };
+      applySavedTheme();
+      // Re-apply after every Astro view transition (back/forward nav resets <html> attrs)
+      document.addEventListener("astro:page-load", applySavedTheme);
+      document.addEventListener("astro:after-swap", applySavedTheme);
     </script>
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
@@ -272,12 +278,10 @@ const csp = [
       document.addEventListener("astro:page-load", setupThemeToggle);
     </script>
     <script is:inline>
-      // Interactive background grid mask
+      // Interactive background grid mask (pixel-precise so glow tracks the cursor exactly)
       document.addEventListener("mousemove", (e) => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
-        document.body.style.setProperty("--mouse-x", `${x}%`);
-        document.body.style.setProperty("--mouse-y", `${y}%`);
+        document.body.style.setProperty("--mouse-x", `${e.clientX}px`);
+        document.body.style.setProperty("--mouse-y", `${e.clientY}px`);
       });
     </script>
   </body>

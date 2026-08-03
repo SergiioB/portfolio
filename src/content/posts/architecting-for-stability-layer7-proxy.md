@@ -1,7 +1,7 @@
 ---
 title: "Architecting for Stability: Replacing Legacy IP-Binding with Layer 7 Proxy Routing"
 description: "A case study on resolving application vs network conflicts by migrating from legacy OS-level IP aliasing to a robust reverse proxy architecture."
-pubDate: 2024-03-10
+pubDate: 2026-03-10
 category: "infrastructure"
 tags: ["linux", "architecture", "proxy", "networking", "tomcat"]
 draft: false

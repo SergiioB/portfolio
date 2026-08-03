@@ -6,7 +6,7 @@ issue: "Manual software installations were time-consuming, inconsistent across s
 solution: "Developed Ansible patterns for silent installations with templated response files, pre-requisite validation, and idempotent deployment checks."
 usedIn: "Enterprise software deployment at a German bank, including SAS, Oracle clients, and middleware components across 50+ servers."
 impact: "Reduced software installation time from hours to minutes, enabled consistent DR rebuilds, and eliminated installation-related configuration drift."
-pubDate: 2024-02-25
+pubDate: 2026-02-25
 category: ["infrastructure", "automation"]
 tags: ["ansible", "silent-install", "enterprise-software", "automation"]
 draft: false

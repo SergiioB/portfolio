@@ -6,7 +6,7 @@ issue: "Lack of understanding about stretched networks, leaf-spine trade-offs, a
 solution: "Documented the stretched network architecture, analyzed application traffic flows, and provided clear guidance on which applications were suitable for stretched L2 vs. Layer 3 approaches."
 usedIn: "Disaster recovery architecture at a German bank, supporting SAP and critical middleware across two data centers."
 impact: "Enabled informed architecture decisions, reduced project risk by clarifying trade-offs, and provided a reference for future DR projects."
-pubDate: 2024-02-28
+pubDate: 2026-02-28
 category: "infrastructure"
 tags: ["networking", "leaf-spine", "disaster-recovery", "architecture"]
 draft: false

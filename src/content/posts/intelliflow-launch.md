@@ -6,7 +6,7 @@ issue: "Needed a repeatable way to leverage AI scaffolding to focus on infrastru
 solution: "Implemented a practical runbook/automation pattern with clear safety checks, execution steps, and verification points."
 usedIn: "Used in cloud projects that required security-first architecture and reliable service behavior."
 impact: "Improved delivery speed while preserving security and operational control. App now live on Google Play Store."
-pubDate: 2024-02-18
+pubDate: 2026-02-18
 updatedDate: 2026-03-03
 category: "kotlin"
 tags: ["GoogleCloud", "Android", "Security", "DevOps", "Firebase"]

@@ -6,7 +6,7 @@ issue: "No clear separation between dev and prod environments, inconsistent vari
 solution: "Implemented a standardized repository structure with separate inventory directories, clear group_vars/host_vars hierarchy, and environment-specific variable overrides."
 usedIn: "Enterprise Linux platform at a German bank, supporting 200+ servers across dev, test, and prod environments."
 impact: "Eliminated cross-environment accidents, reduced onboarding time for new engineers, and made variable debugging straightforward."
-pubDate: 2024-01-20
+pubDate: 2026-01-20
 category: ["infrastructure", "automation"]
 tags: ["ansible", "iac", "devops", "architecture"]
 draft: false

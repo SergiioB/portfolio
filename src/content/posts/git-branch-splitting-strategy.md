@@ -6,7 +6,7 @@ issue: "Mixed branches make PRs unreviewable, increase blast radius, and risk dr
 solution: "Split the oversized branch into multiple clean, topic-focused branches by checking out only the relevant paths from the mixed branch into new branches created fresh off main."
 usedIn: "Enterprise Ansible repositories managing 200+ servers where PR hygiene directly affects production safety and review speed."
 impact: "Reduced PR review time from days to hours, eliminated cross-concern regressions, and made rollback granular enough to revert one topic without reverting all of them."
-pubDate: 2024-04-16
+pubDate: 2026-04-16
 category: ["automation", "infrastructure"]
 tags: ["git", "devops", "ansible", "workflow", "version-control"]
 draft: false

@@ -6,7 +6,7 @@ issue: "The backend AI needed to recognize user intent and categorize vehicle pa
 solution: "Implemented comprehensive multi-language keyword dictionaries, extracted user language context directly from client requests, and used mapping dictionaries to serve localized response templates."
 usedIn: "Used in a serverless Node.js backend to manage AI-driven logic for a mobile application."
 impact: "Allowed seamless scaling to new markets without duplicating the core predictive algorithms, maintaining a single source of truth for part categorization."
-pubDate: 2024-02-14
+pubDate: 2026-02-14
 category: "ai"
 tags: ["nodejs", "multilingual", "llm", "architecture"]
 draft: false

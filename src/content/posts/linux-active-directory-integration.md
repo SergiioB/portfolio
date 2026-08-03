@@ -6,7 +6,7 @@ issue: "AD integration was fragmented across multiple playbooks with no unified 
 solution: "Implemented a unified AD integration strategy: AD group mapping for sudo access, automated Kerberos keytab deployment via Ansible, and standardized PAM configuration across all servers."
 usedIn: "Enterprise Linux platform at a German bank, supporting 200+ servers with SAP, PostgreSQL, and middleware workloads."
 impact: "Reduced access provisioning time from days to hours, eliminated manual sudoers edits, and reduced PAM-related incidents by 90%."
-pubDate: 2024-03-03
+pubDate: 2026-03-03
 category: "infrastructure"
 tags: ["linux", "active-directory", "kerberos", "sssd", "pam", "ansible", "sso"]
 draft: false

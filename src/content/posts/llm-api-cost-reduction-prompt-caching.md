@@ -6,7 +6,7 @@ issue: "Large Language Models charge per token. When you send a 1,000-token syst
 solution: "Restructured the API payload to isolate static system instructions so the backend can take advantage of cached-input pricing or prompt caching features where the provider supports it."
 usedIn: "Evaluated for a Node.js backend of an AI conversational assistant using an OpenAI-compatible chat API."
 impact: "Modeled a ~60% reduction in total LLM spend in scenarios where cached-input pricing is available and the system prompt stays byte-identical across requests."
-pubDate: 2024-02-12
+pubDate: 2026-02-12
 category: "ai"
 tags: ["llm", "cost-optimization", "architecture", "caching"]
 draft: false

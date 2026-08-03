@@ -1,7 +1,7 @@
 ---
 title: "Implementing Google's TurboQuant: Hybrid KV Cache for Edge LLM Deployment"
 description: "How I implemented hybrid per-layer KV cache quantization on RK3588 using insights from Google's TurboQuant research, achieving 17% better compression with zero quality loss."
-pubDate: 2024-03-25
+pubDate: 2026-03-25
 updatedDate: 2026-03-25
 category: "local-ai"
 tags:

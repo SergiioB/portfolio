@@ -6,7 +6,7 @@ issue: "Processing millions of high-velocity data points per second for immediat
 solution: "A technical deep dive into F1's AWS 'Track Pulse' architecture utilizing Kinesis sharding and DynamoDB caching, compared alongside Formula E's GCP HTAP architecture leveraging Pub/Sub, AlloyDB's columnar engine, and Vertex AI for real-time coaching."
 usedIn: "Researching modern high-throughput IoT edge-to-cloud architectures for autonomous vehicle frameworks."
 impact: "Explains how F1 processes 1.1 million data points per second via AWS, and how FE leverages Google Cloud AlloyDB for 100x faster HTAP analytics on live telemetry, enabling real-time GenAI driver agents."
-pubDate: 2024-03-22
+pubDate: 2026-03-22
 updatedDate: 2026-03-22
 category: "cloud"
 tags:

@@ -56,10 +56,52 @@ const categoryToClass = (category: string) =>
         <AsciiTopology />
       </section>
 
-      <section class="field-section" aria-labelledby="apps-heading">
+      <section class="field-section lab-section" aria-labelledby="lab-heading">
         <header class="field-section-header">
           <div>
             <span class="field-section-index">01</span>
+            <div>
+              <p>Local AI Lab</p>
+              <h2 id="lab-heading">One GPU, measured to the token.</h2>
+            </div>
+          </div>
+          <p>
+            Intel Arc Pro B70 32GB running llama.cpp SYCL — every number below is hardware-measured,
+            not estimated.
+          </p>
+        </header>
+
+        <div class="lab-grid">
+          <a
+            class="lab-stat"
+            href={withBase("posts/intel-arc-pro-b70-full-recipe-llama-cpp-sycl/")}
+          >
+            <span class="lab-stat-value">70<em> t/s</em></span>
+            <span class="lab-stat-label">MoE 35B decode @ 512K ctx</span>
+            <span class="lab-stat-sub">Q4_K_XL · 1659 t/s prefill</span>
+          </a>
+          <a class="lab-stat" href={withBase("posts/qwen3-27b-thinkingcap-b70-full-recipe/")}>
+            <span class="lab-stat-value">29<em> t/s</em></span>
+            <span class="lab-stat-label">Dense 27B + MTP-4 @ 256K</span>
+            <span class="lab-stat-sub">+50% speculative gain</span>
+          </a>
+          <a class="lab-stat" href={withBase("posts/kv-cache-quantization-kl-divergence/")}>
+            <span class="lab-stat-value">0.003<em> KL</em></span>
+            <span class="lab-stat-label">q8_0 K + q4_1 V cache</span>
+            <span class="lab-stat-sub">~50% VRAM, near-lossless</span>
+          </a>
+          <a class="lab-stat" href={withBase("posts/b70-kv-cache-quantization-context-ceilings/")}>
+            <span class="lab-stat-value">512<em>K</em></span>
+            <span class="lab-stat-label">max context on 32GB</span>
+            <span class="lab-stat-sub">MoE reads 3.8× less KV</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="field-section" aria-labelledby="apps-heading">
+        <header class="field-section-header">
+          <div>
+            <span class="field-section-index">02</span>
             <div>
               <p data-i18n="exec.productionApps">Production Apps</p>
               <h2 id="apps-heading" data-i18n="exec.appsHeading">
@@ -163,7 +205,7 @@ const categoryToClass = (category: string) =>
           <span> └─ read()</span>
         </div>
         <div class="handbook-copy">
-          <p><span>02</span> <span data-i18n="exec.educationalSeries">Educational Series</span></p>
+          <p><span>03</span> <span data-i18n="exec.educationalSeries">Educational Series</span></p>
           <h2 id="handbook-heading" data-i18n="exec.handbookTitle">
             The LLM Infrastructure Handbook
           </h2>
@@ -181,7 +223,7 @@ const categoryToClass = (category: string) =>
       <section class="field-section notes-section" aria-labelledby="notes-heading">
         <header class="field-section-header notes-heading-row">
           <div>
-            <span class="field-section-index">03</span>
+            <span class="field-section-index">04</span>
             <div>
               <p data-i18n="exec.recentNotes">Recent Field Notes</p>
               <h2 id="notes-heading" data-i18n="exec.notesHeading">

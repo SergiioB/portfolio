@@ -6,7 +6,7 @@ issue: "Ansible playbooks that worked on the control node failed on execution en
 solution: "Built custom Execution Environments using ansible-builder, packaging all Python dependencies, Ansible collections, and system packages into versioned container images."
 usedIn: "Enterprise Linux platform automation at a German bank, supporting 200+ servers with consistent execution environments."
 impact: "Eliminated environment-related playbook failures and reduced troubleshooting time by 80%."
-pubDate: 2024-02-24
+pubDate: 2026-02-24
 category: ["infrastructure", "automation"]
 tags: ["ansible", "containers", "devops", "automation"]
 draft: false

@@ -6,7 +6,7 @@ issue: "No certificate lifecycle management, manual deployment prone to human er
 solution: "Implemented comprehensive certificate automation using OpenSSL for CSR generation, Ansible Vault for encryption, automated deployment roles, expiration monitoring with 90-day alerts, and standardized multi-SAN certificate templates."
 usedIn: "Enterprise Linux platform supporting Apache reverse proxies, load balancers, PostgreSQL, SAP systems, and secure application endpoints across dev, test, and production environments."
 impact: "Eliminated certificate-related outages, reduced deployment time from 2-3 hours to 5-10 minutes, achieved compliance for private key encryption, and established proactive monitoring preventing expiration incidents."
-pubDate: 2024-03-03
+pubDate: 2026-03-03
 category: "automation"
 tags: ["certificates", "ansible", "openssl", "tls", "automation", "security", "vault"]
 draft: false

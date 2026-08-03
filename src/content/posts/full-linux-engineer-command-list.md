@@ -6,7 +6,7 @@ issue: "Scattered knowledge means slower response times during critical operatio
 solution: "Compiled every sanitized, production-tested command snippet from my daily workflow into a single, massive reference guide with a coordinated SVG poster set."
 usedIn: "Daily operations across RHEL-like systems, automation repositories, incident response, and general troubleshooting."
 impact: "Created a single-pane-of-glass reference for system and automation engineers, reducing search time and typos during live deployments."
-pubDate: 2024-03-11
+pubDate: 2026-03-11
 updatedDate: 2026-04-16
 category: ["snippets", "infrastructure", "automation"]
 tags: ["linux", "ansible", "python", "git", "vim", "networking", "cheatsheet", "devops"]

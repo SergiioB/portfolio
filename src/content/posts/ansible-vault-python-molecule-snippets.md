@@ -6,7 +6,7 @@ issue: "One mixed list of Linux and automation commands is hard to scan during a
 solution: "Split the automation workflow into its own sanitized snippets post and grouped the commands into the same order I usually follow in a fresh repository: bootstrap, dependencies, secrets, linting, test scenarios, and quick local sharing."
 usedIn: "Daily Ansible repository work, secret handling, collection setup, and role validation with Molecule."
 impact: "Turned the automation side of the notes into a shareable reference that is easier to follow during setup, safer to publish, and faster to reuse across repositories."
-pubDate: 2024-03-09
+pubDate: 2026-03-09
 category: ["snippets", "automation"]
 tags: ["ansible", "molecule", "python", "linux", "automation", "devops"]
 draft: false

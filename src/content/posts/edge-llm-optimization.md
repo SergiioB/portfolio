@@ -6,7 +6,7 @@ issue: "Edge devices have hard constraints: limited RAM, no GPU VRAM, and strict
 solution: "Developed a three-pronged approach: (1) enforce bandwidth-first model selection, (2) use KV cache quantization to reduce memory footprint, and (3) implement hierarchical context folding for long conversations."
 usedIn: "Engram AI (Discord bot) and RADXA AI Suite running on RK3588 ARM64 hardware."
 impact: "Achieved 55 t/s throughput (vs 4 t/s before), stable memory usage during long sessions, and predictable context behavior without hard crashes."
-pubDate: 2024-03-03
+pubDate: 2026-03-03
 category: "local-ai"
 tags: ["local-ai", "edge-ai", "llama.cpp", "kv-cache", "context-folding", "rk3588", "optimization"]
 draft: false

@@ -6,7 +6,7 @@ issue: "Direct IP replacement would cause service disruption. Applications had h
 solution: "Implemented a two-phase DNS migration strategy using temporary test records, multi-SAN certificates, and coordinated DNS switchover during a planned maintenance window."
 usedIn: "Enterprise infrastructure migration for QA and production systems supporting business-critical applications."
 impact: "Achieved zero-downtime migration, enabled parallel testing without affecting production users, and established a repeatable pattern for future system replacements."
-pubDate: 2024-03-03
+pubDate: 2026-03-03
 category: "infrastructure"
 tags: ["dns", "migration", "certificates", "linux", "devops"]
 draft: false
