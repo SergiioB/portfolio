@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import AsciiTopology from "../components/AsciiTopology.astro";
 import ExecutiveSidebar from "../components/ExecutiveSidebar.astro";
 import { SITE } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -52,23 +53,7 @@ const categoryToClass = (category: string) =>
           </div>
         </div>
 
-        <div class="field-hero-pillars" aria-label="Core domains">
-          <a class="hero-pillar" href={withBase("category/infrastructure/")}>
-            <span class="hero-pillar-icon">⌘</span>
-            <h3>Enterprise Linux</h3>
-            <p>Hardened servers, automated deployments, observability stacks.</p>
-          </a>
-          <a class="hero-pillar" href={withBase("category/local-ai/")}>
-            <span class="hero-pillar-icon">◆</span>
-            <h3>Local AI Lab</h3>
-            <p>Intel Arc Pro B70 inference, KV cache tuning, llama.cpp SYCL benchmarks.</p>
-          </a>
-          <a class="hero-pillar" href={withBase("category/automation/")}>
-            <span class="hero-pillar-icon">▶</span>
-            <h3>Production Apps</h3>
-            <p>Kotlin Android apps on Play Store. Offline-first, privacy-respecting.</p>
-          </a>
-        </div>
+        <AsciiTopology />
       </section>
 
       <section class="field-section" aria-labelledby="apps-heading">
