@@ -65,10 +65,10 @@
   --border: #2a3a55;
   --border-strong: #3d5070;
   --ring: rgba(88, 166, 255, 0.4);
-  --text: #cbd5e1;
+  --text: #d8dee9;
   --text-strong: #f8fafc;
   --text-code: #98f5b5;
-  --text-soft: #94a3b8;
+  --text-soft: #a8b8d0;
   --text-muted: #8b9bb5;
   --heading: #f8fafc;
   --heading-2: #79c0ff;
@@ -6307,9 +6307,9 @@ h3 {
 .field-hero h1 {
   max-width: 13ch;
   font-size: clamp(2.65rem, 4.4vw, 4.6rem);
-  font-weight: 540;
-  line-height: 0.98;
-  letter-spacing: -0.06em;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
   overflow-wrap: normal;
   word-break: normal;
   text-wrap: balance;
@@ -6317,9 +6317,10 @@ h3 {
 
 .field-hero-lede {
   max-width: 58ch;
-  margin: 1.5rem 0 0;
+  margin: 1.25rem 0 0;
   font-size: clamp(0.98rem, 1.4vw, 1.15rem);
-  line-height: 1.7;
+  line-height: 1.65;
+  color: var(--text-soft);
 }
 
 .field-hero-actions {
@@ -6345,9 +6346,9 @@ h3 {
 }
 
 .field-button-primary {
-  border-color: var(--field-ink);
-  background: var(--field-ink);
-  color: var(--field-paper);
+  border-color: var(--field-accent);
+  background: var(--field-accent);
+  color: #fff;
 }
 
 .field-button:hover {
