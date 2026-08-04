@@ -136,8 +136,14 @@ bug. Same-day A/B, same machine, 150W, q8_0-q4_1 KV, llama-bench.
 | pp4096      | 1691 t/s | **2128 t/s** | **+26%**  |
 | pp8192      | 1620 t/s | **2085 t/s** | **+29%**  |
 | pp32768     | ~780 t/s | **1871 t/s** | **+140%** |
+| pp65536     | 986 t/s  | **1504 t/s** | **+52%**  |
+| pp131072    | 673 t/s  | **1211 t/s** | **+80%**  |
 
-_Dense 27B Q4: pp4096 795 → **936 t/s** (+18%), pp8192 758 → 921 t/s (+21%)._
+_Dense 27B Q4: pp4096 795 → **936 t/s** (+18%), pp8192 758 → 921 t/s (+21%),
+pp65536 417 → **651 t/s** (+56%), pp131072 288 → **546 t/s** (+90%)._
+_The TILE→XMX win grows with context: +140% at 32K, +80-90% at 128K. Rows ≤32K from
+Run 9 (r3); ≥64K from Run 11 (r2, same config). b10222 collapses at long context
+(1620 → 673 t/s) while 0804 declines gracefully (2085 → 1211 t/s)._
 
 #### Token generation (decode)
 

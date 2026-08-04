@@ -58,18 +58,18 @@ I rebuilt from upstream master (commit `071327508`, b10255+) into `build-sycl-08
 
 Prefill scales with prompt length (longer prompts amortize kernel overhead), and the XMX path now works on our KV cache. All values t/s, `llama-bench`, 150W, q8_0 K + q4_1 V.
 
-| Config                         | pp512 | pp4096   | pp8192   | pp32768   |
-| ------------------------------ | ----- | -------- | -------- | --------- |
-| MoE 35B Q4 — b10222            | 1061  | 1691     | 1620     | ~780      |
-| MoE 35B Q4 — **master 0804**   | 1134  | **2128** | **2085** | **1871**  |
-| Δ                              | +6.9% | **+26%** | **+29%** | **+140%** |
-| Dense 27B Q4 — b10222          | 640   | 795      | 758      | —         |
-| Dense 27B Q4 — **master 0804** | 685   | **936**  | **921**  | —         |
-| Δ                              | +7%   | **+18%** | **+21%** | —         |
+| Config                         | pp512 | pp4096   | pp8192   | pp32768   | pp65536  | pp131072 |
+| ------------------------------ | ----- | -------- | -------- | --------- | -------- | -------- |
+| MoE 35B Q4 — b10222            | 1061  | 1691     | 1620     | ~780      | 986      | 673      |
+| MoE 35B Q4 — **master 0804**   | 1134  | **2128** | **2085** | **1871**  | **1504** | **1211** |
+| Δ                              | +6.9% | **+26%** | **+29%** | **+140%** | **+52%** | **+80%** |
+| Dense 27B Q4 — b10222          | 640   | 795      | 758      | —         | 417      | 288      |
+| Dense 27B Q4 — **master 0804** | 685   | **936**  | **921**  | —         | **651**  | **546**  |
+| Δ                              | +7%   | **+18%** | **+21%** | —         | **+56%** | **+90%** |
 
 _Build: b10222 (build-sycl-0801) vs master 071327508 (build-sycl-0804, #25874 + #25880), llama-bench `-p 512,4096,8192,32768 -n 128 -r 3 -fa 1 -ctk q8_0 -ctv q4_1 -b 8192 -ub 4096 -t 8 -dev SYCL0`, KV q8_0/q4_1._
 
-The +140% at 32K is the headline: the TILE path's O(n²) collapse is gone, and long-context prefill is now ~2.4× faster. For agent workloads with 100K+ token prompts, that's the difference between waiting minutes and waiting tens of seconds.
+The +140% at 32K is the headline: the TILE path's O(n²) collapse is gone, and long-context prefill is now ~2.4× faster. The win keeps growing with context — at 128K, dense prefill nearly doubles (288 → 546 t/s, +90%) and MoE gains +80% (673 → 1211 t/s). For agent workloads with 100K+ token prompts, that's the difference between waiting minutes and waiting tens of seconds. (Rows ≤32K: Run 9, r3; ≥64K: Run 11, r2, same config.)
 
 ## Results — decode (bandwidth-bound, near ceiling)
 
