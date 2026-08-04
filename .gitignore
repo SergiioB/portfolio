@@ -7,9 +7,10 @@ build/
 .astro.bak-*/
 
 # AI agent / internal docs — not for public
-AGENTS.md
+AGENTS*.md
 .factory/
 .agents/
+.agentic/
 agents/
 .gemini/
 skills-lock.json

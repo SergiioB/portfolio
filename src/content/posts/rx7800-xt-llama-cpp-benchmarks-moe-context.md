@@ -33,7 +33,7 @@ draft: false
 - Storage: 1TB NVMe (LVM: 500G models, 100G inference, 100G root, 16G swap)
 - PSU: 850W Gold
 - OS: Ubuntu 24.04.4 LTS, kernel 6.17.0-35-generic
-- Network: Ethernet, Tailscale (REDACTED)
+- Network: Ethernet, Tailscale
 
 ## Why ROCm and not CUDA
 
