@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: The Complete Local LLM Recipe"
-description: "Everything you need to run production LLM inference on Intel Arc Pro B70 with llama.cpp SYCL — the build, runtime flags, all 5 model configs with measured VRAM boundaries, power tiers, KV cache KL-divergence analysis, and the b9853→b10222 improvement data. 70 t/s MoE decode, 1621 t/s prefill, 512K context."
+description: "Everything you need to run production LLM inference on Intel Arc Pro B70 with llama.cpp SYCL — the build, runtime flags, all 5 model configs with measured VRAM boundaries, power tiers, KV cache KL-divergence analysis, and the b9853→b10222→master 0804 improvement data. 72.6 t/s MoE decode, 2128 t/s prefill, 512K context."
 situation: "The B70 documentation was scattered across 28 files with conflicting KV configs, stale build versions, and unverified claims. I needed one definitive guide that a newcomer could follow end-to-end."
 issue: "Running LLMs on Intel Arc requires SYCL-specific knowledge that doesn't exist in one place: which cmake flags, which env vars, which KV cache config, which power cap, which context length per model. Getting any of these wrong means either crashes, bad quality, or leaving performance on the table."
 solution: "Fact-checked every claim against llama.cpp PRs and external benchmarks, ran a full boundary sweep measuring VRAM at every quant/context combo, A/B tested two SYCL builds, and consolidated everything into one recipe with the exact commands and measured numbers."
 usedIn: "Production daily-driver inference server on Intel Arc Pro B70 32GB. Serves ThinkingCap-Qwen3.6-27B and Qwen3.6-35B-A3B MoE via OpenAI-compatible API, bridged to Telegram through Radxa ROCK 5B+."
-impact: "MoE 35B at 512K context: 70 t/s decode, 1659 t/s prefill. Dense 27B with MTP-4: 24-29 t/s. The b10222 build delivers +6-13% over the previous baseline. Every VRAM boundary measured, not estimated."
+impact: "MoE 35B at 512K context on master 0804: 72.6 t/s decode, 2128 t/s prefill (+26-29% over b10222, +140% at 32K via #25874). Dense 27B with MTP-4: 24-29 t/s. Every VRAM boundary measured, not estimated."
 pubDate: 2026-08-04
 category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -98,7 +98,7 @@ cmake .. \
   -DCMAKE_BUILD_TYPE=Release
 ```
 
-Current production build: **b10222** (`a7a6d0d26`), compiled with IntelLLVM 2026.0.0.
+Current production build: **master 0804** (`071327508`, b10255+, `build-sycl-0804`), compiled with IntelLLVM 2026.0.0. Prior production: b10222 (`a7a6d0d26`).
 
 ### b9853 → b10222 improvement (measured A/B)
 
@@ -122,16 +122,45 @@ _Qwen3.6-35B-A3B Q4_K_XL, q8_0-q4_1 KV, FA on, 150W, llama-bench 5 reps._
 
 The gains come from: oneDNN XMX flash attention (#25222, up to 4.26× prefill at long context), oneMKL GEMM FA (#25025), fused top-k MoE (#25217), RMS_NORM fusion (#26015), and contiguous elementwise fast path (#25946). The improvement scales with prompt length — longer prompts benefit more from the fused attention kernels.
 
+### b10222 → master 0804 improvement (measured A/B, 2026-08-04)
+
+The next step: #25874 extends oneDNN SDPA to **quantized KV** (Q4_0-Q8_0), so XMX flash
+attention finally runs on our q8_0/q4_1 cache, and #25880 fixes a multi-turn corruption
+bug. Same-day A/B, same machine, 150W, q8_0-q4_1 KV, llama-bench.
+
+#### Prefill throughput at multiple prompt sizes (Qwen 35B Q4 MoE)
+
+| Prompt size | b10222   | master 0804  | Δ         |
+| ----------- | -------- | ------------ | --------- |
+| pp512       | 1061 t/s | 1134 t/s     | +6.9%     |
+| pp4096      | 1691 t/s | **2128 t/s** | **+26%**  |
+| pp8192      | 1620 t/s | **2085 t/s** | **+29%**  |
+| pp32768     | ~780 t/s | **1871 t/s** | **+140%** |
+
+_Dense 27B Q4: pp4096 795 → **936 t/s** (+18%), pp8192 758 → 921 t/s (+21%)._
+
+#### Token generation (decode)
+
+| Test                         | b10222    | master 0804  | Δ     |
+| ---------------------------- | --------- | ------------ | ----- |
+| tg128 — MoE 35B Q4           | 70.1 t/s  | **72.6 t/s** | +3.6% |
+| tg128 — Dense 27B Q4 (base)  | 20.8 t/s  | **21.3 t/s** | +2.4% |
+| tg128 — Dense 27B Q4 (MTP-4) | 24-29 t/s | 24-29 t/s    | ~tie  |
+
+_Qwen3.6-35B-A3B Q4_K_XL + ThinkingCap-Qwen3.6-27B Q4_K_M, q8_0-q4_1 KV, FA on, 150W,
+llama-bench 3 reps. Decode stays bandwidth-bound (608 GB/s) — the win is prefill, and it
+grows with context (+140% at 32K). Full details: [the upgrade post](/posts/intel-arc-b70-sycl-xmx-quantized-kv-prefill)._
+
 ### Cross-hardware comparison: 35B MoE class
 
 | Hardware             | VRAM  | Model                | Decode       | Prefill (pp4K) | Max ctx  | Source                                                        |
 | -------------------- | ----- | -------------------- | ------------ | -------------- | -------- | ------------------------------------------------------------- |
-| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q4 MoE      | **70.2 t/s** | **1659 t/s**   | **512K** | this post                                                     |
-| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q5 MoE      | ~68 t/s      | ~1621 t/s      | 256K     | this post                                                     |
+| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q4 MoE      | **72.6 t/s** | **2128 t/s**   | **512K** | this post (master 0804)                                       |
+| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q5 MoE      | ~68 t/s      | ~1621 t/s      | 256K     | b10222-era, not re-run                                        |
 | RX 7800 XT 16GB      | 16 GB | Gemma-4-21B Q4 MoE   | 33 t/s       | 106 t/s        | 32K      | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
 | RX 7800 XT 16GB      | 16 GB | GLM-4.7-REAP-23B IQ4 | 59.8 t/s     | 81.7 t/s       | 32K      | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
 
-_The B70's XMX engines give a massive prefill advantage (1659 t/s vs 82-106 t/s on
+_The B70's XMX engines give a massive prefill advantage (2128 t/s vs 82-106 t/s on
 RDNA3). The 7800 XT wins on decode for small models (fewer bytes/token) but caps at
 32K context with 16 GB VRAM. The B70 reaches 512K — 16× more context._
 
@@ -155,18 +184,24 @@ The fleet standard, validated against [llama.cpp #23470](https://github.com/ggml
 
 ### Dense: ThinkingCap-Qwen3.6-27B (with MTP-4)
 
-| Quant  | Weights | Max ctx  | VRAM free | Decode (base) | w/MTP-4 |
-| ------ | ------- | -------- | --------- | ------------- | ------- |
-| Q4_K_M | 16 GB   | **256K** | 0.9 GB    | 18.4 t/s      | ~29 t/s |
-| Q5_K_M | 19 GB   | **200K** | 2.7 GB    | 16.2 t/s      | ~24 t/s |
-| Q6_K   | 21 GB   | **128K** | 0.7 GB    | 16.0 t/s      | ~24 t/s |
+| Quant  | Weights | Max ctx  | VRAM free | Decode (base) | w/MTP-4 | Prefill (pp4096) |
+| ------ | ------- | -------- | --------- | ------------- | ------- | ---------------- |
+| Q4_K_M | 16 GB   | **256K** | 0.9 GB    | **21.3 t/s**  | ~29 t/s | **936 t/s**      |
+| Q5_K_M | 19 GB   | **200K** | 2.7 GB    | 16.2 t/s      | ~24 t/s | 706 t/s          |
+| Q6_K   | 21 GB   | **128K** | 0.7 GB    | 16.0 t/s      | ~24 t/s | —                |
+
+_Q4_K_M row = master 0804 (Run 9, llama-bench). Q5_K_M / Q6_K rows = b10222-era
+(boundary sweep, listed context); not re-run on 0804._
 
 ### MoE: Qwen3.6-35B-A3B
 
 | Quant   | Weights | Max ctx  | VRAM free | Decode       | Prefill      |
 | ------- | ------- | -------- | --------- | ------------ | ------------ |
-| Q4_K_XL | 21 GB   | **512K** | 1.6 GB    | **70.2 t/s** | **1659 t/s** |
+| Q4_K_XL | 21 GB   | **512K** | 1.6 GB    | **72.6 t/s** | **2128 t/s** |
 | Q5_K_M  | 25 GB   | **256K** | 2.2 GB    | ~68 t/s      | ~1621 t/s    |
+
+_Q4_K_XL row = master 0804 (Run 9, llama-bench, pp4096). Q5_K_M row = b10222-era;
+not re-run on 0804._
 
 **The key insight:** MoE uses 3.8× less KV cache than dense (1,847 MiB vs 6,960 MiB per 128K) because KV scales with attention size, not total params. A 25 GB MoE reaches 512K while a 16 GB dense can't pass 256K.
 
@@ -200,7 +235,7 @@ export ZE_AFFINITY_MASK=0
 
 echo 150000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
 
-~/llama.cpp/build-sycl-0801/bin/llama-server \
+~/llama.cpp/build-sycl-0804/bin/llama-server \
   -m ~/models-cache/Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf \
   --host 0.0.0.0 --port 8765 \
   -ngl 99 -ncmoe 0 \
@@ -209,7 +244,7 @@ echo 150000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
   -t 8 --no-mmap
 ```
 
-**Expected:** 70 t/s decode, 1659 t/s prefill, 512K context, 1.6 GB VRAM free.
+**Expected (master 0804):** 72.6 t/s decode, 2128 t/s prefill (pp4096), 512K context, 1.6 GB VRAM free.
 
 ## Runtime flags handbook
 
@@ -266,6 +301,6 @@ cat /sys/class/hwmon/hwmon4/temp2_input
 This post supersedes the earlier B70 posts which used the old q5_0-q4_1 KV config and build b9851/b9853. The key changes:
 
 1. **KV cache upgraded** to q8_0 K + q4_1 V (KL ~0.003 vs ~0.008)
-2. **Build advanced** to b10222 (+6-13% on both prefill and decode)
+2. **Build advanced** to master 0804 (b10222 was +6-13%; 0804 adds +26-29% prefill, +140% at 32K via #25874)
 3. **VRAM boundaries measured** (not estimated) for every quant/context combo
 4. **All claims fact-checked** against llama.cpp PRs, community benchmarks, and KL-divergence data
