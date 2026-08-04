@@ -35,7 +35,7 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
       <article class="handbook-content">
         <header class="article-header">
           <div class="meta-row">
-            <a href="/handbook/" class="back-link">← Back to Handbook</a>
+            <a href="/handbook/" class="back-link" data-i18n="handbook.back">← Back to Handbook</a>
             <span class="part-label">{entry.data.part}</span>
           </div>
           <h1 class="chapter-title">
@@ -53,7 +53,9 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
           {
             prev && (
               <a href={`/handbook/${prev.slug}/`} class="nav-prev card">
-                <span class="nav-label">← Previous Chapter</span>
+                <span class="nav-label" data-i18n="handbook.prev">
+                  ← Previous Chapter
+                </span>
                 <span class="nav-title">{prev.data.title}</span>
               </a>
             )
@@ -63,7 +65,9 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
           {
             next && (
               <a href={`/handbook/${next.slug}/`} class="nav-next card">
-                <span class="nav-label">Next Chapter →</span>
+                <span class="nav-label" data-i18n="handbook.next">
+                  Next Chapter →
+                </span>
                 <span class="nav-title">{next.data.title}</span>
               </a>
             )

@@ -454,6 +454,24 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "archive.noMatches": { en: "No matches.", es: "Sin resultados." },
   "archive.matches": { en: "matches", es: "coincidencias" },
   "archive.match": { en: "match", es: "coincidencia" },
+  "archive.filterAll": { en: "All", es: "Todo" },
+  "archive.filterAria": { en: "Filter posts by category", es: "Filtrar posts por categoría" },
+  "b70hub.title": { en: "Intel Arc B70", es: "Intel Arc B70" },
+  "b70hub.desc": {
+    en: "case studies · llama.cpp SYCL, KV cache, MoE benchmarks",
+    es: "casos de estudio · llama.cpp SYCL, caché KV, benchmarks MoE",
+  },
+  "handbook.eyebrow": {
+    en: "Local AI / Systems Engineering",
+    es: "IA Local / Ingeniería de Sistemas",
+  },
+  "handbook.scopeTransformer": { en: "Transformer internals", es: "Interna de Transformers" },
+  "handbook.scopeKV": { en: "KV cache economics", es: "Economía de la caché KV" },
+  "handbook.scopeMoE": { en: "MoE + routing", es: "MoE + enrutado" },
+  "handbook.scopeLSA": { en: "DeepSeek LSA", es: "DeepSeek LSA" },
+  "handbook.back": { en: "← Back to Handbook", es: "← Volver al Handbook" },
+  "handbook.prev": { en: "← Previous Chapter", es: "← Capítulo anterior" },
+  "handbook.next": { en: "Next Chapter →", es: "Siguiente capítulo →" },
 
   /* ── About page ── */
   "about.pageTitle": { en: "About", es: "Acerca de" },

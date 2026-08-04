@@ -67,14 +67,26 @@ const years = Object.keys(postsByYear)
             loading="lazy"
           />
           <div class="b70-hub-text">
-            <strong>Intel Arc B70</strong>
-            <span>{b70Count} case studies · llama.cpp SYCL, KV cache, MoE benchmarks</span>
+            <strong data-i18n="b70hub.title">Intel Arc B70</strong>
+            <span
+              >{b70Count}
+              <span data-i18n="b70hub.desc"
+                >case studies · llama.cpp SYCL, KV cache, MoE benchmarks</span
+              ></span
+            >
           </div>
           <span class="b70-hub-arrow" aria-hidden="true">→</span>
         </a>
 
-        <div class="archive-filter" role="group" aria-label="Filter posts by category">
-          <button class="filter-chip is-active" data-filter="all">All</button>
+        <div
+          class="archive-filter"
+          role="group"
+          aria-label="Filter posts by category"
+          data-i18n-label="archive.filterAria"
+        >
+          <button class="filter-chip is-active" data-filter="all" data-i18n="archive.filterAll"
+            >All</button
+          >
           {
             CATEGORY_ORDER.map((slug) => (
               <button class={`filter-chip ${slug}`} data-filter={slug}>
@@ -277,22 +289,29 @@ const years = Object.keys(postsByYear)
     }
   </style>
 
-  <script is:inline>
-    const chips = document.querySelectorAll(".filter-chip");
-    const postsEls = document.querySelectorAll(".archive-post");
-    const yearEls = document.querySelectorAll(".archive-year");
-    const applyFilter = (slug) => {
-      chips.forEach((c) => c.classList.toggle("is-active", c.dataset.filter === slug));
-      postsEls.forEach((p) => {
-        const cats = (p.dataset.categories || "").split(" ");
+  <script>
+    // Event delegation on <document> so filtering works regardless of when the
+    // archive DOM is mounted (Astro ViewTransitions client-side navigation does
+    // not re-run is:inline scripts, which is why per-chip listeners broke).
+    document.addEventListener("click", (e) => {
+      const chip = e.target instanceof Element ? e.target.closest(".filter-chip") : null;
+      if (!chip) return;
+      const slug = chip.getAttribute("data-filter") || "all";
+
+      document.querySelectorAll(".filter-chip").forEach((x) => {
+        x.classList.toggle("is-active", x === chip);
+      });
+
+      document.querySelectorAll(".archive-post").forEach((p) => {
+        const cats = (p.getAttribute("data-categories") || "").split(" ");
         const show = slug === "all" || cats.includes(slug);
         p.classList.toggle("is-hidden", !show);
       });
-      yearEls.forEach((y) => {
+
+      document.querySelectorAll(".archive-year").forEach((y) => {
         const visible = y.querySelectorAll(".archive-post:not(.is-hidden)").length;
         y.classList.toggle("is-empty", visible === 0);
       });
-    };
-    chips.forEach((c) => c.addEventListener("click", () => applyFilter(c.dataset.filter)));
+    });
   </script>
 </BaseLayout>
