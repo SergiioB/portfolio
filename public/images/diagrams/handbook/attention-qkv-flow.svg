@@ -34,16 +34,16 @@
 
   <!-- animated pulses along edges -->
   <circle r="4" fill="#58a6ff">
-    <animateMotion dur="1.6s" repeatCount="indefinite" path="M120 82 H225"/>
+    <animateMotion dur="3.4s" repeatCount="indefinite" path="M120 82 H225"/>
   </circle>
   <circle r="4" fill="#56d364">
-    <animateMotion dur="1.6s" repeatCount="indefinite" path="M120 142 H225"/>
+    <animateMotion dur="3.4s" repeatCount="indefinite" path="M120 142 H225"/>
   </circle>
   <circle r="4" fill="#bc8cff">
-    <animateMotion dur="1.6s" begin="0.8s" repeatCount="indefinite" path="M276 110 H350"/>
+    <animateMotion dur="3.4s" begin="0.8s" repeatCount="indefinite" path="M276 110 H350"/>
   </circle>
   <circle r="4" fill="#e3b341">
-    <animateMotion dur="2.2s" begin="1.2s" repeatCount="indefinite" path="M440 110 H510"/>
+    <animateMotion dur="4.4s" begin="1.2s" repeatCount="indefinite" path="M440 110 H510"/>
   </circle>
 
   <text x="20" y="248" fill="#8b949e" font-size="11">Scores = how relevant each past token is · Output = score-weighted sum of Values</text>

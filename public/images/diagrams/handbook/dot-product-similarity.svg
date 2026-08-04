@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240" font-family="monospace">
+  <rect width="640" height="240" rx="14" fill="#0d1117"/>
+  <text x="20" y="28" fill="#58a6ff" font-size="13" font-weight="bold">DOT PRODUCT: do two vectors point the same way?</text>
+
+  <!-- origin -->
+  <line x1="60" y1="180" x2="300" y2="180" stroke="#30363d"/>
+  <line x1="60" y1="180" x2="60" y2="50" stroke="#30363d"/>
+
+  <!-- Query vector (fixed) -->
+  <line x1="60" y1="180" x2="240" y2="80" stroke="#58a6ff" stroke-width="2.5"/>
+  <text x="246" y="76" fill="#58a6ff" font-size="12">Q</text>
+
+  <!-- Key vector A: aligned (high score) -->
+  <line x1="60" y1="180" x2="220" y2="95" stroke="#56d364" stroke-width="2.5">
+    <animate attributeName="x2" values="220;220;220" dur="6s" repeatCount="indefinite"/>
+  </line>
+  <text x="226" y="92" fill="#56d364" font-size="12">K₁ (aligned → high)</text>
+
+  <!-- Key vector B: rotating to orthogonal (low score) -->
+  <line x1="60" y1="180" x2="200" y2="170" stroke="#e3b341" stroke-width="2.5">
+    <animateTransform attributeName="transform" type="rotate"
+      values="0 60 180; -70 60 180; -70 60 180; 0 60 180" dur="6s" repeatCount="indefinite"/>
+  </line>
+  <text x="210" y="185" fill="#e3b341" font-size="12">K₂ (rotates away → low)</text>
+
+  <!-- score readout -->
+  <rect x="360" y="60" width="250" height="120" rx="10" fill="#161b22" stroke="#30363d"/>
+  <text x="376" y="88" fill="#8b949e" font-size="11">score = Q · K = |Q||K| cos θ</text>
+  <text x="376" y="118" fill="#56d364" font-size="12">Q·K₁ = +0.93  (same direction)</text>
+  <text x="376" y="144" fill="#e3b341" font-size="12">Q·K₂ → 0      (orthogonal)</text>
+  <text x="376" y="168" fill="#484f58" font-size="11">θ = angle between vectors</text>
+
+  <text x="20" y="222" fill="#8b949e" font-size="11">cos θ = 1 when parallel, 0 when orthogonal, −1 when opposite.</text>
+  <text x="20" y="238" fill="#8b949e" font-size="11">So the dot product is a cheap "how related are these two tokens?" score.</text>
+</svg>

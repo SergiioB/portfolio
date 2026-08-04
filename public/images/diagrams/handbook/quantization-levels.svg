@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" font-family="monospace">
+  <rect width="640" height="260" rx="14" fill="#0d1117"/>
+  <text x="20" y="28" fill="#e3b341" font-size="13" font-weight="bold">QUANTIZATION: snap continuous weights to discrete levels</text>
+
+  <!-- continuous curve -->
+  <text x="30" y="60" fill="#8b949e" font-size="11">FP16 (continuous)</text>
+  <path d="M30 120 C 90 70, 150 160, 210 100 S 300 140, 300 100" stroke="#58a6ff" stroke-width="2" fill="none"/>
+
+  <!-- quantized steps (coarse, 4-bit) -->
+  <text x="340" y="60" fill="#e3b341" font-size="11">INT4 (16 levels)</text>
+  <path d="M340 110 h30 v-20 h30 v30 h30 v-25 h30 v15 h30 v-10 h30" stroke="#e3b341" stroke-width="2" fill="none"/>
+
+  <!-- quantized steps (fine, 8-bit) -->
+  <text x="340" y="170" fill="#56d364" font-size="11">INT8 (256 levels)</text>
+  <path d="M340 210 h10 v-8 h10 v12 h10 v-10 h10 v6 h10 v-6 h10 v8 h10 v-8 h10 v4 h10 v-4 h10 v6 h10 v-6 h10 v4 h10 v-4 h10" stroke="#56d364" stroke-width="2" fill="none"/>
+
+  <!-- error arrows -->
+  <g stroke="#ff7b72" stroke-width="1">
+    <line x1="370" y1="110" x2="370" y2="96"/><line x1="430" y1="120" x2="430" y2="134"/>
+  </g>
+  <text x="470" y="120" fill="#ff7b72" font-size="10">error</text>
+
+  <text x="20" y="238" fill="#8b949e" font-size="11">Fewer bits ⇒ coarser steps ⇒ more rounding error ⇒ output distribution drifts.</text>
+  <text x="20" y="254" fill="#8b949e" font-size="11">We measure that drift with KL-divergence: lower is closer to the FP16 original.</text>
+</svg>

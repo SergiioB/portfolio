@@ -51,6 +51,7 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.10",
     "astro": "^5.2.0",
+    "katex": "^0.18.1",
     "puppeteer": "^24.37.5"
   },
   "devDependencies": {

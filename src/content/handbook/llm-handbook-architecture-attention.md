@@ -17,6 +17,10 @@ It does this through stacked **Layers**, primarily composed of two operations:
 
 In standard architectures (like LLaMA), a 70B model simply has more layers, wider hidden dimensions, and more attention heads than an 8B model.
 
+Crucially, generation is **autoregressive**: the model produces one token at a time, and each new token is appended to the input for the next step. This loop is the single most important fact for understanding inference performance.
+
+![Animated autoregressive loop: the predicted token is appended to the context and fed back in, one forward pass per token](/images/diagrams/handbook/autoregressive-loop.svg)
+
 ## Unpacking Attention Heads
 
 When you read a sentence, you subconsciously link verbs to their subjects and pronouns to their nouns. "Attention" is how the model does this mathematically.
@@ -33,9 +37,38 @@ During inference, these heads generate three vectors for every token: **Query (Q
 - **Key:** What do I contain?
 - **Value:** What is my actual semantic meaning?
 
+### The dot product, intuitively
+
+Before the formula, the intuition: the **dot product** of two vectors is a single number that tells you whether they "point the same way." If two vectors are parallel the dot product is large and positive; if they're perpendicular (orthogonal) it is zero; if opposite, negative. So $Q \cdot K$ is a cheap similarity score between "what I'm looking for" and "what a past token contains."
+
+$$Q \cdot K = \sum_i Q_i K_i = |Q|\,|K| \cos\theta$$
+
+![Animated dot product: a Key vector aligned with the Query scores high, while a Key that rotates toward orthogonal scores near zero](/images/diagrams/handbook/dot-product-similarity.svg)
+
+### Putting it together
+
 The model takes the current token's Query and does a dot-product multiplication against every previous token's Key. High scores mean high relevance. The model then uses those scores to sum up the Values.
 
 ![Animated self-attention flow: Query and Key produce scores, softmax, then a weighted sum of Values](/images/diagrams/handbook/attention-qkv-flow.svg)
+
+### Softmax, from the ground up
+
+The raw dot-product scores can be any number — negative, huge, tiny. We need to turn them into **attention weights**: non-negative numbers that add up to 1, so the output is a proper weighted average of the Values. That's exactly what **softmax** does, in two steps:
+
+1. **Exponentiate** each score ($e^x$). This makes everything positive and _amplifies_ larger scores, so the most relevant token grabs most of the weight.
+2. **Normalize** by the sum, so the weights add to 1.
+
+$$\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$$
+
+![Animated softmax: raw scores are exponentiated (amplifying the max) then normalized so the weights sum to one](/images/diagrams/handbook/softmax-steps.svg)
+
+### Why we divide by $\sqrt{d_k}$
+
+When the head dimension $d_k$ is large, the dot products $Q\cdot K$ grow large in magnitude, pushing softmax into regions where one token gets almost all the weight (gradients vanish). Scaling by $\sqrt{d_k}$ keeps the scores in a healthy range:
+
+$$\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{Q K^{\top}}{\sqrt{d_k}}\right) V$$
+
+This is the full "scaled dot-product attention" — the single operation at the heart of every Transformer.
 
 ## The Infrastructure Nightmare: The KV Cache
 

@@ -1,0 +1,40 @@
+---
+// Renders LaTeX math ($...$, $$...$$, \(...\), \[...\]) using self-hosted KaTeX.
+// Include on any page that contains math. Respects the site CSP ('self').
+---
+
+<script>
+  import "katex/dist/katex.min.css";
+  import renderMathInElement from "katex/contrib/auto-render";
+
+  const renderMath = () => {
+    if (typeof document === "undefined") return;
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+      ],
+      throwOnError: false,
+    });
+  };
+
+  renderMath();
+  document.addEventListener("astro:page-load", renderMath);
+</script>
+
+<style is:global>
+  /* Theme-aware KaTeX sizing so formulas sit well in prose */
+  .prose .katex-display {
+    margin: 1.2rem 0;
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-muted);
+  }
+  .prose .katex {
+    font-size: 1.05em;
+  }
+</style>

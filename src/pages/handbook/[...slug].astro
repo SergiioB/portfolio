@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 
 import ExecutiveSidebar from "../../components/ExecutiveSidebar.astro";
+import HandbookMath from "../../components/HandbookMath.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
@@ -71,6 +72,7 @@ const title = `Chapter ${entry.data.chapter}: ${entry.data.title}`;
       </article>
     </main>
   </div>
+  <HandbookMath />
 </BaseLayout>
 
 <style>

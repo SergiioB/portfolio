@@ -27,13 +27,13 @@
     <path d="M110 122 H160"/><path d="M240 122 H320"/>
   </g>
   <g stroke="#56d364" stroke-width="2" fill="none">
-    <path d="M240 116 L320 58"><animate attributeName="stroke-opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/></path>
-    <path d="M240 128 L320 158"><animate attributeName="stroke-opacity" values="0.2;1;0.2" dur="1.4s" repeatCount="indefinite"/></path>
+    <path d="M240 116 L320 58"><animate attributeName="stroke-opacity" values="1;0.2;1" dur="3s" repeatCount="indefinite"/></path>
+    <path d="M240 128 L320 158"><animate attributeName="stroke-opacity" values="0.2;1;0.2" dur="3s" repeatCount="indefinite"/></path>
   </g>
 
   <!-- active pulses -->
-  <circle r="4" fill="#bc8cff"><animateMotion dur="1.2s" repeatCount="indefinite" path="M110 122 H160"/></circle>
-  <circle r="4" fill="#56d364"><animateMotion dur="1.4s" begin="0.4s" repeatCount="indefinite" path="M240 116 L320 58"/></circle>
+  <circle r="4" fill="#bc8cff"><animateMotion dur="2.6s" repeatCount="indefinite" path="M110 122 H160"/></circle>
+  <circle r="4" fill="#56d364"><animateMotion dur="3s" begin="0.4s" repeatCount="indefinite" path="M240 116 L320 58"/></circle>
 
   <text x="20" y="232" fill="#8b949e" font-size="11">Only 2 of N experts run per token → 3B active of a 35B model → fast decode.</text>
 </svg>

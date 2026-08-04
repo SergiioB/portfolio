@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240" font-family="monospace">
+  <rect width="640" height="240" rx="14" fill="#0d1117"/>
+  <text x="20" y="28" fill="#56d364" font-size="13" font-weight="bold">AUTOREGRESSIVE: each new token is fed back as input</text>
+
+  <!-- context tokens -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="30"  y="70" width="56" height="34" rx="6" fill="#161b22" stroke="#8b949e"/><text x="58" y="92" fill="#8b949e">The</text>
+    <rect x="94"  y="70" width="56" height="34" rx="6" fill="#161b22" stroke="#8b949e"/><text x="122" y="92" fill="#8b949e">cat</text>
+    <rect x="158" y="70" width="56" height="34" rx="6" fill="#161b22" stroke="#8b949e"/><text x="186" y="92" fill="#8b949e">sat</text>
+  </g>
+
+  <!-- model box -->
+  <rect x="270" y="60" width="120" height="60" rx="10" fill="none" stroke="#58a6ff" stroke-width="2"/>
+  <text x="330" y="95" fill="#58a6ff" font-size="13" text-anchor="middle">model</text>
+
+  <!-- predicted token -->
+  <rect x="470" y="70" width="70" height="40" rx="8" fill="none" stroke="#56d364" stroke-width="2">
+    <animate attributeName="stroke-opacity" values="0.2;1;1" dur="4s" repeatCount="indefinite"/>
+  </rect>
+  <text x="505" y="95" fill="#56d364" font-size="12" text-anchor="middle">on</text>
+
+  <!-- forward edge -->
+  <path d="M214 87 H270" stroke="#30363d" stroke-width="1.5" fill="none"/>
+  <path d="M390 90 H470" stroke="#56d364" stroke-width="2" fill="none"/>
+  <circle r="4" fill="#58a6ff"><animateMotion dur="1.4s" repeatCount="indefinite" path="M214 87 H270"/></circle>
+  <circle r="4" fill="#56d364"><animateMotion dur="1.4s" begin="0.7s" repeatCount="indefinite" path="M390 90 H470"/></circle>
+
+  <!-- feedback loop: predicted token appended to context -->
+  <path d="M505 110 V170 H120 V104" stroke="#e3b341" stroke-width="2" fill="none" stroke-dasharray="5 4">
+    <animate attributeName="stroke-dashoffset" values="0;-40" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <text x="300" y="190" fill="#e3b341" font-size="11" text-anchor="middle">append predicted token → becomes part of next context</text>
+
+  <text x="20" y="226" fill="#8b949e" font-size="11">One forward pass per token. This is why DECODE is memory-bandwidth bound:</text>
+  <text x="20" y="242" fill="#8b949e" font-size="11">every step re-reads all weights just to emit a single token.</text>
+</svg>
