@@ -5,6 +5,7 @@ pubDate: 2026-07-16
 category:
   - local-ai
   - automation
+  - b70
 tags:
   - grok-build
   - llama.cpp

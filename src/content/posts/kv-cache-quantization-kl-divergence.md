@@ -7,7 +7,7 @@ solution: "Researched the Kullback-Leibler (KL) divergence of various KV cache q
 usedIn: "Production inference configuration for massive context lengths on 32GB GPUs."
 impact: "Restored near-FP16 reasoning quality (KL divergence of ~0.004) while maintaining a small enough memory footprint to keep the 256K context window viable."
 pubDate: 2026-07-06
-category: "local-ai"
+category: ["local-ai", "b70"]
 tags: ["llama-cpp", "hardware-tuning", "machine-learning", "ai", "local-ai", "quantization"]
 draft: false
 amazonUrl: https://go.sergiiob.dev/arc-pro

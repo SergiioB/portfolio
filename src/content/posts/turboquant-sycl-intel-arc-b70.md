@@ -7,7 +7,7 @@ solution: "Documented the failure modes (specifically `SET_ROWS` view tensor cra
 usedIn: "R&D for expanding the safe operating context of 35B parameter MoE models up to 256K tokens on a single 32GB GPU."
 impact: "Saved hours of debugging for other engineers attempting the same bleeding-edge compilation, and established a proven fallback configuration for 256K contexts."
 pubDate: 2026-07-06
-category: "local-ai"
+category: ["local-ai", "b70"]
 tags:
   [
     "sycl",

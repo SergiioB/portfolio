@@ -7,7 +7,7 @@ solution: "Fact-checked every claim against llama.cpp PRs and external benchmark
 usedIn: "Production daily-driver inference server on Intel Arc Pro B70 32GB. Serves ThinkingCap-Qwen3.6-27B and Qwen3.6-35B-A3B MoE via OpenAI-compatible API, bridged to Telegram through Radxa ROCK 5B+."
 impact: "MoE 35B at 512K context: 70 t/s decode, 1659 t/s prefill. Dense 27B with MTP-4: 24-29 t/s. The b10222 build delivers +6-13% over the previous baseline. Every VRAM boundary measured, not estimated."
 pubDate: 2026-08-04
-category: ["local-ai", "infrastructure"]
+category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:
   [
@@ -51,15 +51,15 @@ This post answers all of them with measured data, not estimates.
 
 ## The hardware
 
-| Spec | Value |
-|------|-------|
-| GPU | Intel Arc Pro B70 (Battlemage / Xe2) |
-| VRAM | 32,656 MiB visible GDDR6 |
-| Bandwidth | 608 GB/s, 256-bit bus |
-| Compute | 32 Xe-Cores, 256 XMX engines, 367 INT8 TOPS |
-| Power | 1× 8-pin, TDP ~300W (stock cap 230W) |
-| CPU (test host) | AMD Ryzen 7 5700X3D, 32 GB RAM |
-| OS | Ubuntu 26.04 |
+| Spec            | Value                                       |
+| --------------- | ------------------------------------------- |
+| GPU             | Intel Arc Pro B70 (Battlemage / Xe2)        |
+| VRAM            | 32,656 MiB visible GDDR6                    |
+| Bandwidth       | 608 GB/s, 256-bit bus                       |
+| Compute         | 32 Xe-Cores, 256 XMX engines, 367 INT8 TOPS |
+| Power           | 1× 8-pin, TDP ~300W (stock cap 230W)        |
+| CPU (test host) | AMD Ryzen 7 5700X3D, 32 GB RAM              |
+| OS              | Ubuntu 26.04                                |
 
 ## The software stack
 
@@ -99,34 +99,34 @@ The upstream SYCL commits between the old and new builds are real and measurable
 
 #### Prefill throughput at multiple prompt sizes (Qwen 35B Q4 MoE, 128K)
 
-| Prompt size | b9853 | b10222 | Δ |
-|-------------|-------|--------|---|
-| pp512 | 963 t/s | 1041 t/s | **+8.1%** |
-| pp4096 | 1525 t/s | 1621 t/s | **+6.3%** |
-| pp8192 | 1375 t/s | 1551 t/s | **+12.8%** |
+| Prompt size | b9853    | b10222   | Δ          |
+| ----------- | -------- | -------- | ---------- |
+| pp512       | 963 t/s  | 1041 t/s | **+8.1%**  |
+| pp4096      | 1525 t/s | 1621 t/s | **+6.3%**  |
+| pp8192      | 1375 t/s | 1551 t/s | **+12.8%** |
 
 #### Token generation (decode)
 
-| Test | b9853 | b10222 | Δ |
-|------|-------|--------|---|
+| Test           | b9853    | b10222   | Δ          |
+| -------------- | -------- | -------- | ---------- |
 | tg128 (decode) | 61.8 t/s | 69.5 t/s | **+12.5%** |
 
-*Qwen3.6-35B-A3B Q4_K_XL, q8_0-q4_1 KV, FA on, 150W, llama-bench 5 reps.*
+_Qwen3.6-35B-A3B Q4_K_XL, q8_0-q4_1 KV, FA on, 150W, llama-bench 5 reps._
 
 The gains come from: oneDNN XMX flash attention (#25222, up to 4.26× prefill at long context), oneMKL GEMM FA (#25025), fused top-k MoE (#25217), RMS_NORM fusion (#26015), and contiguous elementwise fast path (#25946). The improvement scales with prompt length — longer prompts benefit more from the fused attention kernels.
 
 ### Cross-hardware comparison: 35B MoE class
 
-| Hardware | VRAM | Model | Decode | Prefill (pp4K) | Max ctx | Source |
-|----------|------|-------|--------|----------------|---------|--------|
-| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q4 MoE | **70.2 t/s** | **1659 t/s** | **512K** | this post |
-| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q5 MoE | ~68 t/s | ~1621 t/s | 256K | this post |
-| RX 7800 XT 16GB | 16 GB | Gemma-4-21B Q4 MoE | 33 t/s | 106 t/s | 32K | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
-| RX 7800 XT 16GB | 16 GB | GLM-4.7-REAP-23B IQ4 | 59.8 t/s | 81.7 t/s | 32K | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
+| Hardware             | VRAM  | Model                | Decode       | Prefill (pp4K) | Max ctx  | Source                                                        |
+| -------------------- | ----- | -------------------- | ------------ | -------------- | -------- | ------------------------------------------------------------- |
+| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q4 MoE      | **70.2 t/s** | **1659 t/s**   | **512K** | this post                                                     |
+| **Arc Pro B70 32GB** | 32 GB | Qwen 35B Q5 MoE      | ~68 t/s      | ~1621 t/s      | 256K     | this post                                                     |
+| RX 7800 XT 16GB      | 16 GB | Gemma-4-21B Q4 MoE   | 33 t/s       | 106 t/s        | 32K      | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
+| RX 7800 XT 16GB      | 16 GB | GLM-4.7-REAP-23B IQ4 | 59.8 t/s     | 81.7 t/s       | 32K      | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
 
-*The B70's XMX engines give a massive prefill advantage (1659 t/s vs 82-106 t/s on
+_The B70's XMX engines give a massive prefill advantage (1659 t/s vs 82-106 t/s on
 RDNA3). The 7800 XT wins on decode for small models (fewer bytes/token) but caps at
-32K context with 16 GB VRAM. The B70 reaches 512K — 16× more context.*
+32K context with 16 GB VRAM. The B70 reaches 512K — 16× more context._
 
 ## KV cache: q8_0 K + q4_1 V
 
@@ -138,39 +138,39 @@ The fleet standard, validated against [llama.cpp #23470](https://github.com/ggml
 
 **Why asymmetric?** K determines attention routing (which tokens to attend to); V is averaged. K is sensitive to quantization (KL ~5.5 at q4_0 — catastrophic); V tolerates it. Result: ~50% VRAM savings vs FP16 with near-lossless quality (KL ~0.003).
 
-| K | V | KL-div | Verdict |
-|---|---|--------|---------|
-| **q8_0** | **q4_1** | **~0.003** | **Fleet standard** |
-| q5_0 | q4_1 | ~0.006-0.008 | Acceptable |
-| q4_0 | any | ~5.5 | **Never — catastrophic** |
+| K        | V        | KL-div       | Verdict                  |
+| -------- | -------- | ------------ | ------------------------ |
+| **q8_0** | **q4_1** | **~0.003**   | **Fleet standard**       |
+| q5_0     | q4_1     | ~0.006-0.008 | Acceptable               |
+| q4_0     | any      | ~5.5         | **Never — catastrophic** |
 
 ## All model configs with measured VRAM boundaries
 
 ### Dense: ThinkingCap-Qwen3.6-27B (with MTP-4)
 
-| Quant | Weights | Max ctx | VRAM free | Decode (base) | w/MTP-4 |
-|-------|---------|---------|-----------|--------------|---------|
-| Q4_K_M | 16 GB | **256K** | 0.9 GB | 18.4 t/s | ~29 t/s |
-| Q5_K_M | 19 GB | **200K** | 2.7 GB | 16.2 t/s | ~24 t/s |
-| Q6_K | 21 GB | **128K** | 0.7 GB | 16.0 t/s | ~24 t/s |
+| Quant  | Weights | Max ctx  | VRAM free | Decode (base) | w/MTP-4 |
+| ------ | ------- | -------- | --------- | ------------- | ------- |
+| Q4_K_M | 16 GB   | **256K** | 0.9 GB    | 18.4 t/s      | ~29 t/s |
+| Q5_K_M | 19 GB   | **200K** | 2.7 GB    | 16.2 t/s      | ~24 t/s |
+| Q6_K   | 21 GB   | **128K** | 0.7 GB    | 16.0 t/s      | ~24 t/s |
 
 ### MoE: Qwen3.6-35B-A3B
 
-| Quant | Weights | Max ctx | VRAM free | Decode | Prefill |
-|-------|---------|---------|-----------|--------|---------|
-| Q4_K_XL | 21 GB | **512K** | 1.6 GB | **70.2 t/s** | **1659 t/s** |
-| Q5_K_M | 25 GB | **256K** | 2.2 GB | ~68 t/s | ~1621 t/s |
+| Quant   | Weights | Max ctx  | VRAM free | Decode       | Prefill      |
+| ------- | ------- | -------- | --------- | ------------ | ------------ |
+| Q4_K_XL | 21 GB   | **512K** | 1.6 GB    | **70.2 t/s** | **1659 t/s** |
+| Q5_K_M  | 25 GB   | **256K** | 2.2 GB    | ~68 t/s      | ~1621 t/s    |
 
 **The key insight:** MoE uses 3.8× less KV cache than dense (1,847 MiB vs 6,960 MiB per 128K) because KV scales with attention size, not total params. A 25 GB MoE reaches 512K while a 16 GB dense can't pass 256K.
 
 ## Power tiers
 
-| Tier | Watts | Use case | Temp |
-|------|-------|----------|------|
-| eco | 150 | **Daily default.** All MoE models. | 63-67°C |
-| efficient | 165 | Dense 27B MTP-4 — peak efficiency (0.148 t/s/W) | 68°C |
-| balanced | 180 | Sustained dense inference | 71°C |
-| burst | 230 | Short bursts only. +9°C over 165W | 77°C |
+| Tier      | Watts | Use case                                        | Temp    |
+| --------- | ----- | ----------------------------------------------- | ------- |
+| eco       | 150   | **Daily default.** All MoE models.              | 63-67°C |
+| efficient | 165   | Dense 27B MTP-4 — peak efficiency (0.148 t/s/W) | 68°C    |
+| balanced  | 180   | Sustained dense inference                       | 71°C    |
+| burst     | 230   | Short bursts only. +9°C over 165W               | 77°C    |
 
 ```bash
 # Set power cap (microwatts)
@@ -206,19 +206,20 @@ echo 150000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
 
 ## Runtime flags handbook
 
-| Flag | Value | Why |
-|------|-------|-----|
-| `-ngl 99` | All layers on GPU | Full GPU offload |
-| `-ncmoe 0` | All MoE experts on GPU | Critical for MoE — don't offload experts to CPU |
-| `-fa on` | Flash attention | Required for quantized KV cache |
-| `-ctk q8_0` | K cache = 8-bit | Near-lossless (KL ~0.003) |
-| `-ctv q4_1` | V cache = 4-bit | V tolerates aggressive quantization |
-| `-b 8192` | Batch size | Optimal for SYCL prefill |
-| `-ub 4096` | Micro-batch | Do NOT reduce — smaller values hurt prefill |
-| `-t 8` | CPU threads | For prompt processing |
-| `--no-mmap` | Keep in VRAM | Don't page model to disk |
+| Flag        | Value                  | Why                                             |
+| ----------- | ---------------------- | ----------------------------------------------- |
+| `-ngl 99`   | All layers on GPU      | Full GPU offload                                |
+| `-ncmoe 0`  | All MoE experts on GPU | Critical for MoE — don't offload experts to CPU |
+| `-fa on`    | Flash attention        | Required for quantized KV cache                 |
+| `-ctk q8_0` | K cache = 8-bit        | Near-lossless (KL ~0.003)                       |
+| `-ctv q4_1` | V cache = 4-bit        | V tolerates aggressive quantization             |
+| `-b 8192`   | Batch size             | Optimal for SYCL prefill                        |
+| `-ub 4096`  | Micro-batch            | Do NOT reduce — smaller values hurt prefill     |
+| `-t 8`      | CPU threads            | For prompt processing                           |
+| `--no-mmap` | Keep in VRAM           | Don't page model to disk                        |
 
 For MTP-4 speculative decoding (dense only):
+
 ```bash
 --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-p-min 0.75
 ```

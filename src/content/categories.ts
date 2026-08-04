@@ -1,4 +1,5 @@
 export const CATEGORY_ORDER = [
+  "b70",
   "infrastructure",
   "automation",
   "ai",
@@ -12,6 +13,11 @@ export const CATEGORY_ORDER = [
 export type CategorySlug = (typeof CATEGORY_ORDER)[number];
 
 export const CATEGORY_META: Record<CategorySlug, { label: string; description: string }> = {
+  b70: {
+    label: "Intel Arc B70",
+    description:
+      "Local LLM inference on the Intel Arc Pro B70 32GB — llama.cpp SYCL, KV cache tuning, MoE and dense benchmarks.",
+  },
   infrastructure: {
     label: "Infrastructure",
     description: "RHEL lifecycle, automation, virtualization, and production operations.",
@@ -48,6 +54,7 @@ export const CATEGORY_META: Record<CategorySlug, { label: string; description: s
 };
 
 const CATEGORY_ROUTE_GROUPS: Record<CategorySlug, readonly CategorySlug[]> = {
+  b70: ["b70"],
   infrastructure: ["infrastructure"],
   automation: ["automation"],
   ai: ["ai", "local-ai"],

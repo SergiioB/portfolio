@@ -404,6 +404,7 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Arquitectura Azure, diseño de infraestructura y prácticas de entrega.",
   },
   "cat.local-ai": { en: "Local AI", es: "IA Local" },
+  "cat.b70": { en: "Intel Arc B70", es: "Intel Arc B70" },
   "cat.local-ai.desc": {
     en: "Running models on local hardware with privacy-first workflows.",
     es: "Ejecución de modelos en hardware local con privacidad como prioridad.",

@@ -7,7 +7,7 @@ solution: "Rewrote the benchmark script to enforce warmup discards, isolate engi
 usedIn: "Production benchmark suite for Intel Arc Pro B70 32GB. The corrected script (b70-verified-bench.sh) is now the canonical benchmark for all B70 model evaluations."
 impact: "Corrected MTP-4 gain at 180W is +35% over base (down from the initially reported +41%). 180W identified as the power sweet spot: same throughput as 230W with significantly lower thermals. Vision models tested with 4-6% image decode overhead."
 pubDate: 2026-07-02
-category: ["local-ai", "infrastructure"]
+category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:
   [

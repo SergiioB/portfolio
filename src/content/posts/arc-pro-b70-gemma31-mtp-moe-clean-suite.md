@@ -5,6 +5,7 @@ pubDate: 2026-07-16
 category:
   - local-ai
   - infrastructure
+  - b70
 tags:
   - intel-arc
   - b70

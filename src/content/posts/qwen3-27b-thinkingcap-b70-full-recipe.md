@@ -7,7 +7,7 @@ solution: "Tested all three quants (Q4_K_M, Q5_K_M, Q6_K) at every context lengt
 usedIn: "Production inference on Intel Arc Pro B70 32GB, serving ThinkingCap-Qwen3.6-27B via llama-server SYCL build b10222. Used daily through a Telegram bot bridge on Radxa ROCK 5B+."
 impact: "Q5_K_M at 200K context runs at ~24 t/s with MTP-4 (base 16.2 t/s + 50% spec gain). Q4_K_M reaches 256K. MoE 35B reaches 512K at 70 t/s. Prefill hits 1621 t/s on the B70's XMX engines. Full VRAM boundary map provided for every config."
 pubDate: 2026-08-04
-category: ["local-ai", "infrastructure"]
+category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
 tags:
   [
@@ -49,11 +49,11 @@ Hardware reference: [Intel Arc Pro B70 on Amazon](https://go.sergiiob.dev/arc-pr
 
 The B70 has 32,656 MiB visible VRAM. A 27B dense model eats most of it in weights alone:
 
-| Quant | Weights | VRAM left for KV + buffers |
-|-------|---------|---------------------------|
-| Q4_K_M | 15.6 GB | ~17 GB |
-| Q5_K_M | 18.2 GB | ~14.5 GB |
-| Q6_K | 20.9 GB | ~11.8 GB |
+| Quant  | Weights | VRAM left for KV + buffers |
+| ------ | ------- | -------------------------- |
+| Q4_K_M | 15.6 GB | ~17 GB                     |
+| Q5_K_M | 18.2 GB | ~14.5 GB                   |
+| Q6_K   | 20.9 GB | ~11.8 GB                   |
 
 The remaining VRAM must hold the KV cache (which scales with context length) plus ~2 GB of fixed compute buffers (SYCL JIT, attention workspace, etc.).
 
@@ -69,16 +69,16 @@ The fleet standard is asymmetric KV quantization:
 --cache-type-k q8_0 --cache-type-v q4_1 --flash-attn on
 ```
 
-**Why asymmetric?** In attention (`softmax(Q·Kᵀ / √d) · V`), the K matrix determines *which tokens to attend to* (routing), while V is *averaged* across attended tokens. K is sensitive to quantization noise; V tolerates it. So: spend bits on K (q8_0), save bits on V (q4_1).
+**Why asymmetric?** In attention (`softmax(Q·Kᵀ / √d) · V`), the K matrix determines _which tokens to attend to_ (routing), while V is _averaged_ across attended tokens. K is sensitive to quantization noise; V tolerates it. So: spend bits on K (q8_0), save bits on V (q4_1).
 
 **Measured KL-divergence** (from [llama.cpp discussion #23470](https://github.com/ggml-org/llama.cpp/discussions/23470), cross-referenced with my own [KL-divergence analysis](https://sergiiob.dev/posts/kv-cache-quantization-kl-divergence/)):
 
-| K cache | V cache | KL-divergence | Same top-p | Verdict |
-|---------|---------|---------------|------------|---------|
-| q8_0 | **q4_1** | **~0.003** | ~97% | **Fleet standard** |
-| q8_0 | q8_0 | ~0.003 | ~97% | Conservative (more VRAM) |
-| q5_0 | q4_1 | ~0.006-0.008 | ~93% | Acceptable trade-off |
-| **q4_0** | *any* | **~5.5** | **~11.6%** | **Catastrophic — never use** |
+| K cache  | V cache  | KL-divergence | Same top-p | Verdict                      |
+| -------- | -------- | ------------- | ---------- | ---------------------------- |
+| q8_0     | **q4_1** | **~0.003**    | ~97%       | **Fleet standard**           |
+| q8_0     | q8_0     | ~0.003        | ~97%       | Conservative (more VRAM)     |
+| q5_0     | q4_1     | ~0.006-0.008  | ~93%       | Acceptable trade-off         |
+| **q4_0** | _any_    | **~5.5**      | **~11.6%** | **Catastrophic — never use** |
 
 The q4_0 K cliff is not gradual — it's catastrophic (KL-divergence ~5.5, only 11.6% of top-p tokens match). The model output is destroyed. This is why we use q8_0 for K: it's the safest option that still saves ~50% VRAM vs FP16.
 
@@ -86,13 +86,13 @@ The q4_0 K cliff is not gradual — it's catastrophic (KL-divergence ~5.5, only 
 
 I loaded each quant at progressively higher context until VRAM ran out. These are **measured** values from `llama-bench` on build b10222, not estimates:
 
-| Quant | 128K | 200K | 256K | 512K |
-|-------|------|------|------|------|
-| **Q4_K_M** | 8.1 GB free ✅ | 4.2 GB free ✅ | **0.9 GB free ⚠️** | OVER ❌ |
-| **Q5_K_M** | 3.3 GB free ✅ | **2.7 GB free ✅** | OVER ❌ | OVER ❌ |
-| **Q6_K** | **0.7 GB free ⚠️** | OVER ❌ | OVER ❌ | OVER ❌ |
+| Quant      | 128K               | 200K               | 256K               | 512K    |
+| ---------- | ------------------ | ------------------ | ------------------ | ------- |
+| **Q4_K_M** | 8.1 GB free ✅     | 4.2 GB free ✅     | **0.9 GB free ⚠️** | OVER ❌ |
+| **Q5_K_M** | 3.3 GB free ✅     | **2.7 GB free ✅** | OVER ❌            | OVER ❌ |
+| **Q6_K**   | **0.7 GB free ⚠️** | OVER ❌            | OVER ❌            | OVER ❌ |
 
-*(Values = MiB free after model + KV + compute buffers. ✅ >1 GB, ⚠️ <1 GB tight.)*
+_(Values = MiB free after model + KV + compute buffers. ✅ >1 GB, ⚠️ <1 GB tight.)_
 
 **Key finding:** Q5_K_M at 200K works with 2.7 GB headroom — better than linear VRAM models predicted. This means **Q5 quality at 200K context is a viable production config**, not just Q4.
 
@@ -102,51 +102,51 @@ Q6_K at 128K is the absolute quality ceiling: it fits with only 687 MiB free. Pu
 
 ### Prefill throughput at multiple prompt sizes
 
-| Config | pp512 | pp4096 | Δ vs Q4 |
-|--------|-------|--------|---------|
-| Q4_K_M @ 256K | 567 t/s | 700 t/s | — |
-| Q5_K_M @ 128K | 614 t/s | 706 t/s | +0.9% |
-| Q5_K_M @ 200K | 616 t/s | 706 t/s | +0.9% |
-| Q6_K @ 128K | 585 t/s | 715 t/s | **+2.1%** |
+| Config        | pp512   | pp4096  | Δ vs Q4   |
+| ------------- | ------- | ------- | --------- |
+| Q4_K_M @ 256K | 567 t/s | 700 t/s | —         |
+| Q5_K_M @ 128K | 614 t/s | 706 t/s | +0.9%     |
+| Q5_K_M @ 200K | 616 t/s | 706 t/s | +0.9%     |
+| Q6_K @ 128K   | 585 t/s | 715 t/s | **+2.1%** |
 
-*Build b10222, q8_0-q4_1 KV, FA on, 150W, llama-bench 3 reps.*
+_Build b10222, q8_0-q4_1 KV, FA on, 150W, llama-bench 3 reps._
 
 Prefill is flat across dense quants (~700-715 t/s at pp4096) — same bandwidth constraint as decode. The B70's XMX engines (via oneDNN flash attention) push prefill well beyond what the raw 608 GB/s bandwidth suggests.
 
 ### Token generation (decode) with MTP-4 delta
 
-| Config | Base decode (tg128) | With MTP-4 (est.) | Δ vs base |
-|--------|--------------------|-------------------|-----------|
-| Q4_K_M @ 256K | 18.4 t/s | ~29 t/s | **+58%** |
-| Q5_K_M @ 200K | 16.2 t/s | ~24 t/s | **+48%** |
-| Q6_K @ 128K | 16.0 t/s | ~24 t/s | **+50%** |
+| Config        | Base decode (tg128) | With MTP-4 (est.) | Δ vs base |
+| ------------- | ------------------- | ----------------- | --------- |
+| Q4_K_M @ 256K | 18.4 t/s            | ~29 t/s           | **+58%**  |
+| Q5_K_M @ 200K | 16.2 t/s            | ~24 t/s           | **+48%**  |
+| Q6_K @ 128K   | 16.0 t/s            | ~24 t/s           | **+50%**  |
 
-*Base from llama-bench tg128 (no speculative). MTP-4 estimate from measured +35-50% gain
-(93-94% draft acceptance, build b10222, 165-180W).*
+_Base from llama-bench tg128 (no speculative). MTP-4 estimate from measured +35-50% gain
+(93-94% draft acceptance, build b10222, 165-180W)._
 
 **Decode speed is quant-independent** (~16-18 t/s base across all quants). The B70 is bandwidth-bound on weights — the quant only affects quality and VRAM, not decode speed. The choice between Q4/Q5/Q6 is purely about quality vs context ceiling.
 
 ### Cross-hardware comparison: 27B dense class
 
-| Hardware | VRAM | Model | Decode (base) | Prefill (pp4K) | Max ctx | Source |
-|----------|------|-------|--------------|----------------|---------|--------|
-| **Arc Pro B70 32GB** | 32 GB | ThinkingCap 27B Q5 | 16.2 t/s | 706 t/s | 200K | this post |
-| **Arc Pro B70 32GB** | 32 GB | ThinkingCap 27B Q5 + MTP | ~24 t/s | 706 t/s | 200K | this post |
-| RX 7800 XT 16GB | 16 GB | GLM-4.7-REAP-23B IQ4 | 59.8 t/s | 81.7 t/s | 32K | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
-| RTX 4090 24GB | 24 GB | Qwen 27B Q4 (est.) | ~35 t/s | ~1000 t/s | 128K | community |
+| Hardware             | VRAM  | Model                    | Decode (base) | Prefill (pp4K) | Max ctx | Source                                                        |
+| -------------------- | ----- | ------------------------ | ------------- | -------------- | ------- | ------------------------------------------------------------- |
+| **Arc Pro B70 32GB** | 32 GB | ThinkingCap 27B Q5       | 16.2 t/s      | 706 t/s        | 200K    | this post                                                     |
+| **Arc Pro B70 32GB** | 32 GB | ThinkingCap 27B Q5 + MTP | ~24 t/s       | 706 t/s        | 200K    | this post                                                     |
+| RX 7800 XT 16GB      | 16 GB | GLM-4.7-REAP-23B IQ4     | 59.8 t/s      | 81.7 t/s       | 32K     | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
+| RTX 4090 24GB        | 24 GB | Qwen 27B Q4 (est.)       | ~35 t/s       | ~1000 t/s      | 128K    | community                                                     |
 
-*The B70's advantage is VRAM capacity (32 GB → 200K context) not raw speed. Consumer
+_The B70's advantage is VRAM capacity (32 GB → 200K context) not raw speed. Consumer
 GPUs with less VRAM cap at 32-128K. The 7800 XT is faster per-token on smaller models
-but can't fit a 19 GB 27B at 200K — it tops out at 32K for a 23B model.*
+but can't fit a 19 GB 27B at 200K — it tops out at 32K for a 23B model._
 
 ## MTP-4 speculative decoding: +35-50% decode
 
 Multi-Token Prediction (MTP) is Qwen's built-in speculative decoding. The model has a draft head that proposes multiple tokens per forward pass, which are then verified in parallel. On dense 27B:
 
-| Config | Base decode | With MTP-4 | Gain |
-|--------|------------|------------|------|
-| Q4_K_M @ 128K, 180W | ~18 t/s | **~29 t/s** | **+50%** |
-| Q5_K_M @ 200K, 165W | ~16 t/s | **~24 t/s** | **+35%** |
+| Config              | Base decode | With MTP-4  | Gain     |
+| ------------------- | ----------- | ----------- | -------- |
+| Q4_K_M @ 128K, 180W | ~18 t/s     | **~29 t/s** | **+50%** |
+| Q5_K_M @ 200K, 165W | ~16 t/s     | **~24 t/s** | **+35%** |
 
 Draft acceptance rate: **93-94%** (measured 0.933-0.938). This is on the high end for self-draft speculative decoding — MTP shares the model's own distribution, so acceptance is naturally high.
 
@@ -192,31 +192,31 @@ For pure text (no vision projector), add 889 MiB headroom — use this for the Q
 
 ## Runtime flags handbook
 
-| Flag | Value | Why |
-|------|-------|-----|
-| `-ngl 99` | All layers on GPU | Full GPU offload, no CPU fallback |
-| `-ncmoe 0` | All MoE experts on GPU | (For dense models, this is a no-op but harmless) |
-| `-fa on` | Flash attention | **Required** for quantized KV cache to work |
-| `-ctk q8_0` | K cache = 8-bit | Near-lossless (KL ~0.003). Never use q4_0 for K — catastrophic (KL ~5.5) |
-| `-ctv q4_1` | V cache = 4-bit | V tolerates aggressive quantization (averaged in attention) |
-| `-c 204800` | 200K context | Max safe context for Q5_K_M. Q4 can reach 256K |
-| `-b 8192` | Batch size | Optimal for SYCL prefill throughput |
-| `-ub 4096` | Micro-batch | Do NOT reduce — smaller values hurt prefill significantly |
-| `-t 8` | 8 CPU threads | For prompt processing and CPU-side ops |
-| `--no-mmap` | Keep in VRAM | Don't page model to disk |
-| `--spec-type draft-mtp` | MTP speculative decoding | +35-50% decode on dense. 93-94% acceptance |
-| `--spec-draft-n-max 4` | Max 4 draft tokens | Best acceptance/speed trade-off |
-| `--spec-draft-p-min 0.75` | Min acceptance probability | Below this, fall back to standard decode |
+| Flag                      | Value                      | Why                                                                      |
+| ------------------------- | -------------------------- | ------------------------------------------------------------------------ |
+| `-ngl 99`                 | All layers on GPU          | Full GPU offload, no CPU fallback                                        |
+| `-ncmoe 0`                | All MoE experts on GPU     | (For dense models, this is a no-op but harmless)                         |
+| `-fa on`                  | Flash attention            | **Required** for quantized KV cache to work                              |
+| `-ctk q8_0`               | K cache = 8-bit            | Near-lossless (KL ~0.003). Never use q4_0 for K — catastrophic (KL ~5.5) |
+| `-ctv q4_1`               | V cache = 4-bit            | V tolerates aggressive quantization (averaged in attention)              |
+| `-c 204800`               | 200K context               | Max safe context for Q5_K_M. Q4 can reach 256K                           |
+| `-b 8192`                 | Batch size                 | Optimal for SYCL prefill throughput                                      |
+| `-ub 4096`                | Micro-batch                | Do NOT reduce — smaller values hurt prefill significantly                |
+| `-t 8`                    | 8 CPU threads              | For prompt processing and CPU-side ops                                   |
+| `--no-mmap`               | Keep in VRAM               | Don't page model to disk                                                 |
+| `--spec-type draft-mtp`   | MTP speculative decoding   | +35-50% decode on dense. 93-94% acceptance                               |
+| `--spec-draft-n-max 4`    | Max 4 draft tokens         | Best acceptance/speed trade-off                                          |
+| `--spec-draft-p-min 0.75` | Min acceptance probability | Below this, fall back to standard decode                                 |
 
 ## MoE comparison: when to use 35B instead of 27B
 
 For reference, the Qwen3.6-35B-A3B MoE on the same B70:
 
-| Config | Decode | Prefill | Max context | VRAM free |
-|--------|--------|---------|-------------|-----------|
-| MoE Q4_K_XL @ 512K | **70.2 t/s** | **1659 t/s** | 512K | 1.6 GB |
-| MoE Q5_K_M @ 256K | ~68 t/s | ~1621 t/s | 256K | 2.2 GB |
-| Dense Q5_K_M @ 200K (MTP) | ~24 t/s | 706 t/s | 200K | 2.7 GB |
+| Config                    | Decode       | Prefill      | Max context | VRAM free |
+| ------------------------- | ------------ | ------------ | ----------- | --------- |
+| MoE Q4_K_XL @ 512K        | **70.2 t/s** | **1659 t/s** | 512K        | 1.6 GB    |
+| MoE Q5_K_M @ 256K         | ~68 t/s      | ~1621 t/s    | 256K        | 2.2 GB    |
+| Dense Q5_K_M @ 200K (MTP) | ~24 t/s      | 706 t/s      | 200K        | 2.7 GB    |
 
 The MoE is 3x faster in decode and 2.3x faster in prefill, with 2.5x more context. **Use MoE for throughput and long context; use dense for reasoning quality and tool use.** Dense 27B with MTP is better for agentic workloads where reasoning chains matter more than raw t/s.
 
