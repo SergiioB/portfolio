@@ -1,6 +1,6 @@
 ---
-title: "Running Qwen3 27B on Intel Arc Pro B70: The Full Recipe"
-description: "Every config that works for running Qwen3 27B dense on Intel Arc Pro B70 with llama.cpp SYCL — Q4/Q5/Q6 quant comparison, MTP-4 speculative decoding (+35-50%), q8_0 K + q4_1 V KV cache with measured KL-divergence, and the exact VRAM context ceiling for each quant. Validated on build b10222 with llama-bench."
+title: "Running Qwen3.6 27B on Intel Arc Pro B70: The Full Recipe"
+description: "Every config that works for running Qwen3.6 27B dense on Intel Arc Pro B70 with llama.cpp SYCL — Q4/Q5/Q6 quant comparison, MTP-4 speculative decoding (+35-50%), q8_0 K + q4_1 V KV cache with measured KL-divergence, and the exact VRAM context ceiling for each quant. Validated on build b10222 with llama-bench."
 situation: "Qwen 3.8 27B is launching next week. I needed the definitive B70 recipe for 27B-class dense models — which quant, which context, which KV config, and what decode speed to expect — so the answer is ready before the launch wave hits."
 issue: "The 27B dense model is VRAM-hungry (16-21 GB weights + 7-14 GB KV at high context), making the quant/context/KV trade-off non-obvious. The previous fleet used q5_0-q4_1 KV cache, but KL-divergence analysis showed q8_0 K + q4_1 V is near-lossless. The context ceiling per quant was unknown."
 solution: "Tested all three quants (Q4_K_M, Q5_K_M, Q6_K) at every context length (128K-512K) with q8_0 K + q4_1 V KV cache. Measured VRAM boundaries, decode speed, and prefill with llama-bench. MTP-4 speculative decoding adds +35-50% decode. The KV insight: dense models use 3.8x more KV cache than MoE — so a 16 GB dense model can't pass 256K while a 25 GB MoE reaches 512K."
