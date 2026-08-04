@@ -16,6 +16,8 @@ Models like **DeepSeek-V3**, **Mixtral**, and **Ornith** use the Mixture of Expe
 
 A Router network looks at the current token and decides which experts are best suited to handle it. For example, a 35B MoE model might only activate 8B parameters per token.
 
+![Animated MoE routing: a router activates only the top-K experts for each token, leaving the rest idle](/images/diagrams/handbook/moe-routing.svg)
+
 **Infrastructure Impact:**
 
 - **VRAM:** You still need enough VRAM to hold all 35B parameters (the model is huge on disk).

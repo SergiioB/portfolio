@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" font-family="monospace">
+  <rect width="640" height="260" rx="14" fill="#0d1117"/>
+  <text x="20" y="28" fill="#58a6ff" font-size="13" font-weight="bold">SELF-ATTENTION: Q · Kᵀ → softmax → · V</text>
+
+  <!-- Q K V boxes -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="40" y="60" width="80" height="44" rx="8" fill="none" stroke="#58a6ff" stroke-width="1.5"/>
+    <text x="80" y="87" fill="#58a6ff">Query</text>
+    <rect x="40" y="120" width="80" height="44" rx="8" fill="none" stroke="#56d364" stroke-width="1.5"/>
+    <text x="80" y="147" fill="#56d364">Key</text>
+    <rect x="40" y="180" width="80" height="44" rx="8" fill="none" stroke="#e3b341" stroke-width="1.5"/>
+    <text x="80" y="207" fill="#e3b341">Value</text>
+  </g>
+
+  <!-- dot product node -->
+  <circle cx="250" cy="110" r="26" fill="none" stroke="#8b949e" stroke-width="1.5"/>
+  <text x="250" y="115" fill="#c9d1d9" font-size="14" text-anchor="middle">Q·Kᵀ</text>
+
+  <!-- softmax node -->
+  <rect x="350" y="84" width="90" height="52" rx="10" fill="none" stroke="#bc8cff" stroke-width="1.5"/>
+  <text x="395" y="115" fill="#bc8cff" font-size="12" text-anchor="middle">softmax</text>
+
+  <!-- output -->
+  <rect x="510" y="84" width="90" height="52" rx="10" fill="none" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="555" y="115" fill="#58a6ff" font-size="12" text-anchor="middle">output</text>
+
+  <!-- static edges -->
+  <g stroke="#30363d" stroke-width="1.5" fill="none">
+    <path d="M120 82 H225 M120 142 H225"/>
+    <path d="M276 110 H350"/>
+    <path d="M440 110 H510"/>
+    <path d="M120 202 H470 V136 H440"/>
+  </g>
+
+  <!-- animated pulses along edges -->
+  <circle r="4" fill="#58a6ff">
+    <animateMotion dur="1.6s" repeatCount="indefinite" path="M120 82 H225"/>
+  </circle>
+  <circle r="4" fill="#56d364">
+    <animateMotion dur="1.6s" repeatCount="indefinite" path="M120 142 H225"/>
+  </circle>
+  <circle r="4" fill="#bc8cff">
+    <animateMotion dur="1.6s" begin="0.8s" repeatCount="indefinite" path="M276 110 H350"/>
+  </circle>
+  <circle r="4" fill="#e3b341">
+    <animateMotion dur="2.2s" begin="1.2s" repeatCount="indefinite" path="M440 110 H510"/>
+  </circle>
+
+  <text x="20" y="248" fill="#8b949e" font-size="11">Scores = how relevant each past token is · Output = score-weighted sum of Values</text>
+</svg>

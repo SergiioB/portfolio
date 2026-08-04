@@ -35,6 +35,8 @@ During inference, these heads generate three vectors for every token: **Query (Q
 
 The model takes the current token's Query and does a dot-product multiplication against every previous token's Key. High scores mean high relevance. The model then uses those scores to sum up the Values.
 
+![Animated self-attention flow: Query and Key produce scores, softmax, then a weighted sum of Values](/images/diagrams/handbook/attention-qkv-flow.svg)
+
 ## The Infrastructure Nightmare: The KV Cache
 
 If the model had to recalculate the Keys and Values for every single word in a 10,000-word prompt just to generate the 10,001st word, inference would be unusably slow.
@@ -42,6 +44,8 @@ If the model had to recalculate the Keys and Values for every single word in a 1
 To solve this, engines like `llama.cpp` or `vLLM` use a **KV Cache**. Once a token's Key and Value are calculated, they are saved in VRAM. When generating the next token, the model only calculates the Q, K, V for the _new_ token, and pulls the past K and V from the cache.
 
 **The catch:** The KV Cache grows linearly with context size. For a 256K context window, the KV cache can easily consume 10GB+ of VRAM. This is why aggressive quantization of the V-cache (to Q4) is critical for high-context local deployment.
+
+![Animated KV cache: one K·V slot added per generated token, VRAM bar growing linearly](/images/diagrams/handbook/kv-cache-growth.svg)
 
 ## Flash Attention: The Savior of Context
 
@@ -52,3 +56,5 @@ As context grows, the matrix multiplication required for attention (Q \* K) grow
 Instead of computing the massive Q\*K matrix and writing it to High Bandwidth Memory (HBM), Flash Attention computes it in small "tiles" directly inside the GPU's ultra-fast SRAM (L1 cache), calculates the Softmax, and only writes the final result back to HBM.
 
 This turns a memory-bandwidth-bound operation into a compute-bound operation, enabling the massive 128K and 256K context windows we see today without slowing inference to a crawl.
+
+![Animated Flash Attention: tiles read from slow HBM into fast SRAM, computed, and only the result written back](/images/diagrams/handbook/flash-attention-tiling.svg)

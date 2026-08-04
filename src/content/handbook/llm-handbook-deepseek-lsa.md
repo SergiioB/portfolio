@@ -52,6 +52,8 @@ The core of LSA is the **Neural Memory Indexer**, implemented as a Dual-Encoder 
 2. **Lookahead Prediction:** As generation proceeds, the current query state is continuously evaluated against the indexed chunks.
 3. **Sparse Fetching:** Every 64 tokens, the indexer evaluates the query projection to predict the most critical KV chunks for the _next_ block of tokens. Only these high-value chunks are asynchronously prefetched into VRAM.
 
+![Animated sparse attention: an indexer scans the key pool and selects only the top-K relevant keys, skipping the rest](/images/diagrams/handbook/lsa-indexer.svg)
+
 By fetching only the critical subset of keys and values, the attention mechanism becomes sparse. DeepSeek-V4's LSA reduces the active KV cache VRAM footprint by **90%** at a 500K context, fundamentally decoupling context length from GPU memory constraints.
 
 For AI infrastructure engineers, this architecture shifts the performance optimization vector from raw HBM capacity to host-to-device PCIe/NVLink bandwidth latency, as the system orchestrates rapid, sparse prefetching of memory chunks every 64 tokens.
