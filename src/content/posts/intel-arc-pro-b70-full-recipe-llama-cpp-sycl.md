@@ -33,6 +33,13 @@ tags:
 draft: false
 ---
 
+> **Update (2026-08-04):** Production has since been promoted to a master build
+> (`build-sycl-0804`, b10255+) with #25874 (quantized-KV XMX flash attention) and #25880.
+> Measured results: MoE prefill **2128 t/s @ pp4096** (was 1691), **1871 t/s @ pp32K**
+> (was ~780, +140%), decode **72.6 t/s**. Dense prefill 936 t/s @ pp4096. See
+> [Intel Arc Pro B70: +140% Long-Context Prefill from a llama.cpp Master Build](/posts/intel-arc-b70-sycl-xmx-quantized-kv-prefill).
+> Everything else in this recipe (KV config, power tiers, VRAM boundaries) is unchanged.
+
 ## Situation
 
 The Intel Arc Pro B70 is a 32 GB GDDR6 discrete GPU based on the Xe2 (Battlemage) architecture. It has 32 Xe-Cores, 256 XMX engines, 608 GB/s bandwidth, and 367 INT8 TOPS. At its price point, it's the cheapest 32 GB VRAM card you can buy for local LLM inference.
