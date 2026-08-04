@@ -222,3 +222,8 @@ temp/
 .zed/*.bak-*
 public/.well-known/security.txt
 public/images/screenshot*.png
+
+# Cover letter: kept locally for tailored applications, not published publicly.
+# The public page/route is disabled (PUBLIC_COVER_LETTER.enabled=false) and this
+# file is untracked so it never ships in the deployed site.
+src/pages/cover-letter.astro

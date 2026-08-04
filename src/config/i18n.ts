@@ -534,8 +534,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "coverLetter.print": { en: "⬇ Print / Save as PDF", es: "⬇ Imprimir / Guardar como PDF" },
   "coverLetter.backAbout": { en: "← About", es: "← Acerca de" },
   "about.coverLetterDisabled": {
-    en: "Cover letter link is temporarily unavailable.",
-    es: "El enlace a la carta de presentación no está disponible temporalmente.",
+    en: "A tailored cover letter is available on request — just reach out.",
+    es: "Hay una carta de presentación personalizada disponible bajo petición — escríbeme.",
   },
   "about.principles": { en: "Operating Principles", es: "Principios Operativos" },
   "about.principle1Title": {
