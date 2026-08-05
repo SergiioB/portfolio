@@ -130,6 +130,34 @@ per-user latency stays flat (96 → 104 ms). llama.cpp's parallel slots serializ
 aggregate saturates at ~85-92 gen t/s and per-user latency degrades linearly
 (15 → 188 ms). At 8+ users, vLLM wins; at 1 user, llama.cpp wins by 6.3×.
 
+### Community numbers, explained (the "single-request 150 t/s" reports)
+
+After this post's first publication, a community user posted vLLM XPU results on the
+same card — single concurrent request, llama-bench-style tg32/pp tests:
+
+| Model (vLLM XPU, 1 request)   | Prefill             | Decode (tg32)              |
+| ----------------------------- | ------------------- | -------------------------- |
+| Ornith-1.0-35B-MXFP4          | 10,304 t/s (pp4086) | 71.1 t/s (peak 73.4)       |
+| Qwen3.6-35B-A3B-**GPTQ-Int4** | 7,975 t/s (pp2048)  | **145.5 t/s (peak 150.2)** |
+
+Three things this teaches us:
+
+1. **Ornith decode 71-73 t/s = exactly what llama.cpp gets on Ornith** (73.7 t/s in our
+   July runs). Decode is memory-bandwidth-bound — the engine barely matters. The user's
+   own comment says it: "same tg 73/75, prefill 10,000".
+2. **The "150 t/s single-request" figure comes from the PLAIN Qwen3.6-35B-A3B, not the
+   UD variant we tested.** The plain A3B has no hybrid linear-attention (GDN) layers —
+   so no generic-triton FLA kernels in the decode path. Our 10.4 t/s was the UD model's
+   penalty, not vLLM's. On the plain A3B, vLLM XPU's decode is genuinely fast.
+3. **vLLM's real, reproducible edge is prefill: 4-5× llama.cpp on the same card**
+   (10,304 vs ~2,128 t/s) — the XMX/DPAS flash-attention kernels in vllm-xpu-kernels.
+   This matches the community head-to-head finding of 2.4-15× prefill advantage.
+
+So the honest scorecard on a B70: **vLLM wins prefill ~5× and concurrency (aggregate);
+decode is parity on non-hybrid models (both engines ~70 t/s on Ornith-class MoE);
+llama.cpp wins single-stream latency, quantized-memory efficiency, model coverage
+(UD/hybrid models run only on llama.cpp) and setup simplicity.**
+
 ## Conclusion — why people say vLLM is better
 
 Because they're measuring different things, and both are real:
@@ -140,9 +168,14 @@ Because they're measuring different things, and both are real:
   busy with many requests at once. Aggregate throughput scales with concurrency —
   measured 153.4 gen t/s at 16 users on a single B70, and community dual-B70 runs hit
   [912 tok/s output at 50 concurrent users](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks).
-  Community head-to-heads also show vLLM XPU winning prefill by [2.4-15×](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks/blob/master/engine-comparison.md)
-  (XMX/DPAS flash-attention kernels), while llama.cpp wins quantized memory efficiency
-  and model coverage (vLLM XPU can't run Qwen 3.5 GDN attention at all).
+  Its prefill is 4-5× llama.cpp's on this card (XMX flash-attention kernels — measured
+  10,304 t/s pp4K on Ornith by the community), and on non-hybrid models like the plain
+  Qwen3.6-35B-A3B its single-request decode is genuinely fast (145-150 t/s).
+- The "mystery" of llama.cpp users on a B70 has a simple answer: most B70 owners run
+  hybrid/UD models (which vLLM XPU can't run at all), single interactive users, or
+  want quantized GGUF memory efficiency — and on decode, both engines are
+  bandwidth-bound anyway. vLLM's wins are real, but they're prefill, concurrency and
+  multi-GPU — not raw single-stream decode.
 - The Reddit "150 t/s on one B70" claim isn't fiction — it's vLLM at ~16 concurrent
   users, which we reproduced on our card (153.4 gen t/s). Nobody quoting it was
   talking about single-stream decode.
