@@ -190,14 +190,17 @@ The fleet standard, validated against [llama.cpp #23470](https://github.com/ggml
 
 ### Dense: ThinkingCap-Qwen3.6-27B (with MTP-4)
 
-| Quant  | Weights | Max ctx  | VRAM free | Decode (base) | w/MTP-4 | Prefill (pp4096) |
-| ------ | ------- | -------- | --------- | ------------- | ------- | ---------------- |
-| Q4_K_M | 16 GB   | **256K** | 0.9 GB    | **21.3 t/s**  | ~29 t/s | **936 t/s**      |
-| Q5_K_M | 19 GB   | **200K** | 2.7 GB    | 16.2 t/s      | ~24 t/s | 706 t/s          |
-| Q6_K   | 21 GB   | **128K** | 0.7 GB    | 16.0 t/s      | ~24 t/s | —                |
+| Quant  | Weights | Max ctx (base) | VRAM free | Decode (base) | w/MTP-4 (128K) | Prefill (pp4096) |
+| ------ | ------- | -------------- | --------- | ------------- | -------------- | ---------------- |
+| Q4_K_M | 16 GB   | **256K**       | 0.9 GB    | **21.3 t/s**  | **29.75 t/s**  | **936 t/s**      |
+| Q5_K_M | 19 GB   | **200K**       | 2.7 GB    | 16.2 t/s      | **26.3 t/s**   | 706 t/s          |
+| Q6_K   | 21 GB   | **128K**       | 0.7 GB    | 16.0 t/s      | **27.85 t/s**  | —                |
 
-_Q4_K_M row = master 0804 (Run 9, llama-bench). Q5_K_M / Q6_K rows = b10222-era
-(boundary sweep, listed context); not re-run on 0804._
+_MTP-4 decode measured 2026-08-05 @200W, 128K ctx (Run 12): engine rate, 4 prompts × 3
+reps steady-state. Base decode Q4 = master 0804 (Run 9); Q5/Q6 base = b10222-era.
+**MTP VRAM caveat:** with spec-decode buffers, dense 27B fits only at 128K ctx —
+Q4@256K+MTP and Q5@200K+MTP overflow (the Max ctx column is the llama-bench boundary
+without MTP buffers). This is why production runs Q6_K @128K + MTP._
 
 ### MoE: Qwen3.6-35B-A3B
 
