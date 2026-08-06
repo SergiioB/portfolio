@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="MoE vs Dense bandwidth comparison on Arc Pro B70">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="moeZone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="denseZone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="720" rx="24" fill="url(#bg)"/>
+
+  <text x="72" y="68" fill="#f8fafc" font-size="32" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="700">
+    Why MoE is 5–6× faster than Dense on the B70
+  </text>
+  <text x="72" y="100" fill="#94a3b8" font-size="17" font-family="Segoe UI, Inter, Arial, sans-serif">
+    Both are bandwidth-bound at 608 GB/s. The difference is bytes read per token.
+  </text>
+
+  <!-- MoE side (left) -->
+  <rect x="60" y="140" width="510" height="540" rx="18" fill="url(#moeZone)" stroke="#10b981" stroke-opacity="0.35"/>
+  <text x="84" y="178" fill="#34d399" font-size="22" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="700">MoE 35B-A3B</text>
+  <text x="84" y="206" fill="#86efac" font-size="15" font-family="Segoe UI, Inter, Arial, sans-serif">3B active params · reads ~3 GB/token</text>
+
+  <!-- MoE: 256 experts, only ~8 active shown -->
+  <g transform="translate(84, 240)">
+    <text x="0" y="0" fill="#94a3b8" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">256 experts per layer — router picks top-8:</text>
+    <!-- inactive experts: faint grid -->
+    <g fill="#1e293b" stroke="#334155">
+      <rect x="0" y="14" width="44" height="44" rx="6"/><rect x="50" y="14" width="44" height="44" rx="6"/>
+      <rect x="0" y="64" width="44" height="44" rx="6"/><rect x="50" y="64" width="44" height="44" rx="6"/>
+      <rect x="100" y="14" width="44" height="44" rx="6"/><rect x="150" y="14" width="44" height="44" rx="6"/>
+      <rect x="100" y="64" width="44" height="44" rx="6"/><rect x="150" y="64" width="44" height="44" rx="6"/>
+      <rect x="200" y="14" width="44" height="44" rx="6"/><rect x="250" y="14" width="44" height="44" rx="6"/>
+      <rect x="300" y="14" width="44" height="44" rx="6"/><rect x="350" y="14" width="44" height="44" rx="6"/>
+      <rect x="200" y="64" width="44" height="44" rx="6"/><rect x="250" y="64" width="44" height="44" rx="6"/>
+      <rect x="300" y="64" width="44" height="44" rx="6"/><rect x="350" y="64" width="44" height="44" rx="6"/>
+    </g>
+    <!-- active experts: glowing green -->
+    <g fill="#10b981" fill-opacity="0.85" stroke="#34d399" stroke-width="1.5" filter="url(#softGlow)">
+      <rect x="400" y="14" width="44" height="44" rx="6"/>
+      <rect x="400" y="64" width="44" height="44" rx="6"/>
+    </g>
+    <text x="400" y="138" fill="#34d399" font-size="12" font-family="Segoe UI, Inter, Arial, sans-serif">active (read)</text>
+  </g>
+
+  <!-- MoE result -->
+  <g transform="translate(84, 430)">
+    <text x="0" y="0" fill="#cbd5e1" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Single-stream decode @ 150W</text>
+    <text x="0" y="56" fill="#34d399" font-size="56" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="800">126</text>
+    <text x="118" y="56" fill="#86efac" font-size="22" font-family="Segoe UI, Inter, Arial, sans-serif">t/s</text>
+    <text x="0" y="92" fill="#86efac" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">vLLM MTP · 58°C</text>
+    <text x="0" y="124" fill="#94a3b8" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">llama.cpp baseline: 69 t/s</text>
+    <text x="0" y="158" fill="#94a3b8" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">Prefill p2k: 6,217 t/s</text>
+  </g>
+
+  <!-- Dense side (right) -->
+  <rect x="630" y="140" width="510" height="540" rx="18" fill="url(#denseZone)" stroke="#ef4444" stroke-opacity="0.35"/>
+  <text x="654" y="178" fill="#f87171" font-size="22" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="700">Dense 27B</text>
+  <text x="654" y="206" fill="#fca5a5" font-size="15" font-family="Segoe UI, Inter, Arial, sans-serif">27B params · reads ALL ~19 GB/token</text>
+
+  <!-- Dense: full stack all active -->
+  <g transform="translate(654, 240)">
+    <text x="0" y="0" fill="#94a3b8" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">Every layer read every token — no router:</text>
+    <g fill="#ef4444" fill-opacity="0.78" stroke="#f87171" stroke-width="1.2" filter="url(#softGlow)">
+      <rect x="0" y="14" width="44" height="44" rx="6"/><rect x="50" y="14" width="44" height="44" rx="6"/>
+      <rect x="0" y="64" width="44" height="44" rx="6"/><rect x="50" y="64" width="44" height="44" rx="6"/>
+      <rect x="100" y="14" width="44" height="44" rx="6"/><rect x="150" y="14" width="44" height="44" rx="6"/>
+      <rect x="100" y="64" width="44" height="44" rx="6"/><rect x="150" y="64" width="44" height="44" rx="6"/>
+      <rect x="200" y="14" width="44" height="44" rx="6"/><rect x="250" y="14" width="44" height="44" rx="6"/>
+      <rect x="300" y="14" width="44" height="44" rx="6"/><rect x="350" y="14" width="44" height="44" rx="6"/>
+      <rect x="200" y="64" width="44" height="44" rx="6"/><rect x="250" y="64" width="44" height="44" rx="6"/>
+      <rect x="300" y="64" width="44" height="44" rx="6"/><rect x="350" y="64" width="44" height="44" rx="6"/>
+      <rect x="400" y="14" width="44" height="44" rx="6"/>
+      <rect x="400" y="64" width="44" height="44" rx="6"/>
+    </g>
+    <text x="400" y="138" fill="#f87171" font-size="12" font-family="Segoe UI, Inter, Arial, sans-serif">all read</text>
+  </g>
+
+  <!-- Dense result -->
+  <g transform="translate(654, 430)">
+    <text x="0" y="0" fill="#cbd5e1" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">Single-stream decode @ 230W</text>
+    <text x="0" y="56" fill="#f87171" font-size="56" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="800">23</text>
+    <text x="74" y="56" fill="#fca5a5" font-size="22" font-family="Segoe UI, Inter, Arial, sans-serif">t/s</text>
+    <text x="0" y="92" fill="#fca5a5" font-size="14" font-family="Segoe UI, Inter, Arial, sans-serif">llama.cpp · 79°C</text>
+    <text x="0" y="124" fill="#94a3b8" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">vLLM FP8: ❌ no XPU kernel</text>
+    <text x="0" y="158" fill="#94a3b8" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">Prefill p2k: 1,007 t/s</text>
+  </g>
+
+  <!-- center divider label -->
+  <g transform="translate(555, 700)">
+    <text x="45" y="0" fill="#64748b" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif" text-anchor="middle">~6.3× bandwidth difference → ~5.5× decode difference</text>
+  </g>
+</svg>

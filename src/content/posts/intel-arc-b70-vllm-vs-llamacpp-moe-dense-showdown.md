@@ -87,6 +87,8 @@ Correctness verified: greedy `temp=0` replays produced byte-identical output
 (a corrupting spec path would diverge), and factual probes (17×23=391, capital
 of Australia=Canberra) were correct.
 
+![Four patches that unlocked MTP speculative decoding on XPU GDN](/images/diagrams/b70-mtp-unlock-flow.svg)
+
 ## The comparison: MoE 35B, full grid
 
 Single-stream (Concurrent-1), 150W sweet spot. Format: **vLLM MTP** / llama.cpp
@@ -165,6 +167,8 @@ past the ~23 t/s Q4 baseline. That's the subject of the next investigation.
 
 ## What this all means
 
+![MoE vs Dense bandwidth comparison — why MoE is 5–6× faster on the B70](/images/diagrams/b70-moe-vs-dense-bandwidth.svg)
+
 1. **MoE is 5–6× faster decode than dense on the B70.** Both are bandwidth-bound
    at 608 GB/s, but MoE reads ~3 GB/token (active experts) vs dense's ~19 GB
    (all weights). This isn't a vLLM-vs-llama.cpp thing — it's architecture.
@@ -176,11 +180,15 @@ past the ~23 t/s Q4 baseline. That's the subject of the next investigation.
 4. **Power: MoE=150W, Dense=180W.** MoE self-limits and 230W actively hurts;
    dense scales but pays in heat. Set the cap once per workload.
 
+![Power scaling: MoE flat vs Dense climbing, with temperature](/images/diagrams/b70-power-scaling-moe-vs-dense.svg)
+
 The honest guidance for a B70 owner: **MoE serving workload → vLLM XPU native
 int4 + MTP @150W. Single-user interactive → llama.cpp @150W (MoE) or @180W
 (dense).** Our pi-telegram-bridge is single-user, so llama.cpp stays production —
 but the gap closed hard, and the dense vLLM kernel is the obvious next thing to
 chase.
+
+![The Pi-Bridge production topology: a 5W ARM board driving a 150W GPU](/images/diagrams/b70-pi-bridge-architecture.svg)
 
 ## What's next: getting dense working on vLLM
 

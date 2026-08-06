@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="Power scaling: MoE flat vs Dense climbing, with temperature">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="glow3"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="640" rx="24" fill="url(#bg3)"/>
+
+  <text x="72" y="60" fill="#f8fafc" font-size="30" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="700">
+    Power scaling: MoE and Dense want opposite settings
+  </text>
+  <text x="72" y="92" fill="#94a3b8" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif">
+    Single-stream decode t/s vs power cap. MoE self-limits; Dense scales — but pays in heat.
+  </text>
+
+  <!-- chart area: x=150..1050 (150W..230W), y=140..500 (0..140 t/s) -->
+  <!-- axes -->
+  <line x1="150" y1="500" x2="1050" y2="500" stroke="#475569" stroke-width="2"/>
+  <line x1="150" y1="140" x2="150" y2="500" stroke="#475569" stroke-width="2"/>
+
+  <!-- y-axis labels (t/s) -->
+  <g fill="#94a3b8" font-size="13" font-family="Segoe UI" text-anchor="end">
+    <text x="140" y="504">0</text>
+    <text x="140" y="401">40</text>
+    <text x="140" y="298">80</text>
+    <text x="140" y="195">120</text>
+  </g>
+  <text x="60" y="320" fill="#cbd5e1" font-size="14" font-family="Segoe UI" transform="rotate(-90 60 320)">Decode t/s (single-stream)</text>
+
+  <!-- x-axis labels (watts) -->
+  <g fill="#94a3b8" font-size="13" font-family="Segoe UI" text-anchor="middle">
+    <text x="150" y="524">150W</text>
+    <text x="600" y="524">180W</text>
+    <text x="1050" y="524">230W</text>
+  </g>
+  <text x="600" y="556" fill="#cbd5e1" font-size="14" font-family="Segoe UI" text-anchor="middle">Power cap</text>
+
+  <!-- MoE line: 125.7 @ 150W, ~126 @ 180W, 115.4 @ 230W (flat-ish, slight dip) -->
+  <!-- y = 500 - (val * 2.575); 125.7 -> 176, 126 -> 175, 115.4 -> 203 -->
+  <polyline points="150,176 600,175 1050,203" fill="none" stroke="#10b981" stroke-width="4" filter="url(#glow3)"/>
+  <g fill="#10b981" filter="url(#glow3)">
+    <circle cx="150" cy="176" r="7"/>
+    <circle cx="600" cy="175" r="7"/>
+    <circle cx="1050" cy="203" r="7"/>
+  </g>
+  <g fill="#34d399" font-size="14" font-family="Segoe UI" font-weight="700">
+    <text x="150" y="160" text-anchor="middle">126</text>
+    <text x="600" y="159" text-anchor="middle">~126</text>
+    <text x="1050" y="187" text-anchor="middle">115</text>
+  </g>
+  <text x="300" y="250" fill="#34d399" font-size="18" font-family="Segoe UI" font-weight="700">MoE 35B (vLLM MTP)</text>
+  <text x="300" y="274" fill="#86efac" font-size="13" font-family="Segoe UI">flat ~58°C · self-limits to ~140W · 230W wastes 80W of heat</text>
+
+  <!-- Dense line: 18 @ 150W, ~20.5 @ 180W (interpolated), 23 @ 230W (p2k/g128 best) -->
+  <!-- y: 18 -> 454, 20.5 -> 447, 23 -> 441 -->
+  <polyline points="150,454 600,447 1050,441" fill="none" stroke="#ef4444" stroke-width="4" filter="url(#glow3)"/>
+  <g fill="#ef4444" filter="url(#glow3)">
+    <circle cx="150" cy="454" r="7"/>
+    <circle cx="600" cy="447" r="7"/>
+    <circle cx="1050" cy="441" r="7"/>
+  </g>
+  <g fill="#f87171" font-size="14" font-family="Segoe UI" font-weight="700">
+    <text x="150" y="478" text-anchor="middle">18</text>
+    <text x="600" y="471" text-anchor="middle">~20</text>
+    <text x="1050" y="425" text-anchor="middle">23</text>
+  </g>
+  <text x="780" y="478" fill="#f87171" font-size="18" font-family="Segoe UI" font-weight="700">Dense 27B (llama.cpp Q4_K_M)</text>
+  <text x="780" y="500" fill="#fca5a5" font-size="13" font-family="Segoe UI">+18-30% scaling · 71°C → 79°C thermal cost</text>
+
+  <!-- sweet spot annotations -->
+  <g>
+    <line x1="150" y1="140" x2="150" y2="500" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 4" stroke-opacity="0.5"/>
+    <rect x="92" y="120" width="116" height="28" rx="8" fill="#064e3b" stroke="#10b981"/>
+    <text x="150" y="139" fill="#34d399" font-size="13" font-family="Segoe UI" text-anchor="middle" font-weight="700">MoE sweet spot</text>
+  </g>
+  <g>
+    <line x1="600" y1="140" x2="600" y2="500" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 4" stroke-opacity="0.5"/>
+    <rect x="542" y="120" width="116" height="28" rx="8" fill="#451a03" stroke="#f59e0b"/>
+    <text x="600" y="139" fill="#fcd34d" font-size="13" font-family="Segoe UI" text-anchor="middle" font-weight="700">Dense sweet spot</text>
+  </g>
+
+  <!-- footer note -->
+  <text x="72" y="608" fill="#64748b" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">
+    Run MoE at 150W (cooler, same speed, 80W less heat). Run Dense at 180W sustained — 230W only for short bursts (79°C thermal limit).
+  </text>
+</svg>
