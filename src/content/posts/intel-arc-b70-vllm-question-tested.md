@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: The vLLM Question, Actually Tested"
-description: "Community threads claim vLLM XPU gives 10x the speed of llama.cpp on the B70 (11,000 t/s prefill, 150 t/s decode on Qwen3.6-35B-A3B). I tested the full path — image, FP8, MXFP4, self-built native checkpoints, seven engine patches — and the model did run. The measured truth: llama.cpp wins single-stream by 6x, and the '150 t/s' claim turns out to be vLLM at 16 concurrent users (measured 153.4 t/s aggregate on our card)."
+description: "Community threads claim vLLM XPU hits 145–150 t/s single-stream on Qwen3.6-35B-A3B GPTQ-Int4 on one B70. I reproduced the plain GPTQ checkpoint on intel/vllm 0.21 XPU: single-stream tops ~58 t/s; 145 t/s only appears as multi-user aggregate (~C=8–16). Dense block-FP8 needs a kernel that does not exist on XPU. llama.cpp stays the single-user winner."
 situation: "Every Intel Arc B70 thread has the same refrain: 'B70 is made for vLLM, llama.cpp is diesel in a Formula 1.' The claims are specific: 11,000 t/s prefill and 150 t/s decode on Qwen3.6-35B-A3B at MXFP4, one GPU. We run llama.cpp SYCL in production at 72.6 t/s decode / 2128 t/s prefill — so the question was worth testing directly rather than taking either side on faith."
 issue: "The vLLM path has three gates, and each one turned out to be real: (1) the FP8 checkpoint for this model is 37.5 GB — it does not fit 32 GB of VRAM, so FP8 is off the table for 35B; (2) the MXFP4 (Intel 4-bit) checkpoints that exist publicly are in the compressed-tensors layout, which vLLM's XPU build rejects; (3) the prebuilt Intel images have an MXFP4 MoE path written for gpt-oss — the Qwen loader is broken in seven separate places, from tensor shapes to activation gating to hybrid-model page sizes."
 solution: "I built the native-format MXFP4 checkpoint myself (fused 256 experts per layer into the w13/w2 layout, verified to 8.8e-5 MSE against BF16 ground truth), moved to the newer intel/vllm:0.17.0-xpu image, and patched the seven engine bugs in-container — 2D per-expert loader support, missing scale-key mapping, the silu-vs-swiglu_oai activation gate (the XPU kernel supports silu; the Python gate doesn't), CUDA-only device contexts in the linear-attention path, a contiguity check, and the hybrid block-size alignment that produced a page size the XPU flash-attention kernel rejects. The model then served and generated correct output."
 usedIn: "Intel Arc Pro B70 32GB test rig (Ubuntu 26.04), intel/vllm:0.17.0-xpu (vllm-xpu-kernels v0.1.4), self-built Qwen3.6-35B-A3B MXFP4 checkpoint (22.4 GB), llama.cpp SYCL b10255+ production."
-impact: "The model ran — and the head-to-head benchmark answers the whole debate. Single stream: llama.cpp wins by 6.3x (65.3 vs 10.4 t/s gen) with 6x better latency. At 16 concurrent users, vLLM's continuous batching takes over: 153.4 gen t/s aggregate with flat per-user latency — exactly the '150 t/s' number people quote. vLLM is a serving engine; llama.cpp is a personal engine. Both measured on our B70. Full evidence in the repo (benchmark-history Run 14-15)."
+impact: "Follow-up (Run 16): plain Qwen3.6-35B-A3B-GPTQ-Int4 on vLLM 0.21 XPU — single-stream tg32 57.9 t/s / pp2048 ~5.3K, not 145/7975. Concurrency gen t/s C1=49 C8=133 C16=182 — Reddit 145 sits near C≈10 aggregate. Dense ThinkingCap 27B block-FP8 loads only with a dequant fallback (~0.75 t/s). vLLM remains a multi-user serving win; llama.cpp remains the single-stream production path. Evidence: benchmark-history Run 14–16."
 pubDate: 2026-08-05
 category: ["b70", "local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -130,33 +130,49 @@ per-user latency stays flat (96 → 104 ms). llama.cpp's parallel slots serializ
 aggregate saturates at ~85-92 gen t/s and per-user latency degrades linearly
 (15 → 188 ms). At 8+ users, vLLM wins; at 1 user, llama.cpp wins by 6.3×.
 
-### Community numbers, explained (the "single-request 150 t/s" reports)
+### Community numbers, re-measured (plain GPTQ-Int4, Run 16)
 
-After this post's first publication, a community user posted vLLM XPU results on the
-same card — single concurrent request, llama-bench-style tg32/pp tests:
+After this post's first publication, a community user (Dolboyob77) posted vLLM XPU
+llama-bench-style numbers on the same card, claimed Concurrent 1:
 
-| Model (vLLM XPU, 1 request)   | Prefill             | Decode (tg32)              |
+| Model (claimed C=1)           | Prefill             | Decode (tg32)              |
 | ----------------------------- | ------------------- | -------------------------- |
 | Ornith-1.0-35B-MXFP4          | 10,304 t/s (pp4086) | 71.1 t/s (peak 73.4)       |
 | Qwen3.6-35B-A3B-**GPTQ-Int4** | 7,975 t/s (pp2048)  | **145.5 t/s (peak 150.2)** |
 
-Three things this teaches us:
+We downloaded the **plain** `Qwen3.6-35B-A3B-GPTQ-Int4` checkpoint and re-ran it on
+`intel/vllm:0.21.0-xpu-full` (torch 2.13+xpu, kernels 0.1.12.2) with graphs ON, tuned
+Triton MoE, FLASH_ATTN PIECEWISE — the best working MoE path on this stack:
 
-1. **Ornith decode 71-73 t/s = exactly what llama.cpp gets on Ornith** (73.7 t/s in our
-   July runs). Decode is memory-bandwidth-bound — the engine barely matters. The user's
-   own comment says it: "same tg 73/75, prefill 10,000".
-2. **The "150 t/s single-request" figure comes from the PLAIN Qwen3.6-35B-A3B, not the
-   UD variant we tested.** The plain A3B has no hybrid linear-attention (GDN) layers —
-   so no generic-triton FLA kernels in the decode path. Our 10.4 t/s was the UD model's
-   penalty, not vLLM's. On the plain A3B, vLLM XPU's decode is genuinely fast.
-3. **vLLM's real, reproducible edge is prefill: 4-5× llama.cpp on the same card**
-   (10,304 vs ~2,128 t/s) — the XMX/DPAS flash-attention kernels in vllm-xpu-kernels.
-   This matches the community head-to-head finding of 2.4-15× prefill advantage.
+| Our measurement (plain GPTQ-Int4) | Value                                                      |
+| --------------------------------- | ---------------------------------------------------------- |
+| Single-stream tg32 (best)         | **57.9 t/s** (not 145)                                     |
+| Single-stream pp2048 (best)       | **~5,122–5,349 t/s** (not 7,975)                           |
+| C=1 aggregate gen                 | 49.4 t/s                                                   |
+| C=8 aggregate gen                 | 133.0 t/s                                                  |
+| C=16 aggregate gen                | **182.5 t/s** (engine peak 190)                            |
+| 230W single-stream                | ~52–53 t/s (no help; MoE self-limits)                      |
+| Native `XpuFusedMoe` int4         | OOM, then shape mismatch (`ptr_A.size(1)`) after lean prep |
 
-So the honest scorecard on a B70: **vLLM wins prefill ~5× and concurrency (aggregate);
-decode is parity on non-hybrid models (both engines ~70 t/s on Ornith-class MoE);
-llama.cpp wins single-stream latency, quantized-memory efficiency, model coverage
-(UD/hybrid models run only on llama.cpp) and setup simplicity.**
+**What this actually teaches us:**
+
+1. **Ornith ~71–73 t/s remains real bandwidth-bound parity** with llama.cpp (~73.7). That
+   part of the community report still stands.
+2. **Plain GPTQ-Int4 does _not_ deliver 145 t/s single-stream on our B70 + 0.21 XPU image.**
+   Our ceiling is ~58 t/s. The 145 figure lands cleanly between C=8 (133) and C=16 (182)
+   aggregate gen t/s — same class of multi-user number as the MXFP4 "150 at 16 users"
+   we already measured. Hybrid GDN is present on this Qwen3.6-35B-A3B checkpoint too;
+   the earlier "plain A3B has no GDN" explanation was wrong for this weight set.
+3. **Prefill edge is real but smaller than the Reddit headline on this path:** ~5.3K
+   pp2048 on GPTQ-Int4 vs llama.cpp ~2.1K on Q4 MoE — still a win for vLLM, not 8K.
+4. **Dense 27B block-FP8** (`ThinkingCap-Qwen3.6-27B-FP8`): stock vLLM has no XPU entry
+   in `_POSSIBLE_FP8_BLOCK_KERNELS`. A dequant fallback serves at **~0.75 t/s** — proof
+   the gap is kernels, not "we didn't try." llama.cpp dense+MTP stays ~24–30 t/s.
+
+So the corrected scorecard: **vLLM wins multi-user aggregate and often prefill;
+single-stream MoE decode on this stack tops ~58 t/s GPTQ (or ~10 t/s broken MXFP4 UD);
+llama.cpp wins single-user interactive decode, GGUF efficiency, and hybrid-model
+coverage.** The Reddit 145 is multi-user throughput misread as Concurrent-1 decode.
 
 ## Conclusion — why people say vLLM is better
 
@@ -168,23 +184,22 @@ Because they're measuring different things, and both are real:
   busy with many requests at once. Aggregate throughput scales with concurrency —
   measured 153.4 gen t/s at 16 users on a single B70, and community dual-B70 runs hit
   [912 tok/s output at 50 concurrent users](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks).
-  Its prefill is 4-5× llama.cpp's on this card (XMX flash-attention kernels — measured
-  10,304 t/s pp4K on Ornith by the community), and on non-hybrid models like the plain
-  Qwen3.6-35B-A3B its single-request decode is genuinely fast (145-150 t/s).
+  Its prefill edge is real on some paths (community Ornith ~10K pp; our GPTQ ~5.3K
+  pp2048 vs llama.cpp ~2.1K). Single-stream MoE decode on our measured GPTQ path is
+  ~58 t/s — not 145.
 - The "mystery" of llama.cpp users on a B70 has a simple answer: most B70 owners run
-  hybrid/UD models (which vLLM XPU can't run at all), single interactive users, or
-  want quantized GGUF memory efficiency — and on decode, both engines are
-  bandwidth-bound anyway. vLLM's wins are real, but they're prefill, concurrency and
-  multi-GPU — not raw single-stream decode.
-- The Reddit "150 t/s on one B70" claim isn't fiction — it's vLLM at ~16 concurrent
-  users, which we reproduced on our card (153.4 gen t/s). Nobody quoting it was
-  talking about single-stream decode.
+  single interactive users or want GGUF efficiency. On decode, MoE is bandwidth-bound
+  either way. vLLM's wins are real, but they're **concurrency / aggregate throughput
+  and often prefill** — not a magic 145 t/s single-stream decode on this card.
+- The Reddit "150 t/s on one B70" claim isn't fiction — it's multi-user aggregate.
+  We hit 153.4 gen t/s at 16 users on MXFP4 (Run 15) and 133–182 gen t/s at C=8–16 on
+  plain GPTQ-Int4 (Run 16). Single-stream Concurrent-1 is ~50–58 t/s on the working path.
 
-So the honest guidance for a B70: **one interactive user → llama.cpp (6× faster).
-A multi-user API or batch/RAG workload → vLLM XPU, and MXFP4 is the quant that fits
-32 GB.** For us, the pi-telegram-bridge is single-user — llama.cpp stays production.
-The vLLM path (patched container, native MXFP4 checkpoint) is now a proven fallback
-for a future multi-user endpoint.
+So the honest guidance for a B70: **one interactive user → llama.cpp.
+A multi-user API or batch/RAG workload → vLLM XPU (accept ~58 t/s/user single-stream
+ceiling; harvest aggregate at C≥8).** For us, the pi-telegram-bridge is single-user —
+llama.cpp stays production. Full campaign notes: B70-DOCS `research/vllm-021-campaign-20260806.md`,
+benchmark-history Run 16.
 
 ## Methodology
 
@@ -202,5 +217,9 @@ for a future multi-user endpoint.
 - Concurrency test: 16 threaded clients, rounds at 1/4/8/16 users, same API on both
   engines (llama.cpp run with `--parallel 16 -c 32768`, 2K ctx/slot, same Q4_K_XL
   model family, same 165W cap)
-- Repo evidence: `benchmark-history.md` Runs 14-15, `results/vllm-mxfp4-summary-20260805.md`,
-  concurrency JSONs in `results/`, patch set `scripts/tmp/vllm017-full-patch.py`
+- Repo evidence: `benchmark-history.md` Runs 14–16, `results/vllm-mxfp4-summary-20260805.md`,
+  `results/vllm-021-gptq-*.json`, `results/vllm-021-dense-fp8-bench.json`,
+  `research/vllm-021-campaign-20260806.md`, patches under `scripts/tmp/vllm-xpu-*`
+- Follow-up stack (Run 16): `intel/vllm:0.21.0-xpu-full`, plain
+  `Qwen3.6-35B-A3B-GPTQ-Int4`, streaming tg32/pp2048 + concurrency sweep; dense
+  `ThinkingCap-Qwen3.6-27B-FP8` with block-FP8 dequant registry patch
