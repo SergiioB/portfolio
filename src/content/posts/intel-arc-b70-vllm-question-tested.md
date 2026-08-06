@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: The vLLM Question, Actually Tested"
-description: "Community threads claim vLLM XPU hits 145–150 t/s single-stream on Qwen3.6-35B-A3B GPTQ-Int4 on one B70. After fixing the XPU native int4 MoE path (torch.int8/kChar), single-stream hits ~73 t/s decode and beats the 8K prefill claim (9.1K @230W). 145 remains multi-user aggregate (native C16≈694 tok/s). llama.cpp stays the single-user latency winner."
+description: "Community threads claim vLLM XPU hits 145–150 t/s single-stream on Qwen3.6-35B-A3B GPTQ-Int4 on one B70. After unlocking the XPU native int4 MoE path (torch.int8/kChar) AND wiring in MTP speculative decoding on the hybrid GDN model, single-stream decode hits 123 t/s (85% of 145) and prefill 7.3K t/s (91% of 8K) — +70% over no-spec, beating llama.cpp MoE single-stream parity. 145 itself remains just out of reach (single-layer MTP ceiling)."
 situation: "Every Intel Arc B70 thread has the same refrain: 'B70 is made for vLLM, llama.cpp is diesel in a Formula 1.' The claims are specific: 11,000 t/s prefill and 150 t/s decode on Qwen3.6-35B-A3B at MXFP4, one GPU. We run llama.cpp SYCL in production at 72.6 t/s decode / 2128 t/s prefill — so the question was worth testing directly rather than taking either side on faith."
 issue: "The vLLM path has three gates, and each one turned out to be real: (1) the FP8 checkpoint for this model is 37.5 GB — it does not fit 32 GB of VRAM, so FP8 is off the table for 35B; (2) the MXFP4 (Intel 4-bit) checkpoints that exist publicly are in the compressed-tensors layout, which vLLM's XPU build rejects; (3) the prebuilt Intel images have an MXFP4 MoE path written for gpt-oss — the Qwen loader is broken in seven separate places, from tensor shapes to activation gating to hybrid-model page sizes."
 solution: "I built the native-format MXFP4 checkpoint myself (fused 256 experts per layer into the w13/w2 layout, verified to 8.8e-5 MSE against BF16 ground truth), moved to the newer intel/vllm:0.17.0-xpu image, and patched the seven engine bugs in-container — 2D per-expert loader support, missing scale-key mapping, the silu-vs-swiglu_oai activation gate (the XPU kernel supports silu; the Python gate doesn't), CUDA-only device contexts in the linear-attention path, a contiguity check, and the hybrid block-size alignment that produced a page size the XPU flash-attention kernel rejects. The model then served and generated correct output."
 usedIn: "Intel Arc Pro B70 32GB test rig (Ubuntu 26.04), intel/vllm:0.17.0-xpu (vllm-xpu-kernels v0.1.4), self-built Qwen3.6-35B-A3B MXFP4 checkpoint (22.4 GB), llama.cpp SYCL b10255+ production."
-impact: "Run 17: native XpuFusedMoe int4 v4 unlocked — root cause was uint8 vs int8 (C++ is_B_int4=kChar). Single-stream tg32 72.6 / pp2048 9,094 @230W (prefill beats Reddit 7,975; decode = MoE bandwidth ceiling, not 145). Concurrency C16 wall-agg 694 tok/s. Triton path was 58/5.3K. Dense block-FP8 still dequant-only ~0.75 t/s. Evidence: benchmark-history Run 16–17."
+impact: "Run 18: vLLM XPU MTP speculative decoding UNLOCKED on the hybrid GDN model — single-stream tg32 123 t/s (85% of Reddit 145) / pp2048 7.3K (91% of 8K) @230W, +70% over the no-spec baseline (Run 17: 72.6 / 9.1K). The A14 verdict 'XPU GDN incompatible with speculative decoding' was an overcautious assert; removing it lets MTP through. 145 itself is the single-layer MTP ceiling on this checkpoint (num_spec=2 clamps to 1). First vLLM XPU result to beat llama.cpp MoE single-stream parity. KL/acceptance audit vs eager still required before production. Evidence: benchmark-history Run 16–18."
 pubDate: 2026-08-05
 category: ["b70", "local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -173,6 +173,50 @@ leaving GPTQ packs as `uint8` made the kernel treat B as BF16 and fail
 So the corrected scorecard: **vLLM wins prefill (native int4) and multi-user aggregate;
 single-stream MoE decode is bandwidth-parity with llama.cpp (~70–73 t/s); llama.cpp wins
 single-user interactive latency, GGUF efficiency, and hybrid/UD coverage.**
+
+### Update — Run 18 (MTP speculative unlocked)
+
+Then we went one layer deeper. The A14 verdict ("XPU GDN kernel rejects
+speculative sequence masks → no speculative decoding on this hybrid model")
+turned out to be an **overcautious assert, not a real kernel limit**. The XPU
+GDN SYCL kernel already receives explicit spec-decode tensors
+(`num_spec_decodes`, `spec_query_start_loc`, `spec_token_indx`,
+`spec_state_indices_tensor`); the boolean `spec_sequence_masks` it asserts on
+is metadata-only and is never passed to the kernel. Removing the assert lets
+speculative decoding through.
+
+We also needed the MTP draft head to actually load. The
+`Qwen3.6-35B-A3B-MTP-Preserved-GPTQ-Int4` checkpoint stores the MTP layers as
+BF16 fused experts, but the draft inherits the target's GPTQ quant_config — so
+the draft experts come up GPTQ-shaped (`w2_qweight`) and crash on load
+(`KeyError: w2_weight`). Patching the three construction sites
+(`Qwen3_5MultiTokenPredictor.__init__`, `Qwen3NextSparseMoeBlock`, `FusedMoE`)
+to strip `quant_config` whenever the prefix contains `mtp` builds the draft
+unquantized, and a one-line `XpuFusedMoe` kwarg strip (the kernels auto-detect
+dtype) closes the load path.
+
+| Config (single-stream, 230W)      |    tg32 |    pp2048 | vs Reddit 145 / 7975 |
+| --------------------------------- | ------: | --------: | -------------------- |
+| Native int4 v4, no spec (Run 17)  |    72.6 |     9,094 | baseline             |
+| **Native int4 v4 + MTP (Run 18)** | **123** | **7,261** | **85% / 91%**        |
+| Reddit claim                      |     145 |     7,975 | —                    |
+
+- **Decode +70%** over no-spec (72.6 → 123 t/s). This is the **first vLLM XPU
+  result to beat llama.cpp MoE single-stream parity** — llama.cpp Q4_K_XL does
+  ~72-73 t/s with no usable MTP on MoE.
+- 1.69× effective speedup ⇒ ~69% implied draft-token acceptance on hybrid GDN.
+- `num_speculative_tokens=2` requested, clamped to 1 (checkpoint has 1 MTP
+  layer) → 123 t/s is the **single-layer MTP ceiling** on this card.
+- **Caveat:** the GDN assert was removed without a KL-divergence / acceptance
+  audit vs the eager path. Output is coherent on spot checks, but treat the
+  XPU spec path as research-grade until that audit lands.
+
+So the corrected scorecard after Run 18: **vLLM XPU native int4 + MTP wins
+single-stream decode (123 vs llama.cpp ~73), wins prefill (7.3K vs ~2.1K), and
+wins aggregate (694 wall-agg at C16). llama.cpp wins single-user interactive
+latency (lower TTFT at small batch), GGUF efficiency, and the safety of an
+unmodified attention path.** For our pi-telegram-bridge (single user), llama.cpp
+still stays production — but the gap closed hard.
 
 ## Conclusion — why people say vLLM is better
 
