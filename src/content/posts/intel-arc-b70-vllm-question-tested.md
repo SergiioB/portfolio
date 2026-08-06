@@ -130,7 +130,7 @@ per-user latency stays flat (96 → 104 ms). llama.cpp's parallel slots serializ
 aggregate saturates at ~85-92 gen t/s and per-user latency degrades linearly
 (15 → 188 ms). At 8+ users, vLLM wins; at 1 user, llama.cpp wins by 6.3×.
 
-### Community numbers, re-measured (plain GPTQ-Int4, Run 16)
+### Community numbers, re-measured (plain GPTQ-Int4, Run 16–17)
 
 After this post's first publication, a community user (Dolboyob77) posted vLLM XPU
 llama-bench-style numbers on the same card, claimed Concurrent 1:
@@ -140,39 +140,39 @@ llama-bench-style numbers on the same card, claimed Concurrent 1:
 | Ornith-1.0-35B-MXFP4          | 10,304 t/s (pp4086) | 71.1 t/s (peak 73.4)       |
 | Qwen3.6-35B-A3B-**GPTQ-Int4** | 7,975 t/s (pp2048)  | **145.5 t/s (peak 150.2)** |
 
-We downloaded the **plain** `Qwen3.6-35B-A3B-GPTQ-Int4` checkpoint and re-ran it on
-`intel/vllm:0.21.0-xpu-full` (torch 2.13+xpu, kernels 0.1.12.2) with graphs ON, tuned
-Triton MoE, FLASH_ATTN PIECEWISE — the best working MoE path on this stack:
+**Run 16 (Triton GPTQ MoE):** graphs ON, FLASH_ATTN PIECEWISE on
+`intel/vllm:0.21.0-xpu-full` — single-stream tg32 **57.9**, pp2048 **~5.3K**. Concurrency
+gen t/s C1=49 / C8=133 / C16=182. Native path crashed.
 
-| Our measurement (plain GPTQ-Int4) | Value                                                      |
-| --------------------------------- | ---------------------------------------------------------- |
-| Single-stream tg32 (best)         | **57.9 t/s** (not 145)                                     |
-| Single-stream pp2048 (best)       | **~5,122–5,349 t/s** (not 7,975)                           |
-| C=1 aggregate gen                 | 49.4 t/s                                                   |
-| C=8 aggregate gen                 | 133.0 t/s                                                  |
-| C=16 aggregate gen                | **182.5 t/s** (engine peak 190)                            |
-| 230W single-stream                | ~52–53 t/s (no help; MoE self-limits)                      |
-| Native `XpuFusedMoe` int4         | OOM, then shape mismatch (`ptr_A.size(1)`) after lean prep |
+**Run 17 (native `XpuFusedMoe` int4 unlocked):** root cause of the native crash was
+dtype, not layout. C++ only enables int4 when `B_dtype == at::kChar` (`torch.int8`);
+leaving GPTQ packs as `uint8` made the kernel treat B as BF16 and fail
+`ptr_A.size(1) must match ptr_B.size(1)`. After `implement_zp` → int8 + route WNA16 →
+`XpuFusedMoe` on `intel/vllm:0.21.0-xpu-int4moe`:
+
+| Our measurement (plain GPTQ-Int4) | Value                                  |
+| --------------------------------- | -------------------------------------- |
+| Native single-stream tg32 @230W   | **72.6 t/s** (not 145)                 |
+| Native single-stream pp2048 @230W | **9,094 t/s** (**beats** Reddit 7,975) |
+| Native @150–180W                  | tg32 65–68 / pp2048 7.1–8.4K           |
+| Native C=16 wall-agg (180W)       | **694 tok/s**                          |
+| Triton path (Run 16 ceiling)      | tg32 57.9 / pp2048 ~5.3K               |
 
 **What this actually teaches us:**
 
-1. **Ornith ~71–73 t/s remains real bandwidth-bound parity** with llama.cpp (~73.7). That
-   part of the community report still stands.
-2. **Plain GPTQ-Int4 does _not_ deliver 145 t/s single-stream on our B70 + 0.21 XPU image.**
-   Our ceiling is ~58 t/s. The 145 figure lands cleanly between C=8 (133) and C=16 (182)
-   aggregate gen t/s — same class of multi-user number as the MXFP4 "150 at 16 users"
-   we already measured. Hybrid GDN is present on this Qwen3.6-35B-A3B checkpoint too;
-   the earlier "plain A3B has no GDN" explanation was wrong for this weight set.
-3. **Prefill edge is real but smaller than the Reddit headline on this path:** ~5.3K
-   pp2048 on GPTQ-Int4 vs llama.cpp ~2.1K on Q4 MoE — still a win for vLLM, not 8K.
-4. **Dense 27B block-FP8** (`ThinkingCap-Qwen3.6-27B-FP8`): stock vLLM has no XPU entry
-   in `_POSSIBLE_FP8_BLOCK_KERNELS`. A dequant fallback serves at **~0.75 t/s** — proof
-   the gap is kernels, not "we didn't try." llama.cpp dense+MTP stays ~24–30 t/s.
+1. **Ornith ~71–73 t/s remains real bandwidth-bound parity** with llama.cpp (~73.7). Our
+   native GPTQ MoE decode lands in the same band — the bus is the limit.
+2. **Prefill target is real and beatable** on the native int4 path (9.1K > 7.975K). The
+   Triton GPTQ path was leaving ~40% prefill on the table.
+3. **145 t/s Concurrent-1 is still not single-stream decode on this card.** Native
+   single-stream tops ~73 t/s. 145 appears only as multi-user aggregate (native C16≈694
+   wall-agg; Triton C≈10 gen≈145). Hybrid GDN is present on this checkpoint too.
+4. **Dense 27B block-FP8** still has no XPU block kernel — dequant fallback ~0.75 t/s.
+   llama.cpp dense+MTP stays ~24–30 t/s.
 
-So the corrected scorecard: **vLLM wins multi-user aggregate and often prefill;
-single-stream MoE decode on this stack tops ~58 t/s GPTQ (or ~10 t/s broken MXFP4 UD);
-llama.cpp wins single-user interactive decode, GGUF efficiency, and hybrid-model
-coverage.** The Reddit 145 is multi-user throughput misread as Concurrent-1 decode.
+So the corrected scorecard: **vLLM wins prefill (native int4) and multi-user aggregate;
+single-stream MoE decode is bandwidth-parity with llama.cpp (~70–73 t/s); llama.cpp wins
+single-user interactive latency, GGUF efficiency, and hybrid/UD coverage.**
 
 ## Conclusion — why people say vLLM is better
 
@@ -182,44 +182,40 @@ Because they're measuring different things, and both are real:
   It's what you want for a single interactive chat — which is exactly our production use.
 - **vLLM is a serving engine.** Continuous batching + paged KV cache means the GPU is
   busy with many requests at once. Aggregate throughput scales with concurrency —
-  measured 153.4 gen t/s at 16 users on a single B70, and community dual-B70 runs hit
+  measured 153.4 gen t/s at 16 users on MXFP4 (Run 15) and **694 wall-agg tok/s at C=16**
+  on native GPTQ-Int4 (Run 17). Community dual-B70 runs hit
   [912 tok/s output at 50 concurrent users](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks).
-  Its prefill edge is real on some paths (community Ornith ~10K pp; our GPTQ ~5.3K
-  pp2048 vs llama.cpp ~2.1K). Single-stream MoE decode on our measured GPTQ path is
-  ~58 t/s — not 145.
+  Prefill on native int4 **beats** the Reddit headline (9.1K pp2048). Single-stream MoE
+  decode is ~73 t/s — bandwidth parity with llama.cpp, **not** 145.
 - The "mystery" of llama.cpp users on a B70 has a simple answer: most B70 owners run
   single interactive users or want GGUF efficiency. On decode, MoE is bandwidth-bound
-  either way. vLLM's wins are real, but they're **concurrency / aggregate throughput
-  and often prefill** — not a magic 145 t/s single-stream decode on this card.
+  either way. vLLM's wins are real: **prefill + concurrency** — not a magic 145 t/s
+  single-stream decode on this card.
 - The Reddit "150 t/s on one B70" claim isn't fiction — it's multi-user aggregate.
-  We hit 153.4 gen t/s at 16 users on MXFP4 (Run 15) and 133–182 gen t/s at C=8–16 on
-  plain GPTQ-Int4 (Run 16). Single-stream Concurrent-1 is ~50–58 t/s on the working path.
+  Single-stream Concurrent-1 on the best native path is **~65–73 t/s**.
 
 So the honest guidance for a B70: **one interactive user → llama.cpp.
-A multi-user API or batch/RAG workload → vLLM XPU (accept ~58 t/s/user single-stream
-ceiling; harvest aggregate at C≥8).** For us, the pi-telegram-bridge is single-user —
-llama.cpp stays production. Full campaign notes: B70-DOCS `research/vllm-021-campaign-20260806.md`,
-benchmark-history Run 16.
+A multi-user API or batch/RAG workload → vLLM XPU native int4 MoE (prefill win +
+aggregate scales past 145 easily).** For us, the pi-telegram-bridge is single-user —
+llama.cpp stays production. Full campaign notes: B70-DOCS
+`research/vllm-021-campaign-20260806.md` A13, benchmark-history Run 16–17.
 
 ## Methodology
 
-- Image: `intel/vllm:0.17.0-xpu` (vllm-xpu-kernels v0.1.4), run with `/dev/dri`
-  passthrough, `VLLM_TARGET_DEVICE=xpu`, oneAPI env
-- Flags: `--quantization mxfp4 --enforce-eager --max-model-len 32768
---gpu-memory-utilization 0.95 --block-size 64`
-- Checkpoints: `Qwen/Qwen3.6-35B-A3B-FP8` (37.5 GB, rejected), community MXFP4
-  (compressed-tensors, rejected), self-built native MXFP4 (22.4 GB, served)
-- Dequant verification: MSE against `Qwen/Qwen3.6-35B-A3B` BF16 weights, layer 10
-  fused gate+up, all 256 experts
-- Benchmark: wall-clock `/v1/chat/completions`, 4 diverse prompts × 3 reps, warmup
-  discarded, 512 output tokens; isolated prefill (4,219-token prompt) and decode
-  (400-token generation) tests
-- Concurrency test: 16 threaded clients, rounds at 1/4/8/16 users, same API on both
-  engines (llama.cpp run with `--parallel 16 -c 32768`, 2K ctx/slot, same Q4_K_XL
-  model family, same 165W cap)
-- Repo evidence: `benchmark-history.md` Runs 14–16, `results/vllm-mxfp4-summary-20260805.md`,
-  `results/vllm-021-gptq-*.json`, `results/vllm-021-dense-fp8-bench.json`,
-  `research/vllm-021-campaign-20260806.md`, patches under `scripts/tmp/vllm-xpu-*`
-- Follow-up stack (Run 16): `intel/vllm:0.21.0-xpu-full`, plain
-  `Qwen3.6-35B-A3B-GPTQ-Int4`, streaming tg32/pp2048 + concurrency sweep; dense
-  `ThinkingCap-Qwen3.6-27B-FP8` with block-FP8 dequant registry patch
+- **Run 13–15 (MXFP4 path):** `intel/vllm:0.17.0-xpu` (vllm-xpu-kernels v0.1.4),
+  self-built native MXFP4 checkpoint (22.4 GB), 7 engine patches. Concurrency
+  head-to-head vs llama.cpp SYCL at 165W.
+- **Run 16–17 (GPTQ-Int4 path):** `intel/vllm:0.21.0-xpu-full` (Triton MoE) and
+  `intel/vllm:0.21.0-xpu-int4moe` (native `XpuFusedMoe`). Checkpoint: plain
+  `Qwen3.6-35B-A3B-GPTQ-Int4`. Flags: `--quantization gptq --dtype float16
+--language-model-only`, FLASH_ATTN PIECEWISE graphs, power 150–230W. Native path
+  requires int8 storage after `implement_zp` (C++ `is_B_int4 = B_dtype == at::kChar`).
+- Benchmark (Reddit mirror): streaming `/v1/chat/completions`, TTFT split for
+  prefill vs decode, exact `usage.prompt_tokens`, tg32 / pp2048 / tg128, 3 reps
+  after warmup discard. Concurrency: threaded clients C=1/4/8/16 with
+  `--max-num-seqs ≥ C` (max-num-seqs=1 serializes and fakes flat aggregate).
+- Production restored after every run: `llama-profile.service` + 150W power cap.
+- Repo evidence: `benchmark-history.md` Runs 14–17,
+  `results/vllm-021-native-int4-v4-*.json`, `results/vllm-021-gptq-*.json`,
+  `research/vllm-021-campaign-20260806.md` A13, patch
+  `scripts/tmp/vllm-xpu-int4-patch/patch_xpu_int4_moe_v4.py`.
