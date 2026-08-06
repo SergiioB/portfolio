@@ -166,17 +166,45 @@ rm -rf /opt_old
 
 Shrinking a VMDK directly in vSphere is not supported while attached to a running VM. The safe enterprise pattern combines online block migration (`pvmove`) to a new, smaller VMDK with kernel device deletion and vSphere SCSI node re-alignment.
 
-### Phase 1: Live Block Migration & Disk Ejection (Online)
+### Phase 1: Pre-requisite LV Shrink (If New VMDK < Old LV Size)
 
-Target: Reclaim space from an over-provisioned 2TB VMDK (`/dev/sdc`) down to 1.3TB (`/dev/sdd`) while `/apps` remains fully accessible.
+If the destination VMDK (e.g. 250G) is smaller than the current Logical Volume allocation (e.g. 500G), `pvmove` will fail with `Insufficient free space: X extents needed`—even if actual data usage is tiny (e.g. 59G). You must shrink the filesystem and LV first.
 
-1. **Attach new VMDK**: Add a new 1.3TB VMDK in vSphere (enumerates as `/dev/sdd`).
-2. **Initialize & Extend Volume Group**:
+1. **Stop active services & unmount cleanly**:
+   ```bash
+   systemctl stop app.service
+   fuser -mv /dev/mapper/vgapp-apps
+   umount /apps
+   ```
+2. **Force filesystem check & shrink with safety buffer**:
+   ```bash
+   e2fsck -f /dev/mapper/vgapp-apps
+   # Shrink filesystem below target LV size (e.g., 90G for a 100G target LV)
+   resize2fs /dev/mapper/vgapp-apps 90G
+   ```
+3. **Reduce LV and fit filesystem to target**:
+   ```bash
+   lvreduce -L 100G /dev/mapper/vgapp-apps
+   # Expand filesystem back to fill the 100G LV exactly
+   resize2fs /dev/mapper/vgapp-apps
+   ```
+4. **Remount & start services**:
+   ```bash
+   mount /apps
+   systemctl start app.service
+   ```
+
+### Phase 2: Live Block Migration & Disk Ejection (Online)
+
+Target: Reclaim space from old 700G VMDK (`/dev/sdc`) to new 250G VMDK (`/dev/sdd`).
+
+1. **Attach new VMDK**: Add 250G VMDK in vSphere (`/dev/sdd`).
+2. **Initialize & Extend VG**:
    ```bash
    pvcreate /dev/sdd
    vgextend vgapp /dev/sdd
    ```
-3. **Migrate Blocks Live** (takes ~30-60 mins depending on storage array throughput; application runs uninterrupted):
+3. **Migrate Blocks Live**:
    ```bash
    pvmove /dev/sdc /dev/sdd
    ```
@@ -185,26 +213,19 @@ Target: Reclaim space from an over-provisioned 2TB VMDK (`/dev/sdc`) down to 1.3
    vgreduce vgapp /dev/sdc
    pvremove /dev/sdc
    ```
-5. **Drop Device from Kernel Bus** (critical to prevent I/O errors prior to hypervisor removal):
+5. **Drop Device from Kernel Bus** (prevents I/O errors before hypervisor removal):
    ```bash
    echo 1 > /sys/block/sdc/device/delete
    ```
-6. **Remove from vSphere**:
-   - Right-click VM → Edit Settings.
-   - Click **X** on the 2TB Hard Disk.
-   - **CRITICAL**: Check **"Delete files from datastore"**. _If skipped, the VM drops the disk but the 2TB VMDK remains orphaned on storage array storage indefinitely._
+6. **Remove from vSphere**: Edit Settings → Remove 700G Hard Disk → **Check "Delete files from datastore"** (CRITICAL: prevents orphaned VMDKs on storage).
 
-### Phase 2: SCSI Slot Re-alignment (SCSI 0:2 Remap)
+### Phase 3: SCSI Slot Re-alignment (SCSI 0:2 Remap)
 
-vSphere disallows editing Virtual Device Node assignments on actively connected disks. To reassign the 1.3TB disk back to `SCSI 0:2`:
+vSphere disallows editing Virtual Device Node assignments on actively connected disks. To reassign the new 250G disk back to `SCSI 0:2`:
 
-1. **Power Off VM** cleanly during scheduled maintenance.
-2. **Detach Disk in vSphere**:
-   - Edit Settings → Click **X** on the 1.3TB Hard Disk.
-   - **CRITICAL**: **DO NOT** check _"Delete files from datastore"_. Only unbind the device registration.
-3. **Re-attach on Target Slot**:
-   - Add New Device → **Existing Hard Disk** → Browse to the 1.3TB `.vmdk`.
-   - Expand disk options → Set **Virtual Device Node** to `SCSI 0:2`.
+1. **Power Off VM** cleanly.
+2. **Detach Disk in vSphere**: Edit Settings → Click **X** on the 250G Hard Disk. **CRITICAL**: **DO NOT** check _"Delete files from datastore"_. Only unbind device registration.
+3. **Re-attach on Target Slot**: Add New Device → **Existing Hard Disk** → Select the 250G `.vmdk` → Set **Virtual Device Node** to `SCSI 0:2`.
 4. **Power On & Verify**:
    ```bash
    lsblk -f
