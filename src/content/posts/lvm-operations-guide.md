@@ -162,24 +162,79 @@ rm -rf /opt_old
 
 ---
 
+## Operation 4: Live Hypervisor Disk Shrink (VMware vSphere + LVM)
+
+Shrinking a VMDK directly in vSphere is not supported while attached to a running VM. The safe enterprise pattern combines online block migration (`pvmove`) to a new, smaller VMDK with kernel device deletion and vSphere SCSI node re-alignment.
+
+### Phase 1: Live Block Migration & Disk Ejection (Online)
+
+Target: Reclaim space from an over-provisioned 2TB VMDK (`/dev/sdc`) down to 1.3TB (`/dev/sdd`) while `/apps` remains fully accessible.
+
+1. **Attach new VMDK**: Add a new 1.3TB VMDK in vSphere (enumerates as `/dev/sdd`).
+2. **Initialize & Extend Volume Group**:
+   ```bash
+   pvcreate /dev/sdd
+   vgextend vgapp /dev/sdd
+   ```
+3. **Migrate Blocks Live** (takes ~30-60 mins depending on storage array throughput; application runs uninterrupted):
+   ```bash
+   pvmove /dev/sdc /dev/sdd
+   ```
+4. **Eject Old Physical Volume**:
+   ```bash
+   vgreduce vgapp /dev/sdc
+   pvremove /dev/sdc
+   ```
+5. **Drop Device from Kernel Bus** (critical to prevent I/O errors prior to hypervisor removal):
+   ```bash
+   echo 1 > /sys/block/sdc/device/delete
+   ```
+6. **Remove from vSphere**:
+   - Right-click VM → Edit Settings.
+   - Click **X** on the 2TB Hard Disk.
+   - **CRITICAL**: Check **"Delete files from datastore"**. _If skipped, the VM drops the disk but the 2TB VMDK remains orphaned on storage array storage indefinitely._
+
+### Phase 2: SCSI Slot Re-alignment (SCSI 0:2 Remap)
+
+vSphere disallows editing Virtual Device Node assignments on actively connected disks. To reassign the 1.3TB disk back to `SCSI 0:2`:
+
+1. **Power Off VM** cleanly during scheduled maintenance.
+2. **Detach Disk in vSphere**:
+   - Edit Settings → Click **X** on the 1.3TB Hard Disk.
+   - **CRITICAL**: **DO NOT** check _"Delete files from datastore"_. Only unbind the device registration.
+3. **Re-attach on Target Slot**:
+   - Add New Device → **Existing Hard Disk** → Browse to the 1.3TB `.vmdk`.
+   - Expand disk options → Set **Virtual Device Node** to `SCSI 0:2`.
+4. **Power On & Verify**:
+   ```bash
+   lsblk -f
+   pvs; vgs; lvs
+   df -h /apps
+   ```
+
+---
+
 ## Quick Reference Table
 
-| Operation | Online/Offline         | Risk Level | Key Command                                  |
-| --------- | ---------------------- | ---------- | -------------------------------------------- |
-| Expand LV | Online                 | Low        | `lvextend -r -l +100%FREE /dev/mapper/vg-lv` |
-| Shrink LV | Offline                | High       | `resize2fs` → `lvreduce` → `resize2fs`       |
-| Migrate   | Online + brief offline | Medium     | `rsync` → stop → `rsync` → switchover        |
+| Operation            | Online/Offline         | Risk Level | Key Command                                  |
+| -------------------- | ---------------------- | ---------- | -------------------------------------------- |
+| Expand LV            | Online                 | Low        | `lvextend -r -l +100%FREE /dev/mapper/vg-lv` |
+| Shrink LV            | Offline                | High       | `resize2fs` → `lvreduce` → `resize2fs`       |
+| Migrate Directory    | Online + brief offline | Medium     | `rsync` → stop → `rsync` → switchover        |
+| Shrink VMDK (VMware) | Online + brief reboot  | Medium     | `pvmove` → `sysfs delete` → SCSI remap       |
 
 ---
 
 ## Common Failure Modes
 
-| Failure                         | Cause                                     | Prevention                                  |
-| ------------------------------- | ----------------------------------------- | ------------------------------------------- |
-| Data loss during shrink         | LV shrunk below filesystem size           | Always shrink filesystem first, with margin |
-| LVM signature lost              | Answered Y to "remove signature" in fdisk | Always answer N                             |
-| SELinux denials after migration | Security contexts not restored            | Run `restorecon -Rv` on mount point         |
-| "Target is busy" during unmount | Process holding filesystem open           | Use `lsof +D /mount` to identify            |
+| Failure                         | Cause                                         | Prevention                                            |
+| ------------------------------- | --------------------------------------------- | ----------------------------------------------------- |
+| Data loss during shrink         | LV shrunk below filesystem size               | Always shrink filesystem first, with margin           |
+| LVM signature lost              | Answered Y to "remove signature" in fdisk     | Always answer N                                       |
+| SELinux denials after migration | Security contexts not restored                | Run `restorecon -Rv` on mount point                   |
+| "Target is busy" during unmount | Process holding filesystem open               | Use `lsof +D /mount` to identify                      |
+| Orphaned 2TB VMDK on datastore  | Omitted "Delete files" checkbox in vSphere    | Always verify datastore file removal on retirement    |
+| Kernel I/O errors on disk drop  | Disk removed in vSphere before sysfs deletion | Execute `echo 1 > /sys/block/sdX/device/delete` first |
 
 <!-- portfolio:expanded-v2 -->
 
