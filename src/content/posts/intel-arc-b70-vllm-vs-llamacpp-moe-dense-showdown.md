@@ -243,18 +243,28 @@ makes KV nearly free — 128K context fits with 213K tokens to spare. No OOM.
    then falls to 3,064 t/s at 128K (**-58% from peak**). Building KV cache for
    122K tokens is inherently O(n²). Still — 3K t/s at 128K beats llama.cpp's
    peak prefill of 1.7K. vLLM wins even at extreme context.
-3. **128K TTFT = 40 seconds — and that's the good news.** Loading 122K tokens
-   once costs 40s; from then on the KV cache is resident and **every follow-up
-   turn is fast** (only new tokens get prefilled, decode continues at ~92 t/s).
-   That makes a full 128K "conversation with the entire document loaded" a
-   genuinely usable interactive pattern — the 40s is a one-time ingestion cost,
-   like loading a file into a session. **≤32K is the no-wait interactive sweet
-   spot** (TTFT < 7s), but 128K is far from batch-only.
+3. **The 40s cold load is a one-time cost — follow-ups are 28× faster.** With
+   `--enable-prefix-caching`, the KV cache of conversation history is reused
+   across turns. Measured multi-turn at full 122K resident context:
 
-**Launcher guidance:** vLLM MTP @128K works well once the context is warm
-(KV-resident). For cold-start single-turn interactive use, llama.cpp dense
-@128K stays the lower-latency choice with no patched-engine correctness risk.
-vLLM MTP wins multi-turn long-context sessions and multi-user API serving.
+   | Turn          | Context |      TTFT |   Decode |
+   | ------------- | ------: | --------: | -------: |
+   | 1 (cold load) | 122,531 |     39.6s | 75.3 t/s |
+   | 2 (warm)      | 122,561 | **1.42s** | 78.2 t/s |
+   | 3 (warm)      | 122,587 |     1.43s | 82.4 t/s |
+   | 4 (warm)      | 122,611 |     1.40s | 82.4 t/s |
+   | 5 (warm)      | 122,636 |     1.42s | 81.9 t/s |
+
+   **Warm follow-up TTFT at full 122K context = 1.4 seconds.** Load the
+   document/codebase once (40s), then chat with the entire thing at interactive
+   latency. That's a genuinely usable long-context assistant pattern — not
+   batch-only. (`--enable-prefix-caching` is mandatory; without it every turn
+   re-prefills from scratch.)
+
+**Launcher guidance:** vLLM MTP @128K + prefix caching = interactive multi-turn
+long-context sessions. Cold single-turn stays slow (40s); warm sessions are
+snappy. For cold-start single-turn interactive use, llama.cpp dense @128K stays
+the lower-latency choice with no patched-engine correctness risk.
 Launch at 128K: `benchmarks/launch-mtp-128k.sh`.
 
 ## What's next: getting dense working on vLLM

@@ -100,6 +100,6 @@
 
   <!-- footer -->
   <text x="72" y="610" fill="#64748b" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">
-    Decode holds ~92 t/s even at 128K (mild -24%). Prefill peaks at 20K then falls to 3K. KV headroom: 341K tokens (128K fits easily). vLLM MTP @128K = batch/RAG, not interactive.
+    Decode holds ~92 t/s even at 128K (mild -24%). Prefill peaks at 20K then falls to 3K. KV headroom: 341K tokens. With --enable-prefix-caching, warm multi-turn TTFT at 122K = 1.4s (28x faster than cold).
   </text>
 </svg>
