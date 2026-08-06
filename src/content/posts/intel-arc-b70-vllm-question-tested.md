@@ -244,6 +244,55 @@ aggregate scales past 145 easily).** For us, the pi-telegram-bridge is single-us
 llama.cpp stays production. Full campaign notes: B70-DOCS
 `research/vllm-021-campaign-20260806.md` A13, benchmark-history Run 16–17.
 
+### Update — Run 19 (full engine + power sweep)
+
+After unlocking MTP (Run 18), we mapped the full prefill × generation surface for
+both engines on MoE, swept power to find the sweet spots, and tested dense 27B on
+both. The picture is now complete.
+
+**MoE 35B — vLLM MTP vs llama.cpp, full grid (single-stream, 150W sweet spot):**
+
+| Prompt \ Gen | g32        | g128       | g256       | g512       |
+| ------------ | ---------- | ---------- | ---------- | ---------- |
+| short        | **127**/74 | **118**/72 | **113**/67 | **110**/72 |
+| p512         | **121**/73 | **116**/72 | **115**/72 | **113**/72 |
+| p1k          | **113**/73 | **114**/64 | **114**/70 | **105**/70 |
+| p2k          | **111**/70 | **126**/69 | **116**/69 | **118**/63 |
+| p4k          | **130**/66 | **114**/65 | **116**/65 | **116**/65 |
+| p8k          | **126**/59 | **111**/58 | **114**/58 | **114**/58 |
+
+Format: **vLLM MTP** / llama.cpp. vLLM is **1.5–2.1× faster decode**, and the
+advantage _grows with prompt length_ (1.5× short → 2.1× at 8K). Prefill: vLLM
+**3.8–8.5× faster** (5.6–7.5K vs 104–1,728 t/s).
+
+**Power sweet spots:**
+
+| Model     | Sweet spot                          | Why                                                       |
+| --------- | ----------------------------------- | --------------------------------------------------------- |
+| MoE 35B   | **150W**                            | Self-limits to ~140W; 230W gives -8% (noise) at +80W heat |
+| Dense 27B | **180W** (sustained) / 230W (burst) | Scales +18–30% 150→230W, but thermal cost (79°C)          |
+
+**Dense 27B verdict:** vLLM has **no FP8 XPU kernel at all** —
+`KeyError: PlatformEnum.XPU` in `choose_scaled_mm_linear_kernel`. Not slow,
+_absent_. llama.cpp is the only working dense engine (Q4_K_M @230W = 23 t/s).
+llama.cpp dense+MTP (the GGUF `nextn` layer) pushes ~24–30 t/s — the only path
+past the Q4 baseline.
+
+**Final scorecard (single-stream, sweet-spot power):**
+
+| Model     | Engine       | Decode (p2k/g128) | Prefill (p2k) | Power | Temp |
+| --------- | ------------ | ----------------: | ------------: | ----: | ---: |
+| MoE 35B   | **vLLM MTP** |       **126 t/s** | **6,217 t/s** |  150W | 58°C |
+| MoE 35B   | llama.cpp    |            69 t/s |     1,498 t/s |  150W | 58°C |
+| Dense 27B | llama.cpp    |            23 t/s |     1,007 t/s |  230W | 79°C |
+| Dense 27B | vLLM FP8     |      ❌ no kernel |             — |     — |    — |
+
+The honest bottom line: **on the B70, MoE is 5–6× faster than dense** (bandwidth:
+MoE reads ~3 GB/token, dense ~19 GB). vLLM MTP wins MoE on both decode and
+prefill. llama.cpp wins dense by default (vLLM has no dense XPU kernel). Power:
+**run MoE at 150W, dense at 180W**. Full grid + raw JSON:
+`results/engine-comparison-full-20260806.md`, benchmark-history Run 19.
+
 ## Methodology
 
 - **Run 13–15 (MXFP4 path):** `intel/vllm:0.17.0-xpu` (vllm-xpu-kernels v0.1.4),
