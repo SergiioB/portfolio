@@ -208,8 +208,12 @@ with graceful per-user degradation. The "145 t/s" community claim sits
 comfortably in this multi-user band (~C10 aggregate). Community dual-B70 runs
 hit [912 tok/s at 50 concurrent users](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks).
 
-_Note: this is the no-MTP path (Run 17/19). With MTP unlocked (Run 18+),
-per-user decode is ~1.8× higher, so the aggregate ceiling rises proportionally._
+_Note: this is the no-MTP path (Run 17/19). **MTP + concurrency is blocked
+on the XPU GDN kernel** (Run 23): the `causal_conv1d` state machine cannot mix
+speculative and non-speculative tokens in a single batch — C2+ with MTP crashes
+EngineCore. Choose one: MTP (single-user, 133 t/s) OR concurrency (no MTP,
+C16=694 aggregate). Can't have both until the XPU GDN kernel supports mixed
+spec/non-spec batches._
 
 ## What this all means
 
