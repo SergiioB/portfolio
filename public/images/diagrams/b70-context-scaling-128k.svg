@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="Context scaling to 128K: how prefill and decode degrade as context fills">
+  <defs>
+    <linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="glow5"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="640" rx="24" fill="url(#bg5)"/>
+
+  <text x="72" y="60" fill="#f8fafc" font-size="30" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="700">
+    How it scales to 128K context
+  </text>
+  <text x="72" y="92" fill="#94a3b8" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif">
+    vLLM MTP, single-stream, 150W. Decode degrades mildly; prefill hits the O(n²) wall.
+  </text>
+
+  <!-- chart area: x=150..1100 (4K..128K log scale), y=160..520 (0..8000 t/s for prefill / map decode separately) -->
+  <!-- axes -->
+  <line x1="150" y1="520" x2="1100" y2="520" stroke="#475569" stroke-width="2"/>
+  <line x1="150" y1="140" x2="150" y2="520" stroke="#475569" stroke-width="2"/>
+
+  <!-- x-axis (log-ish, manual positions): 4K=240, 10K=380, 20K=520, 40K=680, 65K=840, 128K=1040 -->
+  <g fill="#94a3b8" font-size="13" font-family="Segoe UI" text-anchor="middle">
+    <text x="240" y="544">4K</text>
+    <text x="380" y="544">10K</text>
+    <text x="520" y="544">20K</text>
+    <text x="680" y="544">40K</text>
+    <text x="840" y="544">65K</text>
+    <text x="1040" y="544">128K</text>
+  </g>
+  <text x="620" y="572" fill="#cbd5e1" font-size="14" font-family="Segoe UI" text-anchor="middle">Context length (tokens)</text>
+
+  <!-- y-axis left: prefill t/s (0-8000), y = 520 - (val/8000)*360 -->
+  <g fill="#0ea5e9" font-size="13" font-family="Segoe UI" text-anchor="end">
+    <text x="140" y="524">0</text>
+    <text x="140" y="434">2K</text>
+    <text x="140" y="344">4K</text>
+    <text x="140" y="254">6K</text>
+    <text x="140" y="164">8K</text>
+  </g>
+  <text x="55" y="330" fill="#7dd3fc" font-size="14" font-family="Segoe UI" transform="rotate(-90 55 330)" text-anchor="middle">Prefill t/s (left axis)</text>
+
+  <!-- y-axis right: decode t/s (0-140), y = 520 - (val/140)*360 -->
+  <g fill="#10b981" font-size="13" font-family="Segoe UI" text-anchor="start">
+    <text x="1110" y="524">0</text>
+    <text x="1110" y="396">50</text>
+    <text x="1110" y="268">100</text>
+    <text x="1110" y="140">140</text>
+  </g>
+  <text x="1170" y="330" fill="#34d399" font-size="14" font-family="Segoe UI" transform="rotate(90 1170 330)" text-anchor="middle">Decode t/s (right axis)</text>
+
+  <!-- PREFILL line (blue): 4K=5423, 10K=7098, 20K=7325, 40K=5877, 65K=4418, 128K=3064 -->
+  <!-- y = 520 - (v/8000)*360 -->
+  <polyline points="240,276 380,200 520,190 680,255 840,321 1040,382" fill="none" stroke="#0ea5e9" stroke-width="4" filter="url(#glow5)"/>
+  <g fill="#0ea5e9" filter="url(#glow5)">
+    <circle cx="240" cy="276" r="6"/><circle cx="380" cy="200" r="6"/><circle cx="520" cy="190" r="6"/>
+    <circle cx="680" cy="255" r="6"/><circle cx="840" cy="321" r="6"/><circle cx="1040" cy="382" r="6"/>
+  </g>
+  <g fill="#7dd3fc" font-size="12" font-family="Segoe UI" font-weight="600" text-anchor="middle">
+    <text x="240" y="266">5,423</text>
+    <text x="380" y="190">7,098</text>
+    <text x="520" y="180">7,325</text>
+    <text x="680" y="245">5,877</text>
+    <text x="840" y="311">4,418</text>
+    <text x="1040" y="372">3,064</text>
+  </g>
+  <text x="520" y="130" fill="#0ea5e9" font-size="16" font-family="Segoe UI" font-weight="700" text-anchor="middle">Prefill (O(n²) past 20K)</text>
+
+  <!-- DECODE line (green): 4K=120.9, 10K=107.5, 20K=116, 40K=100, 65K=104.7, 128K=92.5 -->
+  <!-- y = 520 - (v/140)*360 -->
+  <polyline points="240,209 380,244 520,222 680,263 840,251 1040,282" fill="none" stroke="#10b981" stroke-width="4" filter="url(#glow5)"/>
+  <g fill="#10b981" filter="url(#glow5)">
+    <circle cx="240" cy="209" r="6"/><circle cx="380" cy="244" r="6"/><circle cx="520" cy="222" r="6"/>
+    <circle cx="680" cy="263" r="6"/><circle cx="840" cy="251" r="6"/><circle cx="1040" cy="282" r="6"/>
+  </g>
+  <g fill="#34d399" font-size="12" font-family="Segoe UI" font-weight="600" text-anchor="middle">
+    <text x="240" y="201">121</text>
+    <text x="380" y="236">108</text>
+    <text x="520" y="214">116</text>
+    <text x="680" y="255">100</text>
+    <text x="840" y="243">105</text>
+    <text x="1040" y="274">92</text>
+  </g>
+
+  <!-- TTFT annotation on 128K point -->
+  <g transform="translate(1010, 380)">
+    <rect x="0" y="0" width="120" height="40" rx="8" fill="#451a03" stroke="#f59e0b" stroke-opacity="0.6"/>
+    <text x="60" y="18" fill="#fcd34d" font-size="12" font-family="Segoe UI" text-anchor="middle">TTFT @128K</text>
+    <text x="60" y="33" fill="#fcd34d" font-size="14" font-family="Segoe UI" text-anchor="middle" font-weight="700">40 seconds</text>
+  </g>
+
+  <!-- no-spec ceiling reference line (73 t/s = y 332) -->
+  <line x1="150" y1="332" x2="1100" y2="332" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6 4" stroke-opacity="0.5"/>
+  <text x="1080" y="328" fill="#f87171" font-size="11" font-family="Segoe UI" text-anchor="end">no-spec ceiling (73 t/s)</text>
+
+  <!-- interactive sweet spot zone -->
+  <rect x="150" y="140" width="450" height="380" fill="#10b981" fill-opacity="0.05" stroke="#10b981" stroke-opacity="0.2" stroke-dasharray="3 3"/>
+  <text x="375" y="160" fill="#6ee7b7" font-size="12" font-family="Segoe UI" text-anchor="middle">≤32K interactive (TTFT &lt; 7s)</text>
+
+  <!-- footer -->
+  <text x="72" y="610" fill="#64748b" font-size="13" font-family="Segoe UI, Inter, Arial, sans-serif">
+    Decode holds ~92 t/s even at 128K (mild -24%). Prefill peaks at 20K then falls to 3K. KV headroom: 341K tokens (128K fits easily). vLLM MTP @128K = batch/RAG, not interactive.
+  </text>
+</svg>

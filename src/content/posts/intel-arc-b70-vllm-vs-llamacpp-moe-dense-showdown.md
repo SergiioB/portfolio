@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: vLLM vs llama.cpp — The Full MoE + Dense Showdown"
-description: "After a 6-week, 19-run campaign, here is the complete vLLM XPU vs llama.cpp SYCL comparison on the Arc Pro B70 — full prefill × generation grids, power sweet spots, and the MoE vs Dense verdict. Headline: vLLM MTP is 1.8× faster decode / 4.2× faster prefill than llama.cpp on MoE (126 vs 69 t/s); llama.cpp wins Dense by default (vLLM has no XPU FP8 kernel). Plus the four-patch path that unlocked MTP speculative decoding on the hybrid GDN model."
+description: "After a 6-week, 21-run campaign, here is the complete vLLM XPU vs llama.cpp SYCL comparison on the Arc Pro B70 — full prefill × generation grids, power sweet spots, 128K context scaling, and the MoE vs Dense verdict. Headline: vLLM MTP hits 133 t/s decode / 8.7K t/s prefill (1.9× / 5.2× over llama.cpp on MoE); llama.cpp wins Dense by default (vLLM has no XPU FP8 kernel). Plus the four-patch path that unlocked MTP speculative decoding on the hybrid GDN model, and a batched-tokens fix that recovered 28% long-prompt prefill."
 situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The community claims are loud ('vLLM does 145 t/s single-stream!') but nobody had published a clean, apples-to-apples grid across prompt sizes, generation lengths, and power levels for both engines on both model classes. So we ran one — 19 benchmark runs, two engines, two model architectures, four wattages, full prefill × generation surfaces."
 issue: "Three blockers stood between us and a real answer. (1) The vLLM XPU native int4 MoE path was broken — C++ only enables int4 when weights are torch.int8 (at::kChar), but GPTQ packs as uint8, so the kernel treated weights as BF16 and crashed on a shape check. (2) MTP speculative decoding — the obvious way to break the bandwidth ceiling — was blocked twice: the GPTQ-preserved checkpoint's MTP layers inherit the target's quant config and crash on load, AND the XPU GDN attention kernel asserted it doesn't support speculative sequence masks. (3) Dense 27B on vLLM needs FP8, and vLLM has no FP8 kernel registered for XPU at all."
 solution: "Four in-container patches unlocked the MoE path: native int4 (implement_zp → int8 storage), BF16 MTP draft (strip quant_config for any mtp prefix), XpuFusedMoe kwarg strip (kernels auto-detect dtype), and removing the overcautious GDN spec assert (the kernel already takes explicit spec tensors — the boolean mask is metadata-only and never reaches SYCL). Then we ran the full grid on both engines at 150W and 230W, plus dense on llama.cpp at both wattages, to map the entire surface and find the power sweet spots."
 usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), intel/vllm:0.21.0-xpu-int4moe + 4 patches, llama.cpp SYCL b10255+ (build-sycl-0804), Qwen3.6-35B-A3B MoE + ThinkingCap-Qwen3.6-27B dense, 150W/230W power sweep."
-impact: "vLLM XPU MTP beats llama.cpp on MoE by 1.8× decode / 4.2× prefill (single-stream). Dense: llama.cpp only (vLLM FP8 has no XPU kernel). Sweet spots: MoE=150W (self-limits, cooler), Dense=180W sustained / 230W burst (+18-30%, thermal cost). MoE is 5-6× faster decode than dense on this card. Full campaign: benchmark-history Run 14-19, research/vllm-021-campaign-20260806.md A1-A16."
+impact: "vLLM XPU MTP beats llama.cpp on MoE by 1.9× decode / 5.2× prefill (single-stream, post-fix: 133 t/s / 8.7K). The --max-num-batched-tokens 8192 fix recovered 21-28% long-prompt prefill (MTP silently caps prefill to 2048 tokens otherwise). 128K context mapped: decode degrades mildly (-24%, still 92 t/s at full context), prefill hits O(n²) past 20K (3,064 t/s @128K), 341K tokens KV headroom. 3 localmaxxing submissions APPROVED. Dense: llama.cpp only (vLLM FP8 has no XPU kernel). Sweet spots: MoE=150W, Dense=180W sustained / 230W burst. Full campaign: benchmark-history Run 14-21, research/vllm-021-campaign-20260806.md A1-A17."
 pubDate: 2026-08-06
 category: ["b70", "local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -94,6 +94,12 @@ of Australia=Canberra) were correct.
 Single-stream (Concurrent-1), 150W sweet spot. Format: **vLLM MTP** / llama.cpp
 (best steady-state decode t/s).
 
+_Note: this grid is the Run 19 measurement, before the Run 20
+`--max-num-batched-tokens 8192` fix. After the fix, vLLM decode improved ~5%
+(short/g32 127 → 133 t/s) and long-prompt prefill recovered 21-28% (p4k
+6,626 → 8,484 t/s). The grid below is the conservative, pre-fix baseline —
+run the harness yourself for post-fix numbers._
+
 | Prompt \ Gen    | g32                  | g128                 | g256                 | g512                 |
 | --------------- | -------------------- | -------------------- | -------------------- | -------------------- |
 | short (~50 tok) | **127** / 74 (1.73×) | **118** / 72 (1.64×) | **113** / 67 (1.67×) | **110** / 72 (1.53×) |
@@ -158,12 +164,20 @@ past the ~23 t/s Q4 baseline. That's the subject of the next investigation.
 
 ## Final scorecard (single-stream, sweet-spot power)
 
-| Model     | Engine       | Config          | Decode (p2k/g128) | Prefill (p2k) | Power | Temp |
-| --------- | ------------ | --------------- | ----------------: | ------------: | ----: | ---: |
-| MoE 35B   | **vLLM MTP** | GPTQ-Int4 + MTP |       **126 t/s** | **6,217 t/s** |  150W | 58°C |
-| MoE 35B   | llama.cpp    | Q4_K_XL GGUF    |            69 t/s |     1,498 t/s |  150W | 58°C |
-| Dense 27B | llama.cpp    | Q4_K_M GGUF     |            23 t/s |     1,007 t/s |  230W | 79°C |
-| Dense 27B | vLLM         | FP8             |  ❌ no XPU kernel |             — |     — |    — |
+_Updated for Run 20 (the `--max-num-batched-tokens 8192` prefill fix): decode
+133 t/s, prefill 8.7K. The original scorecard (126/6,217) was measured before
+the fix — see the update section below._
+
+| Model     | Engine       | Config          |    Decode (best) | Prefill (best) | Power | Temp |
+| --------- | ------------ | --------------- | ---------------: | -------------: | ----: | ---: |
+| MoE 35B   | **vLLM MTP** | GPTQ-Int4 + MTP |      **133 t/s** |  **8,718 t/s** |  150W | 58°C |
+| MoE 35B   | llama.cpp    | Q4_K_XL GGUF    |           69 t/s |      1,498 t/s |  150W | 58°C |
+| Dense 27B | llama.cpp    | Q4_K_M GGUF     |           23 t/s |      1,007 t/s |  230W | 79°C |
+| Dense 27B | vLLM         | FP8             | ❌ no XPU kernel |              — |     — |    — |
+
+_Decode best = short/g32 (Run 20, warmup discarded). Prefill best = p8k
+(7,545-token prompt) — prefill scales with prompt length; the p2k value is
+7,535 t/s. Context-scaling data in the Run 21 section below._
 
 ## What this all means
 
@@ -189,6 +203,46 @@ but the gap closed hard, and the dense vLLM kernel is the obvious next thing to
 chase.
 
 ![The Pi-Bridge production topology: a 5W ARM board driving a 150W GPU](/images/diagrams/b70-pi-bridge-architecture.svg)
+
+## Update — 128K context: how it scales (Run 21)
+
+The natural question after the MTP unlock: **does it hold up as context fills?**
+We ran a context-scaling sweep — 4K → 128K prompts, single-stream, MTP on, 150W.
+
+**VRAM first:** the server allocated **349,869 tokens of KV cache headroom**
+(model 19.79 GiB + 7.75 GiB KV available). The MoE's tiny 3B-active attention
+makes KV nearly free — 128K context fits with 213K tokens to spare. No OOM.
+
+![Context scaling to 128K: prefill hits the O(n²) wall, decode degrades mildly](/images/diagrams/b70-context-scaling-128k.svg)
+
+|  Context | Prefill t/s | Decode t/s |    TTFT |  Wall |
+| -------: | ----------: | ---------: | ------: | ----: |
+|       4K |       5,423 |  **120.9** |   714ms |  1.2s |
+|      10K |       7,098 |      107.5 |    1.4s |  2.0s |
+|      20K |   **7,325** |      116.0 |    2.6s |  3.2s |
+|      40K |       5,877 |      100.0 |    6.6s |  7.2s |
+|      65K |       4,418 |      104.7 |   14.3s | 14.9s |
+| **128K** |   **3,064** |   **92.5** | **40s** | 40.7s |
+
+**What this tells you:**
+
+1. **Decode degrades mildly.** 121 → 92 t/s (4K → 128K, **-24%**). Even at a
+   full 128K context, MTP delivers ~92 t/s — still above the 73 t/s no-spec
+   bandwidth ceiling. Attention grows with KV length, but the MoE's small
+   attention keeps it manageable.
+2. **Prefill hits the O(n²) wall past 20K.** Peaks at ~7.3K t/s (20K context),
+   then falls to 3,064 t/s at 128K (**-58% from peak**). Building KV cache for
+   122K tokens is inherently O(n²). Still — 3K t/s at 128K beats llama.cpp's
+   peak prefill of 1.7K. vLLM wins even at extreme context.
+3. **128K TTFT = 40 seconds.** Fine for batch/RAG (document Q&A, whole-codebase
+   analysis). Painful for interactive chat. **≤32K is the interactive sweet
+   spot** — TTFT under 7 seconds, decode above 100 t/s.
+
+**Launcher guidance:** vLLM MTP @128K is a **batch/RAG workload**, not an
+interactive one. For the pi-telegram-bridge (single-user chat), llama.cpp dense
+@128K stays the right production profile — lower TTFT, no patched-engine
+correctness risk. vLLM MTP wins the moment the workload is long-context batch
+or multi-user API serving. Launch at 128K: `benchmarks/launch-mtp-128k.sh`.
 
 ## What's next: getting dense working on vLLM
 
