@@ -26,6 +26,17 @@ tags:
 draft: false
 ---
 
+## Live on localmaxxing
+
+The headline result is on the [localmaxxing leaderboard](https://www.localmaxxing.com),
+submitted with full patch disclosure and reproducible command flags:
+
+[![Qwen3.6-35B-A3B — 132.9 tok/s on Intel Arc Pro B70 · 32 GB (localmaxxing run)](/images/posts/localmaxxing-vllm-mtp-133tps.png)](https://www.localmaxxing.com/runs/cmshndoyu01i3pp01zgvwr3il)
+
+**→ [Qwen3.6-35B-A3B — 132.9 tok/s on Intel Arc Pro B70 · 32 GB](https://www.localmaxxing.com/runs/cmshndoyu01i3pp01zgvwr3il)**
+vLLM · GPTQ-Int4 · XPU. Three B70 submissions approved: vLLM MTP (this run),
+llama.cpp MoE Q4_K_XL, and llama.cpp dense 27B Q4_K_M.
+
 ## The question, and why it took 19 runs
 
 Every Intel Arc B70 thread has the same fork in it: **vLLM or llama.cpp?** The
@@ -198,11 +209,9 @@ _Decode best = short/g32 (Run 20, warmup discarded). Prefill best = p8k
 
 The honest guidance for a B70 owner: **MoE serving workload → vLLM XPU native
 int4 + MTP @150W. Single-user interactive → llama.cpp @150W (MoE) or @180W
-(dense).** Our pi-telegram-bridge is single-user, so llama.cpp stays production —
-but the gap closed hard, and the dense vLLM kernel is the obvious next thing to
+(dense).** For a single-user chat front-end, llama.cpp stays production — but
+the gap closed hard, and the dense vLLM kernel is the obvious next thing to
 chase.
-
-![The Pi-Bridge production topology: a 5W ARM board driving a 150W GPU](/images/diagrams/b70-pi-bridge-architecture.svg)
 
 ## Update — 128K context: how it scales (Run 21)
 
@@ -234,15 +243,19 @@ makes KV nearly free — 128K context fits with 213K tokens to spare. No OOM.
    then falls to 3,064 t/s at 128K (**-58% from peak**). Building KV cache for
    122K tokens is inherently O(n²). Still — 3K t/s at 128K beats llama.cpp's
    peak prefill of 1.7K. vLLM wins even at extreme context.
-3. **128K TTFT = 40 seconds.** Fine for batch/RAG (document Q&A, whole-codebase
-   analysis). Painful for interactive chat. **≤32K is the interactive sweet
-   spot** — TTFT under 7 seconds, decode above 100 t/s.
+3. **128K TTFT = 40 seconds — and that's the good news.** Loading 122K tokens
+   once costs 40s; from then on the KV cache is resident and **every follow-up
+   turn is fast** (only new tokens get prefilled, decode continues at ~92 t/s).
+   That makes a full 128K "conversation with the entire document loaded" a
+   genuinely usable interactive pattern — the 40s is a one-time ingestion cost,
+   like loading a file into a session. **≤32K is the no-wait interactive sweet
+   spot** (TTFT < 7s), but 128K is far from batch-only.
 
-**Launcher guidance:** vLLM MTP @128K is a **batch/RAG workload**, not an
-interactive one. For the pi-telegram-bridge (single-user chat), llama.cpp dense
-@128K stays the right production profile — lower TTFT, no patched-engine
-correctness risk. vLLM MTP wins the moment the workload is long-context batch
-or multi-user API serving. Launch at 128K: `benchmarks/launch-mtp-128k.sh`.
+**Launcher guidance:** vLLM MTP @128K works well once the context is warm
+(KV-resident). For cold-start single-turn interactive use, llama.cpp dense
+@128K stays the lower-latency choice with no patched-engine correctness risk.
+vLLM MTP wins multi-turn long-context sessions and multi-user API serving.
+Launch at 128K: `benchmarks/launch-mtp-128k.sh`.
 
 ## What's next: getting dense working on vLLM
 

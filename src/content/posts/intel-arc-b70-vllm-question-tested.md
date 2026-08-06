@@ -215,7 +215,7 @@ So the corrected scorecard after Run 18: **vLLM XPU native int4 + MTP wins
 single-stream decode (123 vs llama.cpp ~73), wins prefill (7.3K vs ~2.1K), and
 wins aggregate (694 wall-agg at C16). llama.cpp wins single-user interactive
 latency (lower TTFT at small batch), GGUF efficiency, and the safety of an
-unmodified attention path.** For our pi-telegram-bridge (single user), llama.cpp
+unmodified attention path.** For a single-user chat front-end, llama.cpp
 still stays production — but the gap closed hard.
 
 ## Conclusion — why people say vLLM is better
@@ -240,7 +240,7 @@ Because they're measuring different things, and both are real:
 
 So the honest guidance for a B70: **one interactive user → llama.cpp.
 A multi-user API or batch/RAG workload → vLLM XPU native int4 MoE (prefill win +
-aggregate scales past 145 easily).** For us, the pi-telegram-bridge is single-user —
+aggregate scales past 145 easily).** For a single-user chat front-end,
 llama.cpp stays production. Full campaign notes: B70-DOCS
 `research/vllm-021-campaign-20260806.md` A13, benchmark-history Run 16–17.
 
