@@ -169,6 +169,18 @@ One Intel Arc Pro B70 (32 GB, ~€1,100 / ~$1,200) on Qwen3.6-35B-A3B (MoE):
 at only 5% high-power duty. Open patches and harnesses in
 [the cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
 
+## LocalMaxxing — both runs APPROVED
+
+| Submission                    |           Value | Batch | Link                                                                                             |
+| ----------------------------- | --------------: | ----: | ------------------------------------------------------------------------------------------------ |
+| **MTP4 single-stream decode** |   **204.6 t/s** |     1 | [run](https://www.localmaxxing.com/en/models/Qwen/Qwen3.6-35B-A3B?run=cmsiwwpzf00a4qm01z18izmad) |
+| **Concurrency max (gen t/s)** | **1,139.8 t/s** |    64 | [run](https://www.localmaxxing.com/en/models/Qwen/Qwen3.6-35B-A3B?run=cmsiwwqmt00a9qm010iekvi3u) |
+
+Both approved instantly on localmaxxing.com. Note: the CLI's `benchmark submit`
+hits the wrong endpoint (evals-only `/api/benchmarks`) and silently fails; the
+working path is `POST /api/speed-tests` (documented in the `localmaxxing-submit`
+skill).
+
 ## Consolidated results
 
 **Config:** native INT4 v4 + BF16 MTP draft, single-stream, prefix caching OFF
