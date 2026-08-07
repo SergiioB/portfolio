@@ -215,6 +215,22 @@ at only 5% high-power duty. Open patches and harnesses in
 MTP4 beats his decode by 17%; his custom kernel edges us on prefill (~6%) —
 the gap to close with a custom kernel.
 
+### Concurrency max (multi-user aggregate, no-MTP native int4)
+
+MTP + concurrency is blocked by the GDN kernel, so the max-token multi-user
+path uses no-MTP native int4. Diverse 512-token prompts, 165W:
+
+| Concurrent users | Aggregate t/s |     Gen t/s | Median TPOT |
+| ---------------: | ------------: | ----------: | ----------: |
+|               16 |       1,107.8 |       641.7 |        25ms |
+|               32 |       1,523.8 |       882.7 |        36ms |
+|               48 |       1,578.2 |       914.2 |        52ms |
+|           **64** |   **1,967.7** | **1,139.8** |    **56ms** |
+
+**Max aggregate 1,967.7 t/s @ C64** (1,139.8 gen t/s) — single B70, 64
+concurrent users. The "145 t/s" single-stream claim is dwarfed by vLLM's
+multi-user aggregate.
+
 ## Methodology
 
 - **Checkpoint:** `Qwen3.6-35B-A3B-MTP-Preserved-GPTQ-Int4`, native int4 v4 +
