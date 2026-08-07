@@ -4,7 +4,7 @@ description: "After a 6-week, 21-run campaign, here is the complete vLLM XPU vs 
 situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The community claims are loud ('vLLM does 145 t/s single-stream!') but nobody had published a clean, apples-to-apples grid across prompt sizes, generation lengths, and power levels for both engines on both model classes. So we ran one — 19 benchmark runs, two engines, two model architectures, four wattages, full prefill × generation surfaces."
 issue: "Three blockers stood between us and a real answer. (1) The vLLM XPU native int4 MoE path was broken — C++ only enables int4 when weights are torch.int8 (at::kChar), but GPTQ packs as uint8, so the kernel treated weights as BF16 and crashed on a shape check. (2) MTP speculative decoding — the obvious way to break the bandwidth ceiling — was blocked twice: the GPTQ-preserved checkpoint's MTP layers inherit the target's quant config and crash on load, AND the XPU GDN attention kernel asserted it doesn't support speculative sequence masks. (3) Dense 27B on vLLM needs FP8, and vLLM has no FP8 kernel registered for XPU at all."
 solution: "Four in-container patches unlocked the MoE path: native int4 (implement_zp → int8 storage), BF16 MTP draft (strip quant_config for any mtp prefix), XpuFusedMoe kwarg strip (kernels auto-detect dtype), and removing the overcautious GDN spec assert (the kernel already takes explicit spec tensors — the boolean mask is metadata-only and never reaches SYCL). Then we ran the full grid on both engines at 150W and 230W, plus dense on llama.cpp at both wattages, to map the entire surface and find the power sweet spots."
-usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), intel/vllm:0.21.0-xpu-int4moe + 4 patches, llama.cpp SYCL b10255+ (build-sycl-0804), Qwen3.6-35B-A3B-GPTQ-Int4 MoE + ThinkingCap-Qwen3.6-27B dense, 150W/230W power sweep."
+usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), intel/vllm:0.21.0-xpu-int4moe + 4 patches, llama.cpp SYCL b10255+ (build-sycl-0804), Qwen3.6-35B-A3B MoE (heretic MTP-preserved GPTQ-Int4 checkpoint by llmfan46) + ThinkingCap-Qwen3.6-27B dense, 150W/230W power sweep."
 impact: "vLLM XPU MTP beats llama.cpp on MoE by 1.9× decode / 5.2× prefill (single-stream, post-fix: 133 t/s / 8.7K). The --max-num-batched-tokens 8192 fix recovered 21-28% long-prompt prefill (MTP silently caps prefill to 2048 tokens otherwise). 128K context mapped: decode degrades mildly (-24%, still 92 t/s at full context), prefill hits O(n²) past 20K (3,064 t/s @128K), 341K tokens KV headroom. 3 localmaxxing submissions APPROVED. Dense: llama.cpp only (vLLM FP8 has no XPU kernel). Sweet spots: MoE=150W, Dense=180W sustained / 230W burst. Full campaign: benchmark-history Run 14-21, research/vllm-021-campaign-20260806.md A1-A17."
 pubDate: 2026-08-06
 category: ["b70", "local-ai", "infrastructure"]
@@ -313,6 +313,18 @@ worth investigating:
   sweet spot) may be the practical dense ceiling on this card.
 
 That's the next campaign. For now, the MoE story is closed and measured.
+
+## Model reference
+
+The vLLM MoE benchmarks use a specific checkpoint worth documenting:
+
+- **Architecture:** Qwen3.6-35B-A3B (MoE: 256 experts, 8 active + 1 shared, 3B active params/token, hybrid GDN/attention)
+- **Checkpoint:** [`llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-GPTQ-Int4`](https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-GPTQ-Int4) — a heretic (uncensored/abliterated) variant of the stock Qwen model
+- **Why not the official Qwen GPTQ?** The official `Qwen/Qwen3.6-35B-A3B-GPTQ-Int4` declares `mtp_num_hidden_layers: 1` in config but ships **zero MTP weight tensors** in the shards. The heretic variant preserves these tensors, which is what makes MTP speculative decoding possible (and gives us the 133 t/s decode path)
+- **Quantization:** INT4 weights via GPTQ calibration (group_size=128, symmetric, desc_act=false, GPTQModel 7.1.0-dev). INT4 is the data format — GPTQ is the algorithm that computes the weights
+- **Format note:** INT4 is the optimal format for Intel Arc B70. The XMX (Xe Matrix Extension) engines have native INT4 grouped GEMM — this is Intel's equivalent of NVIDIA's NVFP4 on Tensor Cores. MXFP4 (OCP float4) loads and produces correct output but runs at 10.4 t/s because the hybrid GDN layers bottleneck on unoptimized Triton kernels, not the quant format itself
+
+Quantization quality (KL divergence) is architecture-determined, not weight-determined — the heretic abliteration doesn't change how INT4 quantization affects output distribution. Community KLD data from the same architecture (Qwen3.5-35B-A3B, identical layout) places INT4/GPTQ in the same quality tier as GGUF Q4_K_XL (Mean KLD ~0.012–0.020).
 
 ## Methodology
 
