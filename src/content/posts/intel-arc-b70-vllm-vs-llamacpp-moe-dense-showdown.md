@@ -21,10 +21,11 @@ tags:
     "moe",
     "speculative-decoding",
     "mtp",
-    "benchmark",
   ]
 draft: false
 ---
+
+> **Context:** This is the final showdown results. For the original technical deep-dive into how we built the MXFP4 checkpoints and solved the seven vLLM loader bugs to get here, read **[Phase 1: The vLLM Question on Intel Arc Pro B70 (MXFP4 Native Test)](/posts/intel-arc-b70-vllm-initial-mxfp4-test)** first.
 
 ## Live on localmaxxing
 
