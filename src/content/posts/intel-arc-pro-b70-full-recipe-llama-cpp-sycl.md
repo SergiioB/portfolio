@@ -39,6 +39,8 @@ draft: false
 > (was ~780, +140%), decode **72.6 t/s**. Dense prefill 936 t/s @ pp4096. See
 > [Intel Arc Pro B70: +140% Long-Context Prefill from a llama.cpp Master Build](/posts/intel-arc-b70-sycl-xmx-quantized-kv-prefill).
 > Everything else in this recipe (KV config, power tiers, VRAM boundaries) is unchanged.
+>
+> **Separate vLLM XPU update (2026-08-08):** The public MTP4 recipe now pins the pullable image `vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97`. The old `intel/vllm:0.21.0-xpu-int4moe` name was a local derived image and was never published. The current patch order is `patch_mtp_nightly.py`, then `patch_mtp_boundary.py`. That stack completed exact p130944/g128, or 131,072 total tokens. See the [corrected vLLM comparison and Pi workload report](/posts/intel-arc-b70-vllm-vs-llamacpp-moe-dense-showdown) and the [public cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
 
 ## Situation
 

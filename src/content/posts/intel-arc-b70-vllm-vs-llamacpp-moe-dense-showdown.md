@@ -1,11 +1,11 @@
 ---
-title: "Intel Arc Pro B70: vLLM vs llama.cpp — The Full MoE + Dense Showdown"
-description: "After a 6-week, 21-run campaign, here is the complete vLLM XPU vs llama.cpp SYCL comparison on the Arc Pro B70 — full prefill × generation grids, power sweet spots, 128K context scaling, and the MoE vs Dense verdict. Headline: vLLM MTP hits 133 t/s decode / 8.7K t/s prefill (1.9× / 5.2× over llama.cpp on MoE); llama.cpp wins Dense by default (vLLM has no XPU FP8 kernel). Plus the four-patch path that unlocked MTP speculative decoding on the hybrid GDN model, and a batched-tokens fix that recovered 28% long-prompt prefill."
-situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The community claims are loud ('vLLM does 145 t/s single-stream!') but nobody had published a clean, apples-to-apples grid across prompt sizes, generation lengths, and power levels for both engines on both model classes. So we ran one — 19 benchmark runs, two engines, two model architectures, four wattages, full prefill × generation surfaces."
-issue: "Three blockers stood between us and a real answer. (1) The vLLM XPU native int4 MoE path was broken — C++ only enables int4 when weights are torch.int8 (at::kChar), but GPTQ packs as uint8, so the kernel treated weights as BF16 and crashed on a shape check. (2) MTP speculative decoding — the obvious way to break the bandwidth ceiling — was blocked twice: the GPTQ-preserved checkpoint's MTP layers inherit the target's quant config and crash on load, AND the XPU GDN attention kernel asserted it doesn't support speculative sequence masks. (3) Dense 27B on vLLM needs FP8, and vLLM has no FP8 kernel registered for XPU at all."
-solution: "Four in-container patches unlocked the MoE path: native int4 (implement_zp → int8 storage), BF16 MTP draft (strip quant_config for any mtp prefix), XpuFusedMoe kwarg strip (kernels auto-detect dtype), and removing the overcautious GDN spec assert (the kernel already takes explicit spec tensors — the boolean mask is metadata-only and never reaches SYCL). Then we ran the full grid on both engines at 150W and 230W, plus dense on llama.cpp at both wattages, to map the entire surface and find the power sweet spots."
-usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), intel/vllm:0.21.0-xpu-int4moe + 4 patches, llama.cpp SYCL b10255+ (build-sycl-0804), Qwen3.6-35B-A3B MoE (heretic MTP-preserved GPTQ-Int4 checkpoint by llmfan46) + ThinkingCap-Qwen3.6-27B dense, 150W/230W power sweep."
-impact: "vLLM XPU MTP beats llama.cpp on MoE by 1.9× decode / 5.2× prefill (single-stream, post-fix: 133 t/s / 8.7K). The --max-num-batched-tokens 8192 fix recovered 21-28% long-prompt prefill (MTP silently caps prefill to 2048 tokens otherwise). 128K context mapped: decode degrades mildly (-24%, still 92 t/s at full context), prefill hits O(n²) past 20K (3,064 t/s @128K), 341K tokens KV headroom. 3 localmaxxing submissions APPROVED. Dense: llama.cpp only (vLLM FP8 has no XPU kernel). Sweet spots: MoE=150W, Dense=180W sustained / 230W burst. Full campaign: benchmark-history Run 14-21, research/vllm-021-campaign-20260806.md A1-A17."
+title: "Intel Arc Pro B70: vLLM vs llama.cpp — Corrected MoE + Dense Showdown"
+description: "A corrected, evidence-linked vLLM XPU vs llama.cpp SYCL comparison on the Intel Arc Pro B70. The current MTP4 path reached up to 204.6 t/s in a short 32-token decode cell and 198.5 t/s median across four diverse 64-token prompts. Honest cold-prefix prefill measured 8.15K t/s at p4k and 8.39K t/s at p8k; paired testing found no meaningful prefill gain from 230W over 150W."
+situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The useful answer requires separating engine, checkpoint, quantization, prompt length, output length, concurrency, cache state, and the statistic being reported. This post preserves the historical matched grid and adds a dated correction for the newer nightly/MTP4 campaign."
+issue: "The original vLLM 0.21 investigation had real engineering blockers, but later evidence changed how several results must be described: 204.6 t/s is a short-generation peak rather than sustained long-form decode; an older 8.7K prefill headline came from a cache-prone harness; 230W did not cause the prefill gain; and LocalMaxxing approval is not independent reproduction."
+solution: "The historical vLLM 0.21 path used a local derived image that was never published. The current public recipe pins a pullable vLLM XPU nightly by digest, applies the BF16 MTP patch, then applies the exact-128K partial-group patch. Results separate historical grids, short-generation peaks, diverse-prompt medians, exact Pi workloads, cold and resident prefixes, and aggregate concurrency."
+usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), pinned public vLLM XPU nightly v0.26.1rc1.dev457 with vllm-xpu-kernels 0.1.12, llama.cpp SYCL b10255+, Qwen3.6-35B-A3B GPTQ-Int4/GGUF variants, and ThinkingCap-Qwen3.6-27B dense."
+impact: "Current single-stream evidence: up to 204.6 t/s on short/g32 and 198.5 t/s median across four diverse g64 prompts at a configured 165W cap. Honest cold-prefix prefill: 8,153 t/s at p4k and 8,393 t/s at p8k. The paired 150W/230W prefill A/B was flat within ±0.2%. The historical matched 150W grid showed vLLM ahead by 1.5–2.1× decode and 3.8–8.5× prefill across cells, including 1.82×/4.2× at p2k/g128. LocalMaxxing entries are approved self-reported submissions; independent reproduction and full differential correctness validation remain pending."
 pubDate: 2026-08-06
 category: ["b70", "local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -25,18 +25,28 @@ tags:
 draft: false
 ---
 
-> **Context:** This is the final showdown results. For the original technical deep-dive into how we built the MXFP4 checkpoints and solved the seven vLLM loader bugs to get here, read **[Phase 1: The vLLM Question on Intel Arc Pro B70 (MXFP4 Native Test)](/posts/intel-arc-b70-vllm-initial-mxfp4-test)** first.
+> **Correction — August 8, 2026:** The original article below documents the historical vLLM 0.21/MTP1 campaign. A newer pinned-nightly MTP4 path reached **up to 204.6 t/s** in one short-prompt, 32-output-token cell. A later four-prompt g64 sweep measured **198.5 t/s median** at a configured 165W cap. Longer generations are slower: the grid measured roughly **160–176 t/s at g128**, and a separate 256-token LocalMaxxing CLI run measured **136.2 t/s**.
+>
+> The corrected cold-prefix prefill figures are **8,153 t/s at p4k** and **8,393 t/s at p8k**, measured with a unique random prefix for every request. The older 8,715–8,718 t/s result used a constant-prefix harness later shown to be cache-prone, so it is retained only as a historical observation. A paired 150W/230W test found no meaningful prefill difference (within ±0.2%); 230W was not the source of the gain.
+>
+> The LocalMaxxing records are approved public **self-reported submissions**, not independent reproduction or correctness certification. The current path is single-stream smoke-tested; a published token/logit/KL differential against the no-spec reference remains pending. MTP mixed prefill/decode concurrency also remains incorrect on the XPU GDN causal-convolution path.
+>
+> The public reproduction now pins `vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97`. The old `intel/vllm:0.21.0-xpu-int4moe` name referred to a local derived image and was never published. The current patch order is `patch_mtp_nightly.py`, then `patch_mtp_boundary.py`.
+>
+> The boundary-patched MTP4 path completed an exact **p130944/g128 = 131,072-token** request. TTFT was 48.601 seconds, client post-first rate was 96.87 tok/s, MTP acceptance was 72.31%, and cache-hit delta was zero. These are E2 provisional self-reported measurements.
 
-## Live on localmaxxing
+> **Context:** For the original technical deep-dive into how we built the MXFP4 checkpoints and solved the seven vLLM loader bugs, read **[Phase 1: The vLLM Question on Intel Arc Pro B70 (MXFP4 Native Test)](/posts/intel-arc-b70-vllm-initial-mxfp4-test)** first.
 
-The headline result is on the [localmaxxing leaderboard](https://www.localmaxxing.com),
-submitted with full patch disclosure and reproducible command flags:
+## Published on LocalMaxxing
+
+The historical MTP1 result is published as an approved self-reported entry on the [LocalMaxxing leaderboard](https://www.localmaxxing.com), with patch notes and command flags. LocalMaxxing admission does not independently rerun the benchmark or attest its prompts, output, correctness, hardware, or raw timings:
 
 [![Qwen3.6-35B-A3B — 132.9 tok/s on Intel Arc Pro B70 · 32 GB (localmaxxing run)](/images/posts/localmaxxing-vllm-mtp-133tps.png)](https://www.localmaxxing.com/runs/cmshndoyu01i3pp01zgvwr3il)
 
 **→ [Qwen3.6-35B-A3B — 132.9 tok/s on Intel Arc Pro B70 · 32 GB](https://www.localmaxxing.com/runs/cmshndoyu01i3pp01zgvwr3il)**
-vLLM · GPTQ-Int4 · XPU. Three B70 submissions approved: vLLM MTP (this run),
-llama.cpp MoE Q4_K_XL, and llama.cpp dense 27B Q4_K_M.
+vLLM · GPTQ-Int4 · XPU. Three historical B70 submissions were approved for publication: vLLM MTP (this run), llama.cpp MoE Q4_K_XL, and llama.cpp dense 27B Q4_K_M. “Approved” means accepted into LocalMaxxing's self-reported dataset; it does not mean independently reproduced.
+
+The newer submissions are [204.6 t/s single-stream MTP4](https://www.localmaxxing.com/en/runs/cmsiwwpzf00a4qm01z18izmad) and [1,139.8 t/s aggregate generation at C64](https://www.localmaxxing.com/en/runs/cmsiwwqmt00a9qm010iekvi3u). The second number is server-wide throughput across 64 concurrent requests, **not** per-user decode.
 
 ## The question, and why it took 19 runs
 
@@ -56,48 +66,35 @@ things**, and the MoE vs Dense gap on this card is enormous.
 
 ## How we got here (the campaign arc)
 
-| Run    | What we tried                                                    | What we learned                                                                              |
-| ------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| 13–14  | vLLM 0.17 MXFP4 (self-built checkpoint, 7 patches)               | Served & correct, but decode 7× slower than llama.cpp — image too old                        |
-| 15     | Concurrency head-to-head (16 users)                              | The "150 t/s" claim = multi-user aggregate (153 gen t/s @ C16), not single-stream            |
-| 16     | vLLM 0.21 Triton GPTQ MoE                                        | 58 t/s single-stream — Triton path leaves ~40% on the table                                  |
-| 17     | **Native XpuFusedMoe int4 unlocked** (root cause: uint8 vs int8) | 72.6 t/s decode / 9,094 prefill — **prefill beats Reddit, decode = bandwidth ceiling**       |
-| 18     | **MTP speculative decoded** (4 patches, GDN assert removed)      | **123 t/s single-stream** — first vLLM XPU result to beat llama.cpp MoE parity               |
-| **19** | **Full engine + power sweep** (this post)                        | **vLLM MTP 1.8×/4.2× over llama.cpp; MoE=150W / Dense=180W sweet spots; dense vLLM blocked** |
+| Run    | What we tried                                                       | What we learned                                                                           |
+| ------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| 13–14  | vLLM 0.17 MXFP4 (self-built checkpoint, 7 patches)                  | Served & correct, but decode 7× slower than llama.cpp — image too old                     |
+| 15     | Concurrency head-to-head (16 users)                                 | The "150 t/s" claim = multi-user aggregate (153 gen t/s @ C16), not single-stream         |
+| 16     | vLLM 0.21 Triton GPTQ MoE                                           | 58 t/s single-stream — Triton path leaves ~40% on the table                               |
+| 17     | **Packed W4A16 `XpuFusedMoe` unlocked** (root cause: uint8 vs int8) | 72.6 t/s decode / 9,094 reported prefill — target expert path reached the no-spec ceiling |
+| 18     | **MTP speculative decoded** (four historical logical changes)       | **123 t/s single-stream** — first vLLM XPU result to beat llama.cpp MoE parity            |
+| **19** | **Historical matched engine + power sweep** (this post)             | **At p2k/g128: 1.82× decode / 4.2× prefill; MoE=150W / Dense=180W; dense vLLM blocked**   |
 
-The two breakthroughs were Run 17 (native int4 — a one-bit dtype bug) and Run 18
-(MTP — three load-path patches plus removing an overcautious assert that everyone
-_assumed_ was a real kernel limit).
+The two historical breakthroughs were Run 17 (routing packed W4A16 experts through the intended XPU kernel after a dtype mismatch) and Run 18 (bringing up the single-stream MTP path through three load/call-path changes plus removal of the old assertion). Later mixed-batch testing showed that the assertion was overbroad for single-stream MTP but had hidden a real recurrent-state correctness limitation under concurrency.
 
-## The four patches that unlocked MTP (Run 18)
+## The historical four logical fixes that unlocked MTP (Run 18)
 
-MTP speculative decoding was "known impossible" on this model: it's a hybrid GDN
-architecture (linear attention + full attention layers), and the XPU GDN kernel
-had a hard `assert attn_metadata.spec_sequence_masks is None`. Run 14 (ngram)
-hit that assert and we wrote it up as "XPU GDN incompatible with speculative
-decoding."
+This section describes the historical vLLM 0.21 path. Its four logical changes were delivered in two patch scripts. On the newer pinned nightly used for MTP4, upstream has absorbed the native target W4A16 path and the old GDN assertion; only the checkpoint-specific higher-precision MTP-draft adaptation remains locally necessary.
 
-That was **wrong**. Four patches fixed it:
+MTP speculative decoding had appeared impossible on this model: it is a hybrid GDN architecture (linear attention + full attention layers), and the XPU GDN kernel had a hard `assert attn_metadata.spec_sequence_masks is None`. Run 14 hit that assertion and we initially described XPU GDN as incompatible with speculative decoding.
 
-1. **Native int4 dtype** (`patch_xpu_int4_moe_v4.py`) — `implement_zp` stores
-   `torch.int8` so C++ `is_B_int4 = (B_dtype == at::kChar)` triggers; route
-   `MoeWNA16Method.apply` → `XpuFusedMoe`.
+Four historical changes brought up the single-stream path:
+
+1. **Native packed W4A16 target experts** (`patch_xpu_int4_moe_v4.py`) — `implement_zp` stores `torch.int8` so C++ `is_B_int4 = (B_dtype == at::kChar)` triggers; route `MoeWNA16Method.apply` → `XpuFusedMoe`. The expert weights are packed INT4, while activations are FP16 and scales/accumulation remain higher precision.
 2. **BF16 MTP draft** (`patch_mtp_bf16_draft.py`) — strip `quant_config` at
    `MultiTokenPredictor.__init__`, `Qwen3NextSparseMoeBlock`, and `FusedMoE`
    for any prefix containing `mtp`. The checkpoint's MTP experts are BF16
    fused tensors; inheriting GPTQ made them `w2_qweight`-shaped → `KeyError`.
 3. **XpuFusedMoe kwarg strip** — remove `is_fp8` / `is_mxfp4` from the
    `XpuFusedMoe(...)` call site (the kernels auto-detect dtype).
-4. **GDN spec assert → warning** — the SYCL kernel already receives
-   `num_spec_decodes`, `spec_query_start_loc`, `spec_token_indx`,
-   `spec_state_indices_tensor`; the boolean `spec_sequence_masks` is
-   metadata-only and is **never passed to the kernel**. The assert was a
-   guardrail, not a capability limit.
+4. **GDN spec assert → warning** — the boolean `spec_sequence_masks` was not passed directly to the SYCL kernel, and removing the assertion allowed the single-stream path to run. Later mixed-batch tests showed that the guard had also been masking a real recurrent-state ordering limitation under concurrency; assertion removal alone is not a general GDN speculative-decoding fix.
 
-After all four, the server came up, served requests, and decoded at **123 t/s**.
-Correctness verified: greedy `temp=0` replays produced byte-identical output
-(a corrupting spec path would diverge), and factual probes (17×23=391, capital
-of Australia=Canberra) were correct.
+After all four, the server came up, served requests, and decoded at **123 t/s**. The single-stream path passed deterministic greedy and factual smoke checks. Those checks are useful but are not a full correctness proof: the raw patched-vs-reference token transcript and a broader logit/KL differential have not yet been published. Treat this path as experimental until that audit is complete.
 
 ![Four patches that unlocked MTP speculative decoding on XPU GDN](/images/diagrams/b70-mtp-unlock-flow.svg)
 
@@ -106,11 +103,7 @@ of Australia=Canberra) were correct.
 Single-stream (Concurrent-1), 150W sweet spot. Format: **vLLM MTP** / llama.cpp
 (best steady-state decode t/s).
 
-_Note: this grid is the Run 19 measurement, before the Run 20
-`--max-num-batched-tokens 8192` fix. After the fix, vLLM decode improved ~5%
-(short/g32 127 → 133 t/s) and long-prompt prefill recovered 21-28% (p4k
-6,626 → 8,484 t/s). The grid below is the conservative, pre-fix baseline —
-run the harness yourself for post-fix numbers._
+_Note: this is the historical Run 19 matched grid, before raising `--max-num-batched-tokens` to 8192. The server had logged a 2048-token speculative scheduling ceiling, and the old follow-up grid observed a 21–28% p2k–p4k recovery after raising it. Because that follow-up used the older constant-prefix prefill harness, the exact percentage now needs a clean random-prefix 2048-vs-8192 replication. The qualitative scheduling-ceiling finding remains valid; this table is retained as the controlled historical comparison._
 
 | Prompt \ Gen    | g32                  | g128                 | g256                 | g512                 |
 | --------------- | -------------------- | -------------------- | -------------------- | -------------------- |
@@ -136,25 +129,20 @@ better on longer contexts.
 | p4k    |  3,870 |    **6,626** |             1,728 |     3.8× |
 | p8k    |  7,545 |    **7,526** |             1,662 |     4.5× |
 
-vLLM is **3.8–8.5× faster on prefill**. This is the native int4 `XpuFusedMoe`
-kernel plus continuous-batching prefill — the gap llama.cpp can't close on MoE.
+Within this historical matched 150W grid, vLLM is **3.8–8.5× faster on prefill**. The exact ratio is workload-specific rather than one universal “4×” number: at p2k/g128, the matched comparison is **4.2× prefill and 1.82× decode**. The stacks also use different checkpoint and quantization formats, so this is a best-tuned-engine comparison, not an engine-only A/B. The target experts run through the packed W4A16 `XpuFusedMoe` path.
 
 ## Power sweet spots (temperature-controlled)
 
 This was the surprise: **MoE and Dense want opposite power settings.**
 
-| Model         | Sweet spot                          | 150W → 230W effect | Temp        | Why                                                       |
-| ------------- | ----------------------------------- | ------------------ | ----------- | --------------------------------------------------------- |
-| **MoE 35B**   | **150W**                            | **-8%** (slower!)  | flat ~58°C  | Self-limits to ~140W draw; extra cap just adds heat noise |
-| **Dense 27B** | **180W** sustained / **230W** burst | **+18–30%**        | 71°C → 79°C | Scales with power; but thermal cost is real               |
+| Model         | Sweet spot                          | 150W → 230W effect       | Temp               | Why                                                             |
+| ------------- | ----------------------------------- | ------------------------ | ------------------ | --------------------------------------------------------------- |
+| **MoE 35B**   | **150–165W**                        | **Prefill within ±0.2%** | workload-dependent | Paired testing found no useful prefill gain from the higher cap |
+| **Dense 27B** | **180W** sustained / **230W** burst | **+18–30% decode**       | 71°C → 79°C        | Scales with power, but the thermal cost is real                 |
 
-MoE is bandwidth-bound and barely changes clock for clock — it reads only the
-~3 GB of active experts per token no matter what. Dense reads all ~19 GB of
-weights per token, so it benefits from the extra frequency headroom that higher
-power buys — at the cost of running 20°C hotter.
+The original campaign associated a slower 230W MoE run with the power cap. A later alternating A/B on the same warm server isolated that variable and found p2k, p4k, and p8k prefill effectively flat within ±0.2%. The earlier difference was run-state variance, not a useful power response. Separate monitoring observed approximately 171W during prefill, 113W during decode, and 47W idle even when the configured ceiling was higher.
 
-**Run MoE at 150W. Run Dense at 180W (or 230W for short bursts).** This keeps
-temperatures controlled without sacrificing speed.
+**Run this MoE path at 150–165W. Run Dense at 180W (or 230W for short bursts).** The lower MoE cap preserves performance while avoiding unnecessary heat budget.
 
 ## Dense 27B: the one-sided verdict
 
@@ -174,27 +162,28 @@ checkpoint is also 30 GB, which barely fits 32 GB VRAM with KV cache. So
 llama.cpp dense + MTP (the GGUF `nextn` layer) pushes ~24–30 t/s — the only path
 past the ~23 t/s Q4 baseline. That's the subject of the next investigation.
 
-## Final scorecard (single-stream, sweet-spot power)
+## Current scorecard and historical comparator
 
-_Updated for Run 20 (the `--max-num-batched-tokens 8192` prefill fix): decode
-133 t/s, prefill 8.7K. The original scorecard (126/6,217) was measured before
-the fix — see the update section below._
+The current nightly/MTP4 results and the historical matched engine grid answer different questions, so they are separated here rather than collapsed into one multiplier.
 
-| Model     | Engine       | Config          |    Decode (best) | Prefill (best) | Power | Temp |
-| --------- | ------------ | --------------- | ---------------: | -------------: | ----: | ---: |
-| MoE 35B   | **vLLM MTP** | GPTQ-Int4 + MTP |      **133 t/s** |  **8,718 t/s** |  150W | 58°C |
-| MoE 35B   | llama.cpp    | Q4_K_XL GGUF    |           69 t/s |      1,498 t/s |  150W | 58°C |
-| Dense 27B | llama.cpp    | Q4_K_M GGUF     |           23 t/s |      1,007 t/s |  230W | 79°C |
-| Dense 27B | vLLM         | FP8             | ❌ no XPU kernel |              — |     — |    — |
+| Model / generation               | Engine and config              |     Decode (t/s) |             Prefill (t/s) |    Configured cap | Interpretation                                                  |
+| -------------------------------- | ------------------------------ | ---------------: | ------------------------: | ----------------: | --------------------------------------------------------------- |
+| MoE 35B, current peak            | vLLM nightly, GPTQ-Int4 + MTP4 |        **204.6** |                         — |              165W | Short prompt, g32, maximum observed cell                        |
+| MoE 35B, current diverse prompts | vLLM nightly, GPTQ-Int4 + MTP4 | **198.5 median** |                         — |              165W | Four different prompts, g64; mean 198.8                         |
+| MoE 35B, current cold prefill    | vLLM nightly, GPTQ-Int4 + MTP4 |                — | **8,153 p4k / 8,393 p8k** | 230W test setting | Unique random prefix per call; paired A/B found no 230W benefit |
+| MoE 35B, historical matched grid | vLLM 0.21, GPTQ-Int4 + MTP1    |          111–130 |                 563–7,526 |              150W | Compare cell-by-cell with the historical llama.cpp rows above   |
+| MoE 35B, historical matched grid | llama.cpp, Q4_K_XL GGUF        |            58–74 |                 104–1,728 |              150W | Different checkpoint/quant format; best-tuned stack comparison  |
+| Dense 27B                        | llama.cpp, Q4_K_M GGUF         |               23 |                     1,007 |              230W | Historical dense result                                         |
+| Dense 27B                        | vLLM FP8                       |    no XPU kernel |                         — |                 — | Unsupported in the tested build                                 |
 
-_Decode best = short/g32 (Run 20, warmup discarded). Prefill best = p8k
-(7,545-token prompt) — prefill scales with prompt length; the p2k value is
-7,535 t/s. Context-scaling data in the Run 21 section below._
+The older **8,718 t/s** value is no longer the canonical prefill headline. It came from a constant-prefix harness later shown to be cache-prone. It remains useful as campaign history, but the random-prefix cold measurements above are the defensible current figures.
+
+For generation length context, the MTP4 grid measured **204.6 t/s at g32**, **190.6 t/s at g64**, and **175.7 t/s at g128** for the short prompt. A separate 256-output-token LocalMaxxing CLI run measured **136.2 t/s median**. “200 t/s” therefore describes short interactive generation, not sustained long-form output.
 
 ## Concurrency — multi-user throughput
 
 Single-stream is one thing; serving many users at once is where vLLM's
-continuous batching shines. Native int4 v4 (no MTP), @180W, max-num-seqs=64:
+continuous batching shines. Historical packed W4A16 v4 target path (no MTP), @180W, max-num-seqs=64:
 
 | Concurrent users | Wall-agg tok/s | Avg per-user decode |
 | ---------------: | -------------: | ------------------: |
@@ -205,16 +194,9 @@ continuous batching shines. Native int4 v4 (no MTP), @180W, max-num-seqs=64:
 
 **694 tokens/sec aggregate across 16 concurrent users** — each still getting
 ~46 t/s. A single user gets 64-73 t/s; 16 users get ~11× more total throughput
-with graceful per-user degradation. The "145 t/s" community claim sits
-comfortably in this multi-user band (~C10 aggregate). Community dual-B70 runs
-hit [912 tok/s at 50 concurrent users](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks).
+with graceful per-user degradation. The previously discussed 145 t/s community result cannot be classified as aggregate throughput without the original permalink, prompt/output metadata, and harness. Later single-stream MTP measurements make a value in that range technically plausible. Community dual-B70 runs report [912 tok/s at 50 concurrent users](https://github.com/PMZFX/intel-arc-pro-b70-benchmarks), which is explicitly an aggregate serving result.
 
-_Note: this is the no-MTP path (Run 17/19). **MTP + concurrency is blocked
-on the XPU GDN kernel** (Run 23): the `causal_conv1d` state machine cannot mix
-speculative and non-speculative tokens in a single batch — C2+ with MTP crashes
-EngineCore. Choose one: MTP (single-user, 133 t/s) OR concurrency (no MTP,
-C16=694 aggregate). Can't have both until the XPU GDN kernel supports mixed
-spec/non-spec batches._
+_Note: this is the no-MTP path (Run 17/19). **MTP + mixed prefill/decode concurrency remains incorrect on the XPU GDN path** (Run 23 and later patch attempts): the `causal_conv1d` recurrent-state handling cannot safely mix speculative and non-speculative tokens in one batch. Guard bypasses stopped the immediate failure but produced incorrect output, so they are not fixes. Use MTP for the supported single-stream path or disable MTP for aggregate concurrency until the kernel state-ordering issue is resolved and passes differential correctness tests._
 
 ## What this all means
 
@@ -223,75 +205,54 @@ spec/non-spec batches._
 1. **MoE is 5–6× faster decode than dense on the B70.** Both are bandwidth-bound
    at 608 GB/s, but MoE reads ~3 GB/token (active experts) vs dense's ~19 GB
    (all weights). This isn't a vLLM-vs-llama.cpp thing — it's architecture.
-2. **vLLM MTP wins MoE** (1.8× decode, 4.2× prefill over llama.cpp) — but needs
-   four in-container patches and an MTP-preserved GPTQ checkpoint. Worth it for
-   a serving workload; overkill for single-user interactive.
+2. **vLLM MTP wins the historical matched MoE grid** by 1.5–2.1× decode and 3.8–8.5× prefill across cells; p2k/g128 is 1.82×/4.2×. These are best-tuned stack comparisons across different checkpoint/quant formats, not a pure engine-only A/B. The historical 0.21 result needed four logical changes in two scripts; the current nightly has absorbed most of them.
 3. **llama.cpp wins dense by default** — vLLM has no dense XPU FP8 kernel.
    Until that lands upstream, GGUF + SYCL is the only dense path.
-4. **Power: MoE=150W, Dense=180W.** MoE self-limits and 230W actively hurts;
-   dense scales but pays in heat. Set the cap once per workload.
+4. **Power: MoE=150–165W, Dense=180W sustained.** The paired MoE prefill A/B found 150W and 230W indistinguishable within ±0.2%; the higher cap adds no demonstrated benefit. Dense still scales with power but pays in heat.
 
 ![Power scaling: MoE flat vs Dense climbing, with temperature](/images/diagrams/b70-power-scaling-moe-vs-dense.svg)
 
-The honest guidance for a B70 owner: **MoE serving workload → vLLM XPU native
-int4 + MTP @150W. Single-user interactive → llama.cpp @150W (MoE) or @180W
-(dense).** For a single-user chat front-end, llama.cpp stays production — but
-the gap closed hard, and the dense vLLM kernel is the obvious next thing to
-chase.
+The practical guidance for a B70 owner: **single-stream MoE speed → vLLM XPU packed W4A16 + higher-precision MTP draft at 150–165W; multi-user aggregate MoE serving → native W4A16 without MTP until mixed-batch GDN is fixed; dense → llama.cpp at about 180W sustained.** The patched MTP path remains experimental pending the published differential correctness audit.
 
-## Update — 128K context: how it scales (Run 21)
+## Update: exact 128K and real Pi workload states
 
-The natural question after the MTP unlock: **does it hold up as context fills?**
-We ran a context-scaling sweep — 4K → 128K prompts, single-stream, MTP on, 150W.
+The older Run 21 sweep used approximate context labels. The August 8 campaign calibrated exact rendered tokens after the chat template and exercised the Pi system prompt.
 
-**VRAM first:** the server allocated **349,869 tokens of KV cache headroom**
-(model 19.79 GiB + 7.75 GiB KV available). The MoE's tiny 3B-active attention
-makes KV nearly free — 128K context fits with 213K tokens to spare. No OOM.
+### Exact long-context completion
 
-![Context scaling to 128K: prefill hits the O(n²) wall, decode degrades mildly](/images/diagrams/b70-context-scaling-128k.svg)
+| Spec                  |  Prompt | Output |       Total |   TTFT (s) | Client post-first (tok/s) | MTP accept | Result        |
+| --------------------- | ------: | -----: | ----------: | ---------: | ------------------------: | ---------: | ------------- |
+| MTP4                  |  16,256 |    128 |      16,384 |      2.403 |                    161.23 |     85.34% | Completed     |
+| MTP4                  |  32,640 |    128 |      32,768 |      5.785 |                    139.99 |     71.21% | Completed     |
+| MTP4                  |  65,408 |    128 |      65,536 |     15.093 |                    111.17 |     58.55% | Completed     |
+| MTP4                  |  98,176 |    128 |      98,304 |     28.078 |                    117.36 |     76.56% | Completed     |
+| MTP4                  | 122,880 |    128 |     123,008 |     44.057 |                     95.13 |     62.84% | Completed     |
+| MTP4 + boundary patch | 130,944 |    128 | **131,072** | **48.601** |                 **96.87** | **72.31%** | **Completed** |
+| MTP2                  | 130,944 |    128 | **131,072** |     48.559 |                    103.63 |     86.96% | Completed     |
 
-|  Context | Prefill t/s | Decode t/s |    TTFT |  Wall |
-| -------: | ----------: | ---------: | ------: | ----: |
-|       4K |       5,423 |  **120.9** |   714ms |  1.2s |
-|      10K |       7,098 |      107.5 |    1.4s |  2.0s |
-|      20K |   **7,325** |      116.0 |    2.6s |  3.2s |
-|      40K |       5,877 |      100.0 |    6.6s |  7.2s |
-|      65K |       4,418 |      104.7 |   14.3s | 14.9s |
-| **128K** |   **3,064** |   **92.5** | **40s** | 40.7s |
+The unpatched MTP4 request stopped after 124 output tokens. Four sequence slots remained, but the XPU GDN path expected a complete five-token group: one target plus four drafts. `patch_mtp_boundary.py` sends only that partial final group through stateful non-spec prefill. It does not pad past 131,072 or reduce the requested output.
 
-**What this tells you:**
+MTP2 was 6.98% faster than MTP4 by client post-first rate in the single matched exact-128K observations. MTP4 now works at the boundary, but MTP2 may be the better 128K profile.
 
-1. **Decode degrades mildly.** 121 → 92 t/s (4K → 128K, **-24%**). Even at a
-   full 128K context, MTP delivers ~92 t/s — still above the 73 t/s no-spec
-   bandwidth ceiling. Attention grows with KV length, but the MoE's small
-   attention keeps it manageable.
-2. **Prefill hits the O(n²) wall past 20K.** Peaks at ~7.3K t/s (20K context),
-   then falls to 3,064 t/s at 128K (**-58% from peak**). Building KV cache for
-   122K tokens is inherently O(n²). Still — 3K t/s at 128K beats llama.cpp's
-   peak prefill of 1.7K. vLLM wins even at extreme context.
-3. **The 40s cold load is a one-time cost — follow-ups are 28× faster.** With
-   `--enable-prefix-caching`, the KV cache of conversation history is reused
-   across turns. Measured multi-turn at full 122K resident context:
+### Cold and resident Pi flows
 
-   | Turn          | Context |      TTFT |   Decode |
-   | ------------- | ------: | --------: | -------: |
-   | 1 (cold load) | 122,531 |     39.6s | 75.3 t/s |
-   | 2 (warm)      | 122,561 | **1.42s** | 78.2 t/s |
-   | 3 (warm)      | 122,587 |     1.43s | 82.4 t/s |
-   | 4 (warm)      | 122,611 |     1.40s | 82.4 t/s |
-   | 5 (warm)      | 122,636 |     1.42s | 81.9 t/s |
+| State                                | Endpoint prompt tokens | TTFT (s) | E2E (s) | Cache hits |
+| ------------------------------------ | ---------------------: | -------: | ------: | ---------: |
+| Cold short chat                      |                    595 |    0.811 |   1.746 |          0 |
+| Warm multi-turn                      |                    753 |    0.157 |   1.291 |          0 |
+| RAG/tool append                      |                    930 |    0.236 |   1.027 |          0 |
+| Cold 32K document                    |                 32,640 |    5.802 |   6.694 |          0 |
+| Follow-up over resident 32K document |                 32,795 |    0.676 |   1.726 |     30,464 |
 
-   **Warm follow-up TTFT at full 122K context = 1.4 seconds.** Load the
-   document/codebase once (40s), then chat with the entire thing at interactive
-   latency. That's a genuinely usable long-context assistant pattern — not
-   batch-only. (`--enable-prefix-caching` is mandatory; without it every turn
-   re-prefills from scratch.)
+The Pi system prefix is shorter than the model's 1,088-token cache page. Zero token-level cache hits on short warm requests is expected. The resident 32K follow-up reused 30,464 tokens and reached first content in 0.676 seconds.
 
-**Launcher guidance:** vLLM MTP @128K + prefix caching = interactive multi-turn
-long-context sessions. Cold single-turn stays slow (40s); warm sessions are
-snappy. For cold-start single-turn interactive use, llama.cpp dense @128K stays
-the lower-latency choice with no patched-engine correctness risk.
-Launch at 128K: `benchmarks/launch-mtp-128k.sh`.
+### Mixed load
+
+MTP4 still crashes when a long prefill and speculative decode share one XPU `causal_conv1d` invocation. The no-spec fallback completed one p65408/g128 document plus 20 concurrent g64 short requests.
+
+Mixed aggregate output was 74.46 tok/s: 1,374 generated tokens divided by the complete 18.452-second campaign interval. This includes the 64K prefill and is not a per-stream rate. Short-request TTFT rose from 0.112 seconds p50 at baseline to 12.855 seconds p50 during the mixed campaign.
+
+The exact public image, patch matrix, prompt generator, request recorder, and commands are in the [Intel Arc Pro B70 inference cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
 
 ## What's next: getting dense working on vLLM
 
@@ -312,7 +273,7 @@ worth investigating:
   on dense 27B; a dedicated MTP-4 sweep at 165W (the documented dense efficiency
   sweet spot) may be the practical dense ceiling on this card.
 
-That's the next campaign. For now, the MoE story is closed and measured.
+That's the next campaign. The MoE path is substantially characterized, but scheduler-budget attribution, full differential correctness, immutable public manifests, and third-party reproduction remain open work.
 
 ## Model reference
 
@@ -320,32 +281,30 @@ The vLLM MoE benchmarks use a specific checkpoint worth documenting:
 
 - **Architecture:** Qwen3.6-35B-A3B (MoE: 256 experts, 8 active + 1 shared, 3B active params/token, hybrid GDN/attention)
 - **Checkpoint:** [`llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-GPTQ-Int4`](https://huggingface.co/llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-GPTQ-Int4) — a heretic (uncensored/abliterated) variant of the stock Qwen model
-- **Why not the official Qwen GPTQ?** The official `Qwen/Qwen3.6-35B-A3B-GPTQ-Int4` declares `mtp_num_hidden_layers: 1` in config but ships **zero MTP weight tensors** in the shards. The heretic variant preserves these tensors, which is what makes MTP speculative decoding possible (and gives us the 133 t/s decode path)
-- **Quantization:** INT4 weights via GPTQ calibration (group_size=128, symmetric, desc_act=false, GPTQModel 7.1.0-dev). INT4 is the data format — GPTQ is the algorithm that computes the weights
-- **Format note:** INT4 is the optimal format for Intel Arc B70. The XMX (Xe Matrix Extension) engines have native INT4 grouped GEMM — this is Intel's equivalent of NVIDIA's NVFP4 on Tensor Cores. MXFP4 (OCP float4) loads and produces correct output but runs at 10.4 t/s because the hybrid GDN layers bottleneck on unoptimized Triton kernels, not the quant format itself
+- **Why not the official Qwen GPTQ?** The official `Qwen/Qwen3.6-35B-A3B-GPTQ-Int4` declares `mtp_num_hidden_layers: 1` in config but ships **zero MTP weight tensors** in the shards. The tested derivative preserves those tensors, which makes the MTP path possible.
+- **Quantization:** The target expert weights use GPTQ INT4 calibration (group_size=128, symmetric, desc_act=false). Runtime execution is more precisely described as **packed W4A16**: four-bit weights, FP16 activations, and higher-precision scales/accumulation. Router gates and the preserved MTP tensors are not all INT4.
+- **Format note:** The Xe2 XMX engines provide an optimized packed four-bit grouped-GEMM path. This is not integer-only end-to-end inference and should not be equated directly with NVIDIA NVFP4, which is a different floating-point format. The older MXFP4 experiment used a different execution path and is documented separately.
 
-Quantization quality (KL divergence) is architecture-determined, not weight-determined — the heretic abliteration doesn't change how INT4 quantization affects output distribution. Community KLD data from the same architecture (Qwen3.5-35B-A3B, identical layout) places INT4/GPTQ in the same quality tier as GGUF Q4_K_XL (Mean KLD ~0.012–0.020).
+Quantization quality cannot be inferred from architecture alone, and results from another checkpoint or quantizer are not proof of parity for this derivative. The current path has passed coherent-output and deterministic smoke checks, but a checkpoint-specific perplexity/task-quality study and patched-vs-reference token/logit/KL differential have not yet been published.
 
-## Methodology
+## Methodology and evidence generations
+
+### Historical matched grid
 
 - **Hardware:** Intel Arc Pro B70 32GB, AMD Ryzen 7 5700X3D, Ubuntu 26.04.
-- **vLLM:** `intel/vllm:0.21.0-xpu-int4moe` (v0.21.1.dev18) + 4 in-container
-  patches (`patch_xpu_int4_moe_v4.py`, `patch_mtp_bf16_draft.py`). Model:
-  `Qwen3.6-35B-A3B-MTP-Preserved-GPTQ-Int4` (22.4 GB, 1 MTP layer). Flags:
-  `--quantization gptq --dtype float16 --max-model-len 16384 --max-num-seqs 1
---language-model-only --speculative-config {"method":"mtp",
-"num_speculative_tokens":1}`, PIECEWISE graphs.
-- **llama.cpp:** SYCL b10255+ (build-sycl-0804, oneAPI 2026.0). MoE:
-  `Qwen3.6-35B-A3B-UD-Q4_K_XL` (-ngl 99 -ncmoe 0 -fa on -ctk q8_0 -ctv q4_1).
-  Dense: `ThinkingCap-Qwen3.6-27B-Q4_K_M` (same KV/FA flags).
-- **Measurement:** vLLM = streaming `/v1/chat/completions` with
-  `stream_options.include_usage`, decode = `completion_tokens / (total - ttft)`.
-  llama.cpp = `/completion` `timings.predicted_per_second` (engine rate, per
-  AGENTS.md §9.4). Best steady-state rep (drops JIT warmup). 2 reps/cell.
-- **Thermal discipline:** cooldown to ≤52°C between runs; GPU temp monitored
-  throughout (hwmon `temp2_input`). No two inference processes concurrent.
-- **Full data:** `results/engine-comparison-full-20260806.md`,
-  `results/moe-{vllm-mtp,llamacpp}-*-grid.json`,
-  `results/dense-llamacpp-q4km-{150,230}w-grid.json`. Campaign narrative:
-  `research/vllm-021-campaign-20260806.md` A1–A16. Run log:
-  `docs/benchmark-history.md` Run 14–19.
+- **vLLM, current:** public image `vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97`, observed vLLM `v0.26.1rc1.dev457+gc810e5ee9` and `vllm-xpu-kernels 0.1.12`, with `patch_mtp_nightly.py` then `patch_mtp_boundary.py`.
+- **vLLM, historical:** `intel/vllm:0.21.0-xpu-int4moe` was a local derived image and was never published. Its four logical modifications remain campaign history, not a pullable recipe.
+- **llama.cpp:** SYCL b10255+, MoE `Qwen3.6-35B-A3B-UD-Q4_K_XL`, dense `ThinkingCap-Qwen3.6-27B-Q4_K_M`, with the documented GPU-offload, flash-attention, and quantized-KV flags.
+- **Measurement:** the historical vLLM grid used streaming client timing and the llama.cpp grid used engine timing. It reported best steady-state cells from a small repetition count. It is useful as campaign history but does not meet the stronger current random-prefix/dispersion standard.
+- **Comparison limit:** vLLM GPTQ and llama.cpp GGUF are different checkpoint/quantization stacks. Ratios describe the best tuned configurations tested on the same card, not an isolated engine variable.
+
+### Current nightly/MTP4 evidence
+
+- **Decode peak:** 204.6 t/s, approximately 105 prompt tokens and 32 output tokens.
+- **Diverse-prompt decode:** 198.5 t/s median and 198.8 t/s mean across four different 64-output-token prompts at a configured 165W cap.
+- **Cold prefill:** 8,153 t/s p4k and 8,393 t/s p8k, using a unique random prefix per request.
+- **Power:** alternating 150W/230W prefill rounds on the same warm server were within ±0.2%; the higher cap did not improve this workload.
+- **MTP:** direct counters measured 80.1% overall acceptance at N=4, decreasing by draft position. One MTP layer is invoked recurrently four times to propose up to four tokens before target verification.
+- **Correctness boundary:** single-stream smoke-tested; full token/logit/KL differential pending. Mixed speculative/non-speculative GDN concurrency is unsupported because later guard-bypass attempts produced incorrect output.
+
+The public cookbook now provides the pullable image digest, compatible patch order, exact-token prompt generator, Pi system prompt, request recorder, exact-128K commands, selected results, and a compact machine-readable campaign summary. Full raw SSE, serve logs, and synchronized host telemetry remain in the private evidence archive.
