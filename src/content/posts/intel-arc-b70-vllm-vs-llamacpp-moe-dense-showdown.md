@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: vLLM vs llama.cpp — Corrected MoE + Dense Showdown"
-description: "A corrected, evidence-linked vLLM XPU vs llama.cpp SYCL comparison on the Intel Arc Pro B70. The current MTP4 path reached up to 204.6 t/s in a short 32-token decode cell and 198.5 t/s median across four diverse 64-token prompts. Honest cold-prefix prefill measured 8.15K t/s at p4k and 8.39K t/s at p8k; paired testing found no meaningful prefill gain from 230W over 150W."
-situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The useful answer requires separating engine, checkpoint, quantization, prompt length, output length, concurrency, cache state, and the statistic being reported. This post preserves the historical matched grid and adds a dated correction for the newer nightly/MTP4 campaign."
-issue: "The original vLLM 0.21 investigation had real engineering blockers, but later evidence changed how several results must be described: 204.6 t/s is a short-generation peak rather than sustained long-form decode; an older 8.7K prefill headline came from a cache-prone harness; 230W did not cause the prefill gain; and LocalMaxxing approval is not independent reproduction."
-solution: "The historical vLLM 0.21 path used a local derived image that was never published. The current public recipe pins a pullable vLLM XPU nightly by digest, applies the BF16 MTP patch, then applies the exact-128K partial-group patch. Results separate historical grids, short-generation peaks, diverse-prompt medians, exact Pi workloads, cold and resident prefixes, and aggregate concurrency."
+description: "A matched vLLM XPU study on the Intel Arc Pro B70: no-spec, MTP1, MTP2, and MTP4 with prefix caching on and off at exact 128K. Cache cut resident-session TTFC by 31–66×; MTP2 + cache on had the best 120K-session end-to-end median."
+situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The useful answer requires separating engine, checkpoint, quantization, prompt length, output length, concurrency, cache state, and the statistic being reported. This post preserves the historical engine comparison and adds a matched real-world vLLM matrix."
+issue: "The old public surface mixed short-generation peaks, cold prefill, exact-128K completion, resident-session latency, and historical engine grids. It also lacked a matched cache-on/cache-off comparison, even though normal Pi sessions reuse long prefixes."
+solution: "The current public recipe pins a pullable vLLM XPU nightly by digest, applies the BF16 MTP patch and exact-128K boundary patch in order, then runs the same six calibrated prompts across no-spec, MTP1, MTP2, and MTP4 with caching explicitly enabled or disabled."
 usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), pinned public vLLM XPU nightly v0.26.1rc1.dev457 with vllm-xpu-kernels 0.1.12, llama.cpp SYCL b10255+, Qwen3.6-35B-A3B GPTQ-Int4/GGUF variants, and ThinkingCap-Qwen3.6-27B dense."
-impact: "Current single-stream evidence: up to 204.6 t/s on short/g32 and 198.5 t/s median across four diverse g64 prompts at a configured 165W cap. Honest cold-prefix prefill: 8,153 t/s at p4k and 8,393 t/s at p8k. The paired 150W/230W prefill A/B was flat within ±0.2%. The historical matched 150W grid showed vLLM ahead by 1.5–2.1× decode and 3.8–8.5× prefill across cells, including 1.82×/4.2× at p2k/g128. LocalMaxxing entries are approved self-reported submissions; independent reproduction and full differential correctness validation remain pending."
+impact: "At a resident ~120K prompt, prefix caching cut median TTFC from 36.770–39.508 seconds to 0.554–1.256 seconds. MTP2 + cache on had the best end-to-end median at 2.504 seconds; no-spec + cache on showed the first visible token in 0.554 seconds. For cold exact p130944/g128, no-spec completed fastest at 43.793 seconds, while MTP4 + cache on reached 102.30 client-observed post-first tok/s. All cells are C1 medians of five measured requests and remain E2 self-reported evidence."
 pubDate: 2026-08-06
 category: ["b70", "local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -34,6 +34,46 @@ draft: false
 > The public reproduction now pins `vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97`. The old `intel/vllm:0.21.0-xpu-int4moe` name referred to a local derived image and was never published. The current patch order is `patch_mtp_nightly.py`, then `patch_mtp_boundary.py`.
 >
 > The boundary-patched MTP4 path completed an exact **p130944/g128 = 131,072-token** request. TTFT was 48.601 seconds, client post-first rate was 96.87 tok/s, MTP acceptance was 72.31%, and cache-hit delta was zero. These are E2 provisional self-reported measurements.
+
+## New matched real-world matrix: cache on/off × no-spec/MTP1/MTP2/MTP4
+
+The newest campaign stops mixing short peaks with long-session behavior. It runs eight clean servers with the same public image, checkpoint, two-patch order, exact prompts, 131,072-token context, scheduler budget 8,192, and five measured requests per cell.
+
+![Matched exact-128K cache and MTP benchmark matrix](/images/posts/b70-128k-cache-spec-matrix.svg)
+
+### Cold exact p130944/g128
+
+| Mode    | Cache | TTFC median (s) | End-to-end median (s) | Client post-first median (tok/s) | MTP acceptance |
+| ------- | ----- | --------------: | --------------------: | -------------------------------: | -------------: |
+| No spec | On    |      **41.589** |            **43.793** |                            57.57 |            n/a |
+| No spec | Off   |          42.192 |                44.413 |                            57.19 |            n/a |
+| MTP1    | On    |          48.865 |                50.358 |                            85.10 |         90.36% |
+| MTP1    | Off   |          45.262 |                46.749 |                            86.21 |         90.69% |
+| MTP2    | On    |          48.564 |                49.946 |                            98.81 |         80.54% |
+| MTP2    | Off   |          45.347 |                46.653 |                       **101.68** |         82.77% |
+| MTP4    | On    |          48.761 |                50.011 |                       **102.30** |         61.22% |
+| MTP4    | Off   |          45.473 |                46.865 |                            93.60 |         62.31% |
+
+Cold prompts carried a unique entropy-first prefix and recorded zero cache-hit tokens. `Client post-first` uses `(127 tokens) / (request end - first generated token)`. It is not an engine-native vLLM timing field.
+
+### Five changed follow-ups over one prepared 120K session
+
+| Mode    | Cache | Reused / recomputed tokens median | TTFC median (s) | End-to-end median (s) | Client post-first median (tok/s) |
+| ------- | ----- | --------------------------------: | --------------: | --------------------: | -------------------------------: |
+| No spec | On    |                     119,680 / 468 |       **0.554** |                 2.671 |                            59.90 |
+| No spec | Off   |                       0 / 120,148 |          36.770 |                38.921 |                            59.04 |
+| MTP1    | On    |                   118,592 / 1,556 |           1.222 |                 2.666 |                            88.57 |
+| MTP1    | Off   |                       0 / 120,148 |          39.342 |                40.808 |                            86.64 |
+| MTP2    | On    |                   118,592 / 1,556 |           1.251 |             **2.504** |                           101.39 |
+| MTP2    | Off   |                       0 / 120,148 |          39.408 |                40.634 |                           104.62 |
+| MTP4    | On    |                   118,592 / 1,556 |           1.256 |                 2.517 |                           104.37 |
+| MTP4    | Off   |                       0 / 120,148 |          39.508 |                40.657 |                       **110.48** |
+
+The cache benefit is the practical result: **31.46–66.32× faster TTFC** and **14.57–16.23× faster end-to-end completion** on a resident long session. MTP2 + cache on was the best balanced mode for these 128-token follow-ups. No-spec + cache on won first-visible-token latency.
+
+One attempted cache-off cell was rejected before this matrix was accepted. vLLM V1 in the pinned image defaults prefix caching to on, so omitting the flag did not disable it. Every accepted cache-off row uses `--no-enable-prefix-caching`, logs `enable_prefix_caching: False`, and records zero cache hits.
+
+Full patch order, image digest, model download, eight launch commands, and the complete campaign command are in the [public cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/master/docs/FULL-SETUP-COMMANDS.md). Machine-readable results are in [`results/cache-spec-matrix-20260808-summary.json`](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/master/results/cache-spec-matrix-20260808-summary.json).
 
 > **Context:** For the original technical deep-dive into how we built the MXFP4 checkpoints and solved the seven vLLM loader bugs, read **[Phase 1: The vLLM Question on Intel Arc Pro B70 (MXFP4 Native Test)](/posts/intel-arc-b70-vllm-initial-mxfp4-test)** first.
 
