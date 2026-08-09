@@ -40,7 +40,11 @@ draft: false
 > [Intel Arc Pro B70: +140% Long-Context Prefill from a llama.cpp Master Build](/posts/intel-arc-b70-sycl-xmx-quantized-kv-prefill).
 > Everything else in this recipe (KV config, power tiers, VRAM boundaries) is unchanged.
 >
-> **Separate vLLM XPU update (2026-08-08):** A new matched exact-128K campaign compares no-spec, MTP1, MTP2, and MTP4 with prefix caching on and explicitly off. On changed follow-ups over a resident 120K Pi session, caching cut median TTFC by **31.46–66.32×** and end-to-end latency by **14.57–16.23×**. MTP2 + cache on had the best median end-to-end latency at **2.504 seconds**; no-spec + cache on had the fastest first visible token at **0.554 seconds**. For cold p130944/g128, no-spec completed fastest at **43.793 seconds**. The recipe pins a pullable image digest and applies `patch_mtp_nightly.py`, then `patch_mtp_boundary.py`. See the [matched tables and corrected vLLM comparison](/posts/intel-arc-b70-vllm-vs-llamacpp-moe-dense-showdown) and the cookbook's [full setup and commands](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/master/docs/FULL-SETUP-COMMANDS.md).
+> **vLLM results are separate:** See the
+> [corrected vLLM XPU study](/posts/intel-arc-b70-vllm-vs-llamacpp-moe-dense-showdown)
+> and its [reproducible cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
+> Those results use a different engine, checkpoint, quantization, timing source,
+> and benchmark format; they are not part of this llama.cpp SYCL recipe.
 
 ## Situation
 

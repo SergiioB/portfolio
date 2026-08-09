@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: vLLM vs llama.cpp — Corrected MoE + Dense Showdown"
-description: "A matched vLLM XPU study on the Intel Arc Pro B70: no-spec, MTP1, MTP2, and MTP4 with prefix caching on and off at exact 128K. Cache cut resident-session TTFC by 31–66×; MTP2 + cache on had the best 120K-session end-to-end median."
-situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The useful answer requires separating engine, checkpoint, quantization, prompt length, output length, concurrency, cache state, and the statistic being reported. This post preserves the historical engine comparison and adds a matched real-world vLLM matrix."
-issue: "The old public surface mixed short-generation peaks, cold prefill, exact-128K completion, resident-session latency, and historical engine grids. It also lacked a matched cache-on/cache-off comparison, even though normal Pi sessions reuse long prefixes."
-solution: "The current public recipe pins a pullable vLLM XPU nightly by digest, applies the BF16 MTP patch and exact-128K boundary patch in order, then runs the same six calibrated prompts across no-spec, MTP1, MTP2, and MTP4 with caching explicitly enabled or disabled."
-usedIn: "Intel Arc Pro B70 32GB (Ubuntu 26.04), pinned public vLLM XPU nightly v0.26.1rc1.dev457 with vllm-xpu-kernels 0.1.12, llama.cpp SYCL b10255+, Qwen3.6-35B-A3B GPTQ-Int4/GGUF variants, and ThinkingCap-Qwen3.6-27B dense."
-impact: "At a resident ~120K prompt, prefix caching cut median TTFC from 36.770–39.508 seconds to 0.554–1.256 seconds. MTP2 + cache on had the best end-to-end median at 2.504 seconds; no-spec + cache on showed the first visible token in 0.554 seconds. For cold exact p130944/g128, no-spec completed fastest at 43.793 seconds, while MTP4 + cache on reached 102.30 client-observed post-first tok/s. All cells are C1 medians of five measured requests and remain E2 self-reported evidence."
+description: "A phase-separated vLLM XPU study on Intel Arc Pro B70: cold input, p512 and p8192 decode, the p9445 control, and exact-128K decode across no-spec, MTP1, MTP2, and MTP4."
+situation: "Every B70 owner hits the same fork: vLLM or llama.cpp? The useful answer requires separating engine, checkpoint, quantization, prompt length, output length, concurrency, cache state, timing source, and statistic."
+issue: "Older public surfaces mixed short-generation peaks, cold input rate, exact-128K completion, resident-session latency, and historical engine grids. Those metrics answer different questions."
+solution: "The current recipe pins a public vLLM XPU image by digest, applies two patches in order, calibrates exact prompt shapes, and measures no-spec, MTP1, MTP2, and MTP4 in separate C1 input and output phases."
+usedIn: "Intel Arc Pro B70 32GB, image-pinned vLLM 0.26.1rc1.dev457+gc810e5ee9.xpu with vllm-xpu-kernels 0.1.12, Qwen3.6-35B-A3B preserved-MTP GPTQ-INT4, and historical llama.cpp SYCL comparators."
+impact: "At p9445/g128, MTP4 measured 160.42 client post-first tok/s and reproduced the prior 158.83 result. At full context, MTP2 measured 101.64 tok/s at p130944/g128 and 94.01 at p130560/g512; MTP4 measured 93.53 and 93.83. All are C1 medians of five requests and E2 self-reported evidence."
 pubDate: 2026-08-06
 category: ["b70", "local-ai", "infrastructure"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -25,19 +25,88 @@ tags:
 draft: false
 ---
 
-> **Correction — August 8, 2026:** The original article below documents the historical vLLM 0.21/MTP1 campaign. A newer pinned-nightly MTP4 path reached **up to 204.6 t/s** in one short-prompt, 32-output-token cell. A later four-prompt g64 sweep measured **198.5 t/s median** at a configured 165W cap. Longer generations are slower: the grid measured roughly **160–176 t/s at g128**, and a separate 256-token LocalMaxxing CLI run measured **136.2 t/s**.
+> **Correction, August 9, 2026:** The current result uses public image `vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97`, observed vLLM `0.26.1rc1.dev457+gc810e5ee9.xpu`, and `vllm-xpu-kernels 0.1.12`. PyPI kernel package 0.1.12.2 is newer but untested. The model is Qwen3.6-35B-A3B preserved-MTP GPTQ-INT4. The patch order is `patch_mtp_nightly.py`, then `patch_mtp_boundary.py`.
 >
-> The corrected cold-prefix prefill figures are **8,153 t/s at p4k** and **8,393 t/s at p8k**, measured with a unique random prefix for every request. The older 8,715–8,718 t/s result used a constant-prefix harness later shown to be cache-prone, so it is retained only as a historical observation. A paired 150W/230W test found no meaningful prefill difference (within ±0.2%); 230W was not the source of the gain.
->
-> The LocalMaxxing records are approved public **self-reported submissions**, not independent reproduction or correctness certification. The current path is single-stream smoke-tested; a published token/logit/KL differential against the no-spec reference remains pending. MTP mixed prefill/decode concurrency also remains incorrect on the XPU GDN causal-convolution path.
->
-> The public reproduction now pins `vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97`. The old `intel/vllm:0.21.0-xpu-int4moe` name referred to a local derived image and was never published. The current patch order is `patch_mtp_nightly.py`, then `patch_mtp_boundary.py`.
->
-> The boundary-patched MTP4 path completed an exact **p130944/g128 = 131,072-token** request. TTFT was 48.601 seconds, client post-first rate was 96.87 tok/s, MTP acceptance was 72.31%, and cache-hit delta was zero. These are E2 provisional self-reported measurements.
+> Every current table is C1, median `n=5` after one full-output same-shape warmup, prefix cache enabled, unique entropy-first cold prefixes, zero cache-hit delta, scheduler 8,192, context 131,072, configured cap 165 W, and client monotonic SSE timing. Status is E2 provisional self-report; independent reproduction is pending.
 
-## New matched real-world matrix: cache on/off × no-spec/MTP1/MTP2/MTP4
+![B70 phase-separated input and decode dashboard](/images/posts/b70-prefill-decode-dashboard.svg)
 
-The newest campaign stops mixing short peaks with long-session behavior. It runs eight clean servers with the same public image, checkpoint, two-patch order, exact prompts, 131,072-token context, scheduler budget 8,192, and five measured requests per cell.
+## Current phase-separated vLLM matrix
+
+### Cold input rate: actual endpoint input tokens / TTFT (tok/s)
+
+| Mode    |  p512 | p2048 | p4096 | p6144 | p8192 | Full p131071 |
+| ------- | ----: | ----: | ----: | ----: | ----: | -----------: |
+| No spec | 5,156 | 6,674 | 7,197 | 7,451 | 7,576 |        3,144 |
+| MTP1    | 4,840 | 7,377 | 6,999 | 7,189 | 7,264 |        2,679 |
+| MTP2    | 4,843 | 7,341 | 7,002 | 7,140 | 7,229 |        2,683 |
+| MTP4    | 4,532 | 7,401 | 6,868 | 7,057 | 7,197 |        2,678 |
+
+The input rate includes scheduling, uncached prompt work, and first-token work.
+It is not isolated engine prefill and not llama-bench `pp`.
+
+### Decode at p512: client post-first tok/s
+
+| Mode    |    g32 |   g128 |   g256 |   g512 |
+| ------- | -----: | -----: | -----: | -----: |
+| No spec |  97.43 |  96.79 |  96.60 |  96.13 |
+| MTP1    | 122.21 | 124.57 | 123.82 | 120.58 |
+| MTP2    | 162.90 | 153.17 | 148.31 | 141.80 |
+| MTP4    | 178.34 | 170.91 | 167.85 | 148.35 |
+
+### Decode at p8192: client post-first tok/s
+
+| Mode    |    g32 |   g128 |   g256 |   g512 |
+| ------- | -----: | -----: | -----: | -----: |
+| No spec |  85.92 |  90.34 |  90.91 |  91.26 |
+| MTP1    | 108.41 | 118.41 | 118.49 | 117.45 |
+| MTP2    | 143.95 | 145.43 | 143.82 | 135.61 |
+| MTP4    | 156.28 | 164.36 | 163.89 | 138.03 |
+
+### Historical control: p9445/g128
+
+| Mode    | Client post-first median (tok/s) |
+| ------- | -------------------------------: |
+| No spec |                            89.68 |
+| MTP1    |                           116.85 |
+| MTP2    |                           142.02 |
+| MTP4    |                           160.42 |
+
+The 160.42 tok/s MTP4 result reproduces the previous 158.83 tok/s control within
+1.0%. Exact-128K is a different workload and must stay separate.
+
+### Full-context decode
+
+| Mode    | p130944/g128 (tok/s) | MTP accept | p130560/g512 (tok/s) | MTP accept |
+| ------- | -------------------: | ---------: | -------------------: | ---------: |
+| No spec |                57.35 |        n/a |                57.14 |        n/a |
+| MTP1    |                84.88 |     89.22% |                82.74 |     85.32% |
+| MTP2    |               101.64 |     85.81% |                94.01 |     76.45% |
+| MTP4    |                93.53 |     66.91% |                93.83 |     59.81% |
+
+`Client post-first` is
+`(completion_tokens - 1) / (request_end - first_generated)`. It is request-side,
+not engine-native vLLM decode and not llama-bench `tg`.
+
+![Exact-token benchmark method from stack intake to claims gate](/images/posts/b70-benchmark-method.svg)
+
+The original no-spec p130560/g512 cell stopped early at EOS in three of five
+requests. It remains excluded. The 57.14 tok/s row is the forced exact-output
+replacement. The exact-output request policy now uses `ignore_eos=true`.
+
+Prompt hashes match across no-spec, MTP1, MTP2, and MTP4. Output parity is
+incomplete: depending on the longer-decode cell, exact text matched all four
+modes in only 0–4 of five repetitions. Speed and exact completion length are not
+proof of token, logit/KL, task-quality, or independent correctness parity.
+
+Machine-readable evidence and reproduction commands are in the
+[public cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook):
+[`prefill-decode-matrix-20260809-summary.json`](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/master/results/prefill-decode-matrix-20260809-summary.json)
+and [`FULL-SETUP-COMMANDS.md`](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/master/docs/FULL-SETUP-COMMANDS.md).
+
+## Prior matched real-world matrix: cache on/off × no-spec/MTP1/MTP2/MTP4
+
+The earlier 2026-08-08 campaign used eight clean servers with the same public image, checkpoint, two-patch order, exact prompts, 131,072-token context, scheduler budget 8,192, and five measured requests per cell.
 
 ![Matched exact-128K cache and MTP benchmark matrix](/images/posts/b70-128k-cache-spec-matrix.svg)
 
