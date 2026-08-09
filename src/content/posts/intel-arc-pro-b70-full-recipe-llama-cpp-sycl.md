@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: The Complete Local LLM Recipe"
-description: "Everything you need to run production LLM inference on Intel Arc Pro B70 with llama.cpp SYCL — the build, runtime flags, all 5 model configs with measured VRAM boundaries, power tiers, KV cache KL-divergence analysis, and the b9853→b10222→master 0804 improvement data. 72.6 t/s MoE decode, 2128 t/s prefill, 512K context."
+description: "Everything you need to run production LLM inference on Intel Arc Pro B70 with llama.cpp SYCL — the build, runtime flags, all 5 model configs with measured VRAM boundaries, power tiers, KV cache KL-divergence analysis, and the b9853→b10222→master 0804 improvement data. 72.6 t/s MoE decode, 2128 t/s prefill, 512K context. Plus the dense 27B vLLM XPU track: 69.3 t/s MTP4 decode via GPTQ-INT4."
 situation: "The B70 documentation was scattered across 28 files with conflicting KV configs, stale build versions, and unverified claims. I needed one definitive guide that a newcomer could follow end-to-end."
 issue: "Running LLMs on Intel Arc requires SYCL-specific knowledge that doesn't exist in one place: which cmake flags, which env vars, which KV cache config, which power cap, which context length per model. Getting any of these wrong means either crashes, bad quality, or leaving performance on the table."
 solution: "Fact-checked every claim against llama.cpp PRs and external benchmarks, ran a full boundary sweep measuring VRAM at every quant/context combo, A/B tested two SYCL builds, and consolidated everything into one recipe with the exact commands and measured numbers."
 usedIn: "Production daily-driver inference server on Intel Arc Pro B70 32GB. Serves ThinkingCap-Qwen3.6-27B and Qwen3.6-35B-A3B MoE via OpenAI-compatible API to single-user chat front-ends."
-impact: "MoE 35B at 512K context on master 0804: 72.6 t/s decode, 2128 t/s prefill (+26-29% over b10222, +140% at 32K via #25874). Dense 27B with MTP-4: 24-29 t/s. Every VRAM boundary measured, not estimated."
+impact: "MoE 35B at 512K context on master 0804: 72.6 t/s decode, 2128 t/s prefill (+26-29% over b10222, +140% at 32K via #25874). Dense 27B with MTP-4: 24-29 t/s llama.cpp GGUF, or 69.3 t/s via the vLLM XPU GPTQ-INT4 track (Run 31). Every VRAM boundary measured, not estimated."
 pubDate: 2026-08-04
 category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -29,6 +29,11 @@ tags:
     "power-scaling",
     "benchmark",
     "gguf",
+    "vllm",
+    "xpu",
+    "gptq",
+    "int4",
+    "dense",
   ]
 draft: false
 ---
@@ -45,6 +50,17 @@ draft: false
 > and its [reproducible cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
 > Those results use a different engine, checkpoint, quantization, timing source,
 > and benchmark format; they are not part of this llama.cpp SYCL recipe.
+>
+> **Update (2026-08-10):** The **dense 27B now also runs on vLLM XPU** with
+> GPTQ-INT4 + a preserved BF16 MTP draft head — **69.3 t/s** MTP4 decode at
+> p512/g128 (client post-first, C1, n=5), ~2.4-3× the llama.cpp GGUF path
+> (24-29 t/s). Full 4-mode comparison (no-spec/MTP1/MTP2/MTP4), matched power
+> A/B, and the prefill-ceiling verdict are in the
+> [Dense: Qwen3.6-27B — whole analysis](#dense-qwen36-27--whole-analysis)
+> section below and the
+> [cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
+> All dense vLLM numbers are E2 provisional self-reports; speed is not
+> correctness parity.
 
 ## Situation
 
@@ -207,6 +223,62 @@ reps steady-state. Base decode Q4 = master 0804 (Run 9); Q5/Q6 base = b10222-era
 **MTP VRAM caveat:** with spec-decode buffers, dense 27B fits only at 128K ctx —
 Q4@256K+MTP and Q5@200K+MTP overflow (the Max ctx column is the llama-bench boundary
 without MTP buffers). This is why production runs Q6_K @128K + MTP._
+
+### Dense: Qwen3.6-27B via vLLM XPU (GPTQ-INT4, Run 31-32)
+
+The same dense 27B runs ~2.4-3× faster on vLLM XPU with a GPTQ-INT4 checkpoint
+that keeps the BF16 MTP draft head. Same pinned nightly image and two patches as
+the MoE vLLM track; **fp8 KV is required** for 128K (fp16 KV needs 9.5 GiB and
+does not fit). Config: `gpu-memory-utilization=0.88` (MTP4) / `0.90` (others),
+scheduler 8192, context 131072, 230 W cap.
+
+**4-mode comparison (C1, median n=5, client post-first tok/s, 230 W):**
+
+| Mode     | p512/g128 | p8192/g128 | p130944/g128 (exact 128K) | Cold input p2048 (t/s) |
+| -------- | --------: | ---------: | ------------------------: | ---------------------: |
+| No spec  |      32.9 |       31.5 |                      23.1 |                  1,781 |
+| MTP1     |      50.5 |       46.9 |                      36.8 |                  1,816 |
+| MTP2     |      63.6 |       60.7 |                      42.7 |                  1,812 |
+| **MTP4** |  **69.3** |   **64.1** |                  **47.6** |                  1,755 |
+
+Cold input rate = actual input tokens / client TTFT (includes scheduling and
+first-token work; not llama-bench pp). Decode = client post-first
+`(completion-1)/(end-first)`; not engine-native vLLM decode. Zero cache-hit
+delta on every cold cell; prefix cache on.
+
+**Power (matched A/B, 2026-08-10):** all four modes draw **149.9-156.1 W mean**
+at the 230 W cap on the same mixed workload (1× p2048 prefill + 2× g128 decode)
+— MTP depth is not a power lever. Max 0.5 s interval averages 238-252 W (short
+burst overshoot before the cap controller engages; card TDP ~300 W); pkg temp
+70-74°C. (An earlier campaign-window comparison showing 195 vs 146 W was a
+monitor-coverage artifact and must not be cited.)
+
+**Prefill ceiling:** dense 230 W W4A16 prefill is ~1,700-1,790 t/s and
+compute-bound (~10% of XMX peak). Scheduler budget 16,384 vs 8,192 is FLAT
+(±0.2%) on dense — unlike MoE's +17.6%. The power cap is at its driver-enforced
+max (a 300 W write is rejected) and the `xe` driver has no clock control;
+measured boost under load is 4.2-4.8 GHz.
+
+**Real workload:** realistic Pi short-turn decode is **44-56 t/s** (not the
+73 t/s synthetic peak); a resident 32K-document follow-up reuses 91.3% of
+tokens from prefix cache → TTFT 10.2× faster.
+
+**Flags:**
+
+```bash
+exec vllm serve /model --quantization gptq --dtype float16 \
+  --max-model-len 131072 --gpu-memory-utilization 0.88 \
+  --kv-cache-dtype fp8 --max-num-seqs 64 --max-num-batched-tokens 8192 \
+  --enable-prefix-caching --language-model-only \
+  --speculative-config '{"method":"mtp","num_speculative_tokens":4}'
+```
+
+Launcher: `benchmarks/qwen36-27/launch-dense27-128k-mode.sh` in the
+[cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
+Dashboard: [b70-dense27-4mode-dashboard.svg](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/main/docs/assets/b70-dense27-4mode-dashboard.svg).
+E2 provisional self-report (LocalMaxxing submission `cmsmekk3p001wo001hksfq66z`,
+2026-08-09); independent reproduction pending. W4A8 kernel experiments were
+discarded (KL divergence + stacking errors) and are not a production path.\_
 
 ### MoE: Qwen3.6-35B-A3B
 
