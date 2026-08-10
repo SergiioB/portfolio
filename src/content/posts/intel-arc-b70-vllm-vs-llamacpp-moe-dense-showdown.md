@@ -253,23 +253,27 @@ The original campaign associated a slower 230W MoE run with the power cap. A lat
 
 **Run this MoE path at 150–165W. Run Dense at 180W (or 230W for short bursts).** The lower MoE cap preserves performance while avoiding unnecessary heat budget.
 
-## Dense 27B: the one-sided verdict
+## Dense 27B: The vLLM XPU Breakthrough
 
-| Wattage  |  short/g32 |   p2k/g128 | temp peak |
-| -------- | ---------: | ---------: | --------: |
-| 150W     |     22 t/s |     18 t/s |      71°C |
-| **230W** | **26 t/s** | **23 t/s** |      79°C |
+Dense models scale with power on the B70 (+18–30%), unlike MoE. Historically, the engine story was one-sided because vLLM's FP8 dense path had no XPU kernel registered. That meant falling back to llama.cpp's GGUF path at ~24–30 t/s.
 
-Dense scales with power (+18–30%), unlike MoE. But the engine story is one-sided:
+But the **dense GPTQ-INT4 linear path works on the pinned nightly** via `XpuwNa16LinearKernel`, and it is remarkably fast: **69.3 t/s C1 decode at p512/g128** with 85% MTP acceptance (using the BF16 MTP head). Both MTP patches apply unchanged to the dense `Qwen3_5ForConditionalGeneration` architecture.
 
-**vLLM dense FP8 has no XPU kernel.** Not slow — _absent_. The error is
-`KeyError: <PlatformEnum.XPU: 4>` in `choose_scaled_mm_linear_kernel` — there is
-no FP8 linear kernel registered for the XPU platform in this vLLM build. The
-checkpoint is also 30 GB, which barely fits 32 GB VRAM with KV cache. So
-**llama.cpp is the only working dense engine** on this card today.
+| Engine & Mode               | p512/g128 | p8192/g128 | p130944/g128 (128K) |
+| --------------------------- | --------: | ---------: | ------------------: |
+| llama.cpp Q4_K_M (baseline) |    23 t/s |     21 t/s |            overflow |
+| **vLLM GPTQ-INT4 No spec**  |  32.9 t/s |   31.5 t/s |            23.1 t/s |
+| **vLLM GPTQ-INT4 MTP1**     |  50.5 t/s |   46.9 t/s |            36.8 t/s |
+| **vLLM GPTQ-INT4 MTP2**     |  63.6 t/s |   60.7 t/s |            42.7 t/s |
+| **vLLM GPTQ-INT4 MTP4**     |  **69.3** |   **64.1** |            **47.6** |
 
-llama.cpp dense + MTP (the GGUF `nextn` layer) pushes ~24–30 t/s — the only path
-past the ~23 t/s Q4 baseline. That's the subject of the next investigation.
+_Client post-first tok/s, 230 W cap, median n=5. vLLM MTP4 achieves a massive ~3x speedup over the llama.cpp baseline._
+
+**The catch: FP8 KV Cache is mandatory for 128K.** Dense 27B full attention requires 9.5 GiB of FP16 KV cache at 128K, which overflows the 32GB card when loaded. `--kv-cache-dtype fp8` cuts this in half (~4.75 GiB), making 128K safely achievable (156,745-token capacity at U=0.90).
+
+![B70 dense 27B resident Pi session](/images/posts/b70-dense27-resident-session.svg)
+
+A realistic Pi short-turn decode on this dense path reaches **44-56 t/s**. In a continuous resident-document session (above), cache hits eliminate token processing, speeding up TTFT by over 10×.
 
 ## Current scorecard and historical comparator
 
@@ -363,26 +367,50 @@ Mixed aggregate output was 74.46 tok/s: 1,374 generated tokens divided by the co
 
 The exact public image, patch matrix, prompt generator, request recorder, and commands are in the [Intel Arc Pro B70 inference cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
 
-## What's next: getting dense working on vLLM
+## The Cookbook Recipe: Dense 27B on vLLM XPU
 
-The dense 27B vLLM path is blocked on a single upstream gap: **no FP8 linear
-kernel registered for XPU** in `vllm/v1/.../kernels/linear/__init__.py`
-(`choose_scaled_mm_linear_kernel` raises `KeyError: PlatformEnum.XPU`). Options
-worth investigating:
+With dense 27B working flawlessly via the GPTQ-INT4 track, you can launch it using the exact pinned Docker image and configuration from the cookbook.
 
-- **Wait for / contribute an XPU FP8 kernel** — Intel's `xpu_kernels` package
-  has FP8 paths for other ops; the linear GEMM registration may be a small PR.
-- **BF16 dense on vLLM** (skip quantization) — the 27B BF16 is ~54 GB, won't
-  fit, but a Q4/AWQ dense checkpoint might serve on vLLM's W4A16 path if XPU
-  supports it (needs testing — the GPTQ dense linear path, not MoE).
-- **OpenVINO Model Server** — the OVMS dense path (Run 7–10 in our history)
-  worked for chat at ~26–40 t/s wall; a `genai-bench`-style run on the int4-OV
-  dense checkpoint may be the real vLLM alternative for dense.
-- **Push llama.cpp dense+MTP further** — the GGUF `nextn` layer gave ~24–30 t/s
-  on dense 27B; a dedicated MTP-4 sweep at 165W (the documented dense efficiency
-  sweet spot) may be the practical dense ceiling on this card.
+### 1. Download the Preserved-MTP Checkpoint
 
-That's the next campaign. The MoE path is substantially characterized, but scheduler-budget attribution, full differential correctness, immutable public manifests, and third-party reproduction remain open work.
+The official Qwen GPTQ ships without MTP tensors. You need the derivative that preserves them:
+
+```bash
+export DENSE_DIR="$HOME/models/Qwen3.6-27B-MTP-Preserved-GPTQ-Int4"
+mkdir -p "$DENSE_DIR"
+docker run --rm --user "$(id -u):$(id -g)" -e HF_HOME=/tmp/hf -v "$DENSE_DIR:/model" \
+  python:3.12-slim sh -lc 'pip install --no-cache-dir "huggingface_hub[cli]" && \
+  hf download llmfan46/Qwen3.6-27B-MTP-Preserved-GPTQ-Int4 --local-dir /model'
+```
+
+### 2. Pull the Pinned Image
+
+```bash
+export IMAGE='vllm/vllm-openai-xpu@sha256:2c427ef477da092eb6f2cdbbbd24950b5fa171565b916db69d4c7bb10e68ca97'
+docker pull "$IMAGE"
+```
+
+### 3. Clone the Cookbook and Launch
+
+The cookbook applies the required `patch_mtp_nightly.py` and `patch_mtp_boundary.py` automatically before launching the server.
+
+```bash
+git clone https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook.git
+cd intel-arc-pro-b70-inference-cookbook
+
+# Launch MTP4, Prefix Cache ON, FP8 KV cache, port 8000
+bash benchmarks/qwen36-27/launch-dense27-128k-mode.sh "$DENSE_DIR" mtp4 on 8000
+```
+
+To ensure everything loaded correctly, tail the logs:
+
+```bash
+docker logs -f b70-dense-mtp4-cache-on
+```
+
+You should see: `max_model_len: 131072`, `enable_prefix_caching: True`, `kv_cache_dtype: fp8`, and `num_speculative_tokens: 4`.
+
+The MoE path and this Dense track are now substantially characterized, but scheduler-budget attribution, full differential correctness, immutable public manifests, and third-party reproduction remain open work.
 
 ## Model reference
 
