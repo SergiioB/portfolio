@@ -126,12 +126,18 @@ description, verified). `GGML_SYCL_F16=ON` is mandatory in the build.
 
 ## Why not vLLM (yet)
 
+> **Correction — 2026-08-13.** The 2026-08-10 note below is still true for
+> **FP8**. It is no longer true that “no INT4 exists.” A compressed-tensors
+> W4A16 artifact plus a local PR #51655 overlay loaded on XPU. That path is
+> experimental (n=3 text-only screen, not a public image). llama.cpp GGUF +
+> DFlash n2 remains the recommended recipe. Details:
+> cookbook `docs/muse-glimmer/MUSE-GLIMMER-B70.md`.
+
 - `RedHatAI/Muse-Glimmer-30B-FP8-block` = **34.4 GB** — does not fit 32 GB VRAM.
 - vLLM XPU has **no FP8 linear kernel** (`KeyError: PlatformEnum.XPU`).
-- NVFP4/MXFP4 are Blackwell-class; **no GPTQ-INT4 exists** for this model.
-- The new vLLM Muse support (0.27.0+) needs a GPTQ-INT4 quant; conversion is
-  blocked here (the 56 GB BF16 base doesn't fit current disk).
-- → llama.cpp GGUF is the only path on this card, and it is a good one.
+- NVFP4/MXFP4 are Blackwell-class; the public llama.cpp path is still GGUF.
+- A later compressed-tensors INT4 smoke exists; it is **not** this post's
+  measured stack and is **not** faster than the 26.8 t/s llama.cpp DFlash cell.
 
 ## References
 
