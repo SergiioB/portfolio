@@ -49,8 +49,13 @@ no-spec floor on the same card.
 
 Target GPTQ INT4 G64 ≈ 18 GB. DFlash BF16 draft ≈ 1.67 GB. After load on
 32,656 MiB visible: **5,826 MiB free** at `max_model_len=16384`,
-`gpu-memory-utilization=0.90`, `max_num_seqs=1`. This campaign is a 16K
-serving card, not a 128K claim.
+`gpu-memory-utilization=0.90`, `max_num_seqs=1`. The isolated n=5 **speed**
+card is still that 16K matrix.
+
+A later isolated capacity ladder (Run 38) loaded `max_model_len=120000`
+(5,328 MiB free, logged KV 295,000 tokens) and completed staged C1 requests
+through **p119872+g32 = 119,904** tokens. That is a capacity result, not a
+new decode headline. **128K was not run.**
 
 ## Isolated n=5 results (C1, cache off, 150 W cap)
 
