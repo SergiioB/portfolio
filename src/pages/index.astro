@@ -11,17 +11,126 @@ const posts = await getCollection("posts");
 const publishedPosts = posts
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const selectedPosts = publishedPosts.slice(0, 6);
-const featuredPost = selectedPosts[0];
-const supportingPosts = selectedPosts.slice(1);
 
-const postUrl = (post: (typeof publishedPosts)[number]) =>
-  withBase(`posts/${post.data.slug ?? post.id.replace(/\.md$/, "")}/`);
-const categoryToClass = (category: string) =>
-  `post-category-${category
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")}`;
+const postUrl = (slug: string) => withBase(`posts/${slug}/`);
+
+const labFamilies = [
+  {
+    model: "Nemotron 3.5 Lightning",
+    engine: "vLLM XPU · GPTQ-INT4 · DFlash n=7",
+    value: "186.6",
+    unit: "t/s",
+    claim: "C1 client post-first · p2048/g128 · n=5 · 150 W",
+    note: "Not isolated prefill. Cold input 7160 is prompt/TTFT.",
+    href: postUrl("nemotron-35-lightning-dflash-arc-pro-b70"),
+  },
+  {
+    model: "Muse Glimmer-30B",
+    engine: "llama.cpp SYCL · Q4_K_XL · DFlash n2",
+    value: "26.8",
+    unit: "t/s",
+    claim: "C1 engine decode · p512/g128 · 128K · 230 W",
+    note: "Public path. vLLM overlay is experimental and slower.",
+    href: postUrl("muse-glimmer-30b-intel-arc-b70"),
+  },
+  {
+    model: "Qwen3.6-35B-A3B",
+    engine: "llama.cpp SYCL · Q4_K_XL",
+    value: "70",
+    unit: "t/s",
+    claim: "C1 decode · MoE · 512K context class",
+    note: "Prefill 1659 t/s at the published pp4096 cell.",
+    href: postUrl("intel-arc-pro-b70-full-recipe-llama-cpp-sycl"),
+  },
+  {
+    model: "KV cache",
+    engine: "llama.cpp · q8_0 K + q4_1 V",
+    value: "0.003",
+    unit: "KL",
+    claim: "Near-lossless vs FP16 KV · ~50% VRAM",
+    note: "q4_0 K is catastrophic (KLD ~5.5). Do not use it.",
+    href: postUrl("kv-cache-quantization-kl-divergence"),
+  },
+];
+
+const shelves = [
+  {
+    family: "Nemotron",
+    kicker: "vLLM XPU · 3B-active LatentMoE",
+    title: "186.6 t/s C1 with DFlash, not native MTP",
+    lede: "Graphs plus a BF16 DFlash draft. Native MTP still accepts 0% on this stack. 16K serving card, not a 128K claim.",
+    href: postUrl("nemotron-35-lightning-dflash-arc-pro-b70"),
+    posts: [
+      {
+        title: "Nemotron + DFlash on B70",
+        href: postUrl("nemotron-35-lightning-dflash-arc-pro-b70"),
+      },
+      {
+        title: "vLLM vs llama.cpp showdown (earlier Qwen stack)",
+        href: postUrl("intel-arc-b70-vllm-vs-llamacpp-moe-dense-showdown"),
+      },
+    ],
+  },
+  {
+    family: "Muse Glimmer",
+    kicker: "llama.cpp SYCL · dense multimodal",
+    title: "26.8 t/s at 128K — vLLM is not the public path",
+    lede: "DFlash n2 wins the GGUF sweep. The 29.2 number is 64K. INT4 vLLM exists only as a local overlay.",
+    href: postUrl("muse-glimmer-30b-intel-arc-b70"),
+    posts: [
+      {
+        title: "Muse Glimmer-30B recipe",
+        href: postUrl("muse-glimmer-30b-intel-arc-b70"),
+      },
+      {
+        title: "Full llama.cpp SYCL recipe",
+        href: postUrl("intel-arc-pro-b70-full-recipe-llama-cpp-sycl"),
+      },
+    ],
+  },
+  {
+    family: "Qwen",
+    kicker: "llama.cpp SYCL · dense 27B + MoE 35B",
+    title: "The living recipe, then the 27B MTP card",
+    lede: "Qwen numbers stay on their own posts. Do not mix them with Nemotron client-TTFT or DFlash cells.",
+    href: postUrl("intel-arc-pro-b70-full-recipe-llama-cpp-sycl"),
+    posts: [
+      {
+        title: "B70 full recipe (MoE 35B)",
+        href: postUrl("intel-arc-pro-b70-full-recipe-llama-cpp-sycl"),
+      },
+      {
+        title: "ThinkingCap 27B + MTP",
+        href: postUrl("qwen3-27b-thinkingcap-b70-full-recipe"),
+      },
+      {
+        title: "MTP spec-token curve",
+        href: postUrl("intel-arc-b70-mtp-spec-token-curve"),
+      },
+    ],
+  },
+  {
+    family: "Methods",
+    kicker: "KV · power · context ceilings",
+    title: "Why q8_0 K + q4_1 V, and what 32 GB actually holds",
+    lede: "Methodology posts. These are not model speed cards.",
+    href: postUrl("kv-cache-quantization-kl-divergence"),
+    posts: [
+      {
+        title: "KV cache KL-divergence",
+        href: postUrl("kv-cache-quantization-kl-divergence"),
+      },
+      {
+        title: "Context ceilings on 32 GB",
+        href: postUrl("b70-kv-cache-quantization-context-ceilings"),
+      },
+      {
+        title: "Quantized-KV prefill (+140% at 32K)",
+        href: postUrl("intel-arc-b70-sycl-xmx-quantized-kv-prefill"),
+      },
+    ],
+  },
+];
 ---
 
 <BaseLayout
@@ -66,35 +175,26 @@ const categoryToClass = (category: string) =>
             </div>
           </div>
           <p>
-            Intel Arc Pro B70 32GB running llama.cpp SYCL — every number below is hardware-measured,
-            not estimated.
+            Intel Arc Pro B70 32GB. Each card is one engine, one model, one cell — not a blended
+            leaderboard.
           </p>
         </header>
 
         <div class="lab-grid">
-          <a
-            class="lab-stat"
-            href={withBase("posts/intel-arc-pro-b70-full-recipe-llama-cpp-sycl/")}
-          >
-            <span class="lab-stat-value">70<em> t/s</em></span>
-            <span class="lab-stat-label">MoE 35B decode @ 512K ctx</span>
-            <span class="lab-stat-sub">Q4_K_XL · 1659 t/s prefill</span>
-          </a>
-          <a class="lab-stat" href={withBase("posts/qwen3-27b-thinkingcap-b70-full-recipe/")}>
-            <span class="lab-stat-value">29<em> t/s</em></span>
-            <span class="lab-stat-label">Dense 27B + MTP-4 @ 256K</span>
-            <span class="lab-stat-sub">+50% speculative gain</span>
-          </a>
-          <a class="lab-stat" href={withBase("posts/kv-cache-quantization-kl-divergence/")}>
-            <span class="lab-stat-value">0.003<em> KL</em></span>
-            <span class="lab-stat-label">q8_0 K + q4_1 V cache</span>
-            <span class="lab-stat-sub">~50% VRAM, near-lossless</span>
-          </a>
-          <a class="lab-stat" href={withBase("posts/b70-kv-cache-quantization-context-ceilings/")}>
-            <span class="lab-stat-value">512<em>K</em></span>
-            <span class="lab-stat-label">max context on 32GB</span>
-            <span class="lab-stat-sub">MoE reads 3.8× less KV</span>
-          </a>
+          {
+            labFamilies.map((card) => (
+              <a class="lab-stat" href={card.href}>
+                <span class="lab-stat-model">{card.model}</span>
+                <span class="lab-stat-value">
+                  {card.value}
+                  <em> {card.unit}</em>
+                </span>
+                <span class="lab-stat-label">{card.claim}</span>
+                <span class="lab-stat-sub">{card.engine}</span>
+                <span class="lab-stat-note">{card.note}</span>
+              </a>
+            ))
+          }
         </div>
       </section>
 
@@ -225,77 +325,52 @@ const categoryToClass = (category: string) =>
           <div>
             <span class="field-section-index">04</span>
             <div>
-              <p data-i18n="exec.recentNotes">Recent Field Notes</p>
+              <p data-i18n="exec.labShelves">B70 by model family</p>
               <h2 id="notes-heading" data-i18n="exec.notesHeading">
-                Measured, failed, fixed, documented.
+                One shelf per stack. Dates do not mix numbers.
               </h2>
             </div>
           </div>
-          <a class="field-text-link" href={withBase("archive/")}>
-            <span>{publishedPosts.length}</span>
-            <span data-i18n="exec.viewArchive">View Full Archive</span>
+          <a class="field-text-link" href={withBase("b70/")}>
+            <span>{publishedPosts.filter((post) => post.data.category.includes("b70")).length}</span
+            >
+            <span data-i18n="exec.viewB70">B70 index</span>
             <span aria-hidden="true">↗</span>
           </a>
         </header>
 
-        {
-          featuredPost && (
-            <div class="notes-layout">
-              <a href={postUrl(featuredPost)} class="featured-note">
-                <div class="featured-note-meta">
-                  <span data-i18n="exec.latestSignal">Latest signal</span>
-                  <time
-                    datetime={featuredPost.data.pubDate.toISOString()}
-                    data-localize-date="long"
-                  >
-                    {featuredPost.data.pubDate.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </time>
-                </div>
-                <h3>{featuredPost.data.title}</h3>
-                <p>{featuredPost.data.description}</p>
-                <div class="featured-note-footer">
-                  <div class="executive-category-pills">
-                    {featuredPost.data.category.map((category) => (
-                      <span class:list={["post-category", categoryToClass(category)]}>
-                        {category}
-                      </span>
-                    ))}
-                  </div>
-                  <span aria-hidden="true">READ ↗</span>
-                </div>
-              </a>
+        <div class="family-shelf-grid">
+          {
+            shelves.map((shelf) => (
+              <article class="family-shelf">
+                <a class="family-shelf-hero" href={shelf.href}>
+                  <span class="family-shelf-kicker">{shelf.kicker}</span>
+                  <h3>{shelf.family}</h3>
+                  <p class="family-shelf-title">{shelf.title}</p>
+                  <p>{shelf.lede}</p>
+                </a>
+                <ul class="family-shelf-list">
+                  {shelf.posts.map((item) => (
+                    <li>
+                      <a href={item.href}>
+                        <span>{item.title}</span>
+                        <span aria-hidden="true">↗</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
 
-              <div class="note-list">
-                {supportingPosts.map((post, index) => (
-                  <a href={postUrl(post)} class="note-row">
-                    <span class="note-row-index">{String(index + 2).padStart(2, "0")}</span>
-                    <div>
-                      <time datetime={post.data.pubDate.toISOString()} data-localize-date="short">
-                        {post.data.pubDate.toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </time>
-                      <h3>{post.data.title}</h3>
-                      <div class="executive-category-pills">
-                        {post.data.category.map((category) => (
-                          <span class:list={["post-category", categoryToClass(category)]}>
-                            {category}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )
-        }
+        <p class="family-shelf-archive">
+          <a class="field-text-link" href={withBase("archive/")}>
+            <span>{publishedPosts.length}</span>
+            <span data-i18n="exec.viewArchive">Full chronological archive</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </p>
       </section>
     </main>
   </div>

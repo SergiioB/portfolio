@@ -186,13 +186,15 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Una guía de IA local para ingenieros. Arquitecturas Transformer, cuantización de KV cache, atención moderna y enrutamiento MoE práctico.",
   },
   "exec.readHandbook": { en: "Read the Handbook", es: "Leer el manual" },
-  "exec.recentNotes": { en: "Recent Field Notes", es: "Notas recientes" },
+  "exec.recentNotes": { en: "B70 by model family", es: "B70 por familia" },
+  "exec.labShelves": { en: "B70 by model family", es: "B70 por familia" },
   "exec.notesHeading": {
-    en: "Measured, failed, fixed, documented.",
-    es: "Probado, fallado, corregido, documentado.",
+    en: "One shelf per stack. Dates do not mix numbers.",
+    es: "Una estantería por stack. Las fechas no mezclan números.",
   },
   "exec.latestSignal": { en: "Latest signal", es: "Última señal" },
-  "exec.viewArchive": { en: "View Full Archive", es: "Ver archivo completo" },
+  "exec.viewB70": { en: "B70 index", es: "Índice B70" },
+  "exec.viewArchive": { en: "Full chronological archive", es: "Archivo cronológico" },
 
   /* ── Hero section ── */
   "hero.kicker": { en: "sergio@portfolio:~$ whoami", es: "sergio@portfolio:~$ whoami" },
