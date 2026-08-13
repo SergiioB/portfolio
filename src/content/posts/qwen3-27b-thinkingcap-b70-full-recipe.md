@@ -3,9 +3,9 @@ title: "Running Qwen3.6 27B on Intel Arc Pro B70: The Full Recipe"
 description: "Every config that works for running Qwen3.6 27B dense on Intel Arc Pro B70 with llama.cpp SYCL — Q4/Q5/Q6 quant comparison, MTP-4 speculative decoding (+35-50%), q8_0 K + q4_1 V KV cache with measured KL-divergence, and the exact VRAM context ceiling for each quant. Validated on build b10222 with llama-bench."
 situation: "Qwen 3.8 27B is launching next week. I needed the definitive B70 recipe for 27B-class dense models — which quant, which context, which KV config, and what decode speed to expect — so the answer is ready before the launch wave hits."
 issue: "The 27B dense model is VRAM-hungry (16-21 GB weights + 7-14 GB KV at high context), making the quant/context/KV trade-off non-obvious. The previous fleet used q5_0-q4_1 KV cache, but KL-divergence analysis showed q8_0 K + q4_1 V is near-lossless. The context ceiling per quant was unknown."
-solution: "Tested all three quants (Q4_K_M, Q5_K_M, Q6_K) at every context length (128K-512K) with q8_0 K + q4_1 V KV cache. Measured VRAM boundaries, decode speed, and prefill with llama-bench. MTP-4 speculative decoding adds +35-50% decode. The KV insight: dense models use 3.8x more KV cache than MoE — so a 16 GB dense model can't pass 256K while a 25 GB MoE reaches 512K."
+solution: "Tested all three quants (Q4_K_M, Q5_K_M, Q6_K) at every context length (128K-512K) with q8_0 K + q4_1 V KV cache. Measured VRAM boundaries, decode speed, and prefill with llama-bench. MTP-4 speculative decoding adds +35-50% decode. The KV insight: dense models use 3.8x more KV cache than MoE — so a 16 GB dense model can't pass 256K while a 25 GB MoE fits a 512K context allocation."
 usedIn: "Production inference on Intel Arc Pro B70 32GB, serving ThinkingCap-Qwen3.6-27B via llama-server SYCL build b10222. Used daily through a single-user chat bot bridge."
-impact: "Q5_K_M at 200K context runs at ~24 t/s with MTP-4 (base 16.2 t/s + 50% spec gain). Q4_K_M reaches 256K. MoE 35B reaches 512K at 70 t/s. Prefill hits 1621 t/s on the B70's XMX engines. Full VRAM boundary map provided for every config."
+impact: "Q5_K_M at 200K context runs at ~24 t/s with MTP-4 (base 16.2 t/s + 50% spec gain). Q4_K_M reaches 256K. MoE 35B fits a 512K allocation at 70 t/s decode (VRAM boundary sweep). Prefill hits 1621 t/s on the B70's XMX engines. Full VRAM boundary map provided for every config."
 pubDate: 2026-08-04
 category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -59,7 +59,7 @@ The remaining VRAM must hold the KV cache (which scales with context length) plu
 
 **Here's the non-obvious insight:** KV cache scales with the **attention layer size**, not total parameter count. Dense 27B runs full-size attention on all 27B params, consuming ~6,960 MiB KV per 128K context. MoE 35B-A3B has tiny attention (only 3B active), consuming just ~1,847 MiB per 128K — **3.8x less**.
 
-This means a 25 GB MoE model reaches 512K context, while a 16 GB dense model can't pass 256K. The bigger model goes further because its attention is smaller.
+This means a 25 GB MoE model fits a 512K context allocation, while a 16 GB dense model can't fit 256K. The bigger model goes further because its attention is smaller.
 
 ## KV cache: q8_0 K + q4_1 V (near-lossless, ~50% VRAM savings)
 

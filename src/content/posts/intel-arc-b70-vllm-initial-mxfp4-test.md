@@ -24,7 +24,7 @@ The B70 threads keep saying the same thing:
 > Qwen3.6-35B-A3B on one GPU."
 
 Our production numbers with llama.cpp SYCL (b10255+, q8_0/q4_1 KV, 150W): **72.6 t/s
-decode, 2128 t/s prefill, 512K context** on the same model family. If vLLM really gives
+decode, 2128 t/s prefill, 512K context allocation (VRAM fit)** on the same model family. If vLLM really gives
 150 t/s and 11K prefill on one B70, that's a 2× decode and 5× prefill — worth checking,
 not dismissing.
 

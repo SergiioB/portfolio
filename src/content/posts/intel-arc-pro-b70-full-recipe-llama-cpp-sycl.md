@@ -1,11 +1,11 @@
 ---
 title: "Intel Arc Pro B70: The Complete Local LLM Recipe"
-description: "Everything you need to run production LLM inference on Intel Arc Pro B70 with llama.cpp SYCL — the build, runtime flags, all 5 model configs with measured VRAM boundaries, power tiers, KV cache KL-divergence analysis, and the b9853→b10222→master 0804 improvement data. 72.6 t/s MoE decode, 2128 t/s prefill, 512K context. Plus the dense 27B vLLM XPU track: 69.3 t/s MTP4 decode via GPTQ-INT4."
+description: "Everything you need to run production LLM inference on Intel Arc Pro B70 with llama.cpp SYCL — the build, runtime flags, all 5 model configs with measured VRAM boundaries, power tiers, KV cache KL-divergence analysis, and the b9853→b10222→master 0804 improvement data. 72.6 t/s MoE decode, 2128 t/s prefill, 512K context allocation (VRAM fit). Plus the dense 27B vLLM XPU track: 69.3 t/s MTP4 decode via GPTQ-INT4."
 situation: "The B70 documentation was scattered across 28 files with conflicting KV configs, stale build versions, and unverified claims. I needed one definitive guide that a newcomer could follow end-to-end."
 issue: "Running LLMs on Intel Arc requires SYCL-specific knowledge that doesn't exist in one place: which cmake flags, which env vars, which KV cache config, which power cap, which context length per model. Getting any of these wrong means either crashes, bad quality, or leaving performance on the table."
 solution: "Fact-checked every claim against llama.cpp PRs and external benchmarks, ran a full boundary sweep measuring VRAM at every quant/context combo, A/B tested two SYCL builds, and consolidated everything into one recipe with the exact commands and measured numbers."
 usedIn: "Production daily-driver inference server on Intel Arc Pro B70 32GB. Serves ThinkingCap-Qwen3.6-27B and Qwen3.6-35B-A3B MoE via OpenAI-compatible API to single-user chat front-ends."
-impact: "MoE 35B at 512K context on master 0804: 72.6 t/s decode, 2128 t/s prefill (+26-29% over b10222, +140% at 32K via #25874). Dense 27B with MTP-4: 24-29 t/s llama.cpp GGUF, or 69.3 t/s via the vLLM XPU GPTQ-INT4 track (Run 31). Every VRAM boundary measured, not estimated."
+impact: "MoE 35B at 512K context allocation (VRAM fit) on master 0804: 72.6 t/s decode, 2128 t/s prefill (+26-29% over b10222, +140% at 32K via #25874). Dense 27B with MTP-4: 24-29 t/s llama.cpp GGUF, or 69.3 t/s via the vLLM XPU GPTQ-INT4 track (Run 31). Every VRAM boundary measured, not estimated."
 pubDate: 2026-08-04
 category: ["local-ai", "infrastructure", "b70"]
 amazonUrl: https://go.sergiiob.dev/arc-pro
@@ -190,7 +190,7 @@ grows with context (+140% at 32K). Full details: [the upgrade post](/posts/intel
 
 _The B70's XMX engines give a massive prefill advantage (2128 t/s vs 82-106 t/s on
 RDNA3). The 7800 XT wins on decode for small models (fewer bytes/token) but caps at
-32K context with 16 GB VRAM. The B70 reaches 512K — 16× more context._
+32K context with 16 GB VRAM. The B70 fits a 512K context allocation — 16× the headroom._
 
 ## KV cache: q8_0 K + q4_1 V
 
@@ -290,7 +290,7 @@ discarded (KL divergence + stacking errors) and are not a production path.\_
 _Q4_K_XL row = master 0804 (Run 9, llama-bench, pp4096). Q5_K_M row = b10222-era;
 not re-run on 0804._
 
-**The key insight:** MoE uses 3.8× less KV cache than dense (1,847 MiB vs 6,960 MiB per 128K) because KV scales with attention size, not total params. A 25 GB MoE reaches 512K while a 16 GB dense can't pass 256K.
+**The key insight:** MoE uses 3.8× less KV cache than dense (1,847 MiB vs 6,960 MiB per 128K) because KV scales with attention size, not total params. A 25 GB MoE fits a 512K context allocation while a 16 GB dense can't fit 256K.
 
 ## Power tiers
 
@@ -331,7 +331,7 @@ echo 150000000 | sudo tee /sys/class/hwmon/hwmon4/power1_cap
   -t 8 --no-mmap
 ```
 
-**Expected (master 0804):** 72.6 t/s decode, 2128 t/s prefill (pp4096), 512K context, 1.6 GB VRAM free.
+**Expected (master 0804):** 72.6 t/s decode, 2128 t/s prefill (pp4096), 512K context allocation (VRAM fit), 1.6 GB VRAM free.
 
 ## Runtime flags handbook
 

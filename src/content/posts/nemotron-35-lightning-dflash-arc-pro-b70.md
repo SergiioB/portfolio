@@ -43,9 +43,9 @@ Isolated n=5 is slower, tighter, and honest: **186.6 t/s** representative
 decode. That is still a different class of number than last week's 93 t/s
 no-spec floor on the same card.
 
-![Nemotron-3.5-Lightning DFlash isolated n=5 dashboard](/images/posts/b70-nemotron-dflash-dashboard.svg)
+![Nemotron-3.5-Lightning DFlash advanced card: 186.61 decode, 7160 cold input, 1.81×, 119904 capacity](/images/posts/b70-nemotron-dflash-advanced-dashboard.svg)
 
-![Speed card (16K n=5) vs 120K capacity ladder](/images/posts/b70-nemotron-dflash-context-dashboard.svg)
+![Compact Lane 1 n=5 dashboard](/images/posts/b70-nemotron-dflash-dashboard.svg)
 
 ## VRAM math
 

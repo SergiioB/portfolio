@@ -39,7 +39,7 @@ draft: false
 
 ## Situation
 
-The B70 fleet standard is **q8_0 K + q4_1 V** quantized KV cache: ~50% VRAM savings at KL ~0.003 (near-lossless, validated against [llama.cpp #23470](https://github.com/ggml-org/llama.cpp/discussions/23470)). It's what makes 512K context possible on 32 GB.
+The B70 fleet standard is **q8_0 K + q4_1 V** quantized KV cache: ~50% VRAM savings at KL ~0.003 (near-lossless, validated against [llama.cpp #23470](https://github.com/ggml-org/llama.cpp/discussions/23470)). It's what makes a 512K context allocation fit in VRAM on 32 GB.
 
 But there was a hidden cost. b10222's oneDNN XMX flash attention ([#25222](https://github.com/ggml-org/llama.cpp/pull/25222)) only fired on **FP16** KV caches. Our quantized cache fell back to the generic TILE attention path — which degrades as O(n²) with context length. The symptom: prefill was fast at 4K-8K but collapsed at long context. At 32K tokens, prefill dropped to ~780 t/s on MoE while the same card does 2000+ t/s with the XMX path active.
 
@@ -85,17 +85,19 @@ _Same conditions as the prefill table. MTP-4 speculative decoding (dense only) u
 
 ## Cross-hardware comparison
 
-The B70's value proposition is 32 GB VRAM + 512K context at this price point. On prefill, the XMX engines were already dominant; the master build widens it.
+The B70's value proposition is 32 GB VRAM + a 512K context allocation at this price point. On prefill, the XMX engines were already dominant; the master build widens it.
 
 | Hardware             | Model                         | Decode       | Prefill (long)                       | Context | Source                                                        |
 | -------------------- | ----------------------------- | ------------ | ------------------------------------ | ------- | ------------------------------------------------------------- |
-| **Arc Pro B70 32GB** | Qwen 35B Q4 MoE (master 0804) | **72.6 t/s** | **2128 t/s pp4096 / 1871 t/s pp32K** | 512K    | this post                                                     |
-| Arc Pro B70 32GB     | Qwen 35B Q4 MoE (b10222)      | 70.1 t/s     | 1691 t/s pp4096                      | 512K    | this post                                                     |
+| **Arc Pro B70 32GB** | Qwen 35B Q4 MoE (master 0804) | **72.6 t/s** | **2128 t/s pp4096 / 1871 t/s pp32K** | 512K\*  | this post                                                     |
+| Arc Pro B70 32GB     | Qwen 35B Q4 MoE (b10222)      | 70.1 t/s     | 1691 t/s pp4096                      | 512K\*  | this post                                                     |
 | RX 7800 XT 16GB      | Gemma-4-21B Q4 MoE            | 33 t/s       | 106 t/s                              | 32K     | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
 | RX 7800 XT 16GB      | GLM-4.7-REAP-23B IQ4          | 59.8 t/s     | 81.7 t/s                             | 32K     | [my bench](/posts/rx7800-xt-llama-cpp-benchmarks-moe-context) |
 | RTX 4090 24GB        | Qwen 27B Q4 (est.)            | ~35 t/s      | ~1000 t/s                            | 128K    | community                                                     |
 
-_The 7800 XT wins decode on small dense models (fewer bytes/token) but caps at 32K context with 16 GB VRAM. The B70 reaches 512K — 16× more context — and now out-prefills at every length._
+_The 7800 XT wins decode on small dense models (fewer bytes/token) but caps at 32K context with 16 GB VRAM. The B70 fits a 512K context allocation — 16× the headroom — and now out-prefills at every length._
+
+_\*512K = context allocation fits in VRAM (llama-bench boundary sweep, Run 6); not a served-context completion._
 
 ## Honest counterpoint: OVMS still wins dense decode
 
