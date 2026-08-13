@@ -188,10 +188,6 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "exec.readHandbook": { en: "Read the Handbook", es: "Leer el manual" },
   "exec.recentNotes": { en: "Local LLM Recipes", es: "Recetas de LLM local" },
   "exec.labShelves": { en: "Local LLM Recipes", es: "Recetas de LLM local" },
-  "exec.notesHeading": {
-    en: "One shelf per stack. Dates do not mix numbers.",
-    es: "Una estantería por stack. Las fechas no mezclan números.",
-  },
   "exec.latestSignal": { en: "Latest signal", es: "Última señal" },
   "exec.viewB70": { en: "B70 index", es: "Índice B70" },
   "exec.viewArchive": { en: "Full chronological archive", es: "Archivo cronológico" },
