@@ -45,6 +45,8 @@ no-spec floor on the same card.
 
 ![Nemotron-3.5-Lightning DFlash isolated n=5 dashboard](/images/posts/b70-nemotron-dflash-dashboard.svg)
 
+![Speed card (16K n=5) vs 120K capacity ladder](/images/posts/b70-nemotron-dflash-context-dashboard.svg)
+
 ## VRAM math
 
 Target GPTQ INT4 G64 ≈ 18 GB. DFlash BF16 draft ≈ 1.67 GB. After load on
@@ -78,6 +80,35 @@ logit/KL or task quality).
 
 **Representative scalar: 186.6 t/s** at p2048/g128. The p512 194.6 median
 has a 140–220 family spread (tool/document vs assistant). Do not headline it.
+
+**`n` is not concurrency.** Every row below is **C1** (one active request).
+`n=5` means five measured repeats after a discarded same-shape warmup.
+`n=1` is a single capacity observation.
+
+### Speed card (Run 36, `max_model_len=16384`)
+
+Client post-first decode and cold input are different metrics. Do not put them
+on one unlabeled axis.
+
+| Prompt / gen   | Metric                   |   n |    median |   min |   max |
+| -------------- | ------------------------ | --: | --------: | ----: | ----: |
+| p2048/g1       | cold input (prompt/TTFT) |   5 |      6456 |  6263 |  7353 |
+| **p8192/g1**   | cold input (prompt/TTFT) |   5 |  **7160** |  7117 |  7226 |
+| p512/g128      | C1 client post-first     |   5 |     194.6 | 140.2 | 220.0 |
+| **p2048/g128** | C1 client post-first     |   5 | **186.6** | 174.6 | 201.8 |
+| p8192/g128     | C1 client post-first     |   5 |     157.9 | 143.5 | 170.3 |
+
+### Capacity ladder (Run 38, `max_model_len=120000`)
+
+These completed. The t/s columns are **diagnostic n=1 g32** rates on a
+different output length than the speed card. **Not 128K. Not a decode headline.**
+
+| Prompt + gen    |  Completed | finish | cold input (diag.) | post-first (diag.) |
+| --------------- | ---------: | ------ | -----------------: | -----------------: |
+| 32768 + 32      |      32800 | length |               8220 |              103.8 |
+| 65536 + 32      |      65568 | length |               7032 |               75.6 |
+| 98304 + 32      |      98336 | length |               5923 |               52.1 |
+| **119872 + 32** | **119904** | length |               5356 |               37.1 |
 
 ### About the “10k prefill”
 
