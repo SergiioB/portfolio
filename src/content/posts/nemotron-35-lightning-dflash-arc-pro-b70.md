@@ -176,14 +176,17 @@ it as NVFP4.
    Nemotron vLLM MTP is still dead; DFlash is not.
 2. **Read the tensors.** Official DFlash is NVFP4. A leftover ModelOpt json
    on a BF16 folder is a load failure, not a warning.
-3. **n=3 plus a respawned production container is not a headline.** Pin
-   `Restart=no` for the whole load. Isolated n=5 p8192 was 158, not 185.
+3. **n=3 plus a respawned extra engine is not a headline.** Isolate the GPU
+   for the whole load. Isolated n=5 p8192 was 158, not 185.
 4. **Cold input ≠ prefill.** The 10k number was TTFT on a decode cell.
 5. **Graphs are the no-spec floor** (`at::zeros` atomic + native
-   `grouped_topk`). Those two belong in Intel/vLLM PRs. The converters do not.
+   `grouped_topk`). Opened 2026-08-13:
+   [vllm#52159](https://github.com/vllm-project/vllm/pull/52159) and
+   [vllm-xpu-kernels#524](https://github.com/vllm-project/vllm-xpu-kernels/pull/524).
+   The converters stay out of those PRs.
 
-PR split and next-model playbook live in the research tree:
-`vllm-xpu-pr-readiness-20260813.md`, `next-model-adaptation-playbook.md`.
+Reproduce from the public cookbook (digest + runtime patches; no local image
+tag): [NEMOTRON-DFLASH-B70](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook/blob/master/docs/nemotron35-30a3/NEMOTRON-DFLASH-B70.md).
 
 ## Methodology
 
