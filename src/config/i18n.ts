@@ -186,8 +186,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Una guía de IA local para ingenieros. Arquitecturas Transformer, cuantización de KV cache, atención moderna y enrutamiento MoE práctico.",
   },
   "exec.readHandbook": { en: "Read the Handbook", es: "Leer el manual" },
-  "exec.recentNotes": { en: "B70 by model family", es: "B70 por familia" },
-  "exec.labShelves": { en: "B70 by model family", es: "B70 por familia" },
+  "exec.recentNotes": { en: "Local LLM Recipes", es: "Recetas de LLM local" },
+  "exec.labShelves": { en: "Local LLM Recipes", es: "Recetas de LLM local" },
   "exec.notesHeading": {
     en: "One shelf per stack. Dates do not mix numbers.",
     es: "Una estantería por stack. Las fechas no mezclan números.",
@@ -195,6 +195,12 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "exec.latestSignal": { en: "Latest signal", es: "Última señal" },
   "exec.viewB70": { en: "B70 index", es: "Índice B70" },
   "exec.viewArchive": { en: "Full chronological archive", es: "Archivo cronológico" },
+  "exec.morePosts": { en: "Rest of posts", es: "Resto de posts" },
+  "exec.morePostsHeading": { en: "More field notes", es: "Más notas de campo" },
+  "exec.trademark": {
+    en: "Brand logos are trademarks of their respective owners; shown for identification.",
+    es: "Los logotipos son marcas de sus respectivos propietarios; se muestran solo como identificación.",
+  },
 
   /* ── Hero section ── */
   "hero.kicker": { en: "sergio@portfolio:~$ whoami", es: "sergio@portfolio:~$ whoami" },

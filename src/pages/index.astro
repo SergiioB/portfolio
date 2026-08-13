@@ -56,6 +56,7 @@ const labFamilies = [
 const shelves = [
   {
     family: "Nemotron",
+    logo: "images/logos/nvidia.png",
     kicker: "vLLM XPU · 3B-active LatentMoE",
     title: "186.6 t/s C1 with DFlash, not native MTP",
     lede: "Graphs plus a BF16 DFlash draft. Native MTP still accepts 0%. Speed card is 16K n=5; capacity completed 119,904 tokens. Not 128K.",
@@ -73,6 +74,7 @@ const shelves = [
   },
   {
     family: "Muse Glimmer",
+    logo: "images/logos/meta.png",
     kicker: "llama.cpp SYCL · dense multimodal",
     title: "26.8 t/s at 128K — vLLM is not the public path",
     lede: "DFlash n2 wins the GGUF sweep. The 29.2 number is 64K. INT4 vLLM exists only as a local overlay.",
@@ -90,6 +92,7 @@ const shelves = [
   },
   {
     family: "Qwen",
+    logo: "images/logos/qwen.png",
     kicker: "llama.cpp SYCL · dense 27B + MoE 35B",
     title: "The living recipe, then the 27B MTP card",
     lede: "Qwen numbers stay on their own posts. Do not mix them with Nemotron client-TTFT or DFlash cells.",
@@ -111,6 +114,7 @@ const shelves = [
   },
   {
     family: "Methods",
+    logo: "images/logos/intel.png",
     kicker: "KV · power · context ceilings",
     title: "Why q8_0 K + q4_1 V, and what 32 GB actually holds",
     lede: "Methodology posts. These are not model speed cards.",
@@ -131,6 +135,9 @@ const shelves = [
     ],
   },
 ];
+
+const shelfHrefs = new Set(shelves.flatMap((shelf) => shelf.posts.map((item) => item.href)));
+const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(post.slug)));
 ---
 
 <BaseLayout
@@ -344,6 +351,9 @@ const shelves = [
             shelves.map((shelf) => (
               <article class="family-shelf">
                 <a class="family-shelf-hero" href={shelf.href}>
+                  <span class="family-shelf-logo">
+                    <img src={withBase(shelf.logo)} alt="" loading="lazy" decoding="async" />
+                  </span>
                   <span class="family-shelf-kicker">{shelf.kicker}</span>
                   <h3>{shelf.family}</h3>
                   <p class="family-shelf-title">{shelf.title}</p>
@@ -360,6 +370,42 @@ const shelves = [
                   ))}
                 </ul>
               </article>
+            ))
+          }
+        </div>
+
+        <p class="family-shelf-trademark" data-i18n="exec.trademark">
+          Brand logos are trademarks of their respective owners; shown for identification.
+        </p>
+      </section>
+
+      <section class="field-section notes-section" aria-labelledby="more-heading">
+        <header class="field-section-header">
+          <div>
+            <span class="field-section-index">05</span>
+            <div>
+              <p data-i18n="exec.morePosts">Rest of posts</p>
+              <h2 id="more-heading" data-i18n="exec.morePostsHeading">More field notes</h2>
+            </div>
+          </div>
+        </header>
+
+        <div class="note-list">
+          {
+            remainingPosts.map((post, index) => (
+              <a href={postUrl(post.slug)} class="note-row">
+                <span class="note-row-index">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <time datetime={post.data.pubDate.toISOString()}>
+                    {post.data.pubDate.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <h3>{post.data.title}</h3>
+                </div>
+                <span aria-hidden="true">↗</span>
+              </a>
             ))
           }
         </div>

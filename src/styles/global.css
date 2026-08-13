@@ -6911,6 +6911,31 @@ h3 {
   color: inherit;
 }
 
+.family-shelf-logo {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  height: 2.6rem;
+  padding: 0.35rem 0.7rem;
+  background: #f7f7f3;
+  border: 1px solid var(--field-line);
+  border-radius: 0.65rem;
+}
+
+.family-shelf-logo img {
+  display: block;
+  height: 1.55rem;
+  width: auto;
+  max-width: 8.5rem;
+  object-fit: contain;
+}
+
+.family-shelf-trademark {
+  margin: 1rem 0 0;
+  color: var(--field-muted);
+  font-size: 0.7rem;
+}
+
 .family-shelf-kicker {
   color: var(--field-muted);
   font-family: var(--font-mono);
