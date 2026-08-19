@@ -61,6 +61,12 @@ draft: false
 > [cookbook](https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook).
 > All dense vLLM numbers are E2 provisional self-reports; speed is not
 > correctness parity.
+>
+> **Update (2026-08-19):** Windows 11 Docker Desktop kit for Qwen3.8-27B —
+> if you already have Ian Hudson’s 18 August install, rebuild image
+> `2026.08.19` (draft-INT4 overlay, prefix cache on). Do not re-download
+> the model. Step-by-step:
+> [Qwen3.8-27B on Windows 11 + Arc Pro B70: the 19 August upgrade](/posts/qwen38-windows-b70-draft-int4-upgrade).
 
 ## Situation
 
