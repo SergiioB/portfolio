@@ -23,7 +23,7 @@
     @media print {
       body {
         padding: 0 !important;
-        font-size: 8.7pt !important;
+        font-size: 9.2pt !important;
         line-height: 1.32 !important;
       }
 
@@ -39,13 +39,13 @@
       .skills-grid,
       .edu-row,
       .language-row {
-        font-size: 8.1pt !important;
+        font-size: 9pt !important;
       }
 
       .job-meta,
       .job-period,
       .edu-detail {
-        font-size: 7.8pt !important;
+        font-size: 8pt !important;
       }
 
       .no-print {
@@ -234,6 +234,8 @@
     }
 
     .print-btn {
+      text-decoration: none;
+      display: inline-block;
       border: none;
       border-radius: 6px;
       background: var(--accent);
@@ -250,12 +252,21 @@
       color: var(--text-muted);
       font-size: 8pt;
     }
+    @media print {
+      body { line-height: 1.25 !important; }
+      h2 { margin-bottom: 0.25rem; padding-bottom: 0.12rem; font-size: 10pt; }
+      .header { padding-bottom: 0.4rem; }
+      .contact-row { font-size: 8pt; gap: 0.15rem 0.55rem; }
+      .job li { margin-bottom: 0.05rem; }
+      .skills-grid { gap: 0.12rem 0.7rem; }
+      .job-meta { margin-bottom: 0.12rem; }
+    }
   </style>
 </head>
 <body>
   <header class="header">
     <h1>SERGIO BARRIENTOS</h1>
-    <div class="subtitle">Linux Platform Engineer | Local LLM &amp; Edge AI</div>
+    <div class="subtitle">Linux Platform Engineer | RHEL &amp; Ansible</div>
     <div class="contact-row">
       <span>Madrid, Spain</span>
       <span>|</span>
@@ -272,11 +283,10 @@
   <section class="section">
     <h2>Professional Summary</h2>
     <p class="summary">
-      Linux platform engineer with experience supporting enterprise systems in banking and railway environments.
-      Currently part of the team responsible for a 300+ server RHEL estate at a BaFin/ECB-supervised bank, working
-      across lifecycle management, patching, automation, VMware, monitoring, and high availability. Outside the core
-      role, I run and benchmark local LLMs on Intel, AMD, and RK3588 hardware and build AI-enabled applications. I bring
-      production Linux operations together with practical experimentation in local inference and applied AI.
+      Linux platform engineer focused on RHEL administration and Ansible automation in banking and railway environments.
+      Lead the RHEL 8 to 9 migration at Deutsche Pfandbriefbank and previously coordinated a five-person support team
+      at Sopra Steria. Independently, benchmark local LLMs and publish inference guides through XeCores,
+      alongside two Android apps with AI features.
     </p>
   </section>
 
@@ -288,14 +298,14 @@
         <div class="job-title">Linux and Virtualization Engineer <span class="job-company">| Deutsche Pfandbriefbank AG</span></div>
         <div class="job-period">Jul 2025 - Present</div>
       </div>
-      <div class="job-meta">Full-time | Hybrid | Madrid, Spain | BaFin/ECB-supervised bank | 300+ server estate</div>
+      <div class="job-meta">Full-time | Madrid, Spain (hybrid)</div>
       <ul>
-        <li><strong>Linux platform operations:</strong> Work within the infrastructure team supporting a 300+ server RHEL estate across distributed datacenters and banking-critical workloads.</li>
-        <li><strong>RHEL modernization:</strong> Lead the bank's RHEL 8 to 9 migration project, coordinating the phased technical work and using Red Hat Satellite for provisioning, software distribution, patching, and lifecycle management.</li>
-        <li><strong>Automation:</strong> Build and maintain Ansible playbooks and Git-based workflows for server deployment, controlled infrastructure changes, and reproducible configuration.</li>
-        <li><strong>Reliability and security:</strong> Support hardening and patching cycles, CheckMK monitoring, high-availability clusters, disaster-recovery activities, and VMware vSphere operations.</li>
-        <li><strong>Application support:</strong> Work with Application Owners on Linux requirements and troubleshoot services including Nginx, Apache, Tomcat, JBoss, and PostgreSQL.</li>
-        <li><strong>Applied GenAI:</strong> Contribute to internal exploration and prototypes using Azure AI Foundry and Document Intelligence for document-processing and automation use cases.</li>
+        <li><strong>Linux platform operations:</strong> Support the team’s 300+ RHEL server estate across datacenters and critical banking workloads.</li>
+        <li><strong>RHEL modernization:</strong> Lead the RHEL 8 to 9 migration, coordinating phased technical work. Use Red Hat Satellite for provisioning, patching, and lifecycle management.</li>
+        <li><strong>Automation:</strong> Build Ansible playbooks and Git workflows for server deployment, configuration, and controlled infrastructure changes.</li>
+        <li><strong>Reliability and security:</strong> Support hardening, CheckMK monitoring, high-availability clusters, disaster recovery, and VMware vSphere operations.</li>
+        <li><strong>Application support:</strong> Resolve Linux requirements with application owners and troubleshoot Nginx, Apache, Tomcat, JBoss, and PostgreSQL.</li>
+        <li><strong>Internal AI exploration:</strong> Contribute to document-processing and automation prototypes with Azure AI Foundry and Document Intelligence.</li>
       </ul>
     </article>
 
@@ -304,12 +314,12 @@
         <div class="job-title">IT Application Specialist / Linux System Administrator <span class="job-company">| Sopra Steria</span></div>
         <div class="job-period">Apr 2023 - Jul 2025</div>
       </div>
-      <div class="job-meta">Internship followed by full-time role | Hybrid | Madrid, Spain | Norwegian railway-sector client | 100+ servers</div>
+      <div class="job-meta">Internship → full-time | Madrid, Spain (hybrid) | Norwegian railway-sector client</div>
       <ul>
-        <li><strong>Technical coordination:</strong> Coordinated a five-person team supporting, maintaining, and patching a critical application environment spanning more than 100 Linux and Windows servers.</li>
-        <li><strong>Linux support:</strong> Progressed from an internship into a full-time application support role and later a Linux-focused assignment, troubleshooting Red Hat Linux, Windows, and Azure environments.</li>
-        <li><strong>Automation:</strong> Used Ansible to automate repeatable administration and deployment tasks and supported RHEL lifecycle activities with Red Hat Satellite.</li>
-        <li><strong>Enterprise operations:</strong> Managed incidents, requests, and controlled changes through ServiceNow within an ITIL-aligned support model.</li>
+        <li><strong>Technical coordination:</strong> Coordinated five people supporting and patching a critical application estate of 100+ Linux and Windows servers.</li>
+        <li><strong>Linux support:</strong> Progressed from an internship to application support and a Linux-focused assignment, troubleshooting RHEL, Windows, and Azure environments.</li>
+        <li><strong>Automation:</strong> Automated administration and deployment with Ansible; supported RHEL lifecycle management with Red Hat Satellite.</li>
+        <li><strong>Enterprise operations:</strong> Managed incidents, requests, and controlled changes in ServiceNow under ITIL processes.</li>
         <li><strong>Identity and collaboration:</strong> Supported Active Directory, Kerberos, Entra ID, Intune, and Exchange while working in English with a Norwegian client.</li>
       </ul>
     </article>
@@ -324,14 +334,14 @@
       <span class="skill-label">Automation / IaC</span>
       <span class="skill-value">Ansible, Bash scripting, Git-based workflows, repeatable infrastructure configuration</span>
 
-      <span class="skill-label">AI Infrastructure</span>
+      <span class="skill-label">Local LLMs (projects)</span>
       <span class="skill-value">llama.cpp, GGUF quantization, Intel SYCL, AMD ROCm, RK3588 edge inference, KV-cache tuning, concurrency testing, local LLM benchmarking</span>
 
       <span class="skill-label">Platforms / Services</span>
       <span class="skill-value">VMware vSphere/vCenter, Nginx, Apache HTTP Server, Tomcat, JBoss Web Server, PostgreSQL, SSL/TLS</span>
 
-      <span class="skill-label">Cloud / GenAI</span>
-      <span class="skill-value">Microsoft Azure, Azure AI Foundry, Document Intelligence, LLM prototyping, Firebase</span>
+      <span class="skill-label">Cloud</span>
+      <span class="skill-value">Microsoft Azure; Firebase for independent apps</span>
 
       <span class="skill-label">Operations</span>
       <span class="skill-value">CheckMK, ServiceNow, Active Directory, Kerberos integration, ITIL, change management</span>
@@ -339,12 +349,13 @@
   </section>
 
   <section class="section projects-section">
-    <h2>Selected Projects</h2>
+    <h2>Independent Projects</h2>
     <div class="job">
       <ul>
-        <li><strong><a href="https://intelliauto.app/">IntelliAuto</a>:</strong> Published Kotlin/Firebase vehicle-management app with offline storage, ML Kit OCR, maintenance workflows, and an AI assistant.</li>
-        <li><strong><a href="https://barrysoft-intelliflow.work/">IntelliFlow</a>:</strong> Privacy-focused personal-finance app with offline-first storage, cloud sync, projections, and AI-generated spending insights.</li>
-        <li><strong><a href="https://sergiiob.dev/">Engineering portfolio</a>:</strong> Reproducible local-LLM work across llama.cpp, GGUF, Intel SYCL, AMD ROCm, RK3588, KV-cache tuning, concurrency, and power efficiency.</li>
+        <li><strong><a href="https://intelliauto.app/">IntelliAuto</a>:</strong> Published Kotlin/Firebase vehicle app with offline storage, ML Kit OCR, maintenance tracking, and an AI assistant.</li>
+        <li><strong><a href="https://barrysoft-intelliflow.work/">IntelliFlow</a>:</strong> Published personal-finance app with offline storage, cloud sync, projections, and AI spending summaries.</li>
+        <li><strong><a href="https://xecores.com/">XeCores</a>:</strong> Independent public project documenting tested local-LLM inference recipes and benchmark evidence for Intel Arc GPUs, using llama.cpp SYCL and vLLM XPU.</li>
+        <li><strong><a href="https://sergiiob.dev/">Engineering portfolio</a>:</strong> Technical field notes on Linux, Ansible, and local inference experiments across Intel, AMD, and RK3588 hardware.</li>
       </ul>
     </div>
   </section>
@@ -356,7 +367,7 @@
       <span class="edu-detail">Sep 2024</span>
     </div>
     <div class="edu-row">
-      <span class="edu-title">Technician in Computer Systems and Networks Administration</span>
+      <span class="edu-title">Higher Technician in Computer Network Systems Administration (ASIR)</span>
       <span class="edu-detail">Jun 2023 | Madrid, Spain</span>
     </div>
   </section>
@@ -371,8 +382,8 @@
 
 
   <div class="print-bar no-print">
-    <button class="print-btn" onclick="window.print()">Save as PDF</button>
-    <div class="print-note">Use your browser print dialog to export a clean, ATS-friendly PDF.</div>
+    <a class="print-btn" href="cv-sergio-barrientos.pdf" download>Download PDF</a>
+    <div class="print-note">One-page A4 PDF · <a href="cv-sergio-barrientos-es.html" lang="es">Español</a></div>
   </div>
 </body>
 </html>

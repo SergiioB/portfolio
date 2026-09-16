@@ -140,7 +140,13 @@ const navigation = [
         </a>
       ))
     }
-    <a href={withBase("docs/cv-sergio-barrientos.html")} class="executive-cv-link">
+    <a
+      href={withBase("docs/cv-sergio-barrientos.pdf")}
+      data-href-en={withBase("docs/cv-sergio-barrientos.pdf")}
+      data-href-es={withBase("docs/cv-sergio-barrientos-es.pdf")}
+      class="executive-cv-link"
+      download
+    >
       <span aria-hidden="true">CV</span>
       <strong data-i18n="exec.cv">Curriculum Vitae</strong>
       <i aria-hidden="true">↓</i>

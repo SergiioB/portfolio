@@ -694,7 +694,7 @@
         id: 'nav-cv', group: T('cmd.groupNav'), icon: '📄',
         label: T('cmd.goCv'),
         tags: 'navigation cv resume curriculum',
-        run: () => window.open(base + 'docs/cv-sergio-barrientos.html', '_blank'),
+        run: () => window.open(base + 'cv/?lang=' + currentLang, '_blank'),
       },
       {
         id: 'mode-hardcore', group: T('cmd.groupMode'), icon: '⚡',

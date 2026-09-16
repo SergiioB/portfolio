@@ -23,7 +23,7 @@
     @media print {
       body {
         padding: 0 !important;
-        font-size: 8.7pt !important;
+        font-size: 9.2pt !important;
         line-height: 1.32 !important;
       }
 
@@ -39,13 +39,13 @@
       .skills-grid,
       .edu-row,
       .language-row {
-        font-size: 8.1pt !important;
+        font-size: 9pt !important;
       }
 
       .job-meta,
       .job-period,
       .edu-detail {
-        font-size: 7.8pt !important;
+        font-size: 8pt !important;
       }
 
       .no-print {
@@ -234,6 +234,8 @@
     }
 
     .print-btn {
+      text-decoration: none;
+      display: inline-block;
       border: none;
       border-radius: 6px;
       background: var(--accent);
@@ -250,12 +252,21 @@
       color: var(--text-muted);
       font-size: 8pt;
     }
+    @media print {
+      body { line-height: 1.25 !important; }
+      h2 { margin-bottom: 0.25rem; padding-bottom: 0.12rem; font-size: 10pt; }
+      .header { padding-bottom: 0.4rem; }
+      .contact-row { font-size: 8pt; gap: 0.15rem 0.55rem; }
+      .job li { margin-bottom: 0.05rem; }
+      .skills-grid { gap: 0.12rem 0.7rem; }
+      .job-meta { margin-bottom: 0.12rem; }
+    }
   </style>
 </head>
 <body>
   <header class="header">
     <h1>SERGIO BARRIENTOS</h1>
-    <div class="subtitle">Ingeniero de Plataforma Linux | LLM locales y Edge AI</div>
+    <div class="subtitle">Ingeniero de Plataforma Linux | RHEL y Ansible</div>
     <div class="contact-row">
       <span>Madrid, España</span>
       <span>|</span>
@@ -272,12 +283,10 @@
   <section class="section">
     <h2>Perfil Profesional</h2>
     <p class="summary">
-      Ingeniero de plataforma Linux con experiencia dando soporte a sistemas empresariales en banca y en el
-      sector ferroviario. Actualmente formo parte del equipo responsable de un parque de más de 300 servidores
-      RHEL en un banco supervisado por BaFin/BCE, trabajando en ciclo de vida, parcheo, automatización, VMware,
-      monitorización y alta disponibilidad. Fuera del puesto principal ejecuto y evalúo LLM locales sobre hardware
-      Intel, AMD y RK3588, además de desarrollar aplicaciones con funciones de IA. Combino operaciones Linux en
-      producción con experimentación práctica en inferencia local e IA aplicada.
+      Ingeniero de plataforma Linux centrado en administración RHEL y automatización con Ansible en banca y el sector
+      ferroviario. Lidero la migración de RHEL 8 a 9 en Deutsche Pfandbriefbank y anteriormente coordiné un equipo de
+      soporte de cinco personas en Sopra Steria. Como proyectos independientes, evalúo LLM locales, publico guías
+      de inferencia en XeCores y desarrollo dos aplicaciones Android con funciones de IA.
     </p>
   </section>
 
@@ -289,14 +298,14 @@
         <div class="job-title">Ingeniero Linux y Virtualización <span class="job-company">| Deutsche Pfandbriefbank AG</span></div>
         <div class="job-period">Jul 2025 - Actualidad</div>
       </div>
-      <div class="job-meta">Jornada completa | Híbrido | Madrid, España | Banco supervisado por BaFin/BCE | parque de más de 300 servidores</div>
+      <div class="job-meta">Jornada completa | Madrid, España (híbrido)</div>
       <ul>
-        <li><strong>Operación de plataforma Linux:</strong> Trabajo dentro del equipo de infraestructura que da soporte a un parque de más de 300 servidores RHEL distribuidos entre varios centros de datos y cargas críticas bancarias.</li>
-        <li><strong>Modernización RHEL:</strong> Lidero el proyecto de migración de RHEL 8 a 9 del banco, coordinando el trabajo técnico por fases y utilizando Red Hat Satellite para aprovisionamiento, distribución de software, parcheo y gestión del ciclo de vida.</li>
-        <li><strong>Automatización:</strong> Desarrollo y mantengo playbooks de Ansible y flujos basados en Git para despliegues, cambios controlados de infraestructura y configuraciones reproducibles.</li>
-        <li><strong>Fiabilidad y seguridad:</strong> Doy soporte a ciclos de hardening y parcheo, monitorización con CheckMK, clústeres de alta disponibilidad, actividades de recuperación ante desastres y operaciones en VMware vSphere.</li>
-        <li><strong>Soporte de aplicaciones:</strong> Colaboro con responsables de aplicaciones para resolver requisitos Linux y problemas en servicios como Nginx, Apache, Tomcat, JBoss y PostgreSQL.</li>
-        <li><strong>GenAI aplicada:</strong> Participo en exploración interna y prototipos con Azure AI Foundry y Document Intelligence para casos de procesamiento documental y automatización.</li>
+        <li><strong>Operación de plataforma Linux:</strong> Doy soporte al parque del equipo, con más de 300 servidores RHEL en varios centros de datos y cargas críticas bancarias.</li>
+        <li><strong>Modernización RHEL:</strong> Lidero la migración de RHEL 8 a 9 y coordino el trabajo técnico por fases. Uso Red Hat Satellite para aprovisionamiento, parcheo y gestión del ciclo de vida.</li>
+        <li><strong>Automatización:</strong> Desarrollo playbooks de Ansible y flujos con Git para despliegues, configuración y cambios controlados de infraestructura.</li>
+        <li><strong>Fiabilidad y seguridad:</strong> Doy soporte a la seguridad del sistema, CheckMK, clústeres de alta disponibilidad, recuperación ante desastres y VMware vSphere.</li>
+        <li><strong>Soporte de aplicaciones:</strong> Resuelvo requisitos Linux con responsables de aplicaciones e incidencias en Nginx, Apache, Tomcat, JBoss y PostgreSQL.</li>
+        <li><strong>Exploración interna de IA:</strong> Participo en prototipos de procesamiento documental y automatización con Azure AI Foundry y Document Intelligence.</li>
       </ul>
     </article>
 
@@ -305,12 +314,12 @@
         <div class="job-title">IT Application Specialist / Administrador de Sistemas Linux <span class="job-company">| Sopra Steria</span></div>
         <div class="job-period">Abr 2023 - Jul 2025</div>
       </div>
-      <div class="job-meta">Prácticas seguidas de puesto a jornada completa | Híbrido | Madrid, España | Cliente del sector ferroviario noruego | más de 100 servidores</div>
+      <div class="job-meta">Prácticas → jornada completa | Madrid, España (híbrido) | Cliente del sector ferroviario noruego</div>
       <ul>
-        <li><strong>Coordinación técnica:</strong> Coordiné un equipo de cinco personas para el soporte, mantenimiento y parcheo de un entorno de aplicaciones crítico con más de 100 servidores Linux y Windows.</li>
-        <li><strong>Soporte Linux:</strong> Pasé de unas prácticas a un puesto a jornada completa y posteriormente a una función centrada en Linux, resolviendo problemas en entornos Red Hat Linux, Windows y Azure.</li>
-        <li><strong>Automatización:</strong> Utilicé Ansible para automatizar tareas repetibles de administración y despliegue, y di soporte a actividades del ciclo de vida RHEL con Red Hat Satellite.</li>
-        <li><strong>Operación empresarial:</strong> Gestioné incidencias, peticiones y cambios controlados mediante ServiceNow dentro de un modelo de soporte alineado con ITIL.</li>
+        <li><strong>Coordinación técnica:</strong> Coordiné a cinco personas en el soporte y parcheo de un entorno de aplicaciones crítico con más de 100 servidores Linux y Windows.</li>
+        <li><strong>Soporte Linux:</strong> Pasé de prácticas a soporte de aplicaciones y después a una función centrada en Linux, resolviendo incidencias en RHEL, Windows y Azure.</li>
+        <li><strong>Automatización:</strong> Automaticé tareas de administración y despliegue con Ansible y di soporte al ciclo de vida RHEL con Red Hat Satellite.</li>
+        <li><strong>Operación empresarial:</strong> Gestioné incidencias, peticiones y cambios controlados en ServiceNow siguiendo procesos ITIL.</li>
         <li><strong>Identidad y colaboración:</strong> Di soporte a Active Directory, Kerberos, Entra ID, Intune y Exchange, trabajando en inglés con un cliente noruego.</li>
       </ul>
     </article>
@@ -325,14 +334,14 @@
       <span class="skill-label">Automatización / IaC</span>
       <span class="skill-value">Ansible, scripting Bash, flujos basados en Git, configuración reproducible de infraestructura</span>
 
-      <span class="skill-label">Infraestructura AI</span>
+      <span class="skill-label">LLM locales (proyectos)</span>
       <span class="skill-value">llama.cpp, cuantización GGUF, Intel SYCL, AMD ROCm, inferencia en RK3588, ajuste de KV cache, pruebas de concurrencia y benchmarks de LLM locales</span>
 
       <span class="skill-label">Plataformas / Servicios</span>
       <span class="skill-value">VMware vSphere/vCenter, Nginx, Apache HTTP Server, Tomcat, JBoss Web Server, PostgreSQL, SSL/TLS</span>
 
-      <span class="skill-label">Cloud / GenAI</span>
-      <span class="skill-value">Microsoft Azure, Azure AI Foundry, Document Intelligence, prototipado con LLM y Firebase</span>
+      <span class="skill-label">Nube</span>
+      <span class="skill-value">Microsoft Azure; Firebase en aplicaciones independientes</span>
 
       <span class="skill-label">Operaciones</span>
       <span class="skill-value">CheckMK, ServiceNow, Active Directory, integración Kerberos, ITIL, gestión de cambios</span>
@@ -340,12 +349,13 @@
   </section>
 
   <section class="section projects-section">
-    <h2>Proyectos Destacados</h2>
+    <h2>Proyectos Independientes</h2>
     <div class="job">
       <ul>
-        <li><strong><a href="https://intelliauto.app/">IntelliAuto</a>:</strong> Aplicación publicada en Kotlin/Firebase para gestionar vehículos, con almacenamiento offline, OCR con ML Kit, mantenimiento y asistente de IA.</li>
-        <li><strong><a href="https://barrysoft-intelliflow.work/">IntelliFlow</a>:</strong> Aplicación de finanzas personales centrada en privacidad, con almacenamiento offline-first, sincronización, proyecciones e insights de gasto generados con IA.</li>
-        <li><strong><a href="https://sergiiob.dev/">Portfolio de ingeniería</a>:</strong> Trabajo reproducible con LLM locales sobre llama.cpp, GGUF, Intel SYCL, AMD ROCm, RK3588, KV cache, concurrencia y eficiencia energética.</li>
+        <li><strong><a href="https://intelliauto.app/">IntelliAuto</a>:</strong> App publicada en Kotlin/Firebase para vehículos, con almacenamiento local, OCR de ML Kit, registro de mantenimiento y asistente de IA.</li>
+        <li><strong><a href="https://barrysoft-intelliflow.work/">IntelliFlow</a>:</strong> App publicada de finanzas personales con almacenamiento local, sincronización, proyecciones y resúmenes de gasto con IA.</li>
+        <li><strong><a href="https://xecores.com/">XeCores</a>:</strong> Proyecto independiente con guías probadas y benchmarks de inferencia local con LLM en GPU Intel Arc, usando llama.cpp SYCL y vLLM XPU.</li>
+        <li><strong><a href="https://sergiiob.dev/">Portfolio de ingeniería</a>:</strong> Notas técnicas sobre Linux, Ansible y experimentos de inferencia local en hardware Intel, AMD y RK3588.</li>
       </ul>
     </div>
   </section>
@@ -372,8 +382,8 @@
 
 
   <div class="print-bar no-print">
-    <button class="print-btn" onclick="window.print()">Guardar como PDF</button>
-    <div class="print-note">Usa el diálogo de impresión del navegador para exportar un PDF limpio y compatible con ATS.</div>
+    <a class="print-btn" href="cv-sergio-barrientos-es.pdf" download>Descargar PDF</a>
+    <div class="print-note">PDF A4 de una página · <a href="cv-sergio-barrientos.html" lang="en">English</a></div>
   </div>
 </body>
 </html>

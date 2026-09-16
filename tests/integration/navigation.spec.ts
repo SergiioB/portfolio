@@ -46,17 +46,20 @@ test.describe("Navigation", () => {
     await expect(page.locator("[data-i18n='about.cvLabel']").first()).toHaveText("Ver CV");
   });
 
-  test("should point the CV button to the English document when English is active", async ({
-    page,
-  }) => {
-    await page.goto("/");
-
-    const englishButton = page.locator("[data-lang-option='en']").first();
-    await englishButton.click();
-
-    const cvLink = page.locator(".hero-actions a[data-href-en][data-href-es]").first();
-    await expect(cvLink).toHaveAttribute("href", "/docs/cv-sergio-barrientos.html");
-  });
+  for (const lang of ["en", "es"]) {
+    test(`should download the ${lang} CV when that language is active`, async ({ page }) => {
+      await page.goto("/");
+      await page.locator(`[data-lang-option='${lang}']`).first().click();
+      const cvLink = page.locator(".executive-cv-link");
+      const path = `/docs/cv-sergio-barrientos${lang === "es" ? "-es" : ""}.pdf`;
+      await expect(cvLink).toHaveAttribute("href", path);
+      const downloadPromise = page.waitForEvent("download");
+      await cvLink.click();
+      const download = await downloadPromise;
+      expect(download.suggestedFilename()).toBe(path.split("/").pop());
+      expect(await download.failure()).toBeNull();
+    });
+  }
 });
 
 test.describe("Accessibility", () => {
