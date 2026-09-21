@@ -50,11 +50,11 @@ The results running on the exact same dual-B70 desktop:
 
 - Cascadia Single GPU: **22.7 tok/s**
 - Cascadia Two GPUs: **18.9 tok/s**
-- Cascadia + laptop CPU over WiFi: **3.2 tok/s**
+- Cascadia + laptop iGPU over WiFi: **7.0 tok/s**
 
 _(Note: Cascadia's base OpenVINO engine is currently slower than llama.cpp's custom SYCL kernels on a single node, but we are looking at the scaling efficiency)._
 
-The multi-GPU penalty dropped to just **16%**. The picture changes completely over WiFi: cross-machine, Cascadia retains only **14%** (3.2 tok/s). Orchestration beats RPC on any link, but no state-caching trick survives a 4.4ms-per-frame wireless hop — the honest conclusion is that pipeline distribution wants Ethernet, while WiFi remains capacity-only territory.
+The multi-GPU penalty dropped to just **16%**. Over WiFi, putting the remote stage on the laptop's idle Arc 140T iGPU retains **31%** (7.0 tok/s) — matching naive RPC's WiFi retention while serving a 27B model that would never fit in 16GB of shared iGPU memory alone. Getting there took three fixes: moving the stage off the starved CPU (4 threads of 16 active by default), patching Cascadia's qwen35 engine to forward OpenVINO performance flags (it was the one engine that silently ignored all `--ov-*` tuning), and re-launching the worker so the new config actually took. Per-frame wire cost over WiFi measured 2.5ms — the link was never the bottleneck; the remote stage's compute was.
 
 ![Pipeline Overhead Comparison](/blog/multi-gpu-penalty.svg)
 
