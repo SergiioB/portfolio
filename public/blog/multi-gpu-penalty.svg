@@ -28,7 +28,7 @@
 
   <text x="200" y="460" class="text-base axis-label" text-anchor="middle">0%</text>
   <text x="470" y="460" class="text-base axis-label" text-anchor="middle">50%</text>
-  <text x="740" y="460" class="text-base axis-label" text-anchor="middle">100% (single-device baseline)</text>
+  <text x="740" y="460" class="text-base axis-label" text-anchor="end">100% baseline</text>
 
   <!-- 100% & 50% Marker Lines -->
   <line x1="740" y1="110" x2="740" y2="440" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
@@ -36,7 +36,7 @@
 
   <!-- Bar 1: RPC Local (desktop only) -->
   <text x="180" y="160" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Naive RPC (Local PCIe)</text>
-  <text x="180" y="180" class="text-base text-light" font-size="12" text-anchor="end">2× B70 · llama.cpp · 76.1 tok/s base</text>
+  <text x="180" y="180" class="text-base text-light" font-size="12" text-anchor="end">2× B70 · base 76.1 tok/s</text>
 
   <rect x="202" y="145" width="292" height="40" fill="url(#rpcGrad)" rx="4" />
   <text x="504" y="160" class="text-base text-heavy" fill="#ef4444" font-size="16">54% retained</text>
