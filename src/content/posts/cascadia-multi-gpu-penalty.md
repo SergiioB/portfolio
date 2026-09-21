@@ -50,10 +50,11 @@ The results running on the exact same dual-B70 desktop:
 
 - Cascadia Single GPU: **22.7 tok/s**
 - Cascadia Two GPUs: **18.9 tok/s**
+- Cascadia + laptop CPU over WiFi: **3.2 tok/s**
 
 _(Note: Cascadia's base OpenVINO engine is currently slower than llama.cpp's custom SYCL kernels on a single node, but we are looking at the scaling efficiency)._
 
-The multi-GPU penalty dropped to just **16%**.
+The multi-GPU penalty dropped to just **16%**. The picture changes completely over WiFi: cross-machine, Cascadia retains only **14%** (3.2 tok/s). Orchestration beats RPC on any link, but no state-caching trick survives a 4.4ms-per-frame wireless hop — the honest conclusion is that pipeline distribution wants Ethernet, while WiFi remains capacity-only territory.
 
 ![Pipeline Overhead Comparison](/blog/multi-gpu-penalty.svg)
 
