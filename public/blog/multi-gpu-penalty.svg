@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="rpcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </linearGradient>
+    <linearGradient id="cascGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#6d28d9" />
+    </linearGradient>
+    <linearGradient id="baseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9ca3af" />
+      <stop offset="100%" stop-color="#6b7280" />
+    </linearGradient>
+    <style>
+      .text-base { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      .text-heavy { font-weight: 700; }
+      .text-medium { font-weight: 500; }
+      .text-light { font-weight: 400; fill: #6b7280; }
+      .line-label { fill: #f9fafb; font-weight: 600; font-size: 14px; }
+      .axis-label { fill: #9ca3af; font-size: 12px; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#111827" rx="8" />
+  
+  <text x="40" y="50" class="text-base text-heavy" fill="#f3f4f6" font-size="24">The Distributed Inference Penalty</text>
+  <text x="40" y="75" class="text-base text-medium" fill="#9ca3af" font-size="14">Performance retained when splitting Qwen3.8-27B across 2× GPUs</text>
+
+  <!-- Base Line Grid -->
+  <line x1="180" y1="120" x2="180" y2="320" stroke="#374151" stroke-width="2" />
+  <line x1="180" y1="320" x2="720" y2="320" stroke="#374151" stroke-width="2" />
+  
+  <text x="180" y="340" class="text-base axis-label" text-anchor="middle">0%</text>
+  <text x="450" y="340" class="text-base axis-label" text-anchor="middle">50%</text>
+  <text x="720" y="340" class="text-base axis-label" text-anchor="middle">100% (Single GPU)</text>
+
+  <!-- 100% Marker Line -->
+  <line x1="720" y1="120" x2="720" y2="320" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
+  <line x1="450" y1="120" x2="450" y2="320" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
+
+  <!-- Llama.cpp RPC -->
+  <text x="160" y="165" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Naive RPC</text>
+  <text x="160" y="185" class="text-base text-light" font-size="12" text-anchor="end">llama.cpp layer-split</text>
+  
+  <rect x="182" y="150" width="280" height="40" fill="url(#rpcGrad)" rx="4" />
+  <text x="472" y="175" class="text-base text-heavy" fill="#ef4444" font-size="16">52% retained</text>
+  <text x="472" y="195" class="text-base text-light" font-size="12">-48% penalty (76.1 → 40.8 tok/s)</text>
+
+  <!-- Cascadia -->
+  <text x="160" y="255" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Cascadia</text>
+  <text x="160" y="275" class="text-base text-light" font-size="12" text-anchor="end">Pipeline Handoff</text>
+  
+  <rect x="182" y="240" width="453" height="40" fill="url(#cascGrad)" rx="4" />
+  <text x="645" y="265" class="text-base text-heavy" fill="#8b5cf6" font-size="16">84% retained</text>
+  <text x="645" y="285" class="text-base text-light" font-size="12">-16% penalty (22.7 → 18.9 tok/s)</text>
+
+</svg>
