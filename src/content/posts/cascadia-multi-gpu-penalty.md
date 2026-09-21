@@ -38,7 +38,7 @@ We measured this using `llama.cpp`'s RPC implementation on the dual-GPU desktop:
 - Single Arc Pro B70: **76.1 tok/s**
 - Two Arc Pro B70s (split): **40.8 tok/s**
 
-That is a **48% performance penalty** just for cutting the model in half on the same machine. When we pushed the split over WiFi to the laptop, performance cratered by 68% (down to 24.5 tok/s). The CPU overhead and constant TCP round-trips became the bottleneck.
+That is a **48% performance penalty** just for cutting the model in half on the same machine. Pushing half the model across WiFi to the laptop's CPU made it worse: **24.5 tok/s (−68%)** — and note that config was 1× Arc Pro B70 paired with the laptop CPU, not two GPUs plus a laptop. The CPU overhead and constant TCP round-trips became the bottleneck.
 
 ## The Fix: Pipeline State Handoff
 
