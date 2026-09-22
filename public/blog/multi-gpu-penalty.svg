@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 590">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 730">
   <defs>
     <linearGradient id="rpcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#ef4444" />
@@ -7,6 +7,14 @@
     <linearGradient id="cascGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#8b5cf6" />
       <stop offset="100%" stop-color="#6d28d9" />
+    </linearGradient>
+    <linearGradient id="winGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="mutedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#475569" />
     </linearGradient>
     <style>
       .text-base { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -18,61 +26,67 @@
   </defs>
 
   <rect width="100%" height="100%" fill="#111827" rx="8" />
-  <text x="40" y="50" class="text-base text-heavy" fill="#f3f4f6" font-size="24">The Distributed Inference Penalty</text>
-  <text x="40" y="75" class="text-base text-medium" fill="#9ca3af" font-size="14">Performance retained when splitting Qwen3.8-27B across devices</text>
+  <text x="40" y="50" class="text-base text-heavy" fill="#f3f4f6" font-size="24">The Distributed Inference Penalty — Solved</text>
+  <text x="40" y="75" class="text-base text-medium" fill="#9ca3af" font-size="14">Speed retained when splitting Qwen3.8-27B across devices (batch-1 decode)</text>
 
-  <!-- Base Line Grid -->
-  <line x1="200" y1="110" x2="200" y2="440" stroke="#374151" stroke-width="2" />
-  <line x1="200" y1="440" x2="740" y2="440" stroke="#374151" stroke-width="2" />
+  <!-- Axis: 0% at x=200, 100% at x=740 (5.38 px/point) -->
+  <line x1="200" y1="105" x2="200" y2="650" stroke="#374151" stroke-width="2" />
+  <line x1="200" y1="650" x2="770" y2="650" stroke="#374151" stroke-width="2" />
+  <text x="200" y="670" class="text-base axis-label" text-anchor="middle">0%</text>
+  <text x="470" y="670" class="text-base axis-label" text-anchor="middle">50%</text>
+  <text x="740" y="670" class="text-base axis-label" text-anchor="end">100% baseline</text>
+  <line x1="740" y1="105" x2="740" y2="650" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
+  <line x1="470" y1="105" x2="470" y2="650" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
 
-  <text x="200" y="460" class="text-base axis-label" text-anchor="middle">0%</text>
-  <text x="470" y="460" class="text-base axis-label" text-anchor="middle">50%</text>
-  <text x="740" y="460" class="text-base axis-label" text-anchor="end">100% baseline</text>
+  <!-- Bar 1: RPC same-box -->
+  <text x="190" y="130" class="text-base text-medium" fill="#f3f4f6" font-size="15" text-anchor="end">Naive RPC · same box</text>
+  <text x="190" y="147" class="text-base text-light" font-size="12" text-anchor="end">llama.cpp · 2 GPUs · base 76.1</text>
+  <rect x="202" y="115" width="291" height="38" fill="url(#rpcGrad)" rx="4" />
+  <text x="503" y="132" class="text-base text-heavy" fill="#ef4444" font-size="15">54% retained</text>
+  <text x="503" y="149" class="text-base text-light" font-size="11">40.8 tok/s</text>
 
-  <!-- 100% & 50% Marker Lines -->
-  <line x1="740" y1="110" x2="740" y2="440" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
-  <line x1="470" y1="110" x2="470" y2="440" stroke="#374151" stroke-width="1" stroke-dasharray="4" />
+  <!-- Bar 2: RPC WiFi -->
+  <text x="190" y="205" class="text-base text-medium" fill="#f3f4f6" font-size="15" text-anchor="end">Naive RPC · WiFi</text>
+  <text x="190" y="222" class="text-base text-light" font-size="12" text-anchor="end">desktop GPU + laptop CPU</text>
+  <rect x="202" y="190" width="172" height="38" fill="url(#rpcGrad)" rx="4" />
+  <text x="384" y="207" class="text-base text-heavy" fill="#ef4444" font-size="15">32% retained</text>
+  <text x="384" y="224" class="text-base text-light" font-size="11">24.5 tok/s</text>
 
-  <!-- Bar 1: RPC Local (desktop only) -->
-  <text x="180" y="160" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Naive RPC · PCIe</text>
-  <text x="180" y="180" class="text-base text-light" font-size="12" text-anchor="end">2× B70 · base 76.1 tok/s</text>
+  <!-- Bar 3: Cascadia 0.2.3 -->
+  <text x="190" y="280" class="text-base text-medium" fill="#f3f4f6" font-size="15" text-anchor="end">Cascadia 0.2.3 · same box</text>
+  <text x="190" y="297" class="text-base text-light" font-size="12" text-anchor="end">2 GPU pipeline · base 22.7</text>
+  <rect x="202" y="265" width="446" height="38" fill="url(#mutedGrad)" rx="4" />
+  <text x="658" y="282" class="text-base text-heavy" fill="#94a3b8" font-size="15">83% retained</text>
+  <text x="658" y="299" class="text-base text-light" font-size="11">18.9 tok/s</text>
 
-  <rect x="202" y="145" width="292" height="40" fill="url(#rpcGrad)" rx="4" />
-  <text x="504" y="160" class="text-base text-heavy" fill="#ef4444" font-size="16">54% retained</text>
-  <text x="504" y="180" class="text-base text-light" font-size="12">40.8 tok/s (vs 76.1)</text>
+  <!-- Bar 4: Cascadia 0.2.4 — THE RESULT -->
+  <text x="190" y="355" class="text-base text-heavy" fill="#f3f4f6" font-size="15" text-anchor="end">Cascadia 0.2.4 · same box</text>
+  <text x="190" y="372" class="text-base text-light" font-size="12" text-anchor="end">2 GPU pipeline · base 23.8</text>
+  <rect x="202" y="340" width="543" height="38" fill="url(#winGrad)" rx="4" />
+  <text x="752" y="357" class="text-base text-heavy" fill="#34d399" font-size="15">101% retained</text>
+  <text x="752" y="374" class="text-base text-light" font-size="11">24.02 tok/s · 0.25 ms/frame</text>
 
-  <!-- separator -->
-  <line x1="40" y1="215" x2="760" y2="215" stroke="#1f2937" stroke-width="1" />
+  <!-- Bar 5: Cascadia WiFi idle -->
+  <text x="190" y="430" class="text-base text-medium" fill="#f3f4f6" font-size="15" text-anchor="end">Cascadia · WiFi (idle laptop)</text>
+  <text x="190" y="447" class="text-base text-light" font-size="12" text-anchor="end">60/4 layers · laptop iGPU tail</text>
+  <rect x="202" y="415" width="231" height="38" fill="url(#cascGrad)" rx="4" />
+  <text x="443" y="432" class="text-base text-heavy" fill="#8b5cf6" font-size="15">43% retained</text>
+  <text x="443" y="449" class="text-base text-light" font-size="11">10.2 tok/s</text>
 
-  <!-- Bar 2: RPC cross-machine WiFi -->
-  <text x="180" y="270" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Naive RPC · WiFi</text>
-  <text x="180" y="290" class="text-base text-light" font-size="12" text-anchor="end">B70 + laptop CPU · llama.cpp</text>
+  <!-- Bar 6: Cascadia WiFi + keep-alive -->
+  <text x="190" y="505" class="text-base text-medium" fill="#f3f4f6" font-size="15" text-anchor="end">Cascadia · WiFi + keep-alive</text>
+  <text x="190" y="522" class="text-base text-light" font-size="12" text-anchor="end">same, iGPU kept awake (+29%)</text>
+  <rect x="202" y="490" width="321" height="38" fill="url(#winGrad)" rx="4" />
+  <text x="533" y="507" class="text-base text-heavy" fill="#34d399" font-size="15">60% retained</text>
+  <text x="533" y="524" class="text-base text-light" font-size="11">14.17 tok/s</text>
 
-  <rect x="202" y="255" width="174" height="40" fill="url(#rpcGrad)" rx="4" />
-  <text x="386" y="270" class="text-base text-heavy" fill="#ef4444" font-size="16">32% retained</text>
-  <text x="386" y="290" class="text-base text-light" font-size="12">24.5 tok/s (vs 76.1)</text>
+  <!-- Bar 7: 3-device chain -->
+  <text x="190" y="580" class="text-base text-medium" fill="#f3f4f6" font-size="15" text-anchor="end">Cascadia · 3-device chain</text>
+  <text x="190" y="597" class="text-base text-light" font-size="12" text-anchor="end">desktop → laptop → laptop</text>
+  <rect x="202" y="565" width="54" height="38" fill="url(#mutedGrad)" rx="4" />
+  <text x="266" y="582" class="text-base text-heavy" fill="#94a3b8" font-size="15">10% retained</text>
+  <text x="266" y="599" class="text-base text-light" font-size="11">2.3 tok/s — relay hops compound</text>
 
-  <!-- separator -->
-  <line x1="40" y1="335" x2="760" y2="335" stroke="#1f2937" stroke-width="1" />
-
-  <!-- Bar 3: Cascadia Local -->
-  <text x="180" y="390" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Cascadia · PCIe</text>
-  <text x="180" y="410" class="text-base text-light" font-size="12" text-anchor="end">2× B70 · OpenVINO GenAI</text>
-  <text x="180" y="426" class="text-base text-light" font-size="12" text-anchor="end">22.7 tok/s base</text>
-
-  <rect x="202" y="375" width="448" height="40" fill="url(#cascGrad)" rx="4" />
-  <text x="638" y="390" class="text-base text-heavy" fill="#f3f4f6" font-size="16">83% retained</text>
-  <text x="640" y="410" fill="#e5e7eb" font-size="12">18.9 (vs 22.7)</text>
-
-  <!-- separator -->
-  <line x1="40" y1="445" x2="760" y2="445" stroke="#1f2937" stroke-width="1" />
-
-  <!-- Bar 4: Cascadia WiFi (cross-machine) -->
-  <text x="180" y="490" class="text-base text-medium" fill="#f3f4f6" font-size="16" text-anchor="end">Cascadia · WiFi</text>
-  <text x="180" y="510" class="text-base text-light" font-size="12" text-anchor="end">B70 + laptop iGPU</text>
-
-  <rect x="202" y="475" width="167" height="40" fill="url(#cascGrad)" rx="4" />
-  <text x="434" y="490" class="text-base text-heavy" fill="#8b5cf6" font-size="16">31% retained</text>
-  <text x="434" y="510" class="text-base text-light" font-size="12">7.0 tok/s (vs 22.7)</text>
-
+  <!-- Footnote -->
+  <text x="40" y="712" class="text-base text-light" font-size="11">Same hardware throughout: Arc Pro B70 desktop (2× 32GB) + Intel Core Ultra laptops over WiFi · Qwen3.8-27B INT4 · medians of 3–5 runs</text>
 </svg>
