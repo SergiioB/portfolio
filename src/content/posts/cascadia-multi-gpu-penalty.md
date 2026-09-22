@@ -3,7 +3,7 @@ title: "Zero-Cost Model Splitting: Distributed LLM Inference at 101% of Single-G
 description: "An overnight three-machine experiment that killed the multi-GPU penalty: how a 2-GPU pipeline now runs at 101% of single-GPU speed, why your laptop's power management — not the network — is the real WiFi bottleneck, and when pooling devices actually pays off."
 situation: "Splitting a local LLM across GPUs or machines has always destroyed decode speed — we measured up to −68% with standard RPC layer-splitting."
 issue: "Everyone assumes the network is the killer. An overnight 14-experiment session across a dual-GPU desktop and two laptops shows the wire was never the problem — per-frame overhead, tail-stage costs, and iGPU power states are."
-solution: "Cascadia's pipeline orchestration on 0.2.4 reaches 101% of single-GPU decode across two Arc Pro B70s (0.25 ms/frame), and a 30-line GPU keep-alive lifts WiFi-distributed decode by 29% by stopping the laptop iGPU from sleeping between tokens."
+solution: "Cascadia's pipeline orchestration on 0.2.4 reaches 101% of single-GPU decode across two Arc Pro B70s (0.25 ms/frame), and a 30-line GPU keep-alive lifts WiFi-distributed decode by 29–35% by stopping the laptop iGPU from sleeping between tokens."
 usedIn: "Running 27B-parameter INT4 models across a heterogeneous fleet: a desktop with 2× Arc Pro B70 32GB and Intel Core Ultra laptops, over WiFi."
 impact: "A second GPU now adds capacity for free, two independent servers double throughput (47.8 tok/s aggregate), and WiFi tails retain 60% once power management is handled — with a measured latency model explaining every configuration."
 pubDate: 2026-09-22
@@ -24,7 +24,7 @@ Three machines, four inference devices, everything cross-checked with repeated r
 - **Laptop B**: i5-12450H with UHD Xe-LP iGPU (WiFi) — added mid-session, with a custom Windows build of Cascadia against OpenVINO 2026.5 beta1
 - **Model**: Qwen3.8-27B INT4 (OpenVINO IR) — a hybrid: 48 DeltaNet linear-attention layers + 16 full-attention layers
 
-Fourteen benchmark configurations later, every number below is a median of 3–5 streaming runs at batch 1.
+Sixteen benchmark configurations later, every number below is a median of 3–5 streaming runs at batch 1.
 
 ## The result that shouldn't be possible
 
@@ -61,7 +61,7 @@ We noticed decode ran 37% faster immediately after a long prefill — the only d
 - Idle tail: **10.49 tok/s** (noisy: 9.9–10.5)
 - With keep-alive: **14.17 tok/s** (dead stable: 13.9–14.2 across runs)
 
-That's **+29–39% from power management alone**, replicated at two keep-alive intervals. The best WiFi configuration now retains **60%** of single-GPU speed — while serving layers the desktop never had to compute. This should be a worker feature (an idle-loop warmup between relay frames), and the variance collapse tells you the laptop's power states were also the source of the run-to-run noise.
+That's **+29–35% from power management alone**, replicated at two keep-alive intervals. The best WiFi configuration now retains **60%** of single-GPU speed — while serving layers the desktop never had to compute. This should be a worker feature (an idle-loop warmup between relay frames), and the variance collapse tells you the laptop's power states were also the source of the run-to-run noise.
 
 ## When pooling devices wins (and when it doesn't)
 
