@@ -205,10 +205,33 @@ const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(p
         </div>
       </section>
 
+      <section class="handbook-feature" aria-labelledby="cascadia-heading">
+        <div class="handbook-mark" aria-hidden="true">
+          <span>┌───┬───┐</span>
+          <span>│B70│B70│</span>
+          <span>└─┬─┴─┬─┘</span>
+          <span> └───┘ pipeline</span>
+        </div>
+        <div class="handbook-copy">
+          <p><span>02</span> <span>Distributed inference</span></p>
+          <h2 id="cascadia-heading">Cascadia: a second GPU for free.</h2>
+          <p>
+            Splitting a local LLM across devices used to cost half your tokens. Across two Arc Pro
+            B70s, a Cascadia 0.2.4 pipeline now decodes at 101% of single-GPU speed — 24.02 vs 23.78
+            tok/s at 0.25 ms per frame — and WiFi tails keep 60% once the laptop iGPU stops
+            sleeping.
+          </p>
+        </div>
+        <a class="handbook-link" href={postUrl("cascadia-multi-gpu-penalty")}>
+          <span>Read the write-up</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </section>
+
       <section class="field-section" aria-labelledby="apps-heading">
         <header class="field-section-header">
           <div>
-            <span class="field-section-index">02</span>
+            <span class="field-section-index">03</span>
             <div>
               <p data-i18n="exec.productionApps">Production Apps</p>
               <h2 id="apps-heading" data-i18n="exec.appsHeading">
@@ -312,7 +335,7 @@ const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(p
           <span> └─ read()</span>
         </div>
         <div class="handbook-copy">
-          <p><span>03</span> <span data-i18n="exec.educationalSeries">Educational Series</span></p>
+          <p><span>04</span> <span data-i18n="exec.educationalSeries">Educational Series</span></p>
           <h2 id="handbook-heading" data-i18n="exec.handbookTitle">
             The LLM Infrastructure Handbook
           </h2>
@@ -330,7 +353,7 @@ const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(p
       <section class="field-section notes-section" aria-labelledby="notes-heading">
         <header class="field-section-header notes-heading-row">
           <div>
-            <span class="field-section-index">04</span>
+            <span class="field-section-index">05</span>
             <div>
               <h2 id="notes-heading" data-i18n="exec.labShelves">Local LLM Recipes</h2>
             </div>
@@ -379,7 +402,7 @@ const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(p
       <section class="field-section notes-section" aria-labelledby="more-heading">
         <header class="field-section-header">
           <div>
-            <span class="field-section-index">05</span>
+            <span class="field-section-index">06</span>
             <div>
               <p data-i18n="exec.morePosts">Rest of posts</p>
               <h2 id="more-heading" data-i18n="exec.morePostsHeading">More field notes</h2>

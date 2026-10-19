@@ -198,7 +198,7 @@ block sizes 64/128).
 
 ```bash
 docker run --rm -p 8001:8000 --device /dev/dri \
-  -v /mnt/models2/Qwen3.6-35B-A3B-MXFP4-native:/model:ro \
+  -v ~/models/Qwen3.6-35B-A3B-MXFP4-native:/model:ro \
   -v ./vllm017-full-patch.py:/patch.py:ro \
   -e VLLM_TARGET_DEVICE=xpu -e ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE \
   -e ZE_AFFINITY_MASK=0 -e PYTORCH_ALLOC_CONF="expandable_segments:True" \

@@ -96,10 +96,10 @@
 
   <!-- Stretched VLAN Highlight -->
   <rect x="150" y="450" width="240" height="30" rx="6" fill="#042f2e" stroke="#10b981" stroke-width="1"/>
-  <text x="270" y="470" fill="#34d399" font-size="14" font-family="Consolas, monospace" text-anchor="middle">VLAN 200 (10.0.2.0/24)</text>
+  <text x="270" y="470" fill="#34d399" font-size="14" font-family="Consolas, monospace" text-anchor="middle">VLAN 200 (192.0.2.0/24)</text>
 
   <rect x="770" y="450" width="240" height="30" rx="6" fill="#042f2e" stroke="#10b981" stroke-width="1"/>
-  <text x="890" y="470" fill="#34d399" font-size="14" font-family="Consolas, monospace" text-anchor="middle">VLAN 200 (10.0.2.0/24)</text>
+  <text x="890" y="470" fill="#34d399" font-size="14" font-family="Consolas, monospace" text-anchor="middle">VLAN 200 (192.0.2.0/24)</text>
 
   <path d="M 390 465 L 770 465" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4 2"/>
   <text x="580" y="480" fill="#10b981" font-size="12" font-family="Segoe UI, Inter, Arial, sans-serif" font-style="italic" text-anchor="middle">Stretched L2 Domain</text>
@@ -109,7 +109,7 @@
   <g transform="translate(190, 500)">
     <rect x="0" y="0" width="160" height="60" rx="8" fill="#1e1b4b" stroke="#f59e0b" stroke-width="2" filter="url(#glow-filter)"/>
     <text x="80" y="25" fill="#f8fafc" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold" text-anchor="middle">APP-VM-01</text>
-    <text x="80" y="45" fill="#fcd34d" font-size="13" font-family="Consolas, monospace" text-anchor="middle">IP: 10.0.2.55</text>
+    <text x="80" y="45" fill="#fcd34d" font-size="13" font-family="Consolas, monospace" text-anchor="middle">IP: 192.0.2.55</text>
   </g>
 
   <!-- Migration Curve -->
@@ -120,13 +120,13 @@
   <g transform="translate(810, 500)" opacity="0.6">
     <rect x="0" y="0" width="160" height="60" rx="8" fill="#1e1b4b" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 2"/>
     <text x="80" y="25" fill="#f8fafc" font-size="16" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="bold" text-anchor="middle">APP-VM-01</text>
-    <text x="80" y="45" fill="#fcd34d" font-size="13" font-family="Consolas, monospace" text-anchor="middle">IP: 10.0.2.55</text>
+    <text x="80" y="45" fill="#fcd34d" font-size="13" font-family="Consolas, monospace" text-anchor="middle">IP: 192.0.2.55</text>
   </g>
 
   <!-- Validation Status Box -->
   <rect x="50" y="630" width="1100" height="50" fill="#0f172a" rx="6" stroke="#334155"/>
   <text x="80" y="660" fill="#94a3b8" font-size="15" font-family="Consolas, monospace" font-weight="bold">Gateway validation pattern:</text>
-  <text x="320" y="660" fill="#fcd34d" font-size="15" font-family="Consolas, monospace">$ ping 10.0.2.1</text>
+  <text x="320" y="660" fill="#fcd34d" font-size="15" font-family="Consolas, monospace">$ ping 192.0.2.1</text>
   <text x="480" y="660" fill="#10b981" font-size="15" font-family="Consolas, monospace">-> 0% packet loss during cross-site L2 migration constraint check</text>
 
   <defs>

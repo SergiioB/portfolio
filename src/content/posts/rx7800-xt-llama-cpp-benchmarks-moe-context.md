@@ -199,7 +199,7 @@ The always-on model is Qwen3.6-35B-A3B UD-IQ3_XXS:
 
 ```
 llama-server \
-  --model /srv/models/gguf/Qwen3.6-35B-A3B-UD-IQ3_XXS.gguf \
+  --model ~/models/gguf/Qwen3.6-35B-A3B-UD-IQ3_XXS.gguf \
   --host 0.0.0.0 --port 8080 \
   --parallel 1 --n-gpu-layers 99 \
   --batch-size 512 --ubatch-size 128 \
@@ -248,7 +248,7 @@ No meaningful speedup. ngram finds too few repetitions in the model's outputs. F
 
 ## Model Catalog
 
-31 GGUF files on the node (423 GB total in `/srv/models/gguf/`):
+31 GGUF files on the node (423 GB total in `~/models/gguf/`):
 
 | Model                  | Quant           | Size       | Type                         |
 | ---------------------- | --------------- | ---------- | ---------------------------- |

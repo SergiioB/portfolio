@@ -64,8 +64,8 @@ The Rockchip NPU uses CMA-backed memory and is useful, but it is not a magic rep
 This was the most useful real-world CPU server setup:
 
 ```bash
-taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cpp/build-rk-opt/bin/llama-server \
-  -m /home/radxa/projects/intelliauto-discord-bot/models/cpu_gguf/Qwen3.5-4B-Q4_K_M.gguf \
+taskset -c 0-7 /opt/llama.cpp/build/bin/llama-server \
+  -m ~/models/cpu_gguf/Qwen3.5-4B-Q4_K_M.gguf \
   --host 127.0.0.1 --port 8081 \
   -c 2048 -t 6 --parallel 1 --jinja \
   --reasoning-budget 0 \
@@ -75,8 +75,8 @@ taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cp
 For the 9B path, the same winning configuration applied:
 
 ```bash
-taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cpp/build-rk-opt/bin/llama-server \
-  -m /home/radxa/projects/intelliauto-discord-bot/models/cpu_gguf/Qwen3.5-9B-Q4_K_M.gguf \
+taskset -c 0-7 /opt/llama.cpp/build/bin/llama-server \
+  -m ~/models/cpu_gguf/Qwen3.5-9B-Q4_K_M.gguf \
   --host 127.0.0.1 --port 8081 \
   -c 2048 -t 6 --parallel 1 --jinja \
   --reasoning-budget 0 \
@@ -86,8 +86,8 @@ taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cp
 ### Winning raw benchmark command
 
 ```bash
-taskset -c 0-7 /home/radxa/projects/intelliauto-discord-bot/third_party/llama.cpp/build-rk-opt/bin/llama-bench \
-  -m /home/radxa/projects/intelliauto-discord-bot/models/cpu_gguf/Qwen3.5-9B-Q4_K_M.gguf \
+taskset -c 0-7 /opt/llama.cpp/build/bin/llama-bench \
+  -m ~/models/cpu_gguf/Qwen3.5-9B-Q4_K_M.gguf \
   -ngl 0 -t 6 -p 256 -n 16 -r 1 \
   -b 2048 -ub 512 -ctk f16 -ctv f16 -fa 1 -mmp 1 --no-warmup -o json
 ```

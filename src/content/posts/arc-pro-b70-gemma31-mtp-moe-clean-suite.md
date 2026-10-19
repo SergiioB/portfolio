@@ -169,6 +169,6 @@ Direct engine coding walls for similar tasks were roughly **11–12s** on Qwen35
 
 - `~/benchmarks/grok-build/results/clean_gemma31_bench_20260716_110137.json`
 - `~/benchmarks/grok-build/results/clean_gemma31_bench_20260716_110137_report.md`
-- `/home/sergio/inference/profiles.json`
+- `~/.config/inference/profiles.json`
 
 If you only remember three things: **measure long prefill**, **use MTP on dense Gemma31**, and **never mix agent wall time with engine tok/s**.

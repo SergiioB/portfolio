@@ -42,22 +42,22 @@
   <!-- App 1 -->
   <rect x="70" y="290" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
   <text x="130" y="315" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 1</text>
-  <text x="130" y="335" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.11:8443</text>
+  <text x="130" y="335" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 192.0.2.11:8443</text>
 
   <!-- App 2 -->
   <rect x="210" y="290" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
   <text x="270" y="315" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 2</text>
-  <text x="270" y="335" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.12:8443</text>
+  <text x="270" y="335" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 192.0.2.12:8443</text>
 
   <!-- App 3 -->
   <rect x="70" y="370" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
   <text x="130" y="395" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 3</text>
-  <text x="130" y="415" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.13:8443</text>
+  <text x="130" y="415" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 192.0.2.13:8443</text>
 
   <!-- App 4 -->
   <rect x="210" y="370" width="120" height="60" rx="4" fill="url(#tomcatGrad)" stroke="#f59e0b" stroke-width="1" />
   <text x="270" y="395" font-family="monospace" font-size="12" font-weight="bold" fill="#fcd34d" text-anchor="middle">Tomcat 4</text>
-  <text x="270" y="415" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 10.0.0.14:8443</text>
+  <text x="270" y="415" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">IP: 192.0.2.14:8443</text>
 
   <!-- Connection Lines (Legacy) -->
   <!-- From Cloud to Interface -->
@@ -84,7 +84,7 @@
   <!-- Reverse Proxy -->
   <rect x="470" y="230" width="260" height="40" rx="4" fill="#047857" stroke="#34d399" stroke-width="1" filter="url(#dropShadow)"/>
   <text x="600" y="250" font-family="monospace" font-size="14" font-weight="bold" fill="#ecfdf5" text-anchor="middle">Apache Reverse Proxy</text>
-  <text x="600" y="265" font-family="monospace" font-size="10" fill="#a7f3d0" text-anchor="middle">IP: 10.0.0.10:443 (Single IP)</text>
+  <text x="600" y="265" font-family="monospace" font-size="10" fill="#a7f3d0" text-anchor="middle">IP: 192.0.2.10:443 (Single IP)</text>
 
   <!-- Tomcat Instances (Localhost) -->
   <!-- App 1 -->

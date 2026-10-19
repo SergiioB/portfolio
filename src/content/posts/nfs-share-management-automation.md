@@ -242,7 +242,7 @@ mkdir -p /oracle/OraclePbbExportShare
 
 # Mount using production network IP (NOT hostname)
 mount -t nfs4 -o rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,timeo=600,_netdev \
-  198.51.100.102:/srv/oracle_pbb_export_share/oracle_pbb_export_share \
+  198.51.100.102:/srv/oracle_share/oracle_share \
   /oracle/OraclePbbExportShare
 ```
 
@@ -262,7 +262,7 @@ Add to `/etc/fstab`:
 
 ```bash
 # /etc/fstab
-198.51.100.102:/srv/oracle_pbb_export_share/oracle_pbb_export_share \
+198.51.100.102:/srv/oracle_share/oracle_share \
   /oracle/OraclePbbExportShare \
   nfs4 rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,timeo=600,_netdev 0 0
 ```
@@ -317,7 +317,7 @@ Create an Ansible role for NFS client configuration:
 nfs_mounts:
   - mount_point: /oracle/OraclePbbExportShare
     server_ip: "198.51.100.102"
-    export_path: /srv/oracle_pbb_export_share/oracle_pbb_export_share
+    export_path: /srv/oracle_share/oracle_share
 
   - mount_point: /apps/sapmnt
     server_ip: "198.51.100.105"

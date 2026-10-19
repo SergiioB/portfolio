@@ -494,8 +494,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   },
   "about.tldrTitle": { en: "TL;DR for Recruiters", es: "Resumen para Recruiters" },
   "about.tldrBody": {
-    en: "My core profile is Linux platform engineering and virtualization, with a strong automation focus. Alongside that, I work on applied AI use cases in Azure and build local-AI projects around llama.cpp, benchmarking, and edge inference. I am comfortable moving between operations, implementation, and technical communication.",
-    es: "Mi perfil principal es ingeniería de plataformas Linux y virtualización, con un enfoque fuerte en automatización. Junto a eso, trabajo en casos de uso de IA aplicada en Azure y construyo proyectos de IA local alrededor de llama.cpp, benchmarking e inferencia edge. Me siento cómodo moviéndome entre operaciones, implementación y comunicación técnica.",
+    en: "My core profile is Linux platform engineering and virtualization, with a strong automation focus. Alongside that, I work on applied AI use cases in Azure and build local-AI projects around llama.cpp, benchmarking, edge inference, and distributed inference (Cascadia). I am comfortable moving between operations, implementation, and technical communication.",
+    es: "Mi perfil principal es ingeniería de plataformas Linux y virtualización, con un enfoque fuerte en automatización. Junto a eso, trabajo en casos de uso de IA aplicada en Azure y construyo proyectos de IA local alrededor de llama.cpp, benchmarking, inferencia edge e inferencia distribuida (Cascadia). Me siento cómodo moviéndome entre operaciones, implementación y comunicación técnica.",
   },
   "about.snapshot": { en: "Professional Snapshot", es: "Resumen Profesional" },
   "about.infraTitle": {
@@ -513,8 +513,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   },
   "about.aiTitle": { en: "AI integration for business cases", es: "Integración de IA en negocio" },
   "about.aiDesc": {
-    en: "Applied AI initiatives using Azure AI Foundry, document intelligence, and hands-on local inference work with llama.cpp, benchmarking, and edge hardware.",
-    es: "Iniciativas de IA aplicada con Azure AI Foundry, inteligencia documental y trabajo práctico de inferencia local con llama.cpp, benchmarking y hardware edge.",
+    en: "Applied AI initiatives using Azure AI Foundry, document intelligence, and hands-on local inference work with llama.cpp, benchmarking, edge hardware, and distributed inference (Cascadia).",
+    es: "Iniciativas de IA aplicada con Azure AI Foundry, inteligencia documental y trabajo práctico de inferencia local con llama.cpp, benchmarking, hardware edge e inferencia distribuida (Cascadia).",
   },
   "about.experience": { en: "Experience", es: "Experiencia" },
   "about.coreAreas": { en: "Core Areas", es: "Áreas Principales" },
