@@ -228,3 +228,6 @@ public/images/screenshot*.png
 # The public page/route is disabled (PUBLIC_COVER_LETTER.enabled=false) and this
 # file is untracked so it never ships in the deployed site.
 src/pages/cover-letter.astro
+
+# Local-only variant; canonical copy lives in IntelliAuto/IntelliFlow docs
+AGENTS.git-server.md
