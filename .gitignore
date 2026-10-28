@@ -231,3 +231,7 @@ src/pages/cover-letter.astro
 
 # Local-only variant; canonical copy lives in IntelliAuto/IntelliFlow docs
 AGENTS.git-server.md
+
+# Syncthing transfer artefacts
+.syncthing.*
+.syncthing..*.tmp
