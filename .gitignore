@@ -7,7 +7,7 @@ build/
 .astro.bak-*/
 
 # AI agent / internal docs — not for public
-AGENTS*.md
+# AGENTS.md and REVIEW.md are the agent contracts, they are tracked
 .factory/
 .agents/
 .agentic/
