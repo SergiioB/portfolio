@@ -613,6 +613,31 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.",
     es: "Consultoría de infraestructura para equipos de aplicaciones, traduciendo requisitos de negocio en planes de entrega.",
   },
+  "exp.community.title": {
+    en: "AI Inference Engineer (Contractor) · Community Labs",
+    es: "Ingeniero de Inferencia IA (Contratista) · Community Labs",
+  },
+  "exp.community.subtitle": {
+    en: "Part-time contract · Remote · Spain",
+    es: "Contrato a tiempo parcial · Remoto · España",
+  },
+  "exp.community.period": { en: "2026 - Present", es: "2026 - Presente" },
+  "exp.community.0": {
+    en: "Run distributed LLM inference test campaigns on a multi-node heterogeneous Intel Arc GPU cluster (2× Arc Pro B70 32GB workstations plus edge nodes).",
+    es: "Ejecución de campañas de test de inferencia LLM distribuida en un clúster heterogéneo de GPUs Intel Arc (2× estaciones Arc Pro B70 32GB más nodos edge).",
+  },
+  "exp.community.1": {
+    en: "Benchmark throughput, latency, and GPU memory across serving configurations — quantization formats (AutoRound INT4, GPTQ), KV-cache settings, and multi-GPU partitioning — with reproducible harnesses and documented results.",
+    es: "Benchmarking de throughput, latencia y memoria GPU en distintas configuraciones de serving — formatos de cuantización (AutoRound INT4, GPTQ), ajustes de KV-cache y particionado multi-GPU — con harnesses reproducibles y resultados documentados.",
+  },
+  "exp.community.2": {
+    en: "Author and maintain the public Intel Arc Pro B70 inference cookbook: deployment guides, troubleshooting playbooks, and measurement methodology for on-prem LLM serving.",
+    es: "Autoría y mantenimiento del cookbook público de inferencia Intel Arc Pro B70: guías de despliegue, playbooks de troubleshooting y metodología de medición para serving LLM on-prem.",
+  },
+  "exp.community.3": {
+    en: "Deliver findings asynchronously to a US-based team: written reports, charts, and actionable tuning recommendations per hardware budget.",
+    es: "Entrega asíncrona de resultados a un equipo en EE. UU.: informes escritos, gráficas y recomendaciones de tuning accionables por presupuesto de hardware.",
+  },
   "exp.sopra1.title": {
     en: "Information Technology Application Specialist - Linux System Administrator · Sopra Steria",
     es: "Especialista en Aplicaciones TI - Administrador de Sistemas Linux · Sopra Steria",

@@ -53,6 +53,15 @@
 
   let currentLang = getLang();
 
+  /* Fixed-language deep links: /about?lang=es (or en) forces and persists the language. */
+  try {
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang === 'es' || urlLang === 'en') {
+      window.localStorage.setItem(LANG_KEY, urlLang);
+      currentLang = urlLang;
+    }
+  } catch { /* storage unavailable — param still applies for this page view */ }
+
   /** Translate a key using the injected dictionary `window.__i18n`. */
   const T = (key) => {
     const dict = window.__i18n;
