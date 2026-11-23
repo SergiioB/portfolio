@@ -153,18 +153,45 @@ const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(p
         <div class="field-hero-copy">
           <p class="field-kicker">
             <span>SYS.01</span>
-            <span data-i18n="exec.heroKicker">Systems engineering · local AI · product</span>
+            <span data-i18n="exec.heroKicker">AI systems · Intel Arc B70 · enterprise Linux</span>
           </p>
-          <h1 id="home-heading" data-i18n="exec.heroTitle">Linux infra, local AI, shipped apps.</h1>
+          <h1 id="home-heading" data-i18n="exec.heroTitle">
+            Enterprise Linux, local AI systems, shipped tools.
+          </h1>
           <p class="field-hero-lede" data-i18n="exec.heroLede">
-            Enterprise Linux operations, LLM inference on Intel Arc Pro B70, and production Android
-            apps — documented with the trade-offs left in.
+            Founder of XeCores and Linux infrastructure engineer. Reproducible LLM inference on
+            Intel Arc Pro B70, upstream kernel and runtime fixes, banking-grade RHEL automation, and
+            local-first Android apps — documented with the trade-offs left in.
           </p>
           <div class="field-hero-actions">
             <a class="field-button field-button-primary" href={withBase("archive/")}>
               <span data-i18n="exec.exploreNotes">Explore field notes</span><span aria-hidden="true"
                 >↗</span
               >
+            </a>
+            <a
+              class="field-button"
+              href="https://xecores.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span data-i18n="exec.visitXecores">Visit XeCores Lab</span><span aria-hidden="true"
+                >↗</span
+              >
+            </a>
+          </div>
+          <div class="field-proof" aria-label="Ecosystem proof points">
+            <a href="https://xecores.com/" target="_blank" rel="noopener noreferrer">
+              <strong>xecores.com</strong>
+              <span data-i18n="exec.proofXecores">B70 inference lab</span>
+            </a>
+            <a href="https://huggingface.co/SergiioB" target="_blank" rel="noopener noreferrer">
+              <strong>140K+/mo</strong>
+              <span data-i18n="exec.proofHf">HF downloads</span>
+            </a>
+            <a href="https://github.com/SergiioB" target="_blank" rel="noopener noreferrer">
+              <strong>40+ PRs</strong>
+              <span data-i18n="exec.proofPrs">Merged upstream</span>
             </a>
           </div>
         </div>
@@ -177,14 +204,36 @@ const remainingPosts = publishedPosts.filter((post) => !shelfHrefs.has(postUrl(p
           <div>
             <span class="field-section-index">01</span>
             <div>
-              <p>Local AI Lab</p>
-              <h2 id="lab-heading">One GPU, measured to the token.</h2>
+              <p data-i18n="exec.localLabKicker">Local AI Lab · XeCores</p>
+              <h2 id="lab-heading" data-i18n="exec.localLabTitle">
+                One GPU, measured to the token.
+              </h2>
             </div>
           </div>
-          <p>
-            Intel Arc Pro B70 32GB. Each card is one engine, one model, one cell — not a blended
-            leaderboard.
-          </p>
+          <div>
+            <p class="lab-section-copy" data-i18n="exec.localLabDesc">
+              Intel Arc Pro B70 32GB. Each card is one engine, one model, one cell — not a blended
+              leaderboard. Full live catalog and launchers live on XeCores.
+            </p>
+            <div class="lab-ecosystem-links">
+              <a href="https://xecores.com/" target="_blank" rel="noopener noreferrer"
+                >xecores.com ↗</a
+              >
+              <a
+                href="https://github.com/SergiioB/intel-arc-pro-b70-inference-cookbook"
+                target="_blank"
+                rel="noopener noreferrer">B70 Cookbook ↗</a
+              >
+              <a
+                href="https://github.com/SergiioB/b70-launcher"
+                target="_blank"
+                rel="noopener noreferrer">b70-launcher ↗</a
+              >
+              <a href="https://huggingface.co/SergiioB" target="_blank" rel="noopener noreferrer"
+                >Hugging Face ↗</a
+              >
+            </div>
+          </div>
         </header>
 
         <div class="lab-grid">

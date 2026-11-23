@@ -29,18 +29,21 @@ export const LANG_NAMES: Record<Lang, string> = {
 export const dictionary: Record<string, Record<Lang, string>> = {
   /* ── Site-level ── */
   "site.brand": { en: "Sergio B. / Field Notes", es: "Sergio B. / Notas de Campo" },
-  "site.role": { en: "Linux & Virtualization Engineer", es: "Ingeniero Linux y Virtualización" },
+  "site.role": {
+    en: "AI Systems & Linux Infrastructure",
+    es: "Sistemas IA e Infraestructura Linux",
+  },
   "site.tagline": {
-    en: "Infrastructure delivery, automation, and applied enterprise AI",
-    es: "Infraestructura, automatización e IA empresarial aplicada",
+    en: "Intel Arc Pro B70 inference research, enterprise Linux, and shipped local-first apps",
+    es: "Investigación de inferencia en Intel Arc Pro B70, Linux corporativo y apps local-first",
   },
   "site.description": {
-    en: "Case-study driven portfolio focused on Linux platform engineering, virtualization, Ansible automation, RHEL lifecycle modernization, and practical AI integration in enterprise environments.",
-    es: "Portfolio de ingeniería basado en casos reales: plataformas Linux, virtualización, automatización con Ansible, modernización RHEL e integración práctica de IA en entornos corporativos.",
+    en: "Case-study driven portfolio focused on Intel Arc Pro B70 local AI inference (XeCores), enterprise Linux platform engineering, Ansible automation, and shipped local-first products.",
+    es: "Portfolio de ingeniería centrado en inferencia IA local en Intel Arc Pro B70 (XeCores), plataformas Linux corporativas, automatización con Ansible y productos local-first.",
   },
   "site.profileSummary": {
-    en: "Linux and virtualization engineer documenting real delivery patterns across platform operations, automation, and applied AI work.",
-    es: "Ingeniero Linux y virtualización que documenta patrones reales de entrega en operaciones de plataforma, automatización y trabajo aplicado con IA.",
+    en: "Linux platform engineer and founder of XeCores, documenting reproducible local AI inference on Intel Arc Pro B70 alongside enterprise Linux operations and shipped Android apps.",
+    es: "Ingeniero de plataformas Linux y fundador de XeCores, documentando inferencia IA local reproducible en Intel Arc Pro B70 junto a operaciones Linux corporativas y apps Android.",
   },
   "site.footer": {
     en: "Case-study driven engineering portfolio",
@@ -125,29 +128,45 @@ export const dictionary: Record<string, Record<Lang, string>> = {
 
   /* ── Executive homepage ── */
   "exec.summary": {
-    en: "Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production apps by night.",
-    es: "Trabajo en infraestructura Linux corporativa; también hago experimentos de IA local y desarrollo apps Android.",
+    en: "Founder of XeCores & enterprise Linux engineer — independent Intel Arc Pro B70 inference research, RHEL automation, and shipped local-first apps.",
+    es: "Fundador de XeCores e ingeniero Linux corporativo — investigación independiente de inferencia en Intel Arc Pro B70, automatización RHEL y apps local-first.",
   },
   "exec.status": { en: "Madrid · systems online", es: "Madrid · sistemas online" },
   "exec.command": { en: "Navigate", es: "Navegar" },
   "exec.archive": { en: "Field Notes Archive", es: "Archivo de notas técnicas" },
   "exec.handbook": { en: "LLM Handbook", es: "Manual LLM" },
+  "exec.xecores": { en: "XeCores Lab", es: "XeCores Lab" },
+  "exec.huggingface": { en: "Hugging Face", es: "Hugging Face" },
   "exec.linkedin": { en: "LinkedIn Profile", es: "Perfil de LinkedIn" },
   "exec.github": { en: "GitHub Profile", es: "Perfil de GitHub" },
+  "exec.x": { en: "X (@SergiiioBS)", es: "X (@SergiiioBS)" },
   "exec.cv": { en: "Curriculum Vitae", es: "Currículum Vitae" },
   "exec.heroKicker": {
-    en: "Systems engineering · local AI · product",
-    es: "Ingeniería de sistemas · IA local · producto",
+    en: "AI systems · Intel Arc B70 · enterprise Linux",
+    es: "Sistemas IA · Intel Arc B70 · Linux corporativo",
   },
   "exec.heroTitle": {
-    en: "Linux infra, local AI, shipped apps.",
-    es: "Infra Linux, IA local, apps publicadas.",
+    en: "Enterprise Linux, local AI systems, shipped tools.",
+    es: "Linux corporativo, sistemas de IA local y herramientas reales.",
   },
   "exec.heroLede": {
-    en: "Enterprise Linux operations, LLM inference on Intel Arc Pro B70, and production Android apps — documented with the trade-offs left in.",
-    es: "Operaciones Linux corporativas, inferencia LLM en Intel Arc Pro B70 y apps Android en producción — documentados sin ocultar las decisiones difíciles.",
+    en: "Founder of XeCores and Linux infrastructure engineer. Reproducible LLM inference on Intel Arc Pro B70, upstream kernel and runtime fixes, banking-grade RHEL automation, and local-first Android apps — documented with the trade-offs left in.",
+    es: "Fundador de XeCores e ingeniero de infraestructura Linux. Inferencia LLM reproducible en Intel Arc Pro B70, parches upstream de runtime, automatización RHEL en banca y apps Android local-first — documentados sin ocultar los compromisos técnicos.",
   },
   "exec.exploreNotes": { en: "Explore field notes", es: "Explorar notas técnicas" },
+  "exec.visitXecores": { en: "Visit XeCores Lab", es: "Visitar XeCores Lab" },
+  "exec.proofXecores": { en: "B70 inference lab", es: "Laboratorio B70" },
+  "exec.proofHf": { en: "HF downloads", es: "Descargas HF" },
+  "exec.proofPrs": { en: "Merged upstream", es: "PRs mergeados" },
+  "exec.localLabKicker": { en: "Local AI Lab · XeCores", es: "Laboratorio IA Local · XeCores" },
+  "exec.localLabTitle": {
+    en: "One GPU, measured to the token.",
+    es: "Una GPU, medida hasta el último token.",
+  },
+  "exec.localLabDesc": {
+    en: "Intel Arc Pro B70 32GB. Each card is one engine, one model, one cell — not a blended leaderboard. Full live catalog and launchers live on XeCores.",
+    es: "Intel Arc Pro B70 32GB. Cada tarjeta es un motor, un modelo y una celda — no un ranking mezclado. El catálogo vivo y los launchers están en XeCores.",
+  },
   "exec.viewProfile": { en: "Profile + CV", es: "Perfil + CV" },
   "exec.proofEnterprise": { en: "Enterprise operations", es: "Operaciones Linux" },
   "exec.proofLocal": { en: "Local AI lab", es: "Laboratorio de IA local" },
@@ -480,22 +499,25 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   /* ── About page ── */
   "about.pageTitle": { en: "About", es: "Acerca de" },
   "about.pageDesc": {
-    en: "Professional profile, impact statements, and CV summary.",
-    es: "Perfil profesional, logros de impacto y resumen del CV.",
+    en: "AI systems and Linux infrastructure profile, XeCores research lab, experience, CV, and technical partnerships.",
+    es: "Perfil de sistemas IA e infraestructura Linux, laboratorio XeCores, experiencia, CV y colaboraciones técnicas.",
   },
   "about.eyebrow": { en: "Profile", es: "Perfil" },
   "about.headline": {
-    en: "Linux & Virtualization Engineer with automation-first execution.",
-    es: "Ingeniero Linux y Virtualización con mentalidad automation-first.",
+    en: "AI Systems & Linux Infrastructure Engineer — Founder of XeCores.",
+    es: "Ingeniero de Sistemas IA e Infraestructura Linux — Fundador de XeCores.",
   },
   "about.intro": {
-    en: "I design and operate enterprise Linux platforms, standardize delivery through Ansible and Git, and complement that core work with practical AI projects in Azure and local inference.",
-    es: "Diseño y opero plataformas Linux corporativas, estandarizo entregas con Ansible y Git, y complemento ese trabajo principal con proyectos prácticos de IA en Azure e inferencia local.",
+    en: "By day I operate banking-grade RHEL platforms and Ansible automation. Outside work I run XeCores, an independent Intel Arc Pro B70 inference lab publishing reproducible recipes, quantized Hugging Face checkpoints, upstream runtime fixes, and local-first software.",
+    es: "De día opero plataformas RHEL en banca y automatización con Ansible. Fuera del trabajo dirijo XeCores, un laboratorio independiente de inferencia en Intel Arc Pro B70 donde publico recetas reproducibles, modelos cuantizados en Hugging Face, parches upstream y software local-first.",
   },
-  "about.tldrTitle": { en: "TL;DR for Recruiters", es: "Resumen para Recruiters" },
+  "about.tldrTitle": {
+    en: "TL;DR for Engineering Teams & Partners",
+    es: "Resumen para Equipos Técnicos y Partners",
+  },
   "about.tldrBody": {
-    en: "My core profile is Linux platform engineering and virtualization, with a strong automation focus. Alongside that, I work on applied AI use cases in Azure and build local-AI projects around llama.cpp, benchmarking, edge inference, and distributed inference (Cascadia). I am comfortable moving between operations, implementation, and technical communication.",
-    es: "Mi perfil principal es ingeniería de plataformas Linux y virtualización, con un enfoque fuerte en automatización. Junto a eso, trabajo en casos de uso de IA aplicada en Azure y construyo proyectos de IA local alrededor de llama.cpp, benchmarking, inferencia edge e inferencia distribuida (Cascadia). Me siento cómodo moviéndome entre operaciones, implementación y comunicación técnica.",
+    en: "I bridge regulated enterprise Linux operations (300+ RHEL servers, Ansible, VMware, Azure AI Foundry) with deep hands-on local AI systems work on Intel GPUs (XeCores, b70-launcher, 140K+ monthly Hugging Face model downloads, 40+ merged upstream PRs across AutoRound, TensorFold, vLLM XPU, Cascadia, and IntelInside). Comfortable across production ops, low-level benchmarking, and technical communication.",
+    es: "Conecto operaciones Linux corporativas reguladas (300+ servidores RHEL, Ansible, VMware, Azure AI Foundry) con ingeniería práctica de IA local en GPUs Intel (XeCores, b70-launcher, +140K descargas mensuales en Hugging Face, +40 PRs mergeados upstream en AutoRound, TensorFold, vLLM XPU, Cascadia e IntelInside). Cómodo entre producción, benchmarking de bajo nivel y comunicación técnica.",
   },
   "about.snapshot": { en: "Professional Snapshot", es: "Resumen Profesional" },
   "about.infraTitle": {
@@ -511,10 +533,13 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Ansible orchestration and Git-based change control for repeatable, peer-reviewed, and auditable operations.",
     es: "Orquestación Ansible y control de cambios con Git para operaciones repetibles, revisadas y auditables.",
   },
-  "about.aiTitle": { en: "AI integration for business cases", es: "Integración de IA en negocio" },
+  "about.aiTitle": {
+    en: "Local & enterprise AI systems",
+    es: "Sistemas de IA local y corporativa",
+  },
   "about.aiDesc": {
-    en: "Applied AI initiatives using Azure AI Foundry, document intelligence, and hands-on local inference work with llama.cpp, benchmarking, edge hardware, and distributed inference (Cascadia).",
-    es: "Iniciativas de IA aplicada con Azure AI Foundry, inteligencia documental y trabajo práctico de inferencia local con llama.cpp, benchmarking, hardware edge e inferencia distribuida (Cascadia).",
+    en: "Independent Intel Arc Pro B70 inference research (XeCores, vLLM XPU, llama.cpp SYCL, OpenVINO, TensorFold) alongside Azure AI Foundry delivery in banking.",
+    es: "Investigación independiente de inferencia en Intel Arc Pro B70 (XeCores, vLLM XPU, llama.cpp SYCL, OpenVINO, TensorFold) junto a entrega de IA con Azure AI Foundry en banca.",
   },
   "about.experience": { en: "Experience", es: "Experiencia" },
   "about.coreAreas": { en: "Core Areas", es: "Áreas Principales" },
@@ -527,6 +552,22 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "about.cvDisabled": {
     en: "CV link is temporarily unavailable.",
     es: "El enlace al CV no está disponible temporalmente.",
+  },
+  "about.partnershipsTitle": {
+    en: "Partnerships, Speaking & Technical Advisory",
+    es: "Colaboraciones, Ponencias y Asesoría Técnica",
+  },
+  "about.partnershipsDesc": {
+    en: "Open to independent hardware and runtime evaluations, reproducible benchmark deep-dives, developer advocacy collaborations, and technical advisory around local AI inference and Linux infrastructure. Every sponsored or partnered piece is clearly disclosed and follows the same evidence-first methodology as XeCores.",
+    es: "Abierto a evaluaciones independientes de hardware y runtimes, análisis reproducibles con benchmarks, colaboraciones con comunidades de desarrolladores y asesoría técnica en inferencia IA local e infraestructura Linux. Toda colaboración o contenido patrocinado se declara claramente y sigue la misma metodología basada en evidencia que XeCores.",
+  },
+  "about.partnershipsCta": {
+    en: "Contact hello@xecores.com ↗",
+    es: "Contactar en hello@xecores.com ↗",
+  },
+  "about.partnershipsXecores": {
+    en: "Explore XeCores Lab ↗",
+    es: "Explorar XeCores Lab ↗",
   },
   "about.coverLetterTitle": { en: "Cover Letter", es: "Carta de Presentación" },
   "about.coverLetterLabel": { en: "View Cover Letter", es: "Ver Carta de Presentación" },
@@ -613,6 +654,27 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Acting as infrastructure consultant for application owners, translating business requirements into delivery plans.",
     es: "Consultoría de infraestructura para equipos de aplicaciones, traduciendo requisitos de negocio en planes de entrega.",
   },
+  "exp.xecores.title": {
+    en: "Founder & Lead Researcher · XeCores",
+    es: "Fundador e Investigador Principal · XeCores",
+  },
+  "exp.xecores.subtitle": {
+    en: "Independent Open-Source Lab · xecores.com · Madrid, Spain",
+    es: "Laboratorio Open-Source Independiente · xecores.com · Madrid, España",
+  },
+  "exp.xecores.period": { en: "2026 - Present", es: "2026 - Presente" },
+  "exp.xecores.0": {
+    en: "Built xecores.com, the intel-arc-pro-b70-inference-cookbook (200+ GitHub stars), and b70-launcher to provide tested, reproducible single- and dual-B70 LLM inference recipes across vLLM XPU, exl3xpu, TensorFold, and llama.cpp SYCL.",
+    es: "Creación de xecores.com, el intel-arc-pro-b70-inference-cookbook (+200 estrellas en GitHub) y b70-launcher con recetas reproducibles de inferencia LLM para una y dos Arc Pro B70 en vLLM XPU, exl3xpu, TensorFold y llama.cpp SYCL.",
+  },
+  "exp.xecores.1": {
+    en: "Published quantized Hugging Face checkpoints exceeding 140K+ downloads/month, cited as reproducible baselines in upstream Intel and vLLM engineering issues.",
+    es: "Publicación de checkpoints cuantizados en Hugging Face con más de 140K descargas/mes, utilizados como baselines reproducibles en issues upstream de Intel y vLLM.",
+  },
+  "exp.xecores.2": {
+    en: "Contributed 40+ merged upstream PRs and low-level bug reproducers across intel/auto-round, intel/compute-runtime, vllm-xpu-kernels, TensorFold, Cascadia, and IntelInside.",
+    es: "Más de 40 PRs mergeados upstream y reproductores de fallos de bajo nivel en intel/auto-round, intel/compute-runtime, vllm-xpu-kernels, TensorFold, Cascadia e IntelInside.",
+  },
   "exp.community.title": {
     en: "Inference Performance Engineer · Community Labs",
     es: "Inference Performance Engineer · Community Labs",
@@ -671,7 +733,7 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Full-time · Madrid, Community of Madrid, Spain",
     es: "Tiempo completo · Madrid, Comunidad de Madrid, España",
   },
-  "exp.sopra2.period": { en: "Apr 2023 - Jan 2025", es: "Abr 2023 - Ene 2025" },
+  "exp.sopra2.period": { en: "Jul 2023 - Oct 2023", es: "Jul 2023 - Oct 2023" },
   "exp.sopra2.1": {
     en: "Delivered advanced technical support across multiple technologies in enterprise production contexts.",
     es: "Soporte técnico avanzado en producción con múltiples tecnologías.",
@@ -719,10 +781,10 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     en: "Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL \u2014 application deployment, SSL/TLS, reverse proxy, and production database operations.",
     es: "Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL \u2014 despliegue de aplicaciones, SSL/TLS, proxy inverso y operaciones de bases de datos en producci\u00f3n.",
   },
-  "skill.cloud": { en: "Cloud + AI Integration", es: "Cloud + Integración IA" },
+  "skill.cloud": { en: "Cloud + Local AI Systems", es: "Cloud + Sistemas de IA Local" },
   "skill.cloud.desc": {
-    en: "Azure AI Foundry, document intelligence, and practical AI implementation patterns aligned with operations, local inference, and delivery constraints.",
-    es: "Azure AI Foundry, inteligencia documental y patrones prácticos de implementación de IA alineados con operaciones, inferencia local y restricciones reales de entrega.",
+    en: "Azure AI Foundry, document intelligence, and local LLM inference engineering across Intel Arc Pro B70, vLLM XPU, llama.cpp SYCL, TensorFold, and OpenVINO.",
+    es: "Azure AI Foundry, inteligencia documental e ingeniería de inferencia LLM local en Intel Arc Pro B70, vLLM XPU, llama.cpp SYCL, TensorFold y OpenVINO.",
   },
   "skill.team": { en: "Cross-Team Delivery", es: "Entrega Cross-Team" },
   "skill.team.desc": {

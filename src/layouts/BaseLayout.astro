@@ -85,11 +85,11 @@ const csp = [
     <meta name="ai-author" content={SITE.author} />
     <meta
       name="ai-summary"
-      content="Portfolio of Sergio B., Linux & Virtualization Engineer. Case-study driven technical notes on RHEL lifecycle, Ansible automation, enterprise AI, and infrastructure delivery. Bilingual: English and Spanish."
+      content="Portfolio of Sergio Barrientos (Sergio B.), AI Systems & Linux Infrastructure Engineer and founder of XeCores. Independent Intel Arc Pro B70 local AI inference benchmarks, quantized Hugging Face checkpoints (140K+ monthly downloads), upstream open-source contributions, enterprise RHEL/Ansible operations, and shipped local-first apps. Bilingual: English and Spanish."
     />
     <meta
       name="ai-topics"
-      content="Linux, RHEL, Ansible, VMware, Azure AI, Infrastructure, Automation, DevOps, Platform Engineering"
+      content="Intel Arc Pro B70, XeCores, Local AI Inference, vLLM XPU, llama.cpp SYCL, OpenVINO, Quantization, Linux, RHEL, Ansible, VMware, Azure AI, Platform Engineering"
     />
 
     <!-- JSON-LD Structured Data -->
@@ -101,23 +101,31 @@ const csp = [
           {
             "@type": "Person",
             "@id": canonicalUrl + "#person",
-            name: SITE.author,
-            jobTitle: "Linux & Virtualization Engineer",
+            name: "Sergio Barrientos",
+            alternateName: SITE.author,
+            jobTitle: "AI Systems & Linux Infrastructure Engineer",
             worksFor: { "@type": "Organization", name: "Deutsche Pfandbriefbank AG" },
             url: Astro.site?.toString() ?? canonicalUrl,
             knowsAbout: [
+              "Intel Arc Pro B70",
+              "Local AI Inference",
+              "vLLM XPU",
+              "llama.cpp SYCL",
+              "OpenVINO",
+              "LLM Quantization",
               "Linux",
               "RHEL",
               "Ansible",
               "VMware vSphere",
               "Azure AI",
-              "Infrastructure Automation",
-              "Enterprise AI",
               "Platform Engineering",
             ],
             sameAs: [
+              "https://xecores.com/",
               "https://github.com/SergiioB",
-              "https://linkedin.com/in/sergio-barrientos-dev",
+              "https://huggingface.co/SergiioB",
+              "https://www.linkedin.com/in/sergio-barrientose/",
+              "https://x.com/SergiiioBS",
             ],
           },
           {

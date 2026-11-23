@@ -1,22 +1,16 @@
 ---
 import ExecutiveSidebar from "../components/ExecutiveSidebar.astro";
-import { PUBLIC_CV, PUBLIC_COVER_LETTER, SITE } from "../config/site";
+import { PUBLIC_CV, SITE } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { withBase } from "../utils/paths";
 
 const publicCvHref = PUBLIC_CV.external ? PUBLIC_CV.href : withBase(PUBLIC_CV.href);
 const publicCvHrefEs = PUBLIC_CV.external ? PUBLIC_CV.hrefEs : withBase(PUBLIC_CV.hrefEs);
-const _coverHref = PUBLIC_COVER_LETTER.external
-  ? PUBLIC_COVER_LETTER.href
-  : withBase(PUBLIC_COVER_LETTER.href);
-const _coverHrefEs = PUBLIC_COVER_LETTER.external
-  ? PUBLIC_COVER_LETTER.hrefEs
-  : withBase(PUBLIC_COVER_LETTER.hrefEs);
 ---
 
 <BaseLayout
   title={`About | ${SITE.author}`}
-  description="Professional profile, impact statements, and CV summary."
+  description="AI systems and Linux infrastructure profile, XeCores research lab, experience, CV, and technical partnerships."
   layoutMode="executive"
 >
   <div class="executive-home">
@@ -32,14 +26,15 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
           style="font-size: 1.5rem; font-weight: 700; color: var(--heading); margin: 0 0 0.75rem;"
           data-i18n="about.headline"
         >
-          Linux & Virtualization Engineer with automation-first execution.
+          AI Systems &amp; Linux Infrastructure Engineer — Founder of XeCores.
         </h1>
         <p
           style="color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin: 0 0 1.5rem;"
           data-i18n="about.intro"
         >
-          I design and operate enterprise Linux platforms, standardize delivery through Ansible and
-          Git, and bridge infrastructure operations with practical Generative AI implementations.
+          By day I operate banking-grade RHEL platforms and Ansible automation. Outside work I run
+          XeCores, an independent Intel Arc Pro B70 inference lab publishing reproducible recipes,
+          quantized Hugging Face checkpoints, upstream runtime fixes, and local-first software.
         </p>
         <div
           class="tldr-box panel panel-soft"
@@ -48,13 +43,14 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
           <strong
             data-i18n="about.tldrTitle"
             style="color: var(--text-strong); display: block; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em;"
-            >TL;DR for Recruiters</strong
+            >TL;DR for Engineering Teams &amp; Partners</strong
           >
           <p style="margin: 0; font-size: 0.95em; color: var(--text);" data-i18n="about.tldrBody">
-            My core profile is Linux platform engineering and virtualization, with a strong
-            automation focus. Alongside that, I work on applied AI use cases in Azure and build
-            local-AI projects around llama.cpp, benchmarking, and edge inference. I am comfortable
-            moving between operations, implementation, and technical communication.
+            I bridge regulated enterprise Linux operations (300+ RHEL servers, Ansible, VMware,
+            Azure AI Foundry) with deep hands-on local AI systems work on Intel GPUs (XeCores,
+            b70-launcher, 140K+ monthly Hugging Face model downloads, 40+ merged upstream PRs across
+            AutoRound, TensorFold, vLLM XPU, Cascadia, and IntelInside). Comfortable across
+            production ops, low-level benchmarking, and technical communication.
           </p>
         </div>
       </section>
@@ -77,10 +73,10 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
             </p>
           </article>
           <article class="panel panel-soft signal-card">
-            <h3 data-i18n="about.aiTitle">AI integration for business cases</h3>
+            <h3 data-i18n="about.aiTitle">Local &amp; enterprise AI systems</h3>
             <p data-i18n="about.aiDesc">
-              Applied GenAI initiatives using Azure AI Foundry, document intelligence, and model
-              fine-tuning workflows.
+              Independent Intel Arc Pro B70 inference research (XeCores, vLLM XPU, llama.cpp SYCL,
+              OpenVINO, TensorFold) alongside Azure AI Foundry delivery in banking.
             </p>
           </article>
         </div>
@@ -138,6 +134,34 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
               <li data-i18n="exp.pbb.8">
                 Acting as infrastructure consultant for application owners, translating business
                 requirements into delivery plans.
+              </li>
+            </ul>
+          </article>
+
+          <article class="timeline-item panel panel-soft">
+            <div class="timeline-head">
+              <div>
+                <h3 data-i18n="exp.xecores.title">Founder &amp; Lead Researcher · XeCores</h3>
+                <p class="timeline-subtitle" data-i18n="exp.xecores.subtitle">
+                  Independent Open-Source Lab · xecores.com · Madrid, Spain
+                </p>
+              </div>
+              <p class="timeline-period" data-i18n="exp.xecores.period">2026 - Present</p>
+            </div>
+            <ul>
+              <li data-i18n="exp.xecores.0">
+                Built xecores.com, the intel-arc-pro-b70-inference-cookbook (200+ GitHub stars), and
+                b70-launcher to provide tested, reproducible single- and dual-B70 LLM inference
+                recipes across vLLM XPU, exl3xpu, TensorFold, and llama.cpp SYCL.
+              </li>
+              <li data-i18n="exp.xecores.1">
+                Published quantized Hugging Face checkpoints exceeding 140K+ downloads/month, cited
+                as reproducible baselines in upstream Intel and vLLM engineering issues.
+              </li>
+              <li data-i18n="exp.xecores.2">
+                Contributed 40+ merged upstream PRs and low-level bug reproducers across
+                intel/auto-round, intel/compute-runtime, vllm-xpu-kernels, TensorFold, Cascadia, and
+                IntelInside.
               </li>
             </ul>
           </article>
@@ -218,7 +242,7 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
                   Full-time · Madrid, Community of Madrid, Spain
                 </p>
               </div>
-              <p class="timeline-period" data-i18n="exp.sopra2.period">Apr 2023 - Jan 2025</p>
+              <p class="timeline-period" data-i18n="exp.sopra2.period">Jul 2023 - Oct 2023</p>
             </div>
             <ul>
               <li data-i18n="exp.sopra2.1">
@@ -267,31 +291,31 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
             </p>
           </article>
           <article class="skill-card panel panel-soft">
-            <h3 data-i18n="skill.auto">Automation & Governance</h3>
+            <h3 data-i18n="skill.auto">Automation &amp; Governance</h3>
             <p data-i18n="skill.auto.desc">
               Ansible playbooks, reusable role design, Git workflows, and evidence-based operational
               change controls.
             </p>
           </article>
           <article class="skill-card panel panel-soft">
-            <h3 data-i18n="skill.virt">Virtualization & Datacenter Ops</h3>
+            <h3 data-i18n="skill.virt">Virtualization &amp; Datacenter Ops</h3>
             <p data-i18n="skill.virt.desc">
               VMware vSphere administration, server lifecycle tasks, HA awareness, and
               disaster-recovery execution.
             </p>
           </article>
           <article class="skill-card panel panel-soft">
-            <h3 data-i18n="skill.mid">App Platforms & Databases</h3>
+            <h3 data-i18n="skill.mid">App Platforms &amp; Databases</h3>
             <p data-i18n="skill.mid.desc">
               Nginx, Apache, Tomcat, JBoss/WildFly, PostgreSQL — application deployment, SSL/TLS,
               reverse proxy, and production database operations.
             </p>
           </article>
           <article class="skill-card panel panel-soft">
-            <h3 data-i18n="skill.cloud">Cloud + AI Integration</h3>
+            <h3 data-i18n="skill.cloud">Cloud + Local AI Systems</h3>
             <p data-i18n="skill.cloud.desc">
-              Azure AI Foundry, document intelligence, and practical GenAI implementation patterns
-              aligned with operations.
+              Azure AI Foundry, document intelligence, and local LLM inference engineering across
+              Intel Arc Pro B70, vLLM XPU, llama.cpp SYCL, TensorFold, and OpenVINO.
             </p>
           </article>
           <article class="skill-card panel panel-soft">
@@ -334,28 +358,35 @@ const _coverHrefEs = PUBLIC_COVER_LETTER.external
         </article>
       </section>
 
-      <section class="about-section" aria-labelledby="cover-letter-title">
-        <h2 id="cover-letter-title" data-i18n="about.coverLetterTitle">Cover Letter</h2>
+      <section class="about-section" id="partnerships" aria-labelledby="partnerships-title">
+        <h2 id="partnerships-title" data-i18n="about.partnershipsTitle">
+          Partnerships, Speaking &amp; Technical Advisory
+        </h2>
         <article class="panel panel-soft cv-card">
-          <p data-i18n="about.coverLetterDesc">
-            Professional introduction — who I am, what I work on, and how I approach infrastructure
-            and automation.
+          <p data-i18n="about.partnershipsDesc">
+            Open to independent hardware and runtime evaluations, reproducible benchmark deep-dives,
+            developer advocacy collaborations, and technical advisory around local AI inference and
+            Linux infrastructure. Every sponsored or partnered piece is clearly disclosed and
+            follows the same evidence-first methodology as XeCores.
           </p>
-          {
-            PUBLIC_COVER_LETTER.enabled ? (
-              <a
-                href={withBase("cover-letter/")}
-                class="action-link"
-                data-i18n="about.coverLetterLabel"
-              >
-                {PUBLIC_COVER_LETTER.label}
-              </a>
-            ) : (
-              <p class="cv-disabled-note" data-i18n="about.coverLetterDisabled">
-                Cover letter link is temporarily unavailable.
-              </p>
-            )
-          }
+          <div class="partnerships-actions">
+            <a
+              href="mailto:hello@xecores.com?subject=Technical%20Partnership%20%2F%20Advisory%20Inquiry"
+              class="action-link"
+              data-i18n="about.partnershipsCta"
+            >
+              Contact hello@xecores.com ↗
+            </a>
+            <a
+              href="https://xecores.com/"
+              class="action-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-i18n="about.partnershipsXecores"
+            >
+              Explore XeCores Lab ↗
+            </a>
+          </div>
         </article>
       </section>
 

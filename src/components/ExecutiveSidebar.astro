@@ -43,13 +43,13 @@ const navigation = [
     <span class="executive-monogram" aria-hidden="true">SB<span></span></span>
     <span>
       <strong>Sergio Barrientos</strong>
-      <small data-i18n="site.role">Linux & Virtualization Engineer</small>
+      <small data-i18n="site.role">AI Systems & Linux Infrastructure</small>
     </span>
   </a>
 
   <p class="executive-summary" data-i18n="exec.summary">
-    Building enterprise infrastructure by day; deploying local AI and shipping Kotlin production
-    apps by night.
+    Founder of XeCores & enterprise Linux engineer — independent Intel Arc Pro B70 inference
+    research, RHEL automation, and shipped local-first apps.
   </p>
 
   <div class="executive-status">
@@ -132,10 +132,8 @@ const navigation = [
     {
       PUBLIC_LINKS.map((link) => (
         <a href={link.href} target="_blank" rel="noopener noreferrer">
-          <span aria-hidden="true">{link.label === "LinkedIn" ? "in" : "{}"}</span>
-          <strong data-i18n={link.label === "LinkedIn" ? "exec.linkedin" : "exec.github"}>
-            {link.label}
-          </strong>
+          <span aria-hidden="true">{link.badge}</span>
+          <strong data-i18n={link.i18nKey}>{link.label}</strong>
           <i aria-hidden="true">↗</i>
         </a>
       ))
