@@ -46,4 +46,4 @@ Going forward, the split is intentional:
 - **[`xecores.com`](https://xecores.com/)** holds the live B70 route catalog, interactive die architecture walkthrough, full benchmark tables, and launcher releases.
 - **[`sergiiob.dev`](https://sergiiob.dev/)** holds long-form architecture notes, enterprise Linux & Ansible case studies, the LLM Infrastructure Handbook, and periodic lab summaries like this one.
 
-If you want to collaborate on hardware evaluation, reproducible benchmarking, or developer tooling around Intel GPUs and local AI, reach out via **[LinkedIn](https://www.linkedin.com/in/sergio-barrientose/)** or follow daily updates on **[X (@SergiiioBS)](https://x.com/SergiiioBS)**.
+If you want to collaborate on hardware evaluation, reproducible benchmarking, or developer tooling around Intel GPUs and local AI, reach out via **[hello@xecores.com](mailto:hello@xecores.com)** or follow daily updates on **[X (@SergiiioBS)](https://x.com/SergiiioBS)**.

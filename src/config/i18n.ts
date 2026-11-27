@@ -562,8 +562,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Abierto a evaluaciones independientes de hardware y runtimes, análisis reproducibles con benchmarks, colaboraciones con comunidades de desarrolladores y asesoría técnica en inferencia IA local e infraestructura Linux. Toda colaboración o contenido patrocinado se declara claramente y sigue la misma metodología basada en evidencia que XeCores.",
   },
   "about.partnershipsCta": {
-    en: "Message on LinkedIn ↗",
-    es: "Escribir por LinkedIn ↗",
+    en: "Contact hello@xecores.com ↗",
+    es: "Contactar en hello@xecores.com ↗",
   },
   "about.partnershipsXecores": {
     en: "Explore XeCores Lab ↗",
