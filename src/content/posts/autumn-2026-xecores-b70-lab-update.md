@@ -5,7 +5,7 @@ situation: "After publishing the Cascadia multi-GPU study in September 2026, mos
 issue: "Standalone markdown articles age quickly when vLLM XPU, exl3xpu, TensorFold, and llama.cpp SYCL ship weekly fixes and drivers change behavior across prompt depths."
 solution: "Consolidated live recipes, verified benchmark evidence, and reproducible launch scripts into XeCores (xecores.com), b70-launcher, and the Intel Arc Pro B70 inference cookbook while pushing fixes upstream."
 usedIn: "Dual Intel Arc Pro B70 32GB workstation (PCIe 4.0 x8/x8) running vLLM XPU, exl3xpu, TensorFold, OpenVINO/Cascadia, and llama.cpp SYCL."
-impact: "Over 200 stars on the B70 cookbook, 140K+ monthly downloads on quantized Hugging Face checkpoints, and 40+ merged upstream PRs across Intel and community inference repositories."
+impact: "Over 200 stars on the B70 cookbook, 140K+ monthly downloads on quantized Hugging Face checkpoints, and merged upstream contributions across intel/auto-round, TensorFold, vllm-xpu-kernels, and Cascadia."
 pubDate: 2026-11-23
 category: ["local-ai", "b70"]
 tags: ["intel-arc", "b70", "xecores", "vllm", "tensorfold", "llama-cpp", "huggingface"]
@@ -31,7 +31,7 @@ Alongside the cookbook, our quantized checkpoints on **[Hugging Face (`huggingfa
 
 More importantly than the download counter itself, those checkpoints are being referenced as reproducible control baselines in upstream engineering threads across `intel/llm-scaler` and `vllm-project/vllm` when diagnosing XPU kernels, MTP speculation behavior, and accuracy regressions.
 
-## 3. Upstream first: 40+ merged PRs and reproducible driver bug reports
+## 3. Upstream first: merged XPU fixes and reproducible bug reports
 
 Whenever a B70 run exposes a bug or a bottleneck, the goal is to land the fix or minimal reproducer upstream rather than hiding it in a private fork:
 
@@ -46,4 +46,4 @@ Going forward, the split is intentional:
 - **[`xecores.com`](https://xecores.com/)** holds the live B70 route catalog, interactive die architecture walkthrough, full benchmark tables, and launcher releases.
 - **[`sergiiob.dev`](https://sergiiob.dev/)** holds long-form architecture notes, enterprise Linux & Ansible case studies, the LLM Infrastructure Handbook, and periodic lab summaries like this one.
 
-If you want to collaborate on hardware evaluation, reproducible benchmarking, or developer tooling around Intel GPUs and local AI, reach out via **[hello@xecores.com](mailto:hello@xecores.com)** or follow daily updates on **[X (@SergiiioBS)](https://x.com/SergiiioBS)**.
+If you want to collaborate on hardware evaluation, reproducible benchmarking, or developer tooling around Intel GPUs and local AI, reach out via **[sergiobarrientose@outlook.com](mailto:sergiobarrientose@outlook.com)** or follow daily updates on **[X (@SergiiioBS)](https://x.com/SergiiioBS)**.

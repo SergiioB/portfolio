@@ -157,7 +157,7 @@ export const dictionary: Record<string, Record<Lang, string>> = {
   "exec.visitXecores": { en: "Visit XeCores Lab", es: "Visitar XeCores Lab" },
   "exec.proofXecores": { en: "B70 inference lab", es: "Laboratorio B70" },
   "exec.proofHf": { en: "HF downloads", es: "Descargas HF" },
-  "exec.proofPrs": { en: "Merged upstream", es: "PRs mergeados" },
+  "exec.proofPrs": { en: "AutoRound · TensorFold · vLLM", es: "AutoRound · TensorFold · vLLM" },
   "exec.localLabKicker": { en: "Local AI Lab · XeCores", es: "Laboratorio IA Local · XeCores" },
   "exec.localLabTitle": {
     en: "One GPU, measured to the token.",
@@ -516,8 +516,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Resumen para Equipos Técnicos y Partners",
   },
   "about.tldrBody": {
-    en: "I bridge regulated enterprise Linux operations (300+ RHEL servers, Ansible, VMware, Azure AI Foundry) with deep hands-on local AI systems work on Intel GPUs (XeCores, b70-launcher, 140K+ monthly Hugging Face model downloads, 40+ merged upstream PRs across AutoRound, TensorFold, vLLM XPU, Cascadia, and IntelInside). Comfortable across production ops, low-level benchmarking, and technical communication.",
-    es: "Conecto operaciones Linux corporativas reguladas (300+ servidores RHEL, Ansible, VMware, Azure AI Foundry) con ingeniería práctica de IA local en GPUs Intel (XeCores, b70-launcher, +140K descargas mensuales en Hugging Face, +40 PRs mergeados upstream en AutoRound, TensorFold, vLLM XPU, Cascadia e IntelInside). Cómodo entre producción, benchmarking de bajo nivel y comunicación técnica.",
+    en: "I bridge regulated enterprise Linux operations (300+ RHEL servers, Ansible, VMware, Azure AI Foundry) with deep hands-on local AI systems work on Intel GPUs (XeCores, b70-launcher, 140K+ monthly Hugging Face model downloads, merged upstream contributions across AutoRound, TensorFold, vLLM XPU, and Cascadia). Comfortable across production ops, low-level benchmarking, and technical communication.",
+    es: "Conecto operaciones Linux corporativas reguladas (300+ servidores RHEL, Ansible, VMware, Azure AI Foundry) con ingeniería práctica de IA local en GPUs Intel (XeCores, b70-launcher, +140K descargas mensuales en Hugging Face, contribuciones upstream mergeadas en AutoRound, TensorFold, vLLM XPU y Cascadia). Cómodo entre producción, benchmarking de bajo nivel y comunicación técnica.",
   },
   "about.snapshot": { en: "Professional Snapshot", es: "Resumen Profesional" },
   "about.infraTitle": {
@@ -562,8 +562,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Abierto a evaluaciones independientes de hardware y runtimes, análisis reproducibles con benchmarks, colaboraciones con comunidades de desarrolladores y asesoría técnica en inferencia IA local e infraestructura Linux. Toda colaboración o contenido patrocinado se declara claramente y sigue la misma metodología basada en evidencia que XeCores.",
   },
   "about.partnershipsCta": {
-    en: "Contact hello@xecores.com ↗",
-    es: "Contactar en hello@xecores.com ↗",
+    en: "Contact sergiobarrientose@outlook.com ↗",
+    es: "Contactar en sergiobarrientose@outlook.com ↗",
   },
   "about.partnershipsXecores": {
     en: "Explore XeCores Lab ↗",
@@ -672,8 +672,8 @@ export const dictionary: Record<string, Record<Lang, string>> = {
     es: "Publicación de checkpoints cuantizados en Hugging Face con más de 140K descargas/mes, utilizados como baselines reproducibles en issues upstream de Intel y vLLM.",
   },
   "exp.xecores.2": {
-    en: "Contributed 40+ merged upstream PRs and low-level bug reproducers across intel/auto-round, intel/compute-runtime, vllm-xpu-kernels, TensorFold, Cascadia, and IntelInside.",
-    es: "Más de 40 PRs mergeados upstream y reproductores de fallos de bajo nivel en intel/auto-round, intel/compute-runtime, vllm-xpu-kernels, TensorFold, Cascadia e IntelInside.",
+    en: "Contributed merged upstream fixes and reproducible bug reports across intel/auto-round, TensorFold, vllm-xpu-kernels, Cascadia, and IntelInside.",
+    es: "Fixes upstream mergeados y reportes reproducibles en intel/auto-round, TensorFold, vllm-xpu-kernels, Cascadia e IntelInside.",
   },
   "exp.community.title": {
     en: "Inference Performance Engineer · Community Labs",
